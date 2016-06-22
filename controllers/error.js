@@ -6,7 +6,7 @@ function notFound(req, res, next) {
   next(err);
 }
 
-function serverErrorDev(err, req, res) {
+function serverErrorDev(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error/error', {
     message: err.message,
@@ -17,7 +17,7 @@ function serverErrorDev(err, req, res) {
   });
 }
 
-function serverErrorProd(err, req, res) {
+function serverErrorProd(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error/error', {
     message: err.message,
