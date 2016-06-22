@@ -1,0 +1,47 @@
+<p class="container-fluid">
+	<h4>Write attendanceLeague.</h4>
+	<form name="attendanceLeague" ng-submit="ctrl.submit()" novalidate>
+		<div class="form-group">
+			<div>
+				<label for="league" class="control-label">LEAGUE</label>
+				<select id="league" name="league" class="form-control">
+					<option value="KL">K LEAGUE</option>
+					<option value="KLCL">K LEAGUE CLASSIC</option>
+					<option value="KLCH">K LEAGUE CHALLENGE</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<p>
+				<label for="season" class="control-label">SEASON</label>
+				<input type="text" id="season" name="season" class="form-control" placeholder="Season">
+			</p>
+
+			<p>ex) 40</p>
+			<p>
+				GAMES :
+				<input type="number" id="games" name="games" class="form-control" placeholder="Games" ng-model="ctrl.games" ng-blur="ctrl.calcAve()"/>
+			</p>
+
+			<p>ex) 419478</p>
+			<p>
+				TOTAL : <input type="number" id="total" name="total" class="form-control" placeholder="Total" ng-model="ctrl.total" ng-blur="ctrl.calcAve()">
+			</p>
+
+			<p>
+				AVERAGE : <input type="number" id="average" name="average" class="form-control" placeholder="Average" ng-model="ctrl.average">
+			</p>
+		</div>
+
+		<div class="form-group">
+			<label for="numberOfClubs" class="control-label">NUMBER OF CLUBS</label>
+			<input type="number" id="numberOfClubs" name="numberOfClubs" class="form-control" placeholder="Number Of Clubs"/>
+		</div>
+
+		<input type="submit" class="btn btn-default">
+		<button type="button" class="btn btn-default" ng-click="ctrl.confirmDelete();" ng-if="ctrl.attendanceLeague">
+			<i class="fa fa-trash-o"></i> 삭제
+		</button>
+	</form>
+</div>

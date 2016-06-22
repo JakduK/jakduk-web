@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!--[if IE 9]> <html lang="{{locale}}" class="ie9" ng-app="jakdukApp"> <![endif]-->
+<!--[if !IE]><!--> <html lang="{{locale}}" ng-app="jakdukApp"> <!--<![endif]-->
+	<head>
+		{{> html-header}}
+		<link rel="stylesheet" href="<%=request.getContextPath()%>/bundles/base.css">
+	</head>
+	<body class="header-fixed">
+		<h1 id="banner">Unauthorized</h1>
+		<hr/>
+		<p class="message">Access denied!</p>
+		{{> footer}}
+	</body>
+</html>

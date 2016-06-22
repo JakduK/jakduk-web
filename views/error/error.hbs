@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--[if IE 9]> <html lang="{{locale}}" class="ie9" ng-app="jakdukApp"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="{{locale}}" ng-app="jakdukApp"> <!--<![endif]-->
+  <head>
+    <title>{{TRANSLATION "common.error"}} &middot; {{TRANSLATION "common.jakduk"}}</title>
+    {{> html_header}}
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/unify/assets/css/style.css"/>
+    <link rel="stylesheet" href="/unify/assets/css/headers/header-default.css"/>
+    <link rel="stylesheet" href="/unify/assets/css/footers/footer-v3.css"/>
+    <link rel="stylesheet" href="/unify/assets/plugins/animate.css"/>
+    <link rel="stylesheet" href="/unify/assets/plugins/line-icons/line-icons.css"/>
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/unify/assets/css/theme-colors/blue.css"/>
+  </head>
+
+  <body class="header-fixed">
+    <div class="wrapper">
+
+      {{> navigation_header}}
+
+      <!--=== Breadcrumbs ===-->
+      <div class="breadcrumbs">
+        <div class="container">
+          <h1 class="pull-left"><a href="/home">{{TRANSLATION "common.error"}}</a></h1>
+        </div><!--/container-->
+      </div><!--/breadcrumbs-->
+      <!--=== End Breadcrumbs ===-->
+
+      <div class="container content">
+        <h3>{{TRANSLATION "common.msg.error.default"}}</h3>
+
+        <p>
+          <small>Host : <code>{{req.headers.host}}</code></small>
+        </p>
+        <p>
+          <small>URI : <code>{{req.headers.host}}{{req.originalUrl}}</code></small>
+        </p>
+        <p>
+          <small>Code : <code>{{code}}</code></small>
+        </p>
+        <p>
+          <small>Message : <code>{{message}}</code></small>
+        </p>
+        {{#if error}}
+          <p>
+            <small>Stack : <pre>{{error}}</pre></small>
+          </p>
+        {{/if}}
+        <p>
+          <small>Date : <code ng-bind="{{now}} | date:'medium'"></code></small>
+        </p>
+
+        <p class="text-info"><strong>{{TRANSLATION "common.msg.error.show.error.to.administrator"}}</strong></p>
+        <button class="btn btn-default" onclick="location.href='/home'">
+          {{TRANSLATION "common.button.home"}}
+        </button>
+        <button class="btn btn-default" onclick="history.back()">
+          {{TRANSLATION "common.button.previous.page"}}
+        </button>
+
+      </div><!-- /.container -->
+
+      {{> footer}}
+
+    </div><!-- /.wrapper -->
+
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/unify/assets/plugins/back-to-top.js"></script>
+    <script src="/unify/assets/plugins/smoothScroll.js"></script>
+    <script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/unify/assets/js/app.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/jakduk/js/jakduk.js"></script>
+
+    <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+    
+    <script>angular.module('jakdukApp', ['jakdukCommon'])
+      .config(['$interpolateProvider', function($interpolateProvider) {
+        $interpolateProvider.startSymbol('{%');
+        $interpolateProvider.startSymbol('%}');
+      }]);
+    </script>
+  </body>
+</html>
