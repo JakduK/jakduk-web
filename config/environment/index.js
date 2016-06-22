@@ -1,8 +1,10 @@
 var _ = require('lodash');
 
+var env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+
 // All configurations will extend these options
 var all = {
-  env: process.env.NODE_ENV,
+  env: env,
 
   port: process.env.PORT || 9000,
 
@@ -45,6 +47,6 @@ try {
 
 module.exports = _.merge(
   all,
-  require('./' + process.env.NODE_ENV + '.js') || {},
+  require('./' + env + '.js') || {},
   local
 );
