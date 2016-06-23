@@ -4,15 +4,13 @@ var Client = require('node-rest-client').Client;
 
 var rest = new Client();
 rest.registerMethod('login', config.apiServerUrl + '/login', 'post');
+rest.registerMethod('logout', config.apiServerUrl + '/logout', 'post');
 rest.registerMethod('join', config.apiServerUrl + '/login', 'post');
 rest.registerMethod('userInfo', config.apiServerUrl + '/user/my/profile', 'get');
 rest.registerMethod('latest', config.apiServerUrl + '/home/latest', 'get');
 rest.registerMethod('encyclopedia', config.apiServerUrl + '/home/encyclopedia', 'get');
 
 module.exports = {
-  userInfo: rest.methods.userInfo,
-  latest: rest.methods.latest,
-  encyclopedia: rest.methods.encyclopedia,
   login: function(data, callback) {
     return rest.methods.login(_.merge({
       headers: {
@@ -20,5 +18,9 @@ module.exports = {
       }
     }, data), callback)
   },
+  logout: rest.methods.logout,
+  userInfo: rest.methods.userInfo,
+  latest: rest.methods.latest,
+  encyclopedia: rest.methods.encyclopedia,
   join: rest.methods.join
 };

@@ -14,7 +14,7 @@ function loginPost(req, res) {
   rest.login({
     data: 'username=' + encodeURIComponent(req.body.j_username) + '&password=' + encodeURIComponent(req.body.j_password)
   }, function(data, response) {
-    if (response.statusCode === 200 || response.statusCode === 302) {
+    if (response.statusCode === 200) {
       var redir = req.body.redir || '/';
       var resCookies = cookie.parse(response.headers['set-cookie'].join("; "));
       _.every(resCookies, function (value, key) {
@@ -35,6 +35,17 @@ function loginPost(req, res) {
         message: 'common.exception.io'
       });
     }
+  });
+}
+
+function logout(req, res) {
+  rest.logout({
+    headers: {
+      cookie: req.headers.cookie || ''
+    }
+  }, function() {
+    res.clearCookie('JSESSIONID');
+    res.redirect(req.headers.referer);
   });
 }
 
@@ -59,6 +70,7 @@ module.exports = {
     get: loginGet,
     post: loginPost
   },
+  logout: logout,
   join: {
     get: joinGet,
     post: joinPost
