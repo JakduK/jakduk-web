@@ -12,11 +12,7 @@ function loginGet(req, res) {
 
 function loginPost(req, res) {
   rest.login({
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept': 'application/json'
-    },
-    data: 'j_username=' + encodeURIComponent(req.body.j_username) + '&j_password=' + req.body.j_password
+    data: 'username=' + encodeURIComponent(req.body.j_username) + '&password=' + encodeURIComponent(req.body.j_password)
   }, function(data, response) {
     if (response.statusCode === 200 || response.statusCode === 302) {
       var redir = req.body.redir || '/';

@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var config = require('../config/environment');
 var Client = require('node-rest-client').Client;
 
@@ -12,6 +13,12 @@ module.exports = {
   userInfo: rest.methods.userInfo,
   latest: rest.methods.latest,
   encyclopedia: rest.methods.encyclopedia,
-  login: rest.methods.login,
+  login: function(data, callback) {
+    return rest.methods.login(_.merge({
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }, data), callback)
+  },
   join: rest.methods.join
 };
