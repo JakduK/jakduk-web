@@ -17,9 +17,10 @@ var all = {
     }
   },
 
+  noRedirectPaths: ['/login', '/logout'],
+
   apiServerUrl: 'https://jakduk.com/api',
   thumbnailServerUrl: 'https://jakduk.com',
-  noRedirectPaths: ['/login', '/logout'],
 
   facebook: {
     clientID:     process.env.FACEBOOK_ID || 'id',

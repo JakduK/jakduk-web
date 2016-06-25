@@ -1,9 +1,8 @@
-var home = require('../controllers/home');
-var auth = require('../middlewares/auth');
+var HomeController = require('../controllers/home');
 
 function setup(app) {
-  auth(app, '/home');
-  app.get('/home', home.default);
+  var homeController = new HomeController(app);
+  homeController.default('/home');
 }
 
 module.exports = setup;

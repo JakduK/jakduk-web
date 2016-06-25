@@ -1,14 +1,10 @@
-var error = require('../controllers/error');
+var ErrorController = require('../controllers/error');
 var config = require('../config/environment');
 
 function setup(app) {
-  app.use(error.notFound);
-
-  if (config.env === 'development') {
-    app.use(error.serverError['dev']);
-  }
-
-  app.use(error.serverError['prod']);
+  var errorController = new ErrorController(app);
+  errorController.notFound('/');
+  errorController.all('/');
 }
 
 module.exports = setup;

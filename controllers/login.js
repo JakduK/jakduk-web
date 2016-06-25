@@ -1,80 +1,79 @@
+'use strict';
+
 var express = require('express');
+var SessionUtil = require('../util/jakduk.session.util');
 var _ = require('lodash');
-var cookie = require('cookie');
-var rest = require('../util/rest');
-var config = require('../config/environment');
 
-function loginGet(req, res) {
-  res.render('login/login', {
-    redir: req.headers.referer
-  });
+function LoginController(app) {
+  this.app = app;
 }
 
-function loginPost(req, res) {
-  rest.login({
-    data: 'username=' + encodeURIComponent(req.body.j_username) + '&password=' + encodeURIComponent(req.body.j_password)
-  }, function(data, response) {
-    if (response.statusCode === 200) {
-      var redir = req.body.redir || '/';
-      var resCookies = cookie.parse(response.headers['set-cookie'].join("; "));
-      _.every(resCookies, function (value, key) {
-        res.cookie(key, value);
-      });
-      redir = _.some(config.noRedirectPaths, function(value) {
-        return redir.endsWith(value);
-      }) ? '/' : redir;
-      res.redirect(redir);
-    } else if (response.statusCode === 404) {
+LoginController.prototype.login = function(path) {
+  this.app.route(path)
+    .get(function(req, res) {
+      if (req.isAuthenticated) {
+        res.redirect('/');
+        return;
+      }
+
       res.render('login/login', {
-        result: 'failure',
-        message: 'common.exception.not.found.jakduk.account'
+        redir: req.headers.referer
       });
-    } else {
-      res.render('login/login', {
-        result: 'failure',
-        message: 'common.exception.io'
+    })
+    .post(function (req, res) {
+      req.api.login({
+        username: req.body.j_username,
+        password: req.body.j_password
+      }, function(data, response) {
+        if (response.statusCode === 200) {
+          SessionUtil.saveSession(res, response);
+          var redir = req.body.redir || '/';
+          redir = _.some(req.noRedirectPaths, function(value) {
+            return redir.endsWith(value);
+          }) ? '/' : redir;
+          res.redirect(redir);
+        } else if (response.statusCode === 404) {
+          res.render('login/login', {
+            result: 'failure',
+            message: 'common.exception.not.found.jakduk.account'
+          });
+        } else {
+          res.render('login/login', {
+            result: 'failure',
+            message: 'common.exception.io'
+          });
+        }
       });
-    }
-  });
-}
-
-function logout(req, res) {
-  rest.logout({
-    headers: {
-      cookie: req.headers.cookie || ''
-    }
-  }, function() {
-    res.clearCookie('JSESSIONID');
-    res.redirect(req.headers.referer);
-  });
-}
-
-function password(req, res) {
-  res.render('login/passwordReset');
-}
-
-function findPassword(req, res) {
-  res.render('login/passwordFind');
-}
-
-function joinGet(req, res) {
-  res.render('login/join');
-}
-
-function joinPost(req, res) {
-
-}
-
-module.exports = {
-  default: {
-    get: loginGet,
-    post: loginPost
-  },
-  logout: logout,
-  join: {
-    get: joinGet,
-    post: joinPost
-  },
-  password: password,
-  findPassword: findPassword
+    });
 };
+
+LoginController.prototype.logout = function(path) {
+  this.app.get(path, function(req, res) {
+    req.api.logout(function() {
+      SessionUtil.clearSession(res);
+      res.redirect(req.headers.referer);
+    });
+  });
+};
+
+LoginController.prototype.password = function(path) {
+  this.app.get(path, function(req, res) {
+    res.render('login/passwordReset');
+  });
+};
+
+LoginController.prototype.findPassword = function(path) {
+  this.app.get(path, function(req, res) {
+    res.render('login/passwordFind');
+  });
+};
+
+LoginController.prototype.join = function(path) {
+  this.app.get(path, function joinGet(req, res) {
+    res.render('login/join');
+  }).post(path, function joinPost(req, res) {
+
+  });
+};
+
+module.exports = LoginController;
