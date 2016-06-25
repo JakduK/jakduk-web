@@ -4,6 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
+    "preinstall": "bower install",
     "start": "node ./bin/www"
   },
   "dependencies": {
