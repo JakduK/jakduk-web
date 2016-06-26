@@ -1,7 +1,7 @@
-var SessionUtil = require('../util/jakduk.session.util');
+var SessionUtil = require('../util/jakduk_session_util');
 var config = require('../config/environment');
 var _ = require('lodash');
-var Api = require('./jakduk.api');
+var Api = require('./jakduk_api');
 
 module.exports = function (app) {
   app.use(function(req, res, next) {
@@ -17,6 +17,8 @@ module.exports = function (app) {
       req.isAuthenticated = !!req.userInfo;
 
       _.merge(res.locals, {
+        layout: 'layout',
+        bodyClass: 'header-fixed',
         apiServerUrl: config.apiServerUrl,
         thumbnailServerUrl: config.thumbnailServerUrl,
         userInfo: req.userInfo,

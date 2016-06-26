@@ -20,6 +20,7 @@ HomeController.prototype.default = function(path) {
         })
       ]).then(function (datas) {
         res.render('home/home', {
+          'head_page': 'head_home',
           timeNow: Date.now(),
           data: {
             posts: datas[0].posts || [],

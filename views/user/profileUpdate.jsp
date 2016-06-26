@@ -177,7 +177,7 @@
 									$scope.usernameStatus = "OK";
 									$scope.usernameAlert = {
 										"classType": "text-success",
-										"msg": '<spring:message code="user.msg.avaliable.data"/>'
+										"msg": '<spring:message code="user.msg.available.data"/>'
 									};
 								}
 

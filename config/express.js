@@ -24,7 +24,7 @@ function setup(app) {
   app.use(cookieParser());
 
   // essential
-  require('../middlewares/essential')(app);
+  require('../middlewares/default_context')(app);
 
   // i18n setup
   require('../middlewares/i18n')(app);

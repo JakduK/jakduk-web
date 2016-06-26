@@ -197,7 +197,7 @@
 
 							if (data == false) {
 								$scope.emailStatus = "OK";
-								$scope.emailAlert = {"classType":"text-success", "msg":'<spring:message code="user.msg.avaliable.data"/>'};
+								$scope.emailAlert = {"classType":"text-success", "msg":'<spring:message code="user.msg.available.data"/>'};
 							}
 
 							$scope.emailConn = "none";
@@ -223,7 +223,7 @@
 
 							if (data == false) {
 								$scope.usernameStatus = "OK";
-								$scope.usernameAlert = {"classType":"text-success", "msg":'<spring:message code="user.msg.avaliable.data"/>'};
+								$scope.usernameAlert = {"classType":"text-success", "msg":'<spring:message code="user.msg.available.data"/>'};
 							}
 
 							$scope.usernameConn = "none";

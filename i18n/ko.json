@@ -278,7 +278,7 @@
 	"user.msg.already.username": "누군가가 이미 사용 중입니다. 다른 별명을 써주세요.",
 	"user.msg.need.validation.username": "별명 검증에 통과하지 못했습니다. 제대로된 별명을 입력해 주세요.",
 	"user.msg.password.mismatch": "똑같은 비밀번호를 입력하세요.",
-	"user.msg.avaliable.data": "사용 할 수 있습니다.",
+	"user.msg.available.data": "사용 할 수 있습니다.",
 	"user.msg.replicated.data": "이미 누군가가 사용 중인 값 입니다. 다른 값을 써주세요.",
 	"user.msg.login.failure": "접속에 실패했습니다. 이메일 주소와 비밀번호를 확인하고 다시 입력하세요.",
 	"user.msg.login.failure.locked": "회원님의 계정은 잠겨있습니다. 관리자에게 e-mail로 문의해 주시기 바랍니다.",

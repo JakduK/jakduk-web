@@ -7,6 +7,7 @@ function setup(app) {
   loginController.join('/join');
   loginController.password('/password');
   loginController.findPassword('/password/find');
+  loginController.resetPassword('/password/reset/:code?');
 }
 
 module.exports = setup;

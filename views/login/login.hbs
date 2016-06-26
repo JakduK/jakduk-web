@@ -1,205 +1,180 @@
-<!DOCTYPE html>
-<!--[if IE 9]><html lang="{{locale}}" class="ie9" ng-app="jakdukApp"><![endif]-->
-<!--[if !IE]> --><html lang="{{locale}}" ng-app="jakdukApp"><!-- <![endif]-->
-	<head>
-		<title>{{TRANSLATION "user.sign.in"}} &middot; {{TRANSLATION "common.jakduk"}}</title>
-    {{> html_header}}
+<div class="wrapper" ng-controller="loginCtrl">
 
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css"/>
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/style.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/headers/header-default.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/footers/footer-v3.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/animate.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/line-icons/line-icons.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/theme-colors/blue.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/pages/page_log_reg_v1.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/ladda-buttons/css/custom-lada-btn.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/line-icons-pro/styles.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/brand-buttons/css/brand-buttons.min.css"/>
-    <link rel="stylesheet" href="/jakduk/css/jakduk.css"/>
-	</head>
+  {{> header_navigation}}
 
-	<body class="header-fixed">
-		<div class="wrapper">
+  <!--=== Breadcrumbs ===-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left">{{TRANSLATION "user.sign.in"}}</h1>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
 
-      {{> navigation_header}}
+  <div class="container content">
+    {{#if (EQ result 'failure')}}
+      <div class="alert alert-danger" role="alert">{{TRANSLATION message}}</div>
+    {{else if (EQ result 'warning')}}
+      <div class="alert alert-warning" role="alert">{{TRANSLATION message}}</div>
+    {{/if}}
 
-			<!--=== Breadcrumbs ===-->
-			<div class="breadcrumbs">
-				<div class="container">
-					<h1 class="pull-left">{{TRANSLATION "user.sign.in"}}</h1>
-				</div><!--/container-->
-			</div><!--/breadcrumbs-->
-			<!--=== End Breadcrumbs ===-->
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+        <div class="reg-page">
+          <form action="/login" name="loginForm" method="POST" ng-submit="onSubmit($event)">
+            <!-- CSRF 방어 비활성화
+            <input type="hidden"
+                 name="${_csrf.parameterName}"
+                 value="${_csrf.token}"/>
+            -->
+            <input type="hidden" name="redir" value="{{redir}}">
 
-			<div class="container content" ng-controller="loginCtrl">
-        {{#if (EQ result 'failure')}}
-          <div class="alert alert-danger" role="alert">{{TRANSLATION message}}</div>
-        {{else if (EQ result 'warning')}}
-          <div class="alert alert-warning" role="alert">{{TRANSLATION message}}</div>
-        {{/if}}
+            <div class="reg-header">
+              <h2>{{TRANSLATION "user.sign.in.header"}}</h2>
+            </div>
 
-				<div class="row">
-					<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-						<div class="reg-page">
-							<form action="/login" name="loginForm" method="POST" ng-submit="onSubmit($event)">
-								<!-- CSRF 방어 비활성화
-								<input type="hidden"
-									   name="${_csrf.parameterName}"
-									   value="${_csrf.token}"/>
-								-->
-                <input type="hidden" name="redir" value="{{redir}}">
+            <div class="form-group">
+              <div class="input-group has-feedback"
+                 ng-class="{'has-success':loginForm.j_username.$valid, 'has-error':loginForm.j_username.$invalid}">
+                <span class="input-group-addon"><i class="fa fa-at fa-fw"></i></span>
+                <input type="email" class="form-control" id="j_username" name="j_username" placeholder="{{TRANSLATION "user.placeholder.email"}}" ng-model="email" ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax" autofocus>
+                <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':loginForm.j_username.$valid, 'glyphicon-remove':loginForm.j_username.$invalid}"></span>
+              </div>
+              <p class="text-danger" ng-model="errorEmail" ng-show="errorEmail" ng-bind="errorEmail"></p>
+            </div>
 
-								<div class="reg-header">
-									<h2>{{TRANSLATION "user.sign.in.header"}}</h2>
-								</div>
+            <div class="form-group">
+              <div class="input-group has-feedback" ng-class="{'has-success':loginForm.j_password.$valid, 'has-error':loginForm.j_password.$invalid}">
+                <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
+                <input type="password" class="form-control" id="j_password" name="j_password" placeholder="{{TRANSLATION "user.placeholder.password"}}" ng-model="password" ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax">
+              <span class="glyphicon form-control-feedback"
+                  ng-class="{'glyphicon-ok':loginForm.j_password.$valid, 'glyphicon-remove':loginForm.j_password.$invalid}"></span>
+              </div>
+              <p class="text-danger" ng-model="errorPassword" ng-show="errorPassword" ng-bind="errorPassword"></p>
+            </div>
 
-								<div class="form-group">
-									<div class="input-group has-feedback"
-										 ng-class="{'has-success':loginForm.j_username.$valid, 'has-error':loginForm.j_username.$invalid}">
-										<span class="input-group-addon"><i class="fa fa-at fa-fw"></i></span>
-										<input type="email" class="form-control" id="j_username" name="j_username" placeholder="{{TRANSLATION "user.placeholder.email"}}" ng-model="email" ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax" autofocus>
-									  <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':loginForm.j_username.$valid, 'glyphicon-remove':loginForm.j_username.$invalid}"></span>
-									</div>
-									<p class="text-danger" ng-model="errorEmail" ng-show="errorEmail" ng-bind="errorEmail"></p>
-								</div>
+            <div class="form-group">
 
-								<div class="form-group">
-									<div class="input-group has-feedback" ng-class="{'has-success':loginForm.j_password.$valid, 'has-error':loginForm.j_password.$invalid}">
-										<span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-										<input type="password" class="form-control" id="j_password" name="j_password" placeholder="{{TRANSLATION "user.placeholder.password"}}" ng-model="password" ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax">
-									<span class="glyphicon form-control-feedback"
-										  ng-class="{'glyphicon-ok':loginForm.j_password.$valid, 'glyphicon-remove':loginForm.j_password.$invalid}"></span>
-									</div>
-									<p class="text-danger" ng-model="errorPassword" ng-show="errorPassword" ng-bind="errorPassword"></p>
-								</div>
+              <div class="checkbox">
+                <label>
+                  <input id="remember_me" name="remember-me" type="checkbox"/>
+                  {{TRANSLATION "user.remember.me"}}
+                </label>
+              </div>
+            </div>
 
-								<div class="form-group">
+            <button type="submit" class="btn btn-u rounded btn-block ladda-button" ladda="btnSubmit" data-style="expand-right">
+              {{TRANSLATION "user.sign.in"}}
+            </button>
 
-									<div class="checkbox">
-										<label>
-											<input id="remember_me" name="remember-me" type="checkbox"/>
-                      {{TRANSLATION "user.remember.me"}}
-										</label>
-									</div>
-								</div>
+            <div class="checkbox">
+              <ul class="list-inline">
+                <li>
+                  <a href="/join">
+                    <span aria-hidden="true" class="icon-user-follow"></span> {{TRANSLATION "user.register"}}
+                  </a>
+                </li>
+                |
+                <li>
+                  <a href="/password/find">
+                    <span aria-hidden="true" class="icon-real-estate-056"></span> {{TRANSLATION "user.sign.forgot.password"}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </form>
 
-								<button type="submit" class="btn btn-u rounded btn-block ladda-button" ladda="btnSubmit" data-style="expand-right">
-                  {{TRANSLATION "user.sign.in"}}
-								</button>
+          <hr class="padding-10"/>
 
-								<div class="checkbox">
-									<ul class="list-inline">
-										<li>
-											<a href="/join">
-												<span aria-hidden="true" class="icon-user-follow"></span> {{TRANSLATION "user.register"}}
-											</a>
-										</li>
-										|
-										<li>
-											<a href="/password/find">
-												<span aria-hidden="true" class="icon-real-estate-056"></span> {{TRANSLATION "user.sign.forgot.password"}}
-											</a>
-										</li>
-									</ul>
-								</div>
-							</form>
+          <button class="btn btn-facebook btn-block" onclick="javascript:document.facebook.submit();">
+            <i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
+          </button>
 
-							<hr class="padding-10"/>
+          <button class="btn btn-dropbox btn-block" onclick="javascript:document.daum.submit();">
+            {{TRANSLATION "common.button.connect.with.daum"}} <i class="fa fa-angle-right"></i>
+          </button>
 
-							<button class="btn btn-facebook btn-block" onclick="javascript:document.facebook.submit();">
-								<i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
-							</button>
+          <form action="auth/facebook" name="facebook">
+            <input type="hidden" name="scope" value="email"/>
+          </form>
 
-							<button class="btn btn-dropbox btn-block" onclick="javascript:document.daum.submit();">
-                {{TRANSLATION "common.button.connect.with.daum"}} <i class="fa fa-angle-right"></i>
-							</button>
+          <form action="auth/daum" name="daum">
+          </form>
+        </div>
+      </div>
+    </div><!--/row-->
+  </div>
 
-							<form action="auth/facebook" name="facebook">
-								<input type="hidden" name="scope" value="email"/>
-							</form>
+  {{> footer}}
 
-							<form action="auth/daum" name="daum">
-							</form>
-						</div>
-					</div>
-				</div><!--/row-->
-			</div>
+</div><!-- /.container -->
 
-      {{> footer}}
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/unify/assets/plugins/back-to-top.js"></script>
+<script src="/unify/assets/plugins/smoothScroll.js"></script>
+<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/unify/assets/js/app.js"></script>
+<script src="/unify/assets/plugins/ladda-buttons/js/spin.js"></script>
+<script src="/unify/assets/plugins/ladda-buttons/js/ladda.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
+<script src="/jakduk/js/jakduk.js"></script>
 
-		</div><!-- /.container -->
+<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
 
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/unify/assets/plugins/back-to-top.js"></script>
-    <script src="/unify/assets/plugins/smoothScroll.js"></script>
-    <script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="/unify/assets/js/app.js"></script>
-    <script src="/unify/assets/plugins/ladda-buttons/js/spin.js"></script>
-    <script src="/unify/assets/plugins/ladda-buttons/js/ladda.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-    <script src="/jakduk/js/jakduk.js"></script>
+<script type="text/javascript">
+  angular.module("jakdukApp", ["ngCookies", "angular-ladda", "jakdukCommon"])
+    .controller("loginCtrl", ['$scope', '$http', '$cookies', function ($scope, $http, $cookies) {
+      $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
+      $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
+      $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
+      $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
 
-    <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+      // angular.ready()함수에서는 안된다. 마우스 클릭하니 그제서야 이메일이 들어간다.
+      // 스프링 시큐리티 remember-me 활성화로 중단한다.
+      /*
+      var email = $cookies.get("email");
+      var remember = $cookies.get("remember");
 
-		<script type="text/javascript">
-			angular.module("jakdukApp", ["ngCookies", "angular-ladda", "jakdukCommon"])
-				.controller("loginCtrl", ['$scope', '$http', '$cookies', function ($scope, $http, $cookies) {
-					$scope.emailLengthMin = Jakduk.FormEmailLengthMin;
-					$scope.emailLengthMax = Jakduk.FormEmailLengthMax;
-					$scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
-					$scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
+      if (!Jakduk.isEmpty(email) && !Jakduk.isEmpty(remember) && remember == "1") {
+        $scope.email = email;
+        $scope.remember = true;
+      }
+      */
 
-					// angular.ready()함수에서는 안된다. 마우스 클릭하니 그제서야 이메일이 들어간다.
-					// 스프링 시큐리티 remember-me 활성화로 중단한다.
-					/*
-					var email = $cookies.get("email");
-					var remember = $cookies.get("remember");
+      $scope.onSubmit = function (event) {
+        if ($scope.loginForm.$valid) {
+          $scope.btnSubmit = true;
+        } else {
+          $scope.onEmail();
 
-					if (!Jakduk.isEmpty(email) && !Jakduk.isEmpty(remember) && remember == "1") {
-						$scope.email = email;
-						$scope.remember = true;
-					}
-					*/
+          if ($scope.loginForm.j_password.$error.required) {
+            $scope.errorPassword = '{{TRANSLATION "common.msg.required"}}';
+          } else if ($scope.loginForm.j_password.$error.minlength || $scope.loginForm.j_password.$error.maxlength) {
+            $scope.errorPassword = '{{TRANSLATION "Size.userWrite.password"}}';
+          }
 
-					$scope.onSubmit = function (event) {
-						if ($scope.loginForm.$valid) {
-							$scope.btnSubmit = true;
-						} else {
-							$scope.onEmail();
+          event.preventDefault();
+        }
+      };
 
-							if ($scope.loginForm.j_password.$error.required) {
-								$scope.errorPassword = '{{TRANSLATION "common.msg.required"}}';
-							} else if ($scope.loginForm.j_password.$error.minlength || $scope.loginForm.j_password.$error.maxlength) {
-								$scope.errorPassword = '{{TRANSLATION "Size.userWrite.password"}}';
-							}
+      $scope.onEmail = function () {
+        if ($scope.loginForm.j_username.$invalid) {
+          if ($scope.loginForm.j_username.$error.required) {
+            $scope.errorEmail = '{{TRANSLATION "common.msg.required"}}';
+          } else if ($scope.loginForm.j_username.$error.minlength || $scope.loginForm.j_username.$error.maxlength) {
+            $scope.errorEmail = '{{TRANSLATION "Size.userWrite.email"}}';
+          } else {
+            $scope.errorEmail = '{{TRANSLATION "user.msg.check.mail.format"}}';
+          }
+        } else {
+          $scope.errorEmail = "";
+        }
+      };
+    }]);
 
-              event.preventDefault();
-						}
-					};
-
-					$scope.onEmail = function () {
-						if ($scope.loginForm.j_username.$invalid) {
-							if ($scope.loginForm.j_username.$error.required) {
-								$scope.errorEmail = '{{TRANSLATION "common.msg.required"}}';
-							} else if ($scope.loginForm.j_username.$error.minlength || $scope.loginForm.j_username.$error.maxlength) {
-								$scope.errorEmail = '{{TRANSLATION "Size.userWrite.email"}}';
-							} else {
-								$scope.errorEmail = '{{TRANSLATION "user.msg.check.mail.format"}}';
-							}
-						} else {
-							$scope.errorEmail = "";
-						}
-					};
-				}]);
-
-			$(document).ready(function () {
-				App.init();
-			});
-		</script>
-	</body>
-</html>
+  $(document).ready(function () {
+    App.init();
+  });
+</script>

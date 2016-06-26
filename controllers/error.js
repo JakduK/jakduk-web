@@ -17,6 +17,7 @@ ErrorController.prototype.all = function(path) {
   this.app.use(path, function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error/error', {
+      head_page: 'head_error',
       message: err.message,
       error: isProd ? '' : err.stack,
       code: err.status || 500,

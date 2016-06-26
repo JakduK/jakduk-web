@@ -19,6 +19,7 @@ module.exports = function(app) {
       userLocale = locale.alias[userLocale.replace('_', '-').split('-')[0] + '-*'] || userLocale.default;
     }
     i18n.setLocale(userLocale);
+    req.locale = userLocale;
     res.locals.locale = userLocale;
     next();
   });

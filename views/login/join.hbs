@@ -1,421 +1,385 @@
-<!DOCTYPE html>
-<!--[if IE 9]> <html lang="{{locale}}" class="ie9" ng-app="jakdukApp"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="{{locale}}" ng-app="jakdukApp"> <!--<![endif]-->
-	<head>
-		<title>{{TRANSLATION "user.register"}} &middot; {{TRANSLATION "common.jakduk"}}</title>
-		{{> html_header}}
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css"/>
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/style.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/headers/header-default.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/footers/footer-v3.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/animate.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/line-icons/line-icons.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/theme-colors/blue.css"/>
-    <link rel="stylesheet" href="/unify/assets/css/pages/page_log_reg_v1.css"/>
-    <link rel="stylesheet" href="/unify/assets/plugins/ladda-buttons/css/custom-lada-btn.css"/>
-    <link rel="stylesheet" href="/jakduk/css/jakduk.css"/>
-	</head>
+<div class="wrapper" ng-controller="writeCtrl">
 
-	<body class="header-fixed">
+  {{> header_navigation}}
 
-		<div class="wrapper">
+  <!--=== Breadcrumbs ===-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left">{{TRANSLATION "user.register"}}</h1>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
 
-      {{> navigation_header}}
+  <div class="container content">
 
-			<!--=== Breadcrumbs ===-->
-			<div class="breadcrumbs">
-				<div class="container">
-					<h1 class="pull-left">{{TRANSLATION "user.register"}}</h1>
-				</div><!--/container-->
-			</div><!--/breadcrumbs-->
-			<!--=== End Breadcrumbs ===-->
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
-			<div class="container content" ng-controller="writeCtrl">
+        <!-- Reg-Form -->
+        <form name="userWrite" action="/join" method="POST" class="reg-page" ng-submit="onSubmit($event)">
+          <input type="hidden" name="redir" value="{{redir}}">
+          <input name="emailStatus" type="hidden" size="0" ng-init="emailStatus='{{userWrite.emailStatus}}'" ng-model="emailStatus"/>
+          <input name="usernameStatus" type="hidden" size="0" ng-init="usernameStatus='{{userWrite.usernameStatus}}'" ng-model="usernameStatus"/>
 
-				<div class="row">
-					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+          <div class="reg-header">
+            <h2>{{TRANSLATION "user.register.header"}}</h2>
+          </div>
 
-						<!-- Reg-Form -->
-						<form name="userWrite" action="/join" method="POST" class="reg-page" ng-submit="onSubmit($event)">
+          <div class="form-group has-feedback"
+             ng-class="{'has-success':userWrite.email.$valid && emailStatus === 'OK', 'has-error':userWrite.email.$invalid || emailStatus !== 'OK'}">
+            <label class="control-label">
+              <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
+                {{TRANSLATION "user.email"}}
+            </label>
+            <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}'
+              ng-init="email='{{userWrite.email}}'" ng-model="email"
+              ng-blur="onEmail()" ng-keyup="validationEmail()"
+              ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax"/>
 
-							<input name="emailStatus" class="hidden" size="0" ng-init="emailStatus='{{userWrite.emailStatus}}'" ng-model="emailStatus"/>
-							<input name="usernameStatus" class="hidden" size="0" ng-init="usernameStatus='{{userWrite.usernameStatus}}'" ng-model="usernameStatus"/>
+            <span class="glyphicon form-control-feedback"
+                ng-class="{'glyphicon-ok':userWrite.email.$valid && emailStatus == 'OK', 'glyphicon-remove':userWrite.email.$invalid || emailStatus != 'OK'}"></span>
 
-							<div class="reg-header">
-								<h2>{{TRANSLATION "user.register.header"}}</h2>
-							</div>
+            <i class="fa fa-spinner fa-spin" ng-show="emailConn == 'connecting'"></i>
+            <span ng-class="emailAlert.classType" ng-show="emailAlert.msg" ng-bind="emailAlert.msg"></span>
+          </div>
 
-							<div class="form-group has-feedback"
-								 ng-class="{'has-success':userWrite.email.$valid && emailStatus === 'OK', 'has-error':userWrite.email.$invalid || emailStatus !== 'OK'}">
-								<label class="control-label">
-									<abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
-                    {{TRANSLATION "user.email"}}
-								</label>
-								<input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}'
-									ng-init="email='{{userWrite.email}}'" ng-model="email"
-									ng-blur="onEmail()" ng-keyup="validationEmail()"
-									ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax"/>
+          <div class="form-group has-feedback"
+             ng-class="{'has-success':userWrite.username.$valid && usernameStatus == 'OK', 'has-error':userWrite.username.$invalid || usernameStatus != 'OK'}">
 
-								<span class="glyphicon form-control-feedback"
-									  ng-class="{'glyphicon-ok':userWrite.email.$valid && emailStatus == 'OK', 'glyphicon-remove':userWrite.email.$invalid || emailStatus != 'OK'}"></span>
+            <label class="control-label">
+              <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
+                {{TRANSLATION "user.nickname"}}
+            </label>
+            <input type="text" name="username" class="form-control" placeholder='{{TRANSLATION "user.placeholder.username"}}'
+              ng-init="username='{{userWrite.username}}'" ng-model="username"
+              ng-blur="onUsername()" ng-keyup="validationUsername()"
+              ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax"/>
 
-								<i class="fa fa-spinner fa-spin" ng-show="emailConn == 'connecting'"></i>
-								<span ng-class="emailAlert.classType" ng-show="emailAlert.msg" ng-bind="emailAlert.msg"></span>
-							</div>
+            <span class="glyphicon form-control-feedback"
+                ng-class="{'glyphicon-ok':userWrite.username.$valid && usernameStatus == 'OK', 'glyphicon-remove':userWrite.username.$invalid || usernameStatus != 'OK'}"></span>
 
-							<div class="form-group has-feedback"
-								 ng-class="{'has-success':userWrite.username.$valid && usernameStatus == 'OK', 'has-error':userWrite.username.$invalid || usernameStatus != 'OK'}">
+            <i class="fa fa-spinner fa-spin" ng-show="usernameConn == 'connecting'"></i>
+            <span ng-class="usernameAlert.classType" ng-show="usernameAlert.msg" ng-bind="usernameAlert.msg"></span>
+          </div>
 
-								<label class="control-label">
-									<abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
-                    {{TRANSLATION "user.nickname"}}
-								</label>
-								<input type="text" name="username" class="form-control" placeholder='{{TRANSLATION "user.placeholder.username"}}'
-									ng-init="username='{{userWrite.username}}'" ng-model="username"
-									ng-blur="onUsername()" ng-keyup="validationUsername()"
-									ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax"/>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group has-feedback" ng-class="{'has-success':userWrite.password.$valid, 'has-error':userWrite.password.$invalid}">
+                <label class="control-label">
+                  <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
+                    {{TRANSLATION "user.password"}}
+                </label>
+                <input type="password" name="password" class="form-control" placeholder='{{TRANSLATION "user.placeholder.password"}}'
+                  ng-model="password" ng-keyup="validationPassword()" ng-blur="equalPasswordConfirm()"
+                  ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax"/>
 
-								<span class="glyphicon form-control-feedback"
-									  ng-class="{'glyphicon-ok':userWrite.username.$valid && usernameStatus == 'OK', 'glyphicon-remove':userWrite.username.$invalid || usernameStatus != 'OK'}"></span>
+                <span class="glyphicon form-control-feedback"
+                  ng-class="{'glyphicon-ok':userWrite.password.$valid, 'glyphicon-remove':userWrite.password.$invalid}"></span>
 
-								<i class="fa fa-spinner fa-spin" ng-show="usernameConn == 'connecting'"></i>
-								<span ng-class="usernameAlert.classType" ng-show="usernameAlert.msg" ng-bind="usernameAlert.msg"></span>
-							</div>
+                <span ng-class="passwordAlert.classType" ng-show="passwordAlert.msg" ng-bind="passwordAlert.msg"></span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group has-feedback" ng-class="{'has-success':userWrite.passwordConfirm.$valid,
+                  'has-error':userWrite.passwordConfirm.$invalid || equalPasswordStatus != 'true'}">
+                <label class="control-label">
+                  <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
+                    {{TRANSLATION "user.password.confirm"}}
+                </label>
+                <input type="password" name="passwordConfirm" class="form-control" placeholder='{{TRANSLATION "user.placeholder.password.confirm"}}'
+                  ng-model="passwordConfirm" ng-keyup="validationPasswordConfirm()" ng-blur="equalPasswordConfirm()"
+                  ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax"/>
 
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="form-group has-feedback" ng-class="{'has-success':userWrite.password.$valid, 'has-error':userWrite.password.$invalid}">
-										<label class="control-label">
-											<abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
-                        {{TRANSLATION "user.password"}}
-										</label>
-										<input type="password" name="password" class="form-control" placeholder='{{TRANSLATION "user.placeholder.password"}}'
-											ng-model="password" ng-keyup="validationPassword()" ng-blur="eaualPasswordConfirm()"
-											ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax"/>
+              <span class="glyphicon form-control-feedback"
+                  ng-class="{'glyphicon-ok':userWrite.passwordConfirm.$valid, 'glyphicon-remove':userWrite.passwordConfirm.$invalid || equalPasswordStatus != 'true'}"></span>
 
-										<span class="glyphicon form-control-feedback"
-										  ng-class="{'glyphicon-ok':userWrite.password.$valid, 'glyphicon-remove':userWrite.password.$invalid}"></span>
+                <span class="passwordConfirmAlert.classType" ng-show="passwordConfirmAlert.msg" ng-bind=passwordConfirmAlert.msg></span>
+              </div>
+            </div>
+          </div>
 
-										<span ng-class="passwordAlert.classType" ng-show="passwordAlert.msg" ng-bind="passwordAlert.msg"></span>
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group has-feedback" ng-class="{'has-success':userWrite.passwordConfirm.$valid,
-											'has-error':userWrite.passwordConfirm.$invalid || equalPasswordStatus != 'true'}">
-										<label class="control-label">
-											<abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
-                        {{TRANSLATION "user.password.confirm"}}
-										</label>
-										<input type="password" name="passwordConfirm" class="form-control" placeholder='{{TRANSLATION "user.placeholder.password.confirm"}}'
-											ng-model="passwordConfirm" ng-keyup="validationPasswordConfirm()" ng-blur="eaualPasswordConfirm()"
-											ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax"/>
+          <div class="form-group">
+            <label for="footballClub" class="control-label">{{TRANSLATION "user.support.football.club"}}</label>
+            <select id="footballClub" name="footballClub" class="form-control">
+              <option value="">{{TRANSLATION "common.none"}}</option>
+              {{#each footballClubs as |club|}}
+                {{#each names}}
+                  <option value="{{club.id}}">{{fullName}}</option>
+                {{/each}}
+              {{/each}}
+            </select>
+          </div>
 
-									<span class="glyphicon form-control-feedback"
-										  ng-class="{'glyphicon-ok':userWrite.passwordConfirm.$valid, 'glyphicon-remove':userWrite.passwordConfirm.$invalid || equalPasswordStatus != 'true'}"></span>
+          <div class="form-group">
+            <label class="control-label"> {{TRANSLATION "user.comment"}}</label>
+            <textarea name="about" class="form-control" cols="40" rows="3" placeholder='{{TRANSLATION "user.placeholder.about"}}'></textarea>
+          </div>
+          <hr>
 
-										<span class="passwordConfirmAlert.classType" ng-show="passwordConfirmAlert.msg" ng-bind=passwordConfirmAlert.msg></span>
-									</div>
-								</div>
-							</div>
+          <div class="text-right">
+            <button type="submit" class="btn-u rounded ladda-button"
+              ladda="btnSubmit" data-style="expand-right">
+              <span class="glyphicon glyphicon-upload"></span> {{TRANSLATION "common.button.write"}}
+            </button>
+            <button type="button" class="btn-u btn-u-default rounded" onclick="location.href='/'">
+              <span class="glyphicon glyphicon-ban-circle"></span> {{TRANSLATION "common.button.cancel"}}
+            </button>
+            <div>
+              <span ng-class="buttonAlert.classType" ng-show="buttonAlert.msg" ng-bind="buttonAlert.msg"></span>
+            </div>
+          </div>
 
-							<div class="form-group">
-								<label for="footballClub" class="control-label">{{TRANSLATION "user.support.football.club"}}</label>
-								<select id="footballClub" name="footballClub" class="form-control">
-									<option value="">{{TRANSLATION "common.none"}}</option>
-                  {{#each footballClubs}}
-                    {{#each names}}
-                      <option value="{{id}}">{{fullName}}</option>
-                    {{/each}}
-                  {{/each}}
-								</select>
-							</div>
+        </form>
 
-							<div class="form-group">
-								<label class="control-label"> {{TRANSLATION "user.comment"}}</label>
-								<textarea name="about" class="form-control" cols="40" rows="3" placeholder='{{TRANSLATION "user.placeholder.about"}}'></textarea>
-							</div>
-							<hr>
+      </div>
+    </div>
 
-							<div class="text-right">
-								<button type="submit" class="btn-u rounded ladda-button"
-									ladda="btnSubmit" data-style="expand-right">
-									<span class="glyphicon glyphicon-upload"></span> {{TRANSLATION "common.button.write"}}
-								</button>
-								<button type="button" class="btn-u btn-u-default rounded" onclick="location.href='/'">
-									<span class="glyphicon glyphicon-ban-circle"></span> {{TRANSLATION "common.button.cancel"}}
-								</button>
-								<div>
-									<span ng-class="buttonAlert.classType" ng-show="buttonAlert.msg" ng-bind="buttonAlert.msg"></span>
-								</div>
-							</div>
+  </div><!-- /.container -->
 
-						</form>
+  {{> footer}}
 
-					</div>
-				</div>
+</div>
 
-			</div><!-- /.container -->
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
+<script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
+<script src="/unify/assets/plugins/back-to-top.js"></script>
+<script src="/unify/assets/plugins/smoothScroll.js"></script>
+<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/unify/assets/js/app.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
+<script src="/jakduk/js/jakduk.js"></script>
 
-			{{> footer}}
+<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
 
-		</div>
+<script type="text/javascript">
 
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
-    <script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
-    <script src="/unify/assets/plugins/back-to-top.js"></script>
-    <script src="/unify/assets/plugins/smoothScroll.js"></script>
-    <script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="/unify/assets/js/app.js"></script>
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-    <script src="/jakduk/js/jakduk.js"></script>
+  window.onbeforeunload = function (e) {
+    if (!submitted) {
+      (e || window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+      return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+    }
+  };
 
-    <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+  var submitted = false;
+  var jakdukApp = angular.module("jakdukApp", ["angular-ladda", 'jakdukCommon']);
 
-		<script type="text/javascript">
+  jakdukApp.controller("writeCtrl", function ($scope, $http) {
+    $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
+    $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
+    $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
+    $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
+    $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
+    $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
 
-			window.onbeforeunload = function (e) {
-				if (!submitted) {
-					(e || window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-					return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-				}
-			};
+    $scope.emailConn = "none";
+    $scope.usernameConn = "none";
+    $scope.emailAlert = {};
+    $scope.usernameAlert = {};
+    $scope.passwordAlert = {};
+    $scope.passwordConfirmAlert = {};
+    $scope.buttonAlert = {};
+    $scope.equalPasswordStatus = "false";
 
-			var submitted = false;
-			var jakdukApp = angular.module("jakdukApp", ["angular-ladda", 'jakdukCommon']);
+    $scope.onSubmit = function (event) {
+      if ($scope.userWrite.$valid && $scope.emailStatus == 'OK' && $scope.usernameStatus == 'OK'
+        && $scope.equalPasswordStatus == "true") {
+        submitted = true;
+        $scope.btnSubmit = true;
+      } else {
+        if ($scope.userWrite.email.$invalid) {
+          $scope.validationEmail();
+        }
 
-			jakdukApp.controller("writeCtrl", function ($scope, $http) {
-				$scope.emailLengthMin = Jakduk.FormEmailLengthMin;
-				$scope.emailLengthMax = Jakduk.FormEmailLengthMax;
-				$scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
-				$scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
-				$scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
-				$scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
+        if ($scope.userWrite.username.$invalid) {
+          $scope.validationUsername();
+        }
 
-				$scope.emailConn = "none";
-				$scope.usernameConn = "none";
-				$scope.emailAlert = {};
-				$scope.usernameAlert = {};
-				$scope.passwordAlert = {};
-				$scope.passwordConfirmAlert = {};
-				$scope.buttonAlert = {};
-				$scope.equalPasswordStatus = "false";
+        $scope.equalPasswordConfirm();
+        $scope.buttonAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
+        };
+        event.preventDefault();
+      }
+    };
 
-				angular.element(document).ready(function () {
-					// 서버의 form validation에서 검증 실패 될 경우, 처음에 메시지를 출력한다.
-					var emailErrors = document.getElementById("email.errors");
-					var usernameErrors = document.getElementById("username.errors");
+    $scope.onEmail = function () {
+      if ($scope.userWrite.email.$valid) {
+        if ($scope.emailConn == "none") {
+          $scope.emailConn = "connecting";
+          $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email))
+            .then(function (response) {
+              var data = response.data;
+              if (!data) {
+                $scope.emailStatus = "OK";
+              }
+              $scope.emailAlert = {
+                "classType": data ? "text-danger" : "text-success",
+                "msg": data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+              };
+              $scope.emailConn = "none";
+            }, function (response) {
+              var data = response.data;
+              $scope.emailStatus = "INVALID";
+              $scope.emailConn = "none";
+              $scope.emailAlert = {"classType": "text-danger", "msg": data.message};
+            });
+        }
+      } else {
+        $scope.emailStatus = "INVALID";
+        $scope.validationEmail();
+      }
+    };
 
-					if (Jakduk.isEmpty(emailErrors))
-						$scope.onEmail();
+    $scope.onUsername = function () {
+      if ($scope.userWrite.username.$valid) {
+        if ($scope.usernameConn == "none") {
+          $scope.usernameConn = "connecting";
+          $http.get('{{apiServerUrl}}/user/exist/username?username=' + $scope.username)
+            .then(function (response) {
+              var data = response.data;
+              if (!data) {
+                $scope.usernameStatus = "OK";
+              }
 
-					if (Jakduk.isEmpty(usernameErrors))
-						$scope.onUsername();
-				});
+              $scope.usernameAlert = {
+                "classType": data ? "text-danger" : "text-success",
+                "msg": data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+              };
 
-				$scope.onSubmit = function (event) {
-					if ($scope.userWrite.$valid && $scope.emailStatus == 'OK' && $scope.usernameStatus == 'OK'
-						&& $scope.equalPasswordStatus == "true") {
-						submitted = true;
-						$scope.btnSubmit = true;
-					} else {
-						if ($scope.userWrite.email.$invalid) {
-							$scope.validationEmail();
-						}
+              $scope.usernameConn = "none";
+            }, function (response) {
+              var data = response.data;
+              $scope.usernameStatus = 'INVALID';
+              $scope.usernameConn = "none";
+              $scope.usernameAlert = {"classType": "text-danger", "msg": data.message};
+            });
+        }
+      } else {
+        $scope.usernameStatus = 'INVALID';
+        $scope.validationUsername();
+      }
+    };
 
-						if ($scope.userWrite.username.$invalid) {
-							$scope.validationUsername();
-						}
+    $scope.validationEmail = function () {
+      if ($scope.userWrite.email.$invalid) {
+        if ($scope.userWrite.email.$error.required) {
+          $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "common.msg.required"}}'};
+        } else if ($scope.userWrite.email.$error.minlength || $scope.userWrite.email.$error.maxlength) {
+          $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "Size.userWrite.email"}}'};
+        } else {
+          $scope.emailAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "user.msg.check.mail.format"}}'
+          };
+        }
+      } else {
+        $scope.emailAlert = {
+          "classType": "text-info",
+          "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+        };
+      }
+    };
 
-						$scope.eaualPasswordConfirm();
-						$scope.buttonAlert = {
-							"classType": "text-danger",
-							"msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
-						};
-						event.preventDefault();
-					}
-				};
+    $scope.validationUsername = function () {
+      if ($scope.userWrite.username.$invalid) {
+        if ($scope.userWrite.username.$error.required) {
+          $scope.usernameAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "common.msg.required"}}'
+          };
+        } else if ($scope.userWrite.username.$error.minlength || $scope.userWrite.username.$error.maxlength) {
+          $scope.usernameAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "Size.userWrite.username"}}'
+          };
+        }
+      } else {
+        $scope.usernameAlert = {
+          "classType": "text-info",
+          "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+        };
+      }
+    };
 
-				$scope.onEmail = function () {
-					if ($scope.userWrite.email.$valid) {
-						if ($scope.emailConn == "none") {
-							$scope.emailConn = "connecting";
-              $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email))
-                .then(function (response) {
-                  var data = response.data;
-                  if (!data) {
-                    $scope.emailStatus = "OK";
-                    $scope.emailAlert = {
-                      "classType": "text-success",
-                      "msg": '{{TRANSLATION "user.msg.avaliable.data"}}'
-                    };
-                  }
-                  $scope.emailConn = "none";
-                }, function (response) {
-                  var data = response.data;
-                  $scope.emailStatus = "INVALID";
-                  $scope.emailConn = "none";
-                  $scope.emailAlert = {"classType": "text-danger", "msg": data.message};
-                });
-						}
-					} else {
-						$scope.emailStatus = "INVALID";
-						$scope.validationEmail();
-					}
-				};
+    $scope.validationPassword = function () {
+      $scope.equalPasswordStatus = "false";
+      $scope.passwordConfirmAlert = {};
 
-				$scope.onUsername = function () {
-					if ($scope.userWrite.username.$valid) {
-						if ($scope.usernameConn == "none") {
-							$scope.usernameConn = "connecting";
-              $http.get('{{apiServerUrl}}/user/exist/username?username=' + $scope.username)
-                .then(function (response) {
-                  var data = response.data;
-                  if (!data) {
-                    $scope.usernameStatus = "OK";
-                    $scope.usernameAlert = {
-                      "classType": "text-success",
-                      "msg": '{{TRANSLATION "user.msg.avaliable.data"}}'
-                    };
-                  }
+      if ($scope.userWrite.password.$invalid) {
+        if ($scope.userWrite.password.$error.required) {
+          $scope.passwordAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "common.msg.required"}}'
+          };
+        } else if ($scope.userWrite.password.$error.minlength || $scope.userWrite.password.$error.maxlength) {
+          $scope.passwordAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "Size.userWrite.password"}}'
+          };
+        }
+      } else {
+        $scope.passwordAlert = {
+          "classType": "text-success",
+          "msg": '{{TRANSLATION "user.msg.available.data"}}'
+        };
+      }
+    };
 
-                  $scope.usernameConn = "none";
-                }, function (response) {
-                  var data = response.data;
-                  $scope.usernameStatus = 'INVALID';
-                  $scope.usernameConn = "none";
-                  $scope.usernameAlert = {"classType": "text-danger", "msg": data.message};
-                });
-						}
-					} else {
-						$scope.usernameStatus = 'INVALID';
-						$scope.validationUsername();
-					}
-				};
+    $scope.equalPasswordConfirm = function () {
 
-				$scope.validationEmail = function () {
-					if ($scope.userWrite.email.$invalid) {
-						if ($scope.userWrite.email.$error.required) {
-							$scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "common.msg.required"}}'};
-						} else if ($scope.userWrite.email.$error.minlength || $scope.userWrite.email.$error.maxlength) {
-							$scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "Size.userWrite.email"}}'};
-						} else {
-							$scope.emailAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "user.msg.check.mail.format"}}'
-							};
-						}
-					} else {
-						$scope.emailAlert = {
-							"classType": "text-info",
-							"msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
-						};
-					}
-				};
+      if ($scope.userWrite.password.$invalid) {
+        $scope.passwordConfirmAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "user.msg.password.mismatch"}}'
+        };
+      }
 
-				$scope.validationUsername = function () {
-					if ($scope.userWrite.username.$invalid) {
-						if ($scope.userWrite.username.$error.required) {
-							$scope.usernameAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "common.msg.required"}}'
-							};
-						} else if ($scope.userWrite.username.$error.minlength || $scope.userWrite.username.$error.maxlength) {
-							$scope.usernameAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "Size.userWrite.username"}}'
-							};
-						}
-					} else {
-						$scope.usernameAlert = {
-							"classType": "text-info",
-							"msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
-						};
-					}
-				};
+      if ($scope.userWrite.passwordConfirm.$invalid) return;
 
-				$scope.validationPassword = function () {
-					$scope.equalPasswordStatus = "false";
-					$scope.passwordConfirmAlert = {};
+      if ($scope.password == $scope.passwordConfirm) {
+        $scope.equalPasswordStatus = "true";
+        $scope.passwordConfirmAlert = {
+          "classType": "text-success",
+          "msg": '{{TRANSLATION "user.msg.available.data"}}'
+        };
+      } else {
+        //$scope.equalPasswordStatus = "false";
+        $scope.passwordConfirmAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "user.msg.password.mismatch"}}'
+        };
+      }
+    };
 
-					if ($scope.userWrite.password.$invalid) {
-						if ($scope.userWrite.password.$error.required) {
-							$scope.passwordAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "common.msg.required"}}'
-							};
-						} else if ($scope.userWrite.password.$error.minlength || $scope.userWrite.password.$error.maxlength) {
-							$scope.passwordAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "Size.userWrite.password"}}'
-							};
-						}
-					} else {
-						$scope.passwordAlert = {
-							"classType": "text-success",
-							"msg": '{{TRANSLATION "user.msg.avaliable.data"}}'
-						};
-					}
-				};
+    $scope.validationPasswordConfirm = function () {
+      $scope.equalPasswordStatus = "false";
 
-				$scope.eaualPasswordConfirm = function () {
+      if ($scope.userWrite.passwordConfirm.$invalid) {
+        if ($scope.userWrite.passwordConfirm.$error.required) {
+          $scope.passwordConfirmAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "common.msg.required"}}'
+          };
+        } else if ($scope.userWrite.passwordConfirm.$error.minlength || $scope.userWrite.passwordConfirm.$error.maxlength) {
+          $scope.passwordConfirmAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "Size.userWrite.password"}}'
+          };
+        }
+      } else {
+        $scope.passwordConfirmAlert = {
+          "classType": "text-info",
+          "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+        };
+      }
+    };
+  });
 
-					if ($scope.userWrite.password.$invalid) {
-						$scope.passwordConfirmAlert = {
-							"classType": "text-danger",
-							"msg": '{{TRANSLATION "user.msg.password.mismatch"}}'
-						};
-					}
-
-					if ($scope.userWrite.passwordConfirm.$invalid) return;
-
-					if ($scope.password == $scope.passwordConfirm) {
-						$scope.equalPasswordStatus = "true";
-						$scope.passwordConfirmAlert = {
-							"classType": "text-success",
-							"msg": '{{TRANSLATION "user.msg.avaliable.data"}}'
-						};
-					} else {
-						//$scope.equalPasswordStatus = "false";
-						$scope.passwordConfirmAlert = {
-							"classType": "text-danger",
-							"msg": '{{TRANSLATION "user.msg.password.mismatch"}}'
-						};
-					}
-				};
-
-				$scope.validationPasswordConfirm = function () {
-					$scope.equalPasswordStatus = "false";
-
-					if ($scope.userWrite.passwordConfirm.$invalid) {
-						if ($scope.userWrite.passwordConfirm.$error.required) {
-							$scope.passwordConfirmAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "common.msg.required"}}'
-							};
-						} else if ($scope.userWrite.passwordConfirm.$error.minlength || $scope.userWrite.passwordConfirm.$error.maxlength) {
-							$scope.passwordConfirmAlert = {
-								"classType": "text-danger",
-								"msg": '{{TRANSLATION "Size.userWrite.password"}}'
-							};
-						}
-					} else {
-						$scope.passwordConfirmAlert = {
-							"classType": "text-info",
-							"msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
-						};
-					}
-				};
-			});
-
-			$(document).ready(function () {
-				App.init();
-			});
-		</script>
-
-	</body>
-</html>
+  $(document).ready(function () {
+    App.init();
+  });
+</script>

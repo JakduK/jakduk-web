@@ -6,6 +6,8 @@ var env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 var all = {
   env: env,
 
+  origin: process.env.ORIGIN || 'https://jakduk.com',
+
   port: process.env.PORT || 9000,
 
   locale: {

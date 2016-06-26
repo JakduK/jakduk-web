@@ -392,7 +392,7 @@
 						} else {
 							$scope.categoryAlert = {
 								"classType": "text-success",
-								"msg": '<spring:message code="user.msg.avaliable.data"/>'
+								"msg": '<spring:message code="user.msg.available.data"/>'
 							};
 						}
 					};
@@ -413,7 +413,7 @@
 						} else {
 							$scope.subjectAlert = {
 								"classType": "text-success",
-								"msg": '<spring:message code="user.msg.avaliable.data"/>'
+								"msg": '<spring:message code="user.msg.available.data"/>'
 							};
 						}
 					};
@@ -427,7 +427,7 @@
 						} else {
 							$scope.contentAlert = {
 								"classType": "text-success",
-								"msg": '<spring:message code="user.msg.avaliable.data"/>'
+								"msg": '<spring:message code="user.msg.available.data"/>'
 							};
 						}
 					};

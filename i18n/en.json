@@ -278,7 +278,7 @@
 	"user.msg.already.username": "This Nickname used already.",
 	"user.msg.need.validation.username": "You need username validation. Check username format.",
 	"user.msg.password.mismatch": "Password mismatched.",
-	"user.msg.avaliable.data": "Available data.",
+	"user.msg.available.data": "Available data.",
 	"user.msg.replicated.data": "Replicated data.",
 	"user.msg.login.failure": "Login failure. check your email address and password.",
 	"user.msg.login.failure.locked": "Your account is locked. Please contact administrator by e-mail.",

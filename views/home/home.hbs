@@ -1,116 +1,91 @@
-<!DOCTYPE html>
-<!--[if IE 9]><html lang="{{locale}}" class="ie9" ng-app="jakdukApp"><![endif]-->
-<!--[if !IE]><!--><html lang="{{locale}}" ng-app="jakdukApp"><!--<![endif]-->
-	<head>
-		<title>{{TRANSLATION "common.home"}} &middot; {{TRANSLATION "common.jakduk"}}</title>
-    {{> html_header}}
-    <!-- inject:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
-    <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick.css">
-    <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick-theme.css">
-    <link rel="stylesheet" href="unify/assets/css/style.css">
-    <link rel="stylesheet" href="unify/assets/css/headers/header-default.css">
-    <link rel="stylesheet" href="unify/assets/css/footers/footer-v3.css">
-    <link rel="stylesheet" href="unify/assets/plugins/animate.css">
-    <link rel="stylesheet" href="unify/assets/plugins/line-icons/line-icons.css">
-    <link rel="stylesheet" href="unify/assets/css/theme-colors/blue.css">
-    <link rel="stylesheet" href="unify/assets/css/pages/page_job_inner.css">
-    <link rel="stylesheet" href="unify/assets/css/pages/profile.css">
-    <link rel="stylesheet" href="unify/assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
-    <link rel="stylesheet" href="jakduk/css/jakduk.css">
-    <!-- endinject -->
-  </head>
+<div class="wrapper" ng-controller="homeCtrl">
 
-	<body class="header-fixed">
-		<div class="wrapper" ng-controller="homeCtrl">
+  {{> header_navigation}}
 
-      {{> navigation_header}}
+  <div class="image-block">
+    <div class="container mCustomScrollbar" data-mcs-theme="minimal-dark">
+      <div class="company-description" ng-bind-html="homeDescription"></div>
+    </div>
+  </div>
 
-			<div class="image-block">
-				<div class="container mCustomScrollbar" data-mcs-theme="minimal-dark">
-					<div class="company-description" ng-bind-html="homeDescription"></div>
-				</div>
-			</div>
+  <!--=== Content Part ===-->
+  <div class="container content">
 
-			<!--=== Content Part ===-->
-			<div class="container content">
+    <div class="row">
 
-				<div class="row">
+      <div class="col-md-9">
+        <div class="row ">
 
-					<div class="col-md-9">
-						<div class="row ">
+          <!--  최근 글 -->
+          <div class="col-sm-6 sm-margin-bottom-30">
+            <div class="headline">
+              <h2>{{TRANSLATION "home.posts.latest"}}</h2>
+              <a class="btn-u btn-u-xs btn-u-default rounded" href="/board/free/posts">
+                {{TRANSLATION "common.button.more"}}
+              </a>
+            </div>
 
-							<!--  최근 글 -->
-							<div class="col-sm-6 sm-margin-bottom-30">
-								<div class="headline">
-									<h2>{{TRANSLATION "home.posts.latest"}}</h2>
-									<a class="btn-u btn-u-xs btn-u-default rounded" href="/board/free/posts">
-                    {{TRANSLATION "common.button.more"}}
-									</a>
-								</div>
+            <!-- Trending -->
+            <ul class="ng-cloak list-unstyled blog-trending">
+              <li ng-repeat="post in postsLatest">
+                <h3>
+                  <a ng-href="/board/free/{{post.seq}}" ng-bind="post.status.delete === 'delete' ? '{{TRANSLATION "board.msg.deleted"}}' : post.subject"></a>
+                </h3>
+                <small>
+                  <span aria-hidden="true" class="icon-user"></span>
+                  <span ng-bind="post.writer.username"></span>
+                  &nbsp;
+                  <span ng-if="{{timeNow}} > (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'longDate'"></span>
+                  <span ng-if="{{timeNow}} <= (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'shortTime'"></span>
+                  &nbsp;
+                  <span aria-hidden="true" class="icon-eye"></span> <span ng-bind="post.views"></span>
+                </small>
+              </li>
+            </ul>
+            <!-- End Trending -->
+          </div>
 
-								<!-- Trending -->
-								<ul class="ng-cloak list-unstyled blog-trending">
-									<li ng-repeat="post in postsLatest">
-										<h3>
-											<a ng-href="/board/free/{{post.seq}}" ng-bind="post.status.delete === 'delete' ? '{{TRANSLATION "board.msg.deleted"}}' : post.subject"></a>
-										</h3>
-										<small>
-											<span aria-hidden="true" class="icon-user"></span>
-											<span ng-bind="post.writer.username"></span>
-											&nbsp;
-											<span ng-if="{{timeNow}} > (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'longDate'"></span>
-											<span ng-if="{{timeNow}} <= (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'shortTime'"></span>
-											&nbsp;
-											<span aria-hidden="true" class="icon-eye"></span> <span ng-bind="post.views"></span>
-										</small>
-									</li>
-								</ul>
-								<!-- End Trending -->
-							</div>
+          <!-- 최근 댓글  -->
+          <div class="col-sm-6 sm-margin-bottom-30">
+            <div class="headline">
+              <h2>{{TRANSLATION "home.comments.latest"}}</h2>
+              <a class="btn-u btn-u-xs btn-u-default rounded" href="/board/free/comments">
+                {{TRANSLATION "common.button.more"}}
+              </a>
+            </div>
 
-							<!-- 최근 댓글  -->
-							<div class="col-sm-6 sm-margin-bottom-30">
-								<div class="headline">
-									<h2>{{TRANSLATION "home.comments.latest"}}</h2>
-									<a class="btn-u btn-u-xs btn-u-default rounded" href="/board/free/comments">
-                    {{TRANSLATION "common.button.more"}}
-									</a>
-								</div>
+            <div class="blog-twitter ng-cloak">
+              <div class="blog-twitter-inner" ng-repeat="comment in commentsLatest">
+                <strong>
+                  <span aria-hidden="true" class="icon-user"></span>
+                  <span ng-bind="comment.writer.username"></span>
+                </strong>
+                <a href="/board/free/{{comment.boardItem.seq}}" ng-bind="comment.content"></a>
+                <span class="twitter-time" ng-bind="comment.id | dateFromObjectId | date:'medium'"></span>
+              </div>
+            </div>
+          </div>
 
-								<div class="blog-twitter ng-cloak">
-									<div class="blog-twitter-inner" ng-repeat="comment in commentsLatest">
-										<strong>
-											<span aria-hidden="true" class="icon-user"></span>
-											<span ng-bind="comment.writer.username"></span>
-										</strong>
-										<a href="/board/free/{{comment.boardItem.seq}}" ng-bind="comment.content"></a>
-										<span class="twitter-time" ng-bind="comment.id | dateFromObjectId | date:'medium'"></span>
-									</div>
-								</div>
-							</div>
+        </div>
+        <!--End Blog Post-->
 
-						</div>
-						<!--End Blog Post-->
+      </div>
+      <!-- End Left Sidebar -->
 
-					</div>
-					<!-- End Left Sidebar -->
+      <!-- Right Sidebar -->
+      <div class="col-md-3">
 
-					<!-- Right Sidebar -->
-					<div class="col-md-3">
+        <div class="row">
 
-						<div class="row">
+          <!-- 최근 가입 회원 -->
+          <div class="margin-bottom-30 col-md-12 col-sm-6">
+            <div class="headline"><h2>{{TRANSLATION "home.members.registered.latest"}}</h2></div>
 
-							<!-- 최근 가입 회원 -->
-							<div class="margin-bottom-30 col-md-12 col-sm-6">
-								<div class="headline"><h2>{{TRANSLATION "home.members.registered.latest"}}</h2></div>
-
-								<div class="carousel slide testimonials testimonials-v2" id="testimonials-1">
-									<div class="carousel-inner">
-										<div class="item" ng-repeat="user in usersLatest" ng-class="{'active':$index == 0}">
-											<p ng-bind="user.about"></p>
-											<div class="testimonial-info">
+            <div class="carousel slide testimonials testimonials-v2" id="testimonials-1">
+              <div class="carousel-inner">
+                <div class="item" ng-repeat="user in usersLatest" ng-class="{'active':$index == 0}">
+                  <p ng-bind="user.about"></p>
+                  <div class="testimonial-info">
 												<span class="testimonial-author">
 													<i aria-hidden="true" class="icon-user-follow"></i>
 													<span class="latest-user-name" ng-bind="user.username"></span>
@@ -119,169 +94,167 @@
 														<span ng-bind="user.supportFC.names[0].fullName"></span>
 													</em>
 												</span>
-											</div>
-										</div>
-									</div>
+                  </div>
+                </div>
+              </div>
 
-									<div class="carousel-arrow">
-										<a data-slide="prev" href="#testimonials-1" class="left carousel-control">
-											<i class="fa fa-angle-left"></i>
-										</a>
-										<a data-slide="next" href="#testimonials-1" class="right carousel-control">
-											<i class="fa fa-angle-right"></i>
-										</a>
-									</div>
-								</div>
+              <div class="carousel-arrow">
+                <a data-slide="prev" href="#testimonials-1" class="left carousel-control">
+                  <i class="fa fa-angle-left"></i>
+                </a>
+                <a data-slide="next" href="#testimonials-1" class="right carousel-control">
+                  <i class="fa fa-angle-right"></i>
+                </a>
+              </div>
+            </div>
 
-							</div>
+          </div>
 
 
-							<!--  백과사전  -->
-							<div class="shadow-wrapper col-md-12 col-sm-6">
-								<div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-									<h2>
-										<span ng-bind="encyclopedia.subject"></span>
-										<span class="label rounded label-orange" ng-bind="encyclopedia.kind"></span>
-									</h2>
-									<p ng-bind="encyclopedia.content"></p>
-									<!--
-									<button class="btn-u btn-brd btn-brd-hover rounded btn-u-sea" type="button" ng-click="refreshEncyclopedia()">
-										<i class="fa fa-refresh"></i>
-									</button>
-									-->
-								</div>
-							</div>
+          <!--  백과사전  -->
+          <div class="shadow-wrapper col-md-12 col-sm-6">
+            <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+              <h2>
+                <span ng-bind="encyclopedia.subject"></span>
+                <span class="label rounded label-orange" ng-bind="encyclopedia.kind"></span>
+              </h2>
+              <p ng-bind="encyclopedia.content"></p>
+              <!--
+              <button class="btn-u btn-brd btn-brd-hover rounded btn-u-sea" type="button" ng-click="refreshEncyclopedia()">
+                <i class="fa fa-refresh"></i>
+              </button>
+              -->
+            </div>
+          </div>
 
-							<!-- 명언 -->
-							<div class="col-sm-12">
-								<blockquote class="hero">
-									<p><em>"인간의 도덕과 의무에 대해 내가 알고 있는 것은 모두 축구에서 배웠다."</em></p>
-									<small><em>알베르 카뮈 , 노벨문학상 수상자</em></small>
-								</blockquote>
-							</div>
-						</div>
+          <!-- 명언 -->
+          <div class="col-sm-12">
+            <blockquote class="hero">
+              <p><em>"인간의 도덕과 의무에 대해 내가 알고 있는 것은 모두 축구에서 배웠다."</em></p>
+              <small><em>알베르 카뮈 , 노벨문학상 수상자</em></small>
+            </blockquote>
+          </div>
+        </div>
 
-					</div>
-					<!-- End Right Sidebar -->
+      </div>
+      <!-- End Right Sidebar -->
 
-					<!-- 최근 사진 -->
-					<div class="owl-carousel-v1 owl-work-v1 col-sm-12">
-						<div class="headline">
-							<h2 class="pull-left">{{TRANSLATION "home.pictures.latest"}}</h2>
-							<div class="owl-navigation">
-								<a style="margin:6px 0px 0px 6px;" class="btn-u btn-u-xs btn-u-default rounded pull-left" href="/gallery/list">{{TRANSLATION "common.button.more"}}</a>
+      <!-- 최근 사진 -->
+      <div class="owl-carousel-v1 owl-work-v1 col-sm-12">
+        <div class="headline">
+          <h2 class="pull-left">{{TRANSLATION "home.pictures.latest"}}</h2>
+          <div class="owl-navigation">
+            <a style="margin:6px 0px 0px 6px;" class="btn-u btn-u-xs btn-u-default rounded pull-left" href="/gallery/list">{{TRANSLATION "common.button.more"}}</a>
 
-								<div class="customNavigation">
-									<a class="owl-btn prev-v2" id="slickPrev"><i class="fa fa-angle-left"></i></a>
-									<a class="owl-btn next-v2" id="slickNext"><i class="fa fa-angle-right"></i></a>
-								</div>
-							</div><!--/navigation-->
-						</div>
+            <div class="customNavigation">
+              <a class="owl-btn prev-v2" id="slickPrev"><i class="fa fa-angle-left"></i></a>
+              <a class="owl-btn next-v2" id="slickNext"><i class="fa fa-angle-right"></i></a>
+            </div>
+          </div><!--/navigation-->
+        </div>
 
-						<slick settings="slickConfig" ng-if="dataLoaded">
-							<div ng-repeat="image in galleriesLatest">
-								<div class="simple-block">
-									<a ng-href="/gallery/view/{%image.id%}">
-										<img style="width:225px; margin:5px;" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
-									</a>
-									<p class="img-responsive" ng-bind="image.name"></p>
-								</div>
+        <slick settings="slickConfig" ng-if="dataLoaded">
+          <div ng-repeat="image in galleriesLatest">
+            <div class="simple-block">
+              <a ng-href="/gallery/view/{%image.id%}">
+                <img style="width:225px; margin:5px;" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
+              </a>
+              <p class="img-responsive" ng-bind="image.name"></p>
+            </div>
 
-							</div>
-						</slick>
-					</div>
+          </div>
+        </slick>
+      </div>
 
-				</div>
+    </div>
 
-			</div><!--/container-->
-			<!--=== End Content Part ===-->
+  </div><!--/container-->
+  <!--=== End Content Part ===-->
 
-      {{> footer}}
-		</div><!-- /.container -->
+  {{> footer}}
+</div><!-- /.container -->
 
-    <!-- script:css -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="unify/assets/plugins/back-to-top.js"></script>
-    <script src="unify/assets/plugins/smoothScroll.js"></script>
-    <script src="unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="unify/assets/js/app.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/slick-carousel/slick/slick.js"></script>
-    <script src="bower_components/angular-slick-carousel/dist/angular-slick.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="jakduk/js/jakduk.js"></script>
-    <!-- endinject -->
-    <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+<!-- script:css -->
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/unify/assets/plugins/back-to-top.js"></script>
+<script src="/unify/assets/plugins/smoothScroll.js"></script>
+<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/unify/assets/js/app.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/slick-carousel/slick/slick.js"></script>
+<script src="/bower_components/angular-slick-carousel/dist/angular-slick.js"></script>
+<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="/jakduk/js/jakduk.js"></script>
+<!-- endinject -->
+<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
 
-		<script type="text/javascript">
-			angular.module('jakdukApp', ['ngSanitize', 'slickCarousel', 'jakdukCommon'])
-				.controller("homeCtrl", function ($scope, $http) {
-					$scope.refreshEncyclopedia = refreshEncyclopedia;
+<script type="text/javascript">
+  angular.module('jakdukApp', ['ngSanitize', 'slickCarousel', 'jakdukCommon'])
+    .controller("homeCtrl", function ($scope, $http) {
+      $scope.refreshEncyclopedia = refreshEncyclopedia;
 
-          $scope.dataLoaded = true;
-          $scope.dataLatestConn = 'none';
-          $scope.encyclopediaConn = 'none';
+      $scope.dataLoaded = true;
+      $scope.dataLatestConn = 'none';
+      $scope.encyclopediaConn = 'none';
 
-          $scope.postsLatest = angular.fromJson('{{{FROM_JSON data.posts}}}');
-          $scope.usersLatest = angular.fromJson('{{{FROM_JSON data.users}}}');
-          $scope.commentsLatest = angular.fromJson('{{{FROM_JSON data.comments}}}');
-          $scope.galleriesLatest = angular.fromJson('{{{FROM_JSON data.galleries}}}');
-          $scope.homeDescription = angular.fromJson('{{{FROM_JSON data.homeDescription}}}').desc;
+      $scope.postsLatest = angular.fromJson('{{{FROM_JSON data.posts}}}');
+      $scope.usersLatest = angular.fromJson('{{{FROM_JSON data.users}}}');
+      $scope.commentsLatest = angular.fromJson('{{{FROM_JSON data.comments}}}');
+      $scope.galleriesLatest = angular.fromJson('{{{FROM_JSON data.galleries}}}');
+      $scope.homeDescription = angular.fromJson('{{{FROM_JSON data.homeDescription}}}').desc;
 
-          $scope.encyclopedia = angular.fromJson('{{{FROM_JSON data.encyclopedia}}}');
+      $scope.encyclopedia = angular.fromJson('{{{FROM_JSON data.encyclopedia}}}');
 
-					$scope.slickConfig = {
-						infinite: false,
-						autoplay: true,
-						draggable: true,
-						autoplaySpeed: 3000,
-						//slidesToScroll : 2,
-						//arrows: false,
-						prevArrow: '#slickPrev',
-						nextArrow: '#slickNext',
-						variableWidth: true,
-						lazyLoad: 'ondemand',
-						//centerPadding: '60px',
-						method: {},
-						event: {
-							beforeChange: function (event, slick, currentSlide, nextSlide) {
-							},
-							afterChange: function (event, slick, currentSlide, nextSlide) {
-							}
-						}
-					};
+      $scope.slickConfig = {
+        infinite: false,
+        autoplay: true,
+        draggable: true,
+        autoplaySpeed: 3000,
+        //slidesToScroll : 2,
+        //arrows: false,
+        prevArrow: '#slickPrev',
+        nextArrow: '#slickNext',
+        variableWidth: true,
+        lazyLoad: 'ondemand',
+        //centerPadding: '60px',
+        method: {},
+        event: {
+          beforeChange: function (event, slick, currentSlide, nextSlide) {
+          },
+          afterChange: function (event, slick, currentSlide, nextSlide) {
+          }
+        }
+      };
 
-					function refreshEncyclopedia() {
-						if ($scope.encyclopediaConn === "none") {
-							$scope.encyclopediaConn = "loading";
+      function refreshEncyclopedia() {
+        if ($scope.encyclopediaConn === "none") {
+          $scope.encyclopediaConn = "loading";
 
-              $http.get('{{apiServerUrl}}/home/encyclopedia?lang={{locale}}').then(function(response) {
-                var data = response.data;
+          $http.get('{{apiServerUrl}}/home/encyclopedia?lang={{locale}}').then(function(response) {
+            var data = response.data;
 
-								if (!Jakduk.isEmpty(data)) {
-									if (data.kind === "player") {
-										$scope.encyclopedia.kind = '{{TRANSLATION "home.kind.best.player"}}';
-									} else if (data.encyclopedia.kind === "book") {
-										$scope.encyclopedia.kind = '{{TRANSLATION "home.kind.recommend.book"}}';
-									}
+            if (!Jakduk.isEmpty(data)) {
+              if (data.kind === "player") {
+                $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.best.player"}}';
+              } else if (data.encyclopedia.kind === "book") {
+                $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.recommend.book"}}';
+              }
 
-									$scope.encyclopedia.subject = data.subject;
-									$scope.encyclopedia.content = data.content;
-								}
+              $scope.encyclopedia.subject = data.subject;
+              $scope.encyclopedia.content = data.content;
+            }
 
-								$scope.encyclopediaConn = "none";
-							}, function () {
-                $scope.encyclopediaConn = "none";
-              });
-						}
-					}
-				});
+            $scope.encyclopediaConn = "none";
+          }, function () {
+            $scope.encyclopediaConn = "none";
+          });
+        }
+      }
+    });
 
-			$(document).ready(function() {
-				App.init();
-				App.initScrollBar();
-			});
-		</script>
-	</body>
-</html>
+  $(document).ready(function() {
+    App.init();
+    App.initScrollBar();
+  });
+</script>
