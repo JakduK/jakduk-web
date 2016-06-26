@@ -6,9 +6,13 @@ var env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 var all = {
   env: env,
 
+  port: process.env.PORT || 3000,
+
   origin: process.env.ORIGIN || 'https://jakduk.com',
 
-  port: process.env.PORT || 9000,
+  apiServerUrl: process.env.API_SERVER || 'https://jakduk.com/api',
+
+  thumbnailServerUrl: 'https://jakduk.com',
 
   locale: {
     list: ['ko', 'en'],
@@ -20,9 +24,6 @@ var all = {
   },
 
   noRedirectPaths: ['/login', '/logout'],
-
-  apiServerUrl: 'https://jakduk.com/api',
-  thumbnailServerUrl: 'https://jakduk.com',
 
   facebook: {
     clientID:     process.env.FACEBOOK_ID || 'id',
