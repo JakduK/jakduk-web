@@ -2,13 +2,26 @@ var path = require('path');
 var hbs = require('hbs');
 var hbsUtils = require('hbs-utils')(hbs);
 var i18n = require('i18n');
+var moment = require('moment');
+
+hbs.registerHelper('TITLE', function(val) {
+  var TRANSLATION = hbs.handlebars.helpers.TRANSLATION;
+  var arrVal = [].concat(val);
+  return arrVal.reduce(function(prev, each) {
+    return prev + ' &middot; ' + TRANSLATION(each);
+  }, TRANSLATION(arrVal.shift()));
+});
 
 hbs.registerHelper('TRANSLATION', function(key) {
-  return new hbs.SafeString(i18n.__(key));
+  return i18n.__(key);
 });
 
 hbs.registerHelper('EQ', function(val1, val2) {
   return val1 === val2;
+});
+
+hbs.registerHelper('NOT_EQ', function(val1, val2) {
+  return val1 !== val2;
 });
 
 hbs.registerHelper('OR', function() {
@@ -19,9 +32,41 @@ hbs.registerHelper('OR', function() {
   });
 });
 
-hbs.registerHelper('FROM_JSON', function(val) {
-  return JSON.stringify(val).replace(/\\/g, '\\\\');
+hbs.registerHelper('OPR', function(operator, v1, v2) {
+  switch (operator) {
+    case '===':
+      return v1 === v2;
+    case '!==':
+      return v1 !== v2;
+    case '<':
+      return v1 < v2;
+    case '<=':
+      return v1 <= v2;
+    case '>':
+      return v1 > v2;
+    case '>=':
+      return v1 >= v2;
+    case '&&':
+      return v1 && v2;
+    case '||':
+      return v1 || v2;
+    default:
+      return false;
+  }
 });
+
+hbs.registerHelper('JSON_STRINGIFY', function(val) {
+  return JSON.stringify(val||{}).replace(/\\/g, '\\\\');
+});
+
+hbs.registerHelper('DATE_FORMAT', function(val, format) {
+  return moment(val).format(format);
+});
+
+hbs.registerHelper('GET_PROP', function(obj, key) {
+  return obj[key];
+});
+
 
 if (process.env.NODE_ENV === 'development') {
   hbsUtils.registerWatchedPartials(path.join(__dirname, '..', 'views', 'include'));

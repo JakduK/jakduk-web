@@ -172,6 +172,7 @@
   <!--=== End Content Part ===-->
 
   {{> footer}}
+
 </div><!-- /.container -->
 
 <!-- script:css -->
@@ -198,13 +199,13 @@
       $scope.dataLatestConn = 'none';
       $scope.encyclopediaConn = 'none';
 
-      $scope.postsLatest = angular.fromJson('{{{FROM_JSON data.posts}}}');
-      $scope.usersLatest = angular.fromJson('{{{FROM_JSON data.users}}}');
-      $scope.commentsLatest = angular.fromJson('{{{FROM_JSON data.comments}}}');
-      $scope.galleriesLatest = angular.fromJson('{{{FROM_JSON data.galleries}}}');
-      $scope.homeDescription = angular.fromJson('{{{FROM_JSON data.homeDescription}}}').desc;
+      $scope.postsLatest = angular.fromJson('{{{JSON_STRINGIFY data.posts}}}');
+      $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
+      $scope.commentsLatest = angular.fromJson('{{{JSON_STRINGIFY data.comments}}}');
+      $scope.galleriesLatest = angular.fromJson('{{{JSON_STRINGIFY data.galleries}}}');
+      $scope.homeDescription = angular.fromJson('{{{JSON_STRINGIFY data.homeDescription}}}').desc;
 
-      $scope.encyclopedia = angular.fromJson('{{{FROM_JSON data.encyclopedia}}}');
+      $scope.encyclopedia = angular.fromJson('{{{JSON_STRINGIFY data.encyclopedia}}}');
 
       $scope.slickConfig = {
         infinite: false,

@@ -2,7 +2,7 @@
 <!--[if IE 9]><html lang="{{locale}}" class="ie9" ng-app="jakdukApp"><![endif]-->
 <!--[if !IE]><!--><html lang="{{locale}}" ng-app="jakdukApp"><!--<![endif]-->
   <head>
-    <title>{{TRANSLATION "common.home"}} &middot; {{TRANSLATION "common.jakduk"}}</title>
+    <title>{{{TITLE title}}}</title>
     {{> head_common}}
     {{#if head_page}}
       {{> (lookup . 'head_page')}}

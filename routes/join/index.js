@@ -7,7 +7,8 @@ function index(req, res) {
   req.api.footballClubs(req.locale).then(function (response) {
     var footballClubs = response.data;
     res.render('login/join', {
-      head_page: 'head_login',
+      title: ['user.register', 'common.jakduk'],
+      head_page: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
       isEmailSignup: true
@@ -30,7 +31,8 @@ function submit(req, res) {
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
-        head_page: 'head_login'
+        title: ['user.register', 'common.jakduk'],
+        head_page: 'head_join'
       });
     }
   });
@@ -45,7 +47,8 @@ function indexOAuth(req, res) {
     var footballClubs = responses[0].data;
     var snsProfile = responses[1].data;
     res.render('login/join', {
-      head_page: 'head_login',
+      title: ['user.register', 'common.jakduk'],
+      head_page: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
       isEmailSignup: false,
@@ -66,6 +69,7 @@ function submitOAuth(req, res) {
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
+        title: ['user.register', 'common.jakduk'],
         head_page: 'head_login'
       });
     }

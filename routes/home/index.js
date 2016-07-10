@@ -14,7 +14,8 @@ module.exports.setup = function (app) {
         return response.data
       });
       res.render('home/home', {
-        'head_page': 'head_home',
+        title: ['common.home', 'common.jakduk'],
+        head_page: 'head_home',
         timeNow: Date.now(),
         data: {
           posts: datas[0].posts || [],
