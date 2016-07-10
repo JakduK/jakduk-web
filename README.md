@@ -1,9 +1,9 @@
 #jakduk-web
 
 #Environment
-* Node.js 4.4.6
-* npm 2.15.5
-* Default PORT : 9000
+* Node.js 6.3.0
+* npm 3.10.3
+* Default PORT : 3000
 * Default NODE_ENV : development
 
 #Prerequisite
