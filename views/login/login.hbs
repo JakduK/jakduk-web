@@ -26,7 +26,8 @@
                  name="${_csrf.parameterName}"
                  value="${_csrf.token}"/>
             -->
-            <input type="hidden" name="redir" value="{{redir}}">
+
+            {{#if redir}}<input type="hidden" name="redir" value="{{{redir}}}">{{/if}}
 
             <div class="reg-header">
               <h2>{{TRANSLATION "user.sign.in.header"}}</h2>
@@ -56,7 +57,7 @@
 
               <div class="checkbox">
                 <label>
-                  <input id="remember_me" name="remember-me" type="checkbox"/>
+                  <input id="remember" name="remember" type="checkbox">
                   {{TRANSLATION "user.remember.me"}}
                 </label>
               </div>
@@ -85,20 +86,14 @@
 
           <hr class="padding-10"/>
 
-          <button class="btn btn-facebook btn-block" onclick="javascript:document.facebook.submit();">
+          <button class="btn btn-facebook btn-block" onclick="javascript:window.location = '/auth/facebook'">
             <i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
           </button>
 
-          <button class="btn btn-dropbox btn-block" onclick="javascript:document.daum.submit();">
+          <button class="btn btn-dropbox btn-block" onclick="javascript:window.location = '/auth/daum'">
             {{TRANSLATION "common.button.connect.with.daum"}} <i class="fa fa-angle-right"></i>
           </button>
 
-          <form action="auth/facebook" name="facebook">
-            <input type="hidden" name="scope" value="email"/>
-          </form>
-
-          <form action="auth/daum" name="daum">
-          </form>
         </div>
       </div>
     </div><!--/row-->
@@ -125,23 +120,11 @@
 
 <script type="text/javascript">
   angular.module("jakdukApp", ["ngCookies", "angular-ladda", "jakdukCommon"])
-    .controller("loginCtrl", ['$scope', '$http', '$cookies', function ($scope, $http, $cookies) {
+    .controller("loginCtrl", ['$scope', function ($scope) {
       $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
       $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
       $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
       $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
-
-      // angular.ready()함수에서는 안된다. 마우스 클릭하니 그제서야 이메일이 들어간다.
-      // 스프링 시큐리티 remember-me 활성화로 중단한다.
-      /*
-      var email = $cookies.get("email");
-      var remember = $cookies.get("remember");
-
-      if (!Jakduk.isEmpty(email) && !Jakduk.isEmpty(remember) && remember == "1") {
-        $scope.email = email;
-        $scope.remember = true;
-      }
-      */
 
       $scope.onSubmit = function (event) {
         if ($scope.loginForm.$valid) {

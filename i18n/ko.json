@@ -1,7 +1,7 @@
 {
-	"about": "About",
-	"about.site": "About Site",
-	"about.site.use.guide": "Site Use Guide",
+	"about": "소개",
+	"about.site": "사이트 소개",
+	"about.site.use.guide": "사이트 이용 안내",
 	"board": "게시판",
 	"board.number": "글번호",
 	"board.subject": "제목",
@@ -298,5 +298,7 @@
 	"oauth.register.header": "SNS로 계정 만들기",
 	"Size.userWrite.email": "이메일 주소의 길이는 6 ~ 30자 입니다.",
 	"Size.userWrite.username": "별명의 길이는 최소 2 ~ 20자 입니다.",
-	"Size.userWrite.password": "비밀번호의 길이는 4 ~ 20자 입니다."
+	"Size.userWrite.password": "비밀번호의 길이는 4 ~ 20자 입니다.",
+	"회원을 찾을 수 없습니다. 입력한 이메일 주소가 올바른지 확인해 주세요.": "회원을 찾을 수 없습니다. 입력한 이메일 주소가 올바른지 확인해 주세요.",
+	"비밀번호가 틀렸습니다. 비밀번호를 확인하고 다시 입력해주세요.": "비밀번호가 틀렸습니다. 비밀번호를 확인하고 다시 입력해주세요."
 }

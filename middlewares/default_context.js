@@ -1,16 +1,19 @@
-var SessionUtil = require('../util/jakduk_session_util');
+'use strict';
+
+var SessionUtil = require('../helpers/jakduk_session_util');
+var ApiClient = require('../helpers/jakduk_api_client');
 var config = require('../config/environment');
 var _ = require('lodash');
-var Api = require('./jakduk_api');
 
 module.exports = function (app) {
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     req.noRedirectPaths = config.noRedirectPaths;
-    req.api = new Api(req.headers.cookie, config.apiServerUrl);
-    req.api.profile(function (data, response) {
+    req.api = new ApiClient(req.headers.cookie || '', config.apiServerUrl);
+
+    req.api.profile().then(function (response) {
       if (response.statusCode === 200) {
-        req.userInfo = data;
-      } else {
+        req.userInfo = response.data;
+      } else if (response.statusCode === 401) {
         SessionUtil.clearSession(res);
       }
 

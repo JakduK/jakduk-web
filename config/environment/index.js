@@ -2,13 +2,15 @@ var _ = require('lodash');
 
 var env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
+var origin = process.env.ORIGIN || 'https://jakduk.com';
+
 // All configurations will extend these options
 var all = {
   env: env,
 
   port: process.env.PORT || 3000,
 
-  origin: process.env.ORIGIN || 'https://jakduk.com',
+  origin: origin,
 
   apiServerUrl: process.env.API_SERVER || 'https://jakduk.com/api',
 
@@ -23,24 +25,25 @@ var all = {
     }
   },
 
-  noRedirectPaths: ['/login', '/logout'],
+  noRedirectPaths: [
+    '/login',
+    '/logout',
+    '/join',
+    '/join/oauth',
+    '/password/reset',
+    '/password/find'
+  ],
 
   facebook: {
-    clientID:     process.env.FACEBOOK_ID || 'id',
-    clientSecret: process.env.FACEBOOK_SECRET || 'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
+    clientID:     process.env.FACEBOOK_ID || '',
+    clientSecret: process.env.FACEBOOK_SECRET || '',
+    callbackURL:  origin + '/auth/facebook/callback'
   },
 
-  twitter: {
-    clientID:     process.env.TWITTER_ID || 'id',
-    clientSecret: process.env.TWITTER_SECRET || 'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback'
-  },
-
-  google: {
-    clientID:     process.env.GOOGLE_ID || 'id',
-    clientSecret: process.env.GOOGLE_SECRET || 'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+  daum: {
+    clientID:     process.env.DAUM_ID || '',
+    clientSecret: process.env.DAUM_SECRET || '',
+    callbackURL:  process.env.DOMAIN + '/auth/daum/callback'
   }
 };
 

@@ -14,12 +14,9 @@ hbs.registerHelper('EQ', function(val1, val2) {
 hbs.registerHelper('OR', function() {
   var val = arguments[0];
   var others = Array.prototype.slice.call(arguments, 1, arguments.length - 1);
-  for (var i = 0; i < others.length; i++) {
-    if (val === others) {
-      return true;
-    }
-  }
-  return false;
+  return others.some(function (elem) {
+    return val === elem;
+  });
 });
 
 hbs.registerHelper('FROM_JSON', function(val) {

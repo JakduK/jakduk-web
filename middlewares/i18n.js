@@ -12,8 +12,8 @@ i18n.configure({
   extension: '.json'
 });
 
-module.exports = function(app) {
-  app.use(function(req, res, next) {
+module.exports = function (app) {
+  app.use(function (req, res, next) {
     var userLocale = req.query.lang || req.acceptsLanguages(locale.list);
     if (!locale.alias[userLocale]) {
       userLocale = locale.alias[userLocale.replace('_', '-').split('-')[0] + '-*'] || userLocale.default;

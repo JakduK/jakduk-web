@@ -1,6 +1,6 @@
 {
   "name": "jakduk-web",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "main": "app.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "i18n": "^0.8.2",
     "lodash": "^4.13.1",
     "morgan": "^1.7.0",
-    "node-rest-client": "^1.8.0",
+    "restler": "^3.4.0",
     "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
@@ -28,7 +28,7 @@
     "hbs-utils": "0.0.3"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "bugs": {
     "url": "https://github.com/JakduK/jakduk-web/issues"
