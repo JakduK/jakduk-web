@@ -67,6 +67,9 @@ hbs.registerHelper('GET_PROP', function(obj, key) {
   return obj[key];
 });
 
+hbs.registerHelper('DATE_BY_ID', function(id) {
+  return new Date(parseInt(id.substring(0, 8), 16) * 1000);
+});
 
 if (process.env.NODE_ENV === 'development') {
   hbsUtils.registerWatchedPartials(path.join(__dirname, '..', 'views', 'include'));

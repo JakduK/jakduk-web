@@ -32,13 +32,13 @@ module.exports = function(ApiClient) {
     }.bind(this));
   };
 
-  ApiClient.prototype.topContents = function() {
+  ApiClient.prototype.topPosts = function() {
     return new Promise(function(resolve) {
-      rest.json(this.serverUrl.replace('/api', '') + '/board/data/free/top.json').on('complete', callback.bind(null, resolve));
+      rest.json(this.serverUrl + '/board/free/tops').on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
 
-  ApiClient.prototype.freePostsList = function(query) {
+  ApiClient.prototype.posts = function(query) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/posts', null, {
         query: query

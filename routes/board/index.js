@@ -7,14 +7,14 @@ module.exports.setup = function(app) {
   var router = express.Router();
 
   router.get('/free', function (req, res) {
-    var category = !req.query.category || req.query.category === 'none' ? 'all' : req.query.category;
+    var category = _.toUpper(!req.query.category || req.query.category === 'none' ? 'all' : req.query.category);
     Promise.all([
-      req.api.freePostsList({
+      req.api.posts({
         page: req.query.page,
         size: req.query.size,
         category: category
       }),
-      req.api.topContents()
+      req.api.topPosts()
     ]).then(function(responses) {
       responses.forEach(function(response) {
         _.merge(res.locals, response.data);
@@ -22,7 +22,8 @@ module.exports.setup = function(app) {
       res.render('board/free_posts', {
         title: ['board.free.breadcrumbs.posts', 'board.name.free', 'common.jakduk'],
         head_page: 'head_board',
-        nowDate: Date.now()
+        nowDate: Date.now(),
+        category: category
       })
     });
   });

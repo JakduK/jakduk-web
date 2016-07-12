@@ -26,23 +26,32 @@
           <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-thumbs-o-up"></i>
           <span>{{TRANSLATION "board.top.likes"}}</span>
         </h2>
-        <table class="table table-hover ng-cloak">
+        {{#if (OPR '>' topLikes.length 0)}}
+        <table class="table table-hover">
           <tbody>
-            <tr ng-repeat="post in topLike">
+            {{#each topLikes}}
+            <tr>
               <td class="text-overflow max-width-240">
-                <a ng-href="/board/free/{%post.seq%}?page={{boardListInfo.page}}&category={{boardListInfo.category}}">
-                  <strong ng-bind="post.status.delete !== 'delete' ? post.subject : '{{TRANSLATION "board.msg.deleted"}}'"></strong>
+                <a ng-href="/board/free/{{seq}}?page={{../number}}&category={{../category}}">
+                  <strong>
+                    {{#if (EQ status.delete 'delete')}}
+                      {{TRANSLATION "board.msg.deleted"}}
+                    {{else}}
+                      {{subject}}
+                    {{/if}}
+                  </strong>
                 </a>
               </td>
               <td>
-            <span class="text-primary">
-              <i class="fa fa-thumbs-o-up"></i>
-              <strong ng-bind="post.count"></strong>
-            </span>
+                <span class="text-primary">
+                  <i class="fa fa-thumbs-o-up"></i> <strong>{{count}}</strong>
+                </span>
               </td>
             </tr>
+            {{/each}}
           </tbody>
         </table>
+        {{/if}}
       </div>
       <!--End Top Likes Rows-->
       <!--Top Comments Rows-->
@@ -51,24 +60,32 @@
           <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-comment-o"></i>
           <span>{{TRANSLATION "board.top.comments"}}</span>
         </h2>
+        {{#if (OPR '>' topCommnets.length 0)}}
         <table class="table table-hover ng-cloak">
           <tbody>
-            <tr ng-repeat="post in topComment">
+            {{#each topCommnets}}
+            <tr>
               <td class="text-overflow max-width-240">
-                <a ng-href="/board/free/{%post.seq%}?page={{boardListInfo.page}}&category={{boardListInfo
-                .category}}">
-                  <strong ng-bind="post.status.delete !== 'delete' ? post.subject : '{{TRANSLATION "board.msg.deleted"}}'"></strong>
+                <a ng-href="/board/free/{{seq}}?page={{../number}}&category={{../category}}">
+                  <strong>
+                    {{#if (EQ status.delete 'delete')}}
+                      {{TRANSLATION "board.msg.deleted"}}
+                    {{else}}
+                      {{subject}}
+                    {{/if}}
+                  </strong>
                 </a>
               </td>
               <td>
-            <span class="text-default">
-              <i class="fa fa-comment-o"></i>
-              <strong ng-bind="post.count"></strong>
-            </span>
+                <span class="text-default">
+                  <i class="fa fa-comment-o"></i> <strong>{{count}}</strong>
+                </span>
               </td>
             </tr>
+            {{/each}}
           </tbody>
         </table>
+        {{/if}}
       </div>
       <!--End Top Comments Rows-->
     </div>
@@ -77,17 +94,17 @@
     <div class="row">
       <div class="col-sm-6 margin-bottom-10">
         <button type="button" class="btn-u rounded dropdown-toggle" data-toggle="dropdown">
-        {{#if (NOT_EQ boardListInfo.category 'none')}}
-          {{TRANSLATION (GET_PROP categorys boardListInfo.category)}}
+        {{#if (NOT_EQ category 'none')}}
+          {{GET_PROP categories category}}
         {{else}}
           {{TRANSLATION "board.category"}}
         {{/if}}
           <i class="fa fa-angle-down"></i>
         </button>
         <ul class="dropdown-menu" role="menu">
-        {{#each categorys as |value key|}}
-          {{#if (NOT_EQ value (GET_PROP ../categorys ../boardListInfo.category))}}
-            <li><a href="?category={{key}}">{{TRANSLATION value}}</a></li>
+        {{#each categories as |value key|}}
+          {{#if (NOT_EQ value (GET_PROP ../categories ../category))}}
+            <li><a href="?category={{key}}">{{value}}</a></li>
           {{/if}}
         {{/each}}
         </ul>
@@ -128,46 +145,34 @@
                 {{#if (EQ status.device 'mobile')}}<span aria-hidden="true" class="icon-screen-smartphone"></span>{{/if}}
                 {{#if (EQ status.device 'tablet')}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
                 {{#if (OPR '>' galleries.length 0)}}<span aria-hidden="true" class="icon-picture"></span>{{/if}}
-                <a href="/board/free/{{seq}}?page={{boardListInfo.page}}&category={{boardListInfo.category}}">
+                <a href="/board/free/{{seq}}?page={{../number}}&category={{category}}">
                   {{#if (EQ status.delete 'delete')}}
                     <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
                   {{else}}
                     <strong>{{subject}}</strong>
                   {{/if}}
-                  {{#if (GET_PROP ../commentCount id)}}
-                    <span class="text-success">&nbsp;[{{GET_PROP ../commentCount id}}]</span>
+                  {{#if commentCount}}
+                    <span class="text-success">[{{commentCount}}]</span>
                   {{/if}}
                 </a>
               </div>
               <div class="col-sm-3">
-                <span aria-hidden="true" class="icon-user visible-xs-inline"></span> {{writer.username}} |
-              {{#if (OPR '<' (GET_PROP ../createDate id) ../nowDate)}}
-                {{DATE_FORMAT (GET_PROP ../createDate id) 'YYYY. MM. DD'}}
+                <span aria-hidden="true" class="icon-user visible-xs-inline"></span>{{writer.username}} |
+              {{#if (OPR '<' (DATE_BY_ID id) ../nowDate)}}
+                {{DATE_FORMAT (DATE_BY_ID id) 'YYYY. MM. DD'}}
               {{else}}
-                {{DATE_FORMAT (GET_PROP ../createDate id) 'HH:mm:ss'}}
+                {{DATE_FORMAT (DATE_BY_ID id) 'HH:mm:ss'}}
               {{/if}}
               </div>
               <div class="col-sm-3 hidden-xs">
                 <span aria-hidden="true" class="icon-eye"></span> <strong>{{views}}</strong>
                 <span class="text-primary">
                   <i class="fa fa-thumbs-o-up"></i>
-                  <strong>
-                  {{#if (GET_PROP ../feelingCount id)}}
-                    {{GET_PROP (GET_PROP ../feelingCount id) 'usersLikingCount'}}
-                  {{else}}
-                    0
-                  {{/if}}
-                  </strong>
+                  <strong>{{likingCount}}</strong>
                 </span>
                 <span class="text-danger">
                   <i class="fa fa-thumbs-o-down"></i>
-                  <strong>
-                  {{#if (GET_PROP ../feelingCount id)}}
-                    {{GET_PROP (GET_PROP ../feelingCount id) 'usersDisLikingCount'}}
-                  {{else}}
-                    0
-                  {{/if}}
-                  </strong>
+                  <strong>{{dislikingCount}}</strong>
                 </span>
               </div>
             </div>
@@ -180,55 +185,43 @@
             <div class="row">
               <div class="col-sm-2">
               {{seq}} <span class="hidden-xs">|</span>
-              {{#if categoryName}}
-                <span aria-hidden="true" class="icon-directions visible-xs-inline"></span> {{TRANSLATION (GET_PROP ../categorys categoryName)}}
+              {{#if category}}
+                <span aria-hidden="true" class="icon-directions visible-xs-inline"></span> {{GET_PROP ../categories category}}
               {{/if}}
               </div>
               <div class="col-sm-4">
                 {{#if (EQ status.device 'mobile')}}<span aria-hidden="true" class="icon-screen-smartphone"></span>{{/if}}
                 {{#if (EQ status.device 'tablet')}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
                 {{#if (OPR '>' galleries.length 0)}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
-                <a href="/board/free/{{post.seq}}?page={{boardListInfo.page}}&category={{boardListInfo.category}}">
+                <a href="/board/free/{{seq}}?page={{../number}}&category={{category}}">
                 {{#if (EQ status.delete 'delete')}}
                   <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
                 {{else}}
                   <strong>{{subject}}</strong>
                 {{/if}}
-                {{#if (GET_PROP ../commentCount id)}}
-                  <span class="text-success">&nbsp;[{{GET_PROP ../commentCount id}}]</span>
+                {{#if commentCount}}
+                  <span class="text-success">&nbsp;[{{commentCount}}]</span>
                 {{/if}}
                 </a>
               </div>
 
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-user visible-xs-inline"></span> {{writer.username}} |
-                {{#if (OPR '<' (GET_PROP ../createDate id) ../nowDate)}}
-                  {{DATE_FORMAT (GET_PROP ../createDate id) 'YYYY. MM. DD'}}
+                {{#if (OPR '<' (DATE_BY_ID id) ../nowDate)}}
+                  {{DATE_FORMAT (DATE_BY_ID id) 'YYYY. MM. DD'}}
                 {{else}}
-                  {{DATE_FORMAT (GET_PROP ../createDate id) 'HH:mm:ss'}}
+                  {{DATE_FORMAT (DATE_BY_ID id) 'HH:mm:ss'}}
                 {{/if}}
               </div>
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-eye"></span> <strong>{{views}}</strong>
                 <span class="text-primary">
                   <i class="fa fa-thumbs-o-up"></i>
-                  <strong>
-                    {{#if (GET_PROP ../feelingCount id)}}
-                      {{GET_PROP (GET_PROP ../feelingCount id) 'usersLikingCount'}}
-                    {{else}}
-                      0
-                    {{/if}}
-                  </strong>
+                  <strong>{{likingCount}}</strong>
                 </span>
                 <span class="text-danger">
                   <i class="fa fa-thumbs-o-down"></i>
-                  <strong>
-                    {{#if (GET_PROP ../feelingCount id)}}
-                      {{GET_PROP (GET_PROP ../feelingCount id) 'usersDisLikingCount'}}
-                    {{else}}
-                      0
-                    {{/if}}
-                  </strong>
+                  <strong>{{dislikingCount}}</strong>
                 </span>
               </div>
             </div> <!-- /row -->
@@ -269,12 +262,9 @@
 
   angular.module("jakdukApp", ["ngAnimate", "ui.bootstrap", 'jakdukCommon'])
     .controller("boardCtrl", ['$scope', function ($scope) {
-      var page = parseInt("{{boardListInfo.page}}");
-      var size = parseInt("{{boardListInfo.size}}");
-      var total = Number("{{totalPosts}}");
-
-      $scope.topLike = angular.fromJson('{{JSON_STRINGIFY topLike}}');
-      $scope.topComment = angular.fromJson('{{JSON_STRINGIFY topComment}}');
+      var page = parseInt('{{number}}') + 1;
+      var size = parseInt('{{size}}');
+      var total = Number('{{totalElements}}');
 
       if (page > 0) {
         $scope.currentPage = page;
@@ -300,16 +290,9 @@
 
       $scope.pageChanged = function () {
         var page = $scope.currentPage;
-
-        location.href = '/board/free?page=' + page + '&category={{boardListInfo.category}}';
+        location.href = '/board/free?page=' + page + '&category={{category}}';
       };
     }]);
-
-  function needLogin() {
-    if (confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
-      location.href = '/board/free/write';
-    }
-  }
 
   $(document).ready(function () {
     App.init();
