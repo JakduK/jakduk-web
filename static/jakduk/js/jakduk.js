@@ -22,8 +22,9 @@
 	Jakduk.ItemsPerPageOnBoardComments = 10;
 	Jakduk.isEmpty = function (str) {
 		var obj = String(str);
-		return !!(obj == null || obj == undefined || obj == 'null' || obj == 'undefined' || obj == '');
+		return !!(obj === null || obj === undefined || obj === 'null' || obj === 'undefined' || obj === '');
 	};
+  Jakduk.origin = location.protocol + location.host + (location.port ? ':' + location.port : location.port);
 }());
 
 (function() {
@@ -44,6 +45,11 @@
 		.filter('intFromObjectId', function() {
 			return function(objectId) {
 				return parseInt(objectId.substring(0, 8), 16) * 1000;
+			}
+		})
+		.filter('objectIdFromDate', function () {
+			return function(date) {
+				return Math.floor(date.getTime() / 1000).toString(16) + "0000000000000000";
 			}
 		})
 		.controller("headerCtrl", ['$scope', '$location', function($scope, $location) {

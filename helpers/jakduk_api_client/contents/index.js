@@ -32,17 +32,23 @@ module.exports = function(ApiClient) {
     }.bind(this));
   };
 
-  ApiClient.prototype.topPosts = function() {
+  ApiClient.prototype.getTopPosts = function() {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/tops').on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
 
-  ApiClient.prototype.posts = function(query) {
+  ApiClient.prototype.getPosts = function(query) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/posts', null, {
         query: query
       }).on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
+
+  ApiClient.prototype.getPost = function(seq) {
+    return new Promise(function(resolve) {
+      rest.json(this.serverUrl + '/board/free/' + seq).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
 };

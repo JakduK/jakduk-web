@@ -3,17 +3,19 @@ var hbs = require('hbs');
 var hbsUtils = require('hbs-utils')(hbs);
 var i18n = require('i18n');
 var moment = require('moment');
+var filesize = require('filesize');
+var _ = require('lodash');
 
-hbs.registerHelper('TITLE', function(val) {
+hbs.registerHelper('TITLE', function(val, options) {
   var TRANSLATION = hbs.handlebars.helpers.TRANSLATION;
   var arrVal = [].concat(val);
   return arrVal.reduce(function(prev, each) {
-    return prev + ' &middot; ' + TRANSLATION(each);
-  }, TRANSLATION(arrVal.shift()));
+    return prev + ' &middot; ' + TRANSLATION(each, options);
+  }, TRANSLATION(arrVal.shift(), options));
 });
 
-hbs.registerHelper('TRANSLATION', function(key) {
-  return i18n.__(key);
+hbs.registerHelper('TRANSLATION', function(key, options) {
+  return i18n.__(key, options.hash);
 });
 
 hbs.registerHelper('EQ', function(val1, val2) {
@@ -22,6 +24,10 @@ hbs.registerHelper('EQ', function(val1, val2) {
 
 hbs.registerHelper('NOT_EQ', function(val1, val2) {
   return val1 !== val2;
+});
+
+hbs.registerHelper('NOT', function(val) {
+  return !val;
 });
 
 hbs.registerHelper('OR', function() {
@@ -69,6 +75,24 @@ hbs.registerHelper('GET_PROP', function(obj, key) {
 
 hbs.registerHelper('DATE_BY_ID', function(id) {
   return new Date(parseInt(id.substring(0, 8), 16) * 1000);
+});
+
+hbs.registerHelper('SIZE_FORMAT', function(val) {
+  return filesize(val);
+});
+
+hbs.registerHelper('ARRAY_SIZE', function(val) {
+  return ([] || val).length;
+});
+
+hbs.registerHelper('CONCAT', function() {
+  return Array.prototype.join.call(arguments, '');
+});
+
+hbs.registerHelper('CATEGORY_NAME', function(category, locale) {
+  return (_.find(category.names, function (name) {
+    return locale === name.language;
+  }) || {name: ''}).name;
 });
 
 if (process.env.NODE_ENV === 'development') {

@@ -262,7 +262,7 @@
 
   angular.module("jakdukApp", ["ngAnimate", "ui.bootstrap", 'jakdukCommon'])
     .controller("boardCtrl", ['$scope', function ($scope) {
-      var page = parseInt('{{number}}') + 1;
+      var page = parseInt('{{number}}');
       var size = parseInt('{{size}}');
       var total = Number('{{totalElements}}');
 

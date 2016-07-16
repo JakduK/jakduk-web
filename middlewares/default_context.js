@@ -18,6 +18,11 @@ module.exports = function (app) {
       }
 
       req.isAuthenticated = !!req.userInfo;
+      if (req.isAuthenticated) {
+        res.locals.isAdmin = req.userInfo.roles.some(function(role) {
+          return role === 'ROLE_ROOT';
+        });
+      }
 
       _.merge(res.locals, {
         layout: 'layout',
