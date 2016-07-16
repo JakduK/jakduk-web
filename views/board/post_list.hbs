@@ -191,8 +191,8 @@
               </div>
               <div class="col-sm-4">
                 {{#if (EQ status.device 'MOBILE')}}<span aria-hidden="true" class="icon-screen-smartphone"></span>{{/if}}
-                {{#if (EQ status.device 'TABLET')}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
-                {{#if (OPR '>' galleries.length 0)}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
+                {{#if (EQ status.device 'TABLET')}}<span aria-hidden="true" class="icon-screen-tablet"></span>{{/if}}
+                {{#if (OPR '>' galleries.length 0)}}<span aria-hidden="true" class="icon-picture"></span>{{/if}}
                 <a href="/board/free/{{seq}}?page={{../number}}&category={{category}}">
                 {{#if (EQ status.delete 'delete')}}
                   <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
