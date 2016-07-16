@@ -39,6 +39,14 @@ function updatePassword(req, res, next) {
 module.exports.setup = function (app) {
   var router = express.Router();
 
+  router.use(function(req, res, next) {
+    if (!req.isAuthenticated) {
+      res.redirect('back');
+      return;
+    }
+    next();
+  });
+
   router.get('/profile', index);
 
   router.get('/profile/edit', editProfile);

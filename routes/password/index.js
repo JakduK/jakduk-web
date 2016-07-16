@@ -68,7 +68,7 @@ module.exports.setup = function (app) {
 
   router.use('/', function (req, res, next) {
     if (req.isAuthenticated) {
-      res.redirect('/home');
+      res.redirect('back');
     }
     next();
   });
