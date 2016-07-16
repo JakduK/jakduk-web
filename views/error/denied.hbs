@@ -1,14 +1,20 @@
-<!DOCTYPE html>
-<!--[if IE 9]> <html lang="{{locale}}" class="ie9" ng-app="jakdukApp"> <![endif]-->
-<!--[if !IE]><!--> <html lang="{{locale}}" ng-app="jakdukApp"> <!--<![endif]-->
-	<head>
-		{{> html-header}}
-		<link rel="stylesheet" href="<%=request.getContextPath()%>/bundles/base.css">
-	</head>
-	<body class="header-fixed">
-		<h1 id="banner">Unauthorized</h1>
-		<hr/>
-		<p class="message">Access denied!</p>
-		{{> footer}}
-	</body>
-</html>
+<div class="wrapper">
+
+  {{> header_navigation}}
+
+  <!--=== Breadcrumbs ===-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left"><a href="/home">{{TRANSLATION "common.error"}}</a></h1>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
+
+  <div class="container content">
+    <h1 id="banner">Unauthorized</h1>
+    <hr/>
+    <p class="message">Access denied!</p>
+  </div>
+
+  {{> footer}}
+</div>
