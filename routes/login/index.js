@@ -9,7 +9,7 @@ function index(req, res) {
   res.render('login/login', {
     title: ['user.sign.in', 'common.jakduk'],
     head_page: 'head_login',
-    redir: req.headers.referer,
+    redir: req.headers.referer
   });
 }
 
