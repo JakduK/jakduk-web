@@ -6,7 +6,7 @@ module.exports.setup = function (app) {
   app.get('/logout', function (req, res) {
     req.api.logout().then(function () {
       SessionUtil.clearSession(res);
-      res.redirect('/');
+      res.redirect(req.headers.referer);
     });
   });
 };

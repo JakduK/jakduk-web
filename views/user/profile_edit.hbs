@@ -1,0 +1,195 @@
+<div class="wrapper" ng-controller="writeCtrl">
+
+  {{> header_navigation}}
+
+  <!--=== Breadcrumbs ===-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left"><a href="/user/profile">{{TRANSLATION "user.profile.update"}}</a></h1>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
+
+  <!--=== Content Part ===-->
+  <div class="container content">
+
+    <form name="userProfileForm" action="/user/profile/update" method="POST" class="form-horizontal" ng-submit="onSubmit($event)">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">{{TRANSLATION "user.email"}}</label>
+        <div class="col-sm-4">
+          <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}'
+            ng-init="email='{{userInfo.email}}'" ng-model="email" disabled="disabled">
+        </div>
+      </div>
+
+      <div class="form-group has-feedback"
+         ng-class="{'has-success':userProfileForm.username.$valid, 'has-error':userProfileForm.username.$invalid || usernameStatus != 'OK'}">
+        <label class="col-sm-2 control-label">
+          <abbr title='<spring:message code="common.msg.required"/>'>*</abbr> {{TRANSLATION "user.nickname"}}
+        </label>
+        <div class="col-sm-4">
+          <input type="text" name="username" class="form-control" placeholder="{{TRANSLATION "user.placeholder.username"}}"
+            ng-model="username" ng-init="username='{{userInfo.username}}'"
+            ng-blur="onUsername()" ng-keyup="validationUsername()"
+            ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
+
+      <span class="glyphicon form-control-feedback"
+          ng-class="{'glyphicon-ok':userProfileForm.username.$valid, 'glyphicon-remove':userProfileForm.username.$invalid || usernameStatus != 'OK'}"></span>
+          <i class="fa fa-spinner fa-spin" ng-show="usernameConn == 'connecting'"></i>
+          <span ng-class="usernameAlert.classType" ng-show="usernameAlert.msg" ng-bind="usernameAlert.msg"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">
+          {{TRANSLATION "user.support.football.club"}}
+        </label>
+        <div class="col-sm-4">
+          <select name="footballClub" class="form-control">
+            <option value="">{{TRANSLATION "common.none"}}</option>
+            {{#each footballClubs as |club|}}
+              {{#each club.names}}
+                <option value="{{club.id}}" {{#if (EQ club.id ../../userInfo.footballClub.id)}}selected{{/if}}>{{fullName}}</option>
+              {{/each}}
+            {{/each}}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label"> {{TRANSLATION "user.comment"}}</label>
+        <div class="col-sm-4">
+          <!-- form:textarea 태그를 사용하면서 placeholder에 spring:message를 넣으면 제대로 안나온다. -->
+          <textarea ng-init="about='{{userInfo.about}}'" ng-model="about" name="about" class="form-control" cols="40" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
+          <button type="submit" class="btn btn-success">
+            <span class="glyphicon glyphicon-upload"></span> {{TRANSLATION "common.button.write"}}
+          </button>
+          <button type="button" class="btn btn-warning" onclick="location.href='/user/profile'">
+            <span class="glyphicon glyphicon-ban-circle"></span> {{TRANSLATION "common.button.cancel"}}
+          </button>
+          <div>
+            <i class="fa fa-circle-o-notch fa-spin" ng-show="submitConn == 'connecting'"></i>
+            <span ng-class="buttonAlert.classType" ng-show="buttonAlert.msg" ng-bind="buttonAlert.msg"></span>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div> <!--=== End Content Part ===-->
+
+  {{> footer}}
+
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>>
+<script src="/unify/assets/plugins/back-to-top.js"></script>
+<script src="/unify/assets/plugins/smoothScroll.js"></script>
+<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/unify/assets/js/app.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/jakduk/js/jakduk.js"></script>
+
+<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+
+<script type="text/javascript">
+  angular.module("jakdukApp", [
+    'jakdukCommon'
+  ]).controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
+    var submitted = false;
+
+    $window.onbeforeunload = function (e) {
+      if (!$scope.userProfileForm.$pristine) {
+        (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+        return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+      }
+    };
+
+    $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
+    $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
+
+    $scope.usernameConn = "none";
+    $scope.submitConn = "none";
+    $scope.usernameAlert = {};
+    $scope.buttonAlert = {};
+
+    $scope.onSubmit = function (event) {
+      if ($scope.userProfileForm.$valid && $scope.usernameStatus == "OK") {
+        submitted = true;
+        $scope.submitConn = "connecting";
+        $scope.buttonAlert = {
+          "classType": "text-info",
+          "msg": '{{TRANSLATION "common.msg.be.cummunicating.server"}}'
+        };
+      } else {
+        if ($scope.userProfileForm.username.$invalid) {
+          $scope.validationUsername();
+        }
+
+        $scope.submitConn = "none";
+        $scope.buttonAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
+        };
+        event.preventDefault();
+      }
+    };
+
+    $scope.onUsername = function () {
+      if ($scope.userProfileForm.username.$valid) {
+        if ($scope.usernameConn == "none") {
+          $scope.usernameConn = "connecting";
+          $http.get('{{apiServerUrl}}/user/exist/username?username=' + $scope.username).then(function (response) {
+            var data = response.data;
+
+            $scope.usernameStatus = data ? 'INVALID' : 'OK';
+            $scope.usernameAlert = {
+              "classType": data ? "text-danger" : "text-success",
+              "msg": data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+            };
+
+            $scope.usernameConn = "none";
+          }, function (response) {
+            var data = response.data;
+            $scope.usernameConn = "none";
+            $scope.usernameAlert = {"classType": "text-danger", "msg": data.message};
+          });
+        }
+      } else {
+        $scope.usernameStatus = 'INVALID';
+        $scope.validationUsername();
+      }
+    };
+
+    $scope.validationUsername = function () {
+      if ($scope.userProfileForm.username.$invalid) {
+        if ($scope.userProfileForm.username.$error.required) {
+          $scope.usernameAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "common.msg.required"}}'
+          };
+        } else if ($scope.userProfileForm.username.$error.minlength || $scope.userProfileForm.username.$error.maxlength) {
+          $scope.usernameAlert = {
+            "classType": "text-danger",
+            "msg": '{{TRANSLATION "Size.userWrite.username"}}'
+          };
+        }
+      } else {
+        $scope.usernameAlert = {
+          "classType": "text-info",
+          "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+        };
+      }
+    };
+
+  }]);
+
+  $(document).ready(function () {
+    App.init();
+  });
+</script>
