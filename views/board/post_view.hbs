@@ -430,6 +430,24 @@
     $scope.nextPost = function () {
       $window.location.href = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
     };
+
+    $scope.confirmDelete = function () {
+      if ($scope.commentCount > 0) {
+        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}')) {
+          $window.location.href = '/board/free/delete/{{post.seq}}?type=postonly';
+        }
+      } else {
+        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post"}}')) {
+          $window.location.href = '/board/free/delete/{{post.seq}}?type=all';
+        }
+      }
+    };
+
+    $scope.confirmEdit = function () {
+      if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
+        $window.location.href = '/board/free/edit/{{post.seq}}';
+      }
+    };
   }]).controller("commentCtrl", function ($scope, $http) {
     $scope.boardCommentContentLengthMin = Jakduk.BoardCommentContentLengthMin;
     $scope.boardCommentContentLengthMax = Jakduk.BoardCommentContentLengthMax;
@@ -461,7 +479,7 @@
 
     $scope.focus = function (e) {
       if ({{NOT isAuthenticated}}) {
-        if (confirm('{{TRANSLATION "board.msg.need.login.for.write"}}') == true) {
+        if (window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}') == true) {
           location.href = '/login';
         }
       }
@@ -584,24 +602,6 @@
           $scope.commentFeelingConn[commentId] = "none";
           $scope.commentFeelingAlert[commentId] = data.message;
         });
-      }
-    };
-
-    $scope.confirmDelete = function () {
-      if ($scope.commentCount > 0) {
-        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}')) {
-          $window.location.href = '/board/free/delete/{{post.seq}}?type=postonly';
-        }
-      } else {
-        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post"}}')) {
-          $window.location.href = '/board/free/delete/{{post.seq}}?type=all';
-        }
-      }
-    };
-
-    $scope.confirmEdit = function () {
-      if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
-        $window.location.href = '/board/free/edit/{{post.seq}}';
       }
     };
   });
