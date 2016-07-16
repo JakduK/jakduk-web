@@ -26,7 +26,7 @@
           <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-thumbs-o-up"></i>
           <span>{{TRANSLATION "board.top.likes"}}</span>
         </h2>
-        {{#if (OPR '>' topLikes.length 0)}}
+        {{#if topLikes.length}}
         <table class="table table-hover">
           <tbody>
             {{#each topLikes}}
@@ -60,10 +60,10 @@
           <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-comment-o"></i>
           <span>{{TRANSLATION "board.top.comments"}}</span>
         </h2>
-        {{#if (OPR '>' topCommnets.length 0)}}
+        {{#if topComments.length}}
         <table class="table table-hover ng-cloak">
           <tbody>
-            {{#each topCommnets}}
+            {{#each topComments}}
             <tr>
               <td class="text-overflow max-width-240">
                 <a ng-href="/board/free/{{seq}}?page={{../number}}&category={{../category}}">
