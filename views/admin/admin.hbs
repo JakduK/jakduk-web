@@ -1,0 +1,30 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="admin">JakduK Admin Page</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="home" target="_self">Go JakduK</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row" ui-view></div>
+</div>
+
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-animate/angular-animate.js"></script>
+<script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="/jakduk/js/jakduk.js"></script>
+<script src="/jakduk/js/admin.js"></script>
+
+<script type="text/javascript">
+  angular.module("jakdukApp", ['jakdukCommon', 'jakdukAdmin', 'ui.bootstrap', 'ngAnimate'])
+    .constant('Config', {
+      apiServerUrl: '{{apiServerUrl}}'
+    });
+</script>
