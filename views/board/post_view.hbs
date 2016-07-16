@@ -50,10 +50,10 @@
     {{/if}}
 
     {{#if (OPR '&&' isAuthenticated (EQ userInfo.id post.writer.userId))}}
-      <button type="button" class="btn-u rounded" onclick="confirmEdit();">
+      <button type="button" class="btn-u rounded" ng-click="confirmEdit();">
         <i class="fa fa-pencil-square-o"></i>{{TRANSLATION "common.button.edit"}}
       </button>
-      <button type="button" class="btn-u btn-u-default rounded" onclick="confirmDelete();">
+      <button type="button" class="btn-u btn-u-default rounded" ng-click="confirmDelete();">
         <i class="fa fa-trash-o"></i>{{TRANSLATION "common.button.delete"}}
       </button>
     {{/if}}
@@ -175,16 +175,13 @@
 
 		<!-- comment -->
 		<div ng-controller="commentCtrl">
-
-			<input type="hidden" id="commentCount" value="{{commentCount}}">
-
 			<!-- 댓글 목록  -->
 			<div class="media margin-bottom-10">
 
 				<h2 class="heading-sm text-primary">
 					<i class="fa fa-comments"></i>
 					<span infinite-scroll="initComment()" infinite-scroll-disabled="infiniteDisabled">
-						{{TRANSLATION "board.msg.comment.count" n=commentCount}}
+            {{{TRANSLATION "board.msg.comment.count" n='<span ng-bind="commentCount"></span>'}}}
 					</span>
 					<button type="button" class="btn btn-link" ng-click="btnRefreshComment()" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.refresh.comments"}}">
 						<i class="fa fa-refresh text-muted" ng-class="{'fa-spin':loadCommentConn == 'connecting'}"></i>
@@ -287,10 +284,10 @@
     {{/if}}
 
     {{#if (OPR '&&' isAuthenticated (EQ userInfo.id post.writer.userId))}}
-      <button type="button" class="btn-u rounded" onclick="confirmEdit();">
+      <button type="button" class="btn-u rounded" ng-click="confirmEdit();">
         <i class="fa fa-pencil-square-o"></i>{{TRANSLATION "common.button.edit"}}
       </button>
-      <button type="button" class="btn-u btn-u-default rounded" onclick="confirmDelete();">
+      <button type="button" class="btn-u btn-u-default rounded" ng-click="confirmDelete();">
         <i class="fa fa-trash-o"></i>{{TRANSLATION "common.button.delete"}}
       </button>
     {{/if}}
@@ -589,27 +586,25 @@
         });
       }
     };
+
+    $scope.confirmDelete = function () {
+      if ($scope.commentCount > 0) {
+        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}')) {
+          $window.location.href = '/board/free/delete/{{post.seq}}?type=postonly';
+        }
+      } else {
+        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post"}}')) {
+          $window.location.href = '/board/free/delete/{{post.seq}}?type=all';
+        }
+      }
+    };
+
+    $scope.confirmEdit = function () {
+      if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
+        $window.location.href = '/board/free/edit/{{post.seq}}';
+      }
+    };
   });
-
-	function confirmDelete() {
-		var commentCount = document.getElementById("commentCount").value;
-
-		if (commentCount > 0) {
-			if (confirm('{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}')) {
-				location.href = '/board/free/delete/{{post.seq}}?type=postonly';
-			}
-		} else {
-			if (confirm('{{TRANSLATION "board.msg.confirm.delete.post"}}')) {
-				location.href = '/board/free/delete/{{post.seq}}?type=all';
-			}
-		}
-	}
-
-	function confirmEdit() {
-		if (confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
-			location.href = '/board/free/edit/{{post.seq}}';
-		}
-	}
 
 	$(document).ready(function () {
 		App.init();
