@@ -87,7 +87,6 @@
 
 		<!--Blog Post-->
 		<div class="blog margin-bottom-20">
-			<input type="hidden" id="subject" value="{{post.subject}}">
 			<h2>
 				<small>
 					{{#if (EQ post.status.device 'MOBILE')}}<span aria-hidden="true" class=" icon-screen-smartphone"></span>{{/if}}
@@ -344,7 +343,6 @@
     $scope.alert = {};
     $scope.likeConn = "none";
     $scope.dislikeConn = "none";
-    $scope.subject = document.getElementById("subject").value;
 
     // 글 감정 표현.
     $scope.btnFeeling = function (type) {
