@@ -82,7 +82,7 @@ hbs.registerHelper('SIZE_FORMAT', function(val) {
 });
 
 hbs.registerHelper('ARRAY_SIZE', function(val) {
-  return ([] || val).length;
+  return (val || []).length;
 });
 
 hbs.registerHelper('CONCAT', function() {
