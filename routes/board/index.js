@@ -28,10 +28,12 @@ function list(req, res) {
 
 function view(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
+    var data = response.data;
     res.render('board/post_view', {
-      title: ['board.free.breadcrumbs.posts', 'board.name.free', 'common.jakduk'],
+      pre_title: data.subject,
+      title: ['board.name.free', 'common.jakduk'],
       head_page: 'head_board_view',
-      post: response.data
+      post: data
     });
   });
 }
