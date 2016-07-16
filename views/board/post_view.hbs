@@ -27,7 +27,7 @@
 				<i class="fa fa-list"></i>
 			</button>
 
-    {{#if post.prevPost}}
+    {{#if prevPost}}
       <button type="button" class="btn-u btn-brd rounded" ng-click="prevPost()"
         tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.prev"}}">
         <i class="fa fa-chevron-left"></i>
@@ -38,7 +38,7 @@
       </button>
     {{/if}}
 
-    {{#if post.nextPost}}
+    {{#if nextPost}}
       <button type="button" class="btn-u btn-brd rounded" ng-click="nextPost()"
         tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION  "common.button.next"}}">
         <i class="fa fa-chevron-right"></i>
@@ -263,7 +263,7 @@
 				<i class="fa fa-list"></i>
 			</button>
 
-    {{#if post.prevPost}}
+    {{#if prevPost}}
       <button type="button" class="btn-u btn-brd rounded" ng-click="prevPost()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.prev"}}">
         <i class="fa fa-chevron-left"></i>
       </button>
@@ -273,7 +273,7 @@
       </button>
     {{/if}}
 
-    {{#if post.nextPost}}
+    {{#if nextPost}}
       <button type="button" class="btn-u btn-brd rounded" ng-click="nextPost()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.next"}}">
         <i class="fa fa-chevron-right"></i>
       </button>
@@ -424,11 +424,11 @@
     };
 
     $scope.prevPost = function () {
-      $window.location.href = '/board/free/' + {{post.prevPost.seq}} + '/' + $window.location.search;
+      $window.location.href = '/board/free/' + {{prevPost.seq}} + '/' + $window.location.search;
     };
 
     $scope.nextPost = function () {
-      $window.location.href = '/board/free/' + {{post.nextPost.seq}} + '/' + $window.location.search;
+      $window.location.href = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
     };
   }]).controller("commentCtrl", function ($scope, $http) {
     $scope.boardCommentContentLengthMin = Jakduk.BoardCommentContentLengthMin;

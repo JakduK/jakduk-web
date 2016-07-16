@@ -33,7 +33,9 @@ function view(req, res) {
       pre_title: data.subject,
       title: ['board.name.free', 'common.jakduk'],
       head_page: 'head_board_view',
-      post: data
+      post: data.post,
+      nextPost: data.nextPost,
+      prevPost: data.prevPost
     });
   });
 }
