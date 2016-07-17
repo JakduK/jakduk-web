@@ -24,11 +24,9 @@ function updateProfile(req, res, next) {
 }
 
 function editPassword(req, res) {
-  req.api.footballClubs(req.locale).then(function (response) {
-    res.render('user/password_edit', {
-      title: ['common.jakduk', 'user.password.change'],
-      head_page: 'head_profile'
-    });
+  res.render('user/password_edit', {
+    title: ['common.jakduk', 'user.password.change'],
+    head_page: 'head_profile'
   });
 }
 
