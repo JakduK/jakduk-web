@@ -18,8 +18,8 @@
         <!-- Reg-Form -->
         <form name="userWrite" action="/join{{#unless isEmailSignup}}/oauth{{/unless}}" method="POST" class="reg-page" ng-submit="onSubmit($event)">
           <input type="hidden" name="redir" value="{{redir}}">
-          <input name="emailStatus" type="hidden" size="0" ng-init="emailStatus='{{userWrite.emailStatus}}'" ng-model="emailStatus"/>
-          <input name="usernameStatus" type="hidden" size="0" ng-init="usernameStatus='{{userWrite.usernameStatus}}'" ng-model="usernameStatus"/>
+          <input name="emailStatus" type="hidden" size="0" ng-init="emailStatus='{{userWrite.emailStatus}}'" ng-model="emailStatus">
+          <input name="usernameStatus" type="hidden" size="0" ng-init="usernameStatus='{{userWrite.usernameStatus}}'" ng-model="usernameStatus">
 
           <div class="reg-header">
             <h2>{{TRANSLATION "user.register.header"}}</h2>
@@ -40,7 +40,7 @@
           </div>
 
           <div class="form-group has-feedback"
-             ng-class="{'has-success':userWrite.username.$valid && usernameStatus == 'OK', 'has-error':userWrite.username.$invalid || usernameStatus != 'OK'}">
+             ng-class="{'has-success':userWrite.username.$valid && usernameStatus === 'OK', 'has-error':userWrite.username.$invalid || usernameStatus !== 'OK'}">
 
             <label class="control-label">
               <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
@@ -48,7 +48,7 @@
             </label>
             <input type="text" name="username" class="form-control" placeholder='{{TRANSLATION "user.placeholder.username"}}' ng-init="username='{{userWrite.username}}'" ng-model="username" ng-blur="onUsername()" ng-keyup="validationUsername()" ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
 
-            <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userWrite.username.$valid && usernameStatus == 'OK', 'glyphicon-remove':userWrite.username.$invalid || usernameStatus != 'OK'}"></span>
+            <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userWrite.username.$valid && usernameStatus === 'OK', 'glyphicon-remove':userWrite.username.$invalid || usernameStatus !== 'OK'}"></span>
 
             <i class="fa fa-spinner fa-spin" ng-show="usernameConn == 'connecting'"></i>
             <span ng-class="usernameAlert.classType" ng-show="usernameAlert.msg" ng-bind="usernameAlert.msg"></span>
@@ -199,23 +199,23 @@
         if ($scope.userWrite.email.$valid) {
           if ($scope.emailConn == "none") {
             $scope.emailConn = "connecting";
-            $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email))
-              .then(function (response) {
-                var data = response.data;
-                if (!data) {
-                  $scope.emailStatus = "OK";
-                }
-                $scope.emailAlert = {
-                  "classType": data ? "text-danger" : "text-success",
-                  "msg": data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
-                };
-                $scope.emailConn = "none";
-              }, function (response) {
-                var data = response.data;
-                $scope.emailStatus = "INVALID";
-                $scope.emailConn = "none";
-                $scope.emailAlert = {"classType": "text-danger", "msg": data.message};
-              });
+            $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email)).then(function (response) {
+              var data = response.data;
+              $scope.emailStatus = data ? 'INVALID' : 'OK';
+              $scope.emailAlert = {
+                classType: data ? "text-danger" : "text-success",
+                msg: data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+              };
+            }, function (response) {
+              var data = response.data;
+              $scope.emailStatus = 'INVALID';
+              $scope.emailAlert = {
+                classType: "text-danger",
+                msg: data.message
+              };
+            }).then(function () {
+              $scope.emailConn = "none";
+            });
           }
         } else {
           $scope.emailStatus = "INVALID";
@@ -227,23 +227,22 @@
         if ($scope.userWrite.username.$valid) {
           if ($scope.usernameConn == "none") {
             $scope.usernameConn = "connecting";
-            $http.get('{{apiServerUrl}}/user/exist/username?username=' + $scope.username).then(function (response) {
+            $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function (response) {
               var data = response.data;
-              if (!data) {
-                $scope.usernameStatus = "OK";
-              }
-
+              $scope.usernameStatus = data ? 'INVALID' : 'OK';
               $scope.usernameAlert = {
-                "classType": data ? "text-danger" : "text-success",
-                "msg": data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                classType: data ? "text-danger" : "text-success",
+                msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
               };
-
-              $scope.usernameConn = "none";
             }, function (response) {
               var data = response.data;
               $scope.usernameStatus = 'INVALID';
+              $scope.usernameAlert = {
+                classType: "text-danger",
+                msg: data.message
+              };
+            }).then(function () {
               $scope.usernameConn = "none";
-              $scope.usernameAlert = {"classType": "text-danger", "msg": data.message};
             });
           }
         } else {
@@ -260,14 +259,14 @@
             $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "Size.userWrite.email"}}'};
           } else {
             $scope.emailAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "user.msg.check.mail.format"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "user.msg.check.mail.format"}}'
             };
           }
         } else {
           $scope.emailAlert = {
-            "classType": "text-info",
-            "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+            classType: "text-info",
+            msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
           };
         }
       };
@@ -276,19 +275,19 @@
         if ($scope.userWrite.username.$invalid) {
           if ($scope.userWrite.username.$error.required) {
             $scope.usernameAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "common.msg.required"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "common.msg.required"}}'
             };
           } else if ($scope.userWrite.username.$error.minlength || $scope.userWrite.username.$error.maxlength) {
             $scope.usernameAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "Size.userWrite.username"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "Size.userWrite.username"}}'
             };
           }
         } else {
           $scope.usernameAlert = {
-            "classType": "text-info",
-            "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+            classType: "text-info",
+            msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
           };
         }
       };
@@ -300,19 +299,19 @@
         if ($scope.userWrite.password.$invalid) {
           if ($scope.userWrite.password.$error.required) {
             $scope.passwordAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "common.msg.required"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "common.msg.required"}}'
             };
           } else if ($scope.userWrite.password.$error.minlength || $scope.userWrite.password.$error.maxlength) {
             $scope.passwordAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "Size.userWrite.password"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "Size.userWrite.password"}}'
             };
           }
         } else {
           $scope.passwordAlert = {
-            "classType": "text-success",
-            "msg": '{{TRANSLATION "user.msg.available.data"}}'
+            classType: "text-success",
+            msg: '{{TRANSLATION "user.msg.available.data"}}'
           };
         }
       };
@@ -321,8 +320,8 @@
 
         if ($scope.userWrite.password.$invalid) {
           $scope.passwordConfirmAlert = {
-            "classType": "text-danger",
-            "msg": '{{TRANSLATION "user.msg.password.mismatch"}}'
+            classType: "text-danger",
+            msg: '{{TRANSLATION "user.msg.password.mismatch"}}'
           };
         }
 
@@ -331,13 +330,13 @@
         if ($scope.password == $scope.passwordConfirm) {
           $scope.equalPasswordStatus = "true";
           $scope.passwordConfirmAlert = {
-            "classType": "text-success",
-            "msg": '{{TRANSLATION "user.msg.available.data"}}'
+            classType: "text-success",
+            msg: '{{TRANSLATION "user.msg.available.data"}}'
           };
         } else {
           $scope.passwordConfirmAlert = {
-            "classType": "text-danger",
-            "msg": '{{TRANSLATION "user.msg.password.mismatch"}}'
+            classType: "text-danger",
+            msg: '{{TRANSLATION "user.msg.password.mismatch"}}'
           };
         }
       };
@@ -348,19 +347,19 @@
         if ($scope.userWrite.passwordConfirm.$invalid) {
           if ($scope.userWrite.passwordConfirm.$error.required) {
             $scope.passwordConfirmAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "common.msg.required"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "common.msg.required"}}'
             };
           } else if ($scope.userWrite.passwordConfirm.$error.minlength || $scope.userWrite.passwordConfirm.$error.maxlength) {
             $scope.passwordConfirmAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "Size.userWrite.password"}}'
+              classType: "text-danger",
+              msg: '{{TRANSLATION "Size.userWrite.password"}}'
             };
           }
         } else {
           $scope.passwordConfirmAlert = {
-            "classType": "text-info",
-            "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+            classType: "text-info",
+            msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
           };
         }
       };

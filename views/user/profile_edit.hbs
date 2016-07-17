@@ -23,7 +23,7 @@
       </div>
 
       <div class="form-group has-feedback"
-         ng-class="{'has-success':userProfileForm.username.$valid, 'has-error':userProfileForm.username.$invalid || usernameStatus != 'OK'}">
+         ng-class="{'has-success':userProfileForm.username.$valid, 'has-error':userProfileForm.username.$invalid || usernameStatus !== 'OK'}">
         <label class="col-sm-2 control-label">
           <abbr title='<spring:message code="common.msg.required"/>'>*</abbr> {{TRANSLATION "user.nickname"}}
         </label>
@@ -34,8 +34,8 @@
             ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
 
       <span class="glyphicon form-control-feedback"
-          ng-class="{'glyphicon-ok':userProfileForm.username.$valid, 'glyphicon-remove':userProfileForm.username.$invalid || usernameStatus != 'OK'}"></span>
-          <i class="fa fa-spinner fa-spin" ng-show="usernameConn == 'connecting'"></i>
+          ng-class="{'glyphicon-ok':userProfileForm.username.$valid, 'glyphicon-remove':userProfileForm.username.$invalid || usernameStatus !== 'OK'}"></span>
+          <i class="fa fa-spinner fa-spin" ng-show="usernameConn === 'connecting'"></i>
           <span ng-class="usernameAlert.classType" ng-show="usernameAlert.msg" ng-bind="usernameAlert.msg"></span>
         </div>
       </div>
@@ -57,7 +57,7 @@
       </div>
 
       <div class="form-group">
-        <label class="col-sm-2 control-label"> {{TRANSLATION "user.comment"}}</label>
+        <label class="col-sm-2 control-label">{{TRANSLATION "user.comment"}}</label>
         <div class="col-sm-4">
           <!-- form:textarea 태그를 사용하면서 placeholder에 spring:message를 넣으면 제대로 안나온다. -->
           <textarea ng-init="about='{{userInfo.about}}'" ng-model="about" name="about" class="form-control" cols="40" rows="3"></textarea>
@@ -119,7 +119,7 @@
     $scope.buttonAlert = {};
 
     $scope.onSubmit = function (event) {
-      if ($scope.userProfileForm.$valid && $scope.usernameStatus == "OK") {
+      if ($scope.userProfileForm.$valid && $scope.usernameStatus === "OK") {
         submitted = true;
         $scope.submitConn = "connecting";
         $scope.buttonAlert = {
@@ -142,22 +142,21 @@
 
     $scope.onUsername = function () {
       if ($scope.userProfileForm.username.$valid) {
-        if ($scope.usernameConn == "none") {
+        if ($scope.usernameConn === "none") {
           $scope.usernameConn = "connecting";
-          $http.get('{{apiServerUrl}}/user/exist/username?username=' + $scope.username).then(function (response) {
+          $http.get('{{apiServerUrl}}/user/exist/username/update?username=' + encodeURIComponent($scope.username)).then(function (response) {
             var data = response.data;
-
             $scope.usernameStatus = data ? 'INVALID' : 'OK';
             $scope.usernameAlert = {
               "classType": data ? "text-danger" : "text-success",
               "msg": data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
             };
-
-            $scope.usernameConn = "none";
           }, function (response) {
             var data = response.data;
-            $scope.usernameConn = "none";
+            $scope.usernameStatus = 'INVALID';
             $scope.usernameAlert = {"classType": "text-danger", "msg": data.message};
+          }).then(function () {
+            $scope.usernameConn = "none";
           });
         }
       } else {
@@ -170,19 +169,19 @@
       if ($scope.userProfileForm.username.$invalid) {
         if ($scope.userProfileForm.username.$error.required) {
           $scope.usernameAlert = {
-            "classType": "text-danger",
-            "msg": '{{TRANSLATION "common.msg.required"}}'
+            classType: "text-danger",
+            msg: '{{TRANSLATION "common.msg.required"}}'
           };
         } else if ($scope.userProfileForm.username.$error.minlength || $scope.userProfileForm.username.$error.maxlength) {
           $scope.usernameAlert = {
-            "classType": "text-danger",
-            "msg": '{{TRANSLATION "Size.userWrite.username"}}'
+            classType: "text-danger",
+            msg: '{{TRANSLATION "Size.userWrite.username"}}'
           };
         }
       } else {
         $scope.usernameAlert = {
-          "classType": "text-info",
-          "msg": '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+          classType: "text-info",
+          msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
         };
       }
     };
