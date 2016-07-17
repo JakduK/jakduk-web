@@ -239,7 +239,6 @@
     <!--=== End Content Part ===-->
   </div>
 
-
   {{> footer}}
 
 </div><!-- /.container -->
@@ -259,36 +258,38 @@
 <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
 
 <script type="text/javascript">
+  angular.module("jakdukApp", [
+    "ngAnimate",
+    "ui.bootstrap",
+    'jakdukCommon'
+  ]).controller("boardCtrl", ['$scope', function ($scope) {
+    var page = parseInt('{{number}}');
+    var size = parseInt('{{size}}');
+    var total = parseInt('{{totalElements}}');
 
-  angular.module("jakdukApp", ["ngAnimate", "ui.bootstrap", 'jakdukCommon'])
-    .controller("boardCtrl", ['$scope', function ($scope) {
-      var page = parseInt('{{number}}');
-      var size = parseInt('{{size}}');
-      var total = Number('{{totalElements}}');
+    if (page > 0) {
+      $scope.currentPage = page;
+    } else {
+      $scope.currentPage = 1;
+    }
+    $scope.totalItems = total;
+    $scope.itemsPerPage = size;
 
-      if (page > 0) {
-        $scope.currentPage = page;
-      } else {
-        $scope.currentPage = 1;
+    $scope.btnEnter = function () {
+      var isValid = true;
+      if ($scope.searchWords.trim() < 1) {
+        isValid = false;
       }
-      $scope.totalItems = total;
-      $scope.itemsPerPage = size;
+      if (isValid) {
+        location.href = '/search?q=' + $scope.searchWords.trim() + '&w=PO;CO;';
+      }
+    };
 
-      $scope.btnEnter = function () {
-        var isValid = true;
-        if ($scope.searchWords.trim() < 1) {
-          isValid = false;
-        }
-        if (isValid) {
-          location.href = '/search?q=' + $scope.searchWords.trim() + '&w=PO;CO;';
-        }
-      };
-
-      $scope.pageChanged = function () {
-        var page = $scope.currentPage;
-        location.href = '/board/free?page=' + page + '&category={{category}}';
-      };
-    }]);
+    $scope.pageChanged = function () {
+      var page = $scope.currentPage;
+      location.href = '/board/free?page=' + page + '&category={{category}}';
+    };
+  }]);
 
   $(document).ready(function () {
     App.init();

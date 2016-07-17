@@ -145,314 +145,313 @@
 <script src="/bower_components/summernote/lang/summernote-ko-KR.js"></script>
 
 <script type="text/javascript">
-  angular.module("jakdukApp", ["summernote", "angularFileUpload", "angular-ladda", 'jakdukCommon'])
-    .controller('FreeWriteCtrl', function ($scope, $http, $window, $document, FileUploader) {
-      var document = $document[0],
-        isSubmitted;
+  angular.module("jakdukApp", [
+    "summernote", "angularFileUpload", "angular-ladda", 'jakdukCommon'
+  ]).controller('FreeWriteCtrl', function ($scope, $http, $window, $document, FileUploader) {
+    var document = $document[0],
+      isSubmitted;
 
-      $scope.onSubmit = onSubmit;
-      $scope.onDiscard = onDiscard;
+    $scope.onSubmit = onSubmit;
+    $scope.onDiscard = onDiscard;
 
-      $scope.categoryAlert = {};
-      $scope.subjectAlert = {};
-      $scope.contentAlert = {};
-      $scope.buttonAlert = {};
-      $scope.storedImages = [];
+    $scope.categoryAlert = {};
+    $scope.subjectAlert = {};
+    $scope.contentAlert = {};
+    $scope.buttonAlert = {};
+    $scope.storedImages = [];
 
-      $window.onbeforeunload = function (e) {
-        if (!isSubmitted && $scope.boardFreeWrite.$dirty) {
-          (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-          return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-        }
-      };
+    $window.onbeforeunload = function (e) {
+      if (!isSubmitted && $scope.boardFreeWrite.$dirty) {
+        (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+        return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+      }
+    };
 
-      angular.element(document).ready(function () {
-        if (!Jakduk.isEmpty($scope.images)) {
-          var objImages = JSON.parse($scope.images);
-          objImages.forEach(function (entry) {
-            $scope.storedImages.push(entry);
-            $scope.$apply();
-          });
-        }
-      });
+    angular.element(document).ready(function () {
+      if (!Jakduk.isEmpty($scope.images)) {
+        var objImages = JSON.parse($scope.images);
+        objImages.forEach(function (entry) {
+          $scope.storedImages.push(entry);
+          $scope.$apply();
+        });
+      }
+    });
 
-      $scope.options = {
-        height: 0,
-        lang: "${summernoteLang}",
-        toolbar: [
-          ['style', ['style']],
-          ['font', ['bold', 'italic', 'underline', /*'superscript', 'subscript', */'strikethrough', 'clear']],
-          ['fontname', ['fontname']],
-          // ['fontsize', ['fontsize']], // Still buggy
-          ['color', ['color']],
-          ['para', ['ul', 'ol', 'paragraph']],
-          // ['height', ['height']],
-          ['table', ['table']],
-          ['insert', ['link', 'picture', 'video', 'hr']],
-          ['view', ['fullscreen', 'codeview']],
-          ['help', ['help']]
-        ]
-      };
+    $scope.options = {
+      height: 0,
+      lang: "${summernoteLang}",
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', /*'superscript', 'subscript', */'strikethrough', 'clear']],
+        ['fontname', ['fontname']],
+        // ['fontsize', ['fontsize']], // Still buggy
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        // ['height', ['height']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video', 'hr']],
+        ['view', ['fullscreen', 'codeview']],
+        ['help', ['help']]
+      ]
+    };
 
-      $scope.uploader = new FileUploader({
-        url: '{{apiServerUrl}}/gallery',
-        autoUpload: true,
-        method: "POST"
-      });
+    $scope.uploader = new FileUploader({
+      url: '{{apiServerUrl}}/gallery',
+      autoUpload: true,
+      method: "POST"
+    });
 
-      // 이미 등록된 이미지들 가져오기.
-      $scope.onGalleryItem = function (fileItem, type) {
-        if (!Jakduk.isEmpty($scope.images)) {
-          var tempImages = JSON.parse($scope.images);
-          var rmIdx = -1;
+    // 이미 등록된 이미지들 가져오기.
+    $scope.onGalleryItem = function (fileItem, type) {
+      if (!Jakduk.isEmpty($scope.images)) {
+        var tempImages = JSON.parse($scope.images);
+        var rmIdx = -1;
 
-          tempImages.forEach(function (entry, index) {
-            if (entry.uid == fileItem.uid) {
-              rmIdx = index;
-            }
-          });
-
-          if (rmIdx != -1) {
-            if (type == 'queue') {
-              var imageInfo = {
-                uid: fileItem.uid,
-                name: fileItem.newName,
-                fileName: fileItem.file.name,
-                size: fileItem.file.size
-              };
-            } else if (type == 'stored') {
-              var imageInfo = {
-                uid: fileItem.uid,
-                name: fileItem.name,
-                fileName: fileItem.fileName,
-                size: fileItem.size
-              };
-            }
-
-            tempImages.splice(rmIdx, 1, imageInfo);
-            $scope.images = JSON.stringify(tempImages);
-            console.log("fileItem updated(queue). fileInfo=", imageInfo);
+        tempImages.forEach(function (entry, index) {
+          if (entry.uid == fileItem.uid) {
+            rmIdx = index;
           }
+        });
+
+        if (rmIdx != -1) {
+          if (type == 'queue') {
+            var imageInfo = {
+              uid: fileItem.uid,
+              name: fileItem.newName,
+              fileName: fileItem.file.name,
+              size: fileItem.file.size
+            };
+          } else if (type == 'stored') {
+            var imageInfo = {
+              uid: fileItem.uid,
+              name: fileItem.name,
+              fileName: fileItem.fileName,
+              size: fileItem.size
+            };
+          }
+
+          tempImages.splice(rmIdx, 1, imageInfo);
+          $scope.images = JSON.stringify(tempImages);
+          console.log("fileItem updated(queue). fileInfo=", imageInfo);
         }
-      };
+      }
+    };
 
-      // 이미 등록된 이미지 삭제.
-      $scope.removeStoredItem = function (fileItem) {
-        if (fileItem.uid != null) {
-          var bUrl = '{{apiServerUrl}}/gallery/' + fileItem.uid;
+    // 이미 등록된 이미지 삭제.
+    $scope.removeStoredItem = function (fileItem) {
+      if (fileItem.uid != null) {
+        var bUrl = '{{apiServerUrl}}/gallery/' + fileItem.uid;
 
-          var reqPromise = $http.delete(bUrl);
+        var reqPromise = $http.delete(bUrl);
 
-          reqPromise.success(function (data, status, headers, config) {
+        reqPromise.success(function (data, status, headers, config) {
 
-            if (!Jakduk.isEmpty($scope.storedImages)) {
-              var rmIdx = -1;
+          if (!Jakduk.isEmpty($scope.storedImages)) {
+            var rmIdx = -1;
 
-              $scope.storedImages.forEach(function (entry, index) {
-                if (entry.uid == fileItem.uid) {
-                  rmIdx = index;
-                }
-              });
-
-              if (rmIdx != -1) {
-                $scope.storedImages.splice(rmIdx, 1);
+            $scope.storedImages.forEach(function (entry, index) {
+              if (entry.uid == fileItem.uid) {
+                rmIdx = index;
               }
+            });
+
+            if (rmIdx != -1) {
+              $scope.storedImages.splice(rmIdx, 1);
             }
-
-            if (!Jakduk.isEmpty($scope.images)) {
-              var tempImages = JSON.parse($scope.images);
-              var rmIdx = -1;
-
-              tempImages.forEach(function (entry, index) {
-                if (entry.uid == fileItem.uid) {
-                  rmIdx = index;
-                }
-              });
-
-              if (rmIdx != -1) {
-                tempImages.splice(rmIdx, 1);
-                $scope.images = JSON.stringify(tempImages);
-              }
-            }
-
-            console.log("fileItem removed(stored). status=" + status);
-          });
-          reqPromise.error(function (data, status, headers, config) {
-            console.error(data.message);
-          });
-        }
-      };
-
-      // 지금 업로드한 이미지를 큐에서 삭제.
-      $scope.removeQueueItem = function (fileItem) {
-
-        if (fileItem.uid != null) {
-
-          var bUrl = '{{apiServerUrl}}/gallery/' + fileItem.uid;
-
-          var reqPromise = $http.delete(bUrl);
-
-          reqPromise.success(function (data, status, headers, config) {
-
-            fileItem.remove();
-
-            if (!Jakduk.isEmpty($scope.images)) {
-              var tempImages = JSON.parse($scope.images);
-              var rmIdx = -1;
-
-              tempImages.forEach(function (entry, index) {
-                if (entry.uid == fileItem.uid) {
-                  rmIdx = index;
-                }
-              });
-
-              if (rmIdx != -1) {
-                tempImages.splice(rmIdx, 1);
-                $scope.images = JSON.stringify(tempImages);
-              }
-              console.log("fileItem removed(queue). status=" + status);
-            }
-
-          });
-          reqPromise.error(function (data, status, headers, config) {
-            console.error(data.message);
-          });
-        }
-      };
-
-      // 이미지 업로드를 완료.
-      $scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
-
-        if (status == 200) {
-          var imageUrl = "{{thumbnailServerUrl}}/gallery/" + response.id;
-
-          fileItem.uid = response.id;
-
-          var imageInfo = {
-            uid: fileItem.uid,
-            name: fileItem.newName,
-            fileName: fileItem.file.name,
-            size: fileItem.file.size
-          };
+          }
 
           if (!Jakduk.isEmpty($scope.images)) {
             var tempImages = JSON.parse($scope.images);
-            tempImages.push(imageInfo);
-            $scope.images = JSON.stringify(tempImages);
-          } else {
-            var tempImages = [];
-            tempImages.push(imageInfo);
-            $scope.images = JSON.stringify(tempImages);
+            var rmIdx = -1;
+
+            tempImages.forEach(function (entry, index) {
+              if (entry.uid == fileItem.uid) {
+                rmIdx = index;
+              }
+            });
+
+            if (rmIdx != -1) {
+              tempImages.splice(rmIdx, 1);
+              $scope.images = JSON.stringify(tempImages);
+            }
           }
 
-          $(".summernote").summernote("insertImage", imageUrl, function ($image) {
-            $image.addClass("img-responsive");
-          });
-        } else {
-          console.error(response.message);
-        }
-      };
+          console.log("fileItem removed(stored). status=" + status);
+        });
+        reqPromise.error(function (data, status, headers, config) {
+          console.error(data.message);
+        });
+      }
+    };
 
-      // 에디터 아래의 이미지 업로드 버튼을 누를 때.
-      $scope.insertImage = function (item) {
-        var imageUrl = "{{thumbnailServerUrl}}/gallery/" + item.uid;
+    // 지금 업로드한 이미지를 큐에서 삭제.
+    $scope.removeQueueItem = function (fileItem) {
+
+      if (fileItem.uid != null) {
+
+        var bUrl = '{{apiServerUrl}}/gallery/' + fileItem.uid;
+
+        var reqPromise = $http.delete(bUrl);
+
+        reqPromise.success(function (data, status, headers, config) {
+
+          fileItem.remove();
+
+          if (!Jakduk.isEmpty($scope.images)) {
+            var tempImages = JSON.parse($scope.images);
+            var rmIdx = -1;
+
+            tempImages.forEach(function (entry, index) {
+              if (entry.uid == fileItem.uid) {
+                rmIdx = index;
+              }
+            });
+
+            if (rmIdx != -1) {
+              tempImages.splice(rmIdx, 1);
+              $scope.images = JSON.stringify(tempImages);
+            }
+            console.log("fileItem removed(queue). status=" + status);
+          }
+
+        });
+        reqPromise.error(function (data, status, headers, config) {
+          console.error(data.message);
+        });
+      }
+    };
+
+    // 이미지 업로드를 완료.
+    $scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
+
+      if (status == 200) {
+        var imageUrl = "{{thumbnailServerUrl}}/gallery/" + response.id;
+
+        fileItem.uid = response.id;
+
+        var imageInfo = {
+          uid: fileItem.uid,
+          name: fileItem.newName,
+          fileName: fileItem.file.name,
+          size: fileItem.file.size
+        };
+
+        if (!Jakduk.isEmpty($scope.images)) {
+          var tempImages = JSON.parse($scope.images);
+          tempImages.push(imageInfo);
+          $scope.images = JSON.stringify(tempImages);
+        } else {
+          var tempImages = [];
+          tempImages.push(imageInfo);
+          $scope.images = JSON.stringify(tempImages);
+        }
 
         $(".summernote").summernote("insertImage", imageUrl, function ($image) {
           $image.addClass("img-responsive");
         });
-      };
+      } else {
+        console.error(response.message);
+      }
+    };
 
-      $scope.imageUpload = function (files, editor) {
-        $scope.uploader.addToQueue(files);
-      };
+    // 에디터 아래의 이미지 업로드 버튼을 누를 때.
+    $scope.insertImage = function (item) {
+      var imageUrl = "{{thumbnailServerUrl}}/gallery/" + item.uid;
 
-      $scope.validationCategory = function () {
-        if ($scope.boardFreeWrite.categoryName.$invalid) {
-          $scope.categoryAlert = {
+      $(".summernote").summernote("insertImage", imageUrl, function ($image) {
+        $image.addClass("img-responsive");
+      });
+    };
+
+    $scope.imageUpload = function (files, editor) {
+      $scope.uploader.addToQueue(files);
+    };
+
+    $scope.validationCategory = function () {
+      if ($scope.boardFreeWrite.categoryName.$invalid) {
+        $scope.categoryAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "common.msg.required"}}'
+        };
+      } else {
+        $scope.categoryAlert = {
+          "classType": "text-success",
+          "msg": '{{TRANSLATION "user.msg.available.data"}}'
+        };
+      }
+    };
+
+    $scope.validationSubject = function () {
+      if ($scope.boardFreeWrite.subject.$invalid) {
+        if ($scope.boardFreeWrite.subject.$error.required) {
+          $scope.subjectAlert = {
             "classType": "text-danger",
             "msg": '{{TRANSLATION "common.msg.required"}}'
           };
-        } else {
-          $scope.categoryAlert = {
-            "classType": "text-success",
-            "msg": '{{TRANSLATION "user.msg.available.data"}}'
-          };
-        }
-      };
-
-      $scope.validationSubject = function () {
-        if ($scope.boardFreeWrite.subject.$invalid) {
-          if ($scope.boardFreeWrite.subject.$error.required) {
-            $scope.subjectAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "common.msg.required"}}'
-            };
-          } else if ($scope.boardFreeWrite.subject.$error.minlength || $scope.boardFreeWrite.subject.$error.maxlength) {
-            $scope.subjectAlert = {
-              "classType": "text-danger",
-              "msg": '{{TRANSLATION "Size.boardFreeWrite.subject"}}'
-            };
-          }
-        } else {
+        } else if ($scope.boardFreeWrite.subject.$error.minlength || $scope.boardFreeWrite.subject.$error.maxlength) {
           $scope.subjectAlert = {
-            "classType": "text-success",
-            "msg": '{{TRANSLATION "user.msg.available.data"}}'
-          };
-        }
-      };
-
-      $scope.validationContent = function () {
-        if ($scope.content.length < Jakduk.SummernoteContentsMinSize) {
-          $scope.contentAlert = {
             "classType": "text-danger",
-            "msg": '{{TRANSLATION "Size.boardFreeWrite.content"}}'
-          };
-        } else {
-          $scope.contentAlert = {
-            "classType": "text-success",
-            "msg": '{{TRANSLATION "user.msg.available.data"}}'
+            "msg": '{{TRANSLATION "Size.boardFreeWrite.subject"}}'
           };
         }
-      };
-
-      $scope.validationGalleries = function () {
-        if (!Jakduk.isEmpty($scope.images)) {
-          var tempImages = JSON.parse($scope.images);
-          var rmIdx = -1;
-
-          tempImages.forEach(function (entry, index) {
-            if (entry.name != null && (entry.name.length < 2 || entry.name.length > 50)) {
-              entry.name = "";
-            }
-          });
-
-          $scope.images = JSON.stringify(tempImages);
-        }
-      };
-
-      function onSubmit(event) {
-        if ($scope.boardFreeWrite.$valid && $scope.content.length >= Jakduk.SummernoteContentsMinSize) {
-          isSubmitted = true;
-          $scope.btnSubmit = true;
-          $scope.validationGalleries();
-        } else {
-          isSubmitted = false;
-          $scope.validationCategory();
-          $scope.validationSubject();
-          $scope.validationContent();
-
-          $scope.buttonAlert = {
-            "classType": "text-danger",
-            "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
-          };
-          event.preventDefault();
-        }
+      } else {
+        $scope.subjectAlert = {
+          "classType": "text-success",
+          "msg": '{{TRANSLATION "user.msg.available.data"}}'
+        };
       }
+    };
 
-      function onDiscard() {
-        $window.location.href = '/board';
+    $scope.validationContent = function () {
+      if ($scope.content.length < Jakduk.SummernoteContentsMinSize) {
+        $scope.contentAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "Size.boardFreeWrite.content"}}'
+        };
+      } else {
+        $scope.contentAlert = {
+          "classType": "text-success",
+          "msg": '{{TRANSLATION "user.msg.available.data"}}'
+        };
       }
-    });
+    };
+
+    $scope.validationGalleries = function () {
+      if (!Jakduk.isEmpty($scope.images)) {
+        var tempImages = JSON.parse($scope.images);
+        tempImages.forEach(function (entry, index) {
+          if (entry.name != null && (entry.name.length < 2 || entry.name.length > 50)) {
+            entry.name = "";
+          }
+        });
+
+        $scope.images = JSON.stringify(tempImages);
+      }
+    };
+
+    function onSubmit(event) {
+      if ($scope.boardFreeWrite.$valid && $scope.content.length >= Jakduk.SummernoteContentsMinSize) {
+        isSubmitted = true;
+        $scope.btnSubmit = true;
+        $scope.validationGalleries();
+      } else {
+        isSubmitted = false;
+        $scope.validationCategory();
+        $scope.validationSubject();
+        $scope.validationContent();
+
+        $scope.buttonAlert = {
+          "classType": "text-danger",
+          "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
+        };
+        event.preventDefault();
+      }
+    }
+
+    function onDiscard() {
+      $window.location.href = '/board';
+    }
+  });
 
   $(document).ready(function () {
     App.init();
