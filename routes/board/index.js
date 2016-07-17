@@ -3,7 +3,7 @@
 var express = require('express');
 var _ = require('lodash');
 
-function list(req, res) {
+function postList(req, res) {
   var category = _.toUpper(!req.query.category || req.query.category === 'none' ? 'all' : req.query.category);
   Promise.all([
     req.api.getPosts({
@@ -26,7 +26,14 @@ function list(req, res) {
   });
 }
 
-function view(req, res) {
+function commentList(req, res) {
+  res.render('board/comment_list', {
+    title: ['board.free.breadcrumbs.comments', 'board.name.free', 'common.jakduk'],
+    head_page: 'head_board'
+  });
+}
+
+function viewPost(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
     var data = response.data;
     res.render('board/post_view', {
@@ -40,14 +47,39 @@ function view(req, res) {
   });
 }
 
+function writePost(req, res) {
+  res.render('board/post_write', {
+    title: ['board.write', 'common.jakduk'],
+    head_page: 'head_board_view'
+  });
+}
+
+function editPost(req, res) {
+  req.api.getPost(req.params.id).then(function (response) {
+    var data = response.data;
+    res.render('board/post_write', {
+      pre_title: data.subject,
+      title: ['board.edit', 'common.jakduk'],
+      head_page: 'head_board_view',
+      post: data.post
+    });
+  });
+}
+
 module.exports.setup = function(app) {
   var router = express.Router();
 
-  router.get('/free', list);
+  router.get('/free', postList);
 
-  router.get('/free/posts', list);
+  router.get('/free/posts', postList);
 
-  router.get('/free/:id', view);
+  router.get('/free/comments', commentList);
+
+  router.get('/free/write', writePost);
+
+  router.get('/free/edit/:id', editPost);
+
+  router.get('/free/:id', viewPost);
 
   app.use('/board', router);
 };
