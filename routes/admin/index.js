@@ -14,6 +14,7 @@ module.exports.setup = function (app) {
     res.render('admin/admin', {
       pre_title: 'ADMIN PAGE',
       title: ['common.jakduk'],
+      baseHref: '/',
       head_page: 'head_admin'
     });
   });
