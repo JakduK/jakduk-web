@@ -18,7 +18,7 @@ function postList(req, res) {
     });
     res.render('board/post_list', {
       title: ['board.free.breadcrumbs.posts', 'board.name.free', 'common.jakduk'],
-      head_page: 'head_board',
+      headPage: 'head_board',
       nowDate: Date.now(),
       category: category,
       number: res.locals.number + 1
@@ -39,7 +39,7 @@ function commentList(req, res) {
     });
     res.render('board/comment_list', {
       title: ['board.free.breadcrumbs.comments', 'board.name.free', 'common.jakduk'],
-      head_page: 'head_board',
+      headPage: 'head_board',
       number: res.locals.number + 1
     });
   });
@@ -49,9 +49,9 @@ function viewPost(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
     var data = response.data;
     res.render('board/post_view', {
-      pre_title: data.subject,
+      preTitle: data.subject,
       title: ['board.name.free', 'common.jakduk'],
-      head_page: 'head_board_view',
+      headPage: 'head_board_view',
       post: data.post,
       nextPost: data.nextPost,
       prevPost: data.prevPost
@@ -62,7 +62,7 @@ function viewPost(req, res) {
 function writePost(req, res) {
   res.render('board/post_write', {
     title: ['board.write', 'common.jakduk'],
-    head_page: 'head_board_view'
+    headPage: 'head_board_view'
   });
 }
 
@@ -70,9 +70,9 @@ function editPost(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
     var data = response.data;
     res.render('board/post_write', {
-      pre_title: data.subject,
+      preTitle: data.subject,
       title: ['board.edit', 'common.jakduk'],
-      head_page: 'head_board_view',
+      headPage: 'head_board_view',
       post: data.post
     });
   });

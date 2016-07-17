@@ -8,7 +8,7 @@ function index(req, res) {
     var footballClubs = response.data;
     res.render('login/join', {
       title: ['user.register', 'common.jakduk'],
-      head_page: 'head_join',
+      headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
       isEmailSignup: true
@@ -32,7 +32,7 @@ function submit(req, res) {
     } else {
       res.render('login/join', {
         title: ['user.register', 'common.jakduk'],
-        head_page: 'head_join'
+        headPage: 'head_join'
       });
     }
   });
@@ -48,7 +48,7 @@ function indexOAuth(req, res) {
     var snsProfile = responses[1].data;
     res.render('login/join', {
       title: ['user.register', 'common.jakduk'],
-      head_page: 'head_join',
+      headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
       isEmailSignup: false,
@@ -70,7 +70,7 @@ function submitOAuth(req, res) {
     } else {
       res.render('login/join', {
         title: ['user.register', 'common.jakduk'],
-        head_page: 'head_login'
+        headPage: 'head_login'
       });
     }
   });

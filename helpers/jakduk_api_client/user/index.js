@@ -1,7 +1,6 @@
 'use strict';
 
 var rest = require('restler');
-var querystring = require('querystring');
 
 module.exports = function(ApiClient) {
   var callback = ApiClient.prototype._callback;

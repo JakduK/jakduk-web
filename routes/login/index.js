@@ -8,7 +8,7 @@ var config = require('../../config/environment');
 function index(req, res) {
   res.render('login/login', {
     title: ['user.sign.in', 'common.jakduk'],
-    head_page: 'head_login',
+    headPage: 'head_login',
     redir: req.headers.referer
   });
 }
@@ -29,7 +29,7 @@ function submit(req, res) {
     } else {
       res.render('login/login', {
         title: ['user.sign.in', 'common.jakduk'],
-        head_page: 'head_login',
+        headPage: 'head_login',
         result: 'failure',
         message: response.data.message
       });

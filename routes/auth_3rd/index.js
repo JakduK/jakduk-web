@@ -3,7 +3,6 @@
 var express = require('express');
 var querystring = require('querystring');
 var _ = require('lodash');
-var cookie = require('cookie');
 var config = require('../../config/environment');
 var oauthClient = require('../../helpers/oauth');
 var SessionUtil = require('../../helpers/jakduk_session_util');

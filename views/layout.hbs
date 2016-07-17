@@ -5,10 +5,10 @@
   <base href="{{baseHref}}">
 {{/if}}
   <head>
-  <title>{{#if pre_title}}{{{pre_title}}} &middot; {{/if}}{{{TITLE title}}}</title>
+  <title>{{#if preTitle}}{{{preTitle}}} &middot; {{/if}}{{{TITLE title}}}</title>
   {{> head_common}}
-  {{#if head_page}}
-    {{> (lookup . 'head_page')}}
+  {{#if headPage}}
+    {{> (lookup . 'headPage')}}
   {{/if}}
   </head>
 

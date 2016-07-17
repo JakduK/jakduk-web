@@ -10,20 +10,17 @@ module.exports.setup = function (app) {
       req.api.latest(),
       req.api.encyclopedia(res.locals.locale)
     ]).then(function (responses) {
-      var datas = responses.map(function (response) {
-        return response.data
-      });
       res.render('home/home', {
         title: ['common.home', 'common.jakduk'],
-        head_page: 'head_home',
+        headPage: 'head_home',
         timeNow: Date.now(),
         data: {
-          posts: datas[0].posts || [],
-          users: datas[0].users || [],
-          comments: datas[0].comments || [],
-          galleries: datas[0].galleries || [],
-          homeDescription: datas[0].homeDescription || {},
-          encyclopedia: datas[1]
+          posts: responses[0].data.posts || [],
+          users: responses[0].data.users || [],
+          comments: responses[0].data.comments || [],
+          galleries: responses[0].data.galleries || [],
+          homeDescription: responses[0].data.homeDescription || {},
+          encyclopedia: responses[1].data
         }
       });
     }).catch(function (err) {

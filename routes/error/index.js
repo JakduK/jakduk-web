@@ -12,7 +12,7 @@ module.exports.setup = function (app) {
     res.status(err.status || 500);
     res.render('error/error', {
       title: ['common.error', 'common.jakduk'],
-      head_page: 'head_error',
+      headPage: 'head_error',
       message: err.message,
       error: isProd ? '' : err.stack,
       code: err.status || 500,
