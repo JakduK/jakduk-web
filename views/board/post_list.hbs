@@ -159,7 +159,7 @@
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-user visible-xs-inline"></span>{{writer.username}} |
               {{#if (OPR '<' (DATE_BY_ID id) ../nowDate)}}
-                <span ng-bind="'{{DATE_BY_ID id}}' | date:'shortDate'"></span>
+                <span ng-bind="'{{DATE_BY_ID id}}' | date:'mediumDate'"></span>
               {{else}}
                 <span ng-bind="'{{DATE_BY_ID id}}' | date:'shortTime'"></span>
               {{/if}}
@@ -208,7 +208,7 @@
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-user visible-xs-inline"></span> {{writer.username}} |
                 {{#if (OPR '<' (DATE_BY_ID id) ../nowDate)}}
-                  <span ng-bind="'{{DATE_BY_ID id}}' | date:'shortDate'"></span>
+                  <span ng-bind="'{{DATE_BY_ID id}}' | date:'mediumDate'"></span>
                 {{else}}
                   <span ng-bind="'{{DATE_BY_ID id}}' | date:'shortTime'"></span>
                 {{/if}}
