@@ -194,16 +194,14 @@
 
 <script type="text/javascript">
   angular.module('jakdukApp', [
-    'ngSanitize', 'ui.bootstrap', 'jakdukCommon'
+    'ngSanitize',
+    'ui.bootstrap',
+    'jakdukCommon'
   ]).controller("boardCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
     var page = parseInt('{{number}}');
     var size = parseInt('{{size}}');
-    var total = Number('{{totalElements}}');
+    var total = parseInt('{{totalElements}}');
 
-    $scope.dataCommentsConn = "loading";
-    $scope.dataTopPostConn = "loading";
-    $scope.comments = [];
-    $scope.postsHavingComments = {};
     $scope.commentFeelingConn = {};
     $scope.commentFeelingAlert = {};
     $scope.numberOfCommentLike = {};
