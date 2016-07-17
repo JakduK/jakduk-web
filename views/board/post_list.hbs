@@ -271,18 +271,14 @@
       } else {
         $scope.currentPage = 1;
       }
-
       $scope.totalItems = total;
       $scope.itemsPerPage = size;
 
       $scope.btnEnter = function () {
-
         var isValid = true;
-
         if ($scope.searchWords.trim() < 1) {
           isValid = false;
         }
-
         if (isValid) {
           location.href = '/search?q=' + $scope.searchWords.trim() + '&w=PO;CO;';
         }

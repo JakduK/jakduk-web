@@ -27,9 +27,21 @@ function postList(req, res) {
 }
 
 function commentList(req, res) {
-  res.render('board/comment_list', {
-    title: ['board.free.breadcrumbs.comments', 'board.name.free', 'common.jakduk'],
-    head_page: 'head_board'
+  Promise.all([
+    req.api.getComments({
+      page: req.query.page,
+      size: req.query.size
+    }),
+    req.api.getTopPosts()
+  ]).then(function (responses) {
+    responses.forEach(function(response) {
+      _.merge(res.locals, response.data);
+    });
+    res.render('board/comment_list', {
+      title: ['board.free.breadcrumbs.comments', 'board.name.free', 'common.jakduk'],
+      head_page: 'head_board',
+      number: res.locals.number + 1
+    });
   });
 }
 

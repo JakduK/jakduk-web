@@ -51,4 +51,12 @@ module.exports = function(ApiClient) {
       rest.json(this.serverUrl + '/board/free/' + seq).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
+
+  ApiClient.prototype.getComments = function(query) {
+    return new Promise(function(resolve) {
+      rest.json(this.serverUrl + '/board/free/comments', null, {
+        query: query
+      }).on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
 };
