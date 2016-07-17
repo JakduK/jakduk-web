@@ -2,7 +2,6 @@ var path = require('path');
 var hbs = require('hbs');
 var hbsUtils = require('hbs-utils')(hbs);
 var i18n = require('i18n');
-var moment = require('moment');
 var filesize = require('filesize');
 var _ = require('lodash');
 
@@ -65,16 +64,12 @@ hbs.registerHelper('JSON_STRINGIFY', function(val) {
   return JSON.stringify(val||{}).replace(/\\/g, '\\\\');
 });
 
-hbs.registerHelper('DATE_FORMAT', function(val, format) {
-  return moment(val).format(format);
-});
-
 hbs.registerHelper('GET_PROP', function(obj, key) {
   return obj[key];
 });
 
 hbs.registerHelper('DATE_BY_ID', function(id) {
-  return new Date(parseInt(id.substring(0, 8), 16) * 1000);
+  return new Date(parseInt(id.substring(0, 8), 16) * 1000).getTime();
 });
 
 hbs.registerHelper('SIZE_FORMAT', function(val) {
