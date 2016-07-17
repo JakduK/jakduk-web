@@ -8,6 +8,6 @@ module.exports = {
   },
   clearSession: function(res) {
     res.clearCookie('JSESSIONID');
-    res.clearCookie('rememeber-me');
+    res.clearCookie('remember-me');
   }
 };
