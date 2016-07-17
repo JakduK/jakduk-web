@@ -3,18 +3,25 @@
 var express = require('express');
 
 function index(req, res) {
-  res.render('user/profile', {
-    title: ['common.jakduk', 'user.profile'],
-    head_page: 'head_profile'
+  req.api.getUserProfile().then(function (response) {
+    res.render('user/profile', {
+      title: ['common.jakduk', 'user.profile'],
+      head_page: 'head_profile',
+      userProfile: response.data
+    });
   });
 }
 
 function editProfile(req, res) {
-  req.api.footballClubs(req.locale).then(function (response) {
+  Promise.all([
+    req.api.getUserProfile(),
+    req.api.footballClubs(req.locale)
+  ]).then(function (responses) {
     res.render('user/profile_edit', {
       title: ['common.jakduk', 'user.profile.update'],
       head_page: 'head_profile',
-      footballClubs: response.data
+      userProfile: responses[0].data,
+      footballClubs: responses[1].data
     });
   });
 }

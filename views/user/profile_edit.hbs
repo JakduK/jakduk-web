@@ -17,8 +17,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">{{TRANSLATION "user.email"}}</label>
         <div class="col-sm-4">
-          <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}'
-            ng-init="email='{{userInfo.email}}'" ng-model="email" disabled="disabled">
+          <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}' ng-init="email='{{userProfile.email}}'" ng-model="email" disabled="disabled">
         </div>
       </div>
 
@@ -29,7 +28,7 @@
         </label>
         <div class="col-sm-4">
           <input type="text" name="username" class="form-control" placeholder="{{TRANSLATION "user.placeholder.username"}}"
-            ng-model="username" ng-init="username='{{userInfo.username}}'"
+            ng-model="username" ng-init="username='{{userProfile.username}}'"
             ng-blur="onUsername()" ng-keyup="validationUsername()"
             ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
 
@@ -49,7 +48,9 @@
             <option value="">{{TRANSLATION "common.none"}}</option>
             {{#each footballClubs as |club|}}
               {{#each club.names}}
-                <option value="{{club.id}}" {{#if (EQ club.id ../../userInfo.footballClub.id)}}selected{{/if}}>{{fullName}}</option>
+                <option value="{{club.id}}" {{#if (EQ fullName ../../userProfile.footballClubName)}}selected{{/if}}>
+                  {{fullName}}
+                </option>
               {{/each}}
             {{/each}}
           </select>
@@ -60,7 +61,7 @@
         <label class="col-sm-2 control-label">{{TRANSLATION "user.comment"}}</label>
         <div class="col-sm-4">
           <!-- form:textarea 태그를 사용하면서 placeholder에 spring:message를 넣으면 제대로 안나온다. -->
-          <textarea ng-init="about='{{userInfo.about}}'" ng-model="about" name="about" class="form-control" cols="40" rows="3"></textarea>
+          <textarea ng-init="about='{{userProfile.about}}'" ng-model="about" name="about" class="form-control" cols="40" rows="3"></textarea>
         </div>
       </div>
 

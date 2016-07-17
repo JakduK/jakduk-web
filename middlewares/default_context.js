@@ -10,7 +10,7 @@ module.exports = function (app) {
     req.noRedirectPaths = config.noRedirectPaths;
     req.api = new ApiClient(req.headers.cookie || '', config.apiServerUrl);
 
-    req.api.profile().then(function (response) {
+    req.api.getUserInfo().then(function (response) {
       if (response.statusCode === 200) {
         req.userInfo = response.data;
       } else if (response.statusCode === 401) {
