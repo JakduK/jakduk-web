@@ -298,5 +298,6 @@
 	"oauth.register.header": "SNS로 계정 만들기",
 	"Size.userWrite.email": "이메일 주소의 길이는 6 ~ 30자 입니다.",
 	"Size.userWrite.username": "별명의 길이는 최소 2 ~ 20자 입니다.",
-	"Size.userWrite.password": "비밀번호의 길이는 4 ~ 20자 입니다."
+	"Size.userWrite.password": "비밀번호의 길이는 4 ~ 20자 입니다.",
+	"msg.comingsoon": "준비중입니다."
 }

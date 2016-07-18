@@ -298,5 +298,6 @@
 	"oauth.register.header": "Register a new account with SNS",
 	"Size.userWrite.email": "The length of email is 6 ~ 30 characters.",
 	"Size.userWrite.username": "The length of nickname is 2 ~ 20 characters.",
-	"Size.userWrite.password": "The length of password is 4 ~ 20 characters."
+	"Size.userWrite.password": "The length of password is 4 ~ 20 characters.",
+	"msg.comingsoon": "Coming soon."
 }

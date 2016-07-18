@@ -8,6 +8,10 @@ module.exports = function (app) {
   require('./user').setup(app);
   require('./board').setup(app);
   require('./about').setup(app);
+  require('./gallery').setup(app);
+  require('./jakdu').setup(app);
+  require('./stats').setup(app);
+  require('./search').setup(app);
   require('./admin').setup(app);
   require('./error').setup(app);
 };
