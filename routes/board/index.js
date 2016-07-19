@@ -49,15 +49,15 @@ function commentList(req, res) {
 
 function viewPost(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
-    var post = response.data;
+    var postData = response.data;
     res.render('board/post_view', {
-      preTitle: post.subject,
+      preTitle: postData.post.subject,
       title: ['board.name.free', 'common.jakduk'],
       headPage: 'head_board_view',
-      nextPost: post.nextPost,
-      prevPost: post.prevPost,
-      post: _.merge(post.post, {
-        galleries: post.post.galleries || []
+      nextPost: postData.nextPost,
+      prevPost: postData.prevPost,
+      post: _.merge(postData.post, {
+        galleries: postData.post.galleries || []
       })
     });
   });
@@ -79,13 +79,13 @@ function editPost(req, res) {
     req.api.getPost(req.params.id)
   ]).then(function (responses) {
     var categories = responses[0].data.categories;
-    var post = responses[1].data;
+    var postData = responses[1].data;
     res.render('board/post_write', {
-      preTitle: post.subject,
+      preTitle: postData.post.subject,
       title: ['board.edit', 'common.jakduk'],
       headPage: 'head_board_view',
       categories: categories,
-      post: post
+      post: postData.post
     });
   });
 }
