@@ -114,7 +114,7 @@
         <div>
           <h5 class="media-heading">
             <i aria-hidden="true" class="icon-user"></i> {{writer.username}}
-            <span ng-bind="'{{DATE_BY_ID id}}' | date:'medium'"></span>
+            <span>{{DATE_FORMAT (DATE_BY_ID id) 'LLL' ../locale}}</span>
           </h5>
           <p>
           {{#if (EQ status.device 'MOBILE')}}
@@ -190,7 +190,7 @@
 <script src="/jakduk/js/jakduk.js"></script>
 
 <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-<script src="/bower_components/summernote/lang/summernote-ko-KR.js"></script>
+<script src="/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}.js"></script>
 
 <script type="text/javascript">
   angular.module('jakdukApp', [

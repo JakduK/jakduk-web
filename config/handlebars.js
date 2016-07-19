@@ -4,6 +4,7 @@ var hbsUtils = require('hbs-utils')(hbs);
 var i18n = require('i18n');
 var filesize = require('filesize');
 var _ = require('lodash');
+var moment = require('moment');
 
 hbs.registerHelper('TITLE', function(val, options) {
   var TRANSLATION = hbs.handlebars.helpers.TRANSLATION;
@@ -61,7 +62,7 @@ hbs.registerHelper('OPR', function(operator, v1, v2) {
 });
 
 hbs.registerHelper('JSON_STRINGIFY', function(val) {
-  return JSON.stringify(val||{}).replace(/\\/g, '\\\\');
+  return val ? JSON.stringify(val).replace(/\\/g, '\\\\') : '';
 });
 
 hbs.registerHelper('GET_PROP', function(obj, key) {
@@ -76,6 +77,11 @@ hbs.registerHelper('SIZE_FORMAT', function(val) {
   return filesize(val);
 });
 
+hbs.registerHelper('DATE_FORMAT', function(val, format, locale) {
+  moment.locale(locale);
+  return moment(val).format(format);
+});
+
 hbs.registerHelper('ARRAY_SIZE', function(val) {
   return (val || []).length;
 });
@@ -85,9 +91,23 @@ hbs.registerHelper('CONCAT', function() {
 });
 
 hbs.registerHelper('CATEGORY_NAME', function(category, locale) {
-  return (_.find(category.names, function (name) {
+  return (_.find((category || {}).names || [], function (name) {
     return locale === name.language;
-  }) || {name: ''}).name;
+  }) || {name: ''}).name || '';
+});
+
+hbs.registerHelper('PICK_CATEGORY', function(categories, code) {
+  return _.find(categories, function (category) {
+    return category.code === code;
+  });
+});
+
+hbs.registerHelper('DEFAULT_VALUE', function(val1, val2) {
+  return val1 || val2;
+});
+
+hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
+  return locale.startsWith('ko') ? 'ko-KR' : 'en-US';
 });
 
 if (process.env.NODE_ENV === 'development') {

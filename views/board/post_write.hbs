@@ -11,16 +11,21 @@
   <!--=== End Breadcrumbs ===-->
 
   <div class="container content" ng-controller="FreeWriteCtrl">
-    <form name="boardFreeWrite" action="/board/free/write" method="POST" ng-submit="onSubmit($event)">
-      <div class="form-group" ng-class="{'has-success':boardFreeWrite.categoryName.$valid, 'has-error':boardFreeWrite.categoryName.$invalid}">
+    <div class="alert alert-danger" ng-show="submitErred" ng-if="submitErred" style="display:none;">
+      <p>{{TRANSLATION 'common.msg.error.406'}}</p>
+    </div>
+
+    <form name="boardFreeWrite" ng-submit="onSubmit($event)">
+      <div class="form-group" ng-class="{'has-success':boardFreeWrite.category.$valid, 'has-error':boardFreeWrite.category.$invalid}">
         <div class="row">
           <div class="col-sm-3">
-            <label for="categoryName" class="control-label"><abbr title="required">*</abbr>
-              {{TRANSLATION "board.category"}}</label>
-            <select name="categoryName" class="form-control" ng-model="categoryName" ng-init="categoryName='{{boardFreeWrite.categoryName}}'" ng-change="validationCategory()" ng-required="true">
+            <label for="category" class="control-label">
+              <abbr title="required">*</abbr> {{TRANSLATION "board.category"}}
+            </label>
+            <select id="category" name="category" class="form-control" ng-model="category" ng-init="category='{{post.category.code}}'" ng-change="validationCategory()" ng-required="true">
               <option value="">{{TRANSLATION "board.category.init"}}</option>
-            {{#each boardCategories}}
-              <option value="{{name}}">{{TRANSLATION resName}}</option>
+            {{#each categories as |category|}}
+              <option value="{{category.code}}">{{CATEGORY_NAME category ../locale}}</option>
             {{/each}}
             </select>
             <span ng-class="categoryAlert.classType" ng-show="categoryAlert.msg" ng-bind="categoryAlert.msg"></span>
@@ -34,7 +39,7 @@
         </label>
         <input type="text" name="subject" class="form-control" placeholder='{{TRANSLATION "board.placeholder.subject"}}'
           ng-model="subject" ng-change="validationSubject()" ng-model-options="{ debounce: 400 }"
-          ng-required="true" ng-minlength="3" ng-maxlength="60">
+          ng-required="true" ng-minlength="3" ng-maxlength="60" ng-init="subject='{{post.subject}}'">
         <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':boardFreeWrite.subject.$valid,
         'glyphicon-remove':boardFreeWrite.subject.$invalid}"></span>
         <span ng-class="subjectAlert.classType" ng-show="subjectAlert.msg" ng-bind="subjectAlert.msg"></span>
@@ -44,7 +49,7 @@
         <label for="content" class="control-label">
           <abbr title="required">*</abbr> {{TRANSLATION "board.content"}}
         </label>
-        <summernote config="options" ng-model="content" on-image-upload="imageUpload(files, editor)" editable="editable"></summernote>
+        <summernote config="options" ng-model="content" on-image-upload="imageUpload(files, editor)" editable="editable"  ng-init="content='{{post.content}}'"></summernote>
         <span ng-class="contentAlert.classType" ng-show="contentAlert.msg" ng-bind="contentAlert.msg"></span>
       </div>
 
@@ -56,7 +61,7 @@
         <!-- sotred Images -->
         <div class="media col-xs-12 col-sm-4" ng-repeat="item in storedImages">
           <div class="media-left media-middle">
-            <img class="media-object" ng-src="<%=request.getContextPath()%>/gallery/thumbnail/{%item.uid%}" style="width:50px; height:50px;">
+            <img class="media-object" ng-src="{%item.url%}" style="width:50px; height:50px;">
           </div>
           <div class="media-body">
             <h5 class="media-heading">
@@ -78,7 +83,7 @@
         <!-- queue Images -->
         <div class="media col-xs-12 col-sm-4" ng-repeat="item in uploader.queue">
           <div class="media-left media-middle">
-            <img class="media-object" ng-src="/gallery/thumbnail/{%item.uid%}" style="width:50px; height:50px;">
+            <img class="media-object" ng-src="{%item.url%}" style="width:50px; height:50px;">
           </div>
           <div class="media-body">
             <h5 class="media-heading">
@@ -142,14 +147,15 @@
 <script src="/jakduk/js/jakduk.js"></script>
 
 <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-<script src="/bower_components/summernote/lang/summernote-ko-KR.js"></script>
+<script src="/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}.js"></script>
 
 <script type="text/javascript">
   angular.module("jakdukApp", [
     "summernote", "angularFileUpload", "angular-ladda", 'jakdukCommon'
-  ]).controller('FreeWriteCtrl', function ($scope, $http, $window, $document, FileUploader) {
-    var document = $document[0],
-      isSubmitted;
+  ]).controller('FreeWriteCtrl', [
+    '$scope', '$http', '$window', 'FileUploader',
+  function ($scope, $http, $window, FileUploader) {
+    var images = angular.fromJson('{{{DEFAULT_VALUE (JSON_STRINGIFY post.galleries) '[]'}}}');
 
     $scope.onSubmit = onSubmit;
     $scope.onDiscard = onDiscard;
@@ -160,26 +166,20 @@
     $scope.buttonAlert = {};
     $scope.storedImages = [];
 
+    images.forEach(function (entry) {
+      $scope.storedImages.push(entry);
+    });
+
     $window.onbeforeunload = function (e) {
-      if (!isSubmitted && $scope.boardFreeWrite.$dirty) {
+      if (!$scope.btnSubmit && !$scope.boardFreeWrite.$pristine) {
         (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
         return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
       }
     };
 
-    angular.element(document).ready(function () {
-      if (!Jakduk.isEmpty($scope.images)) {
-        var objImages = JSON.parse($scope.images);
-        objImages.forEach(function (entry) {
-          $scope.storedImages.push(entry);
-          $scope.$apply();
-        });
-      }
-    });
-
     $scope.options = {
       height: 0,
-      lang: "${summernoteLang}",
+      lang: '{{SUMMERNOTE_LOCALE locale}}',
       toolbar: [
         ['style', ['style']],
         ['font', ['bold', 'italic', 'underline', /*'superscript', 'subscript', */'strikethrough', 'clear']],
@@ -198,59 +198,50 @@
     $scope.uploader = new FileUploader({
       url: '{{apiServerUrl}}/gallery',
       autoUpload: true,
-      method: "POST"
+      method: 'POST',
+      withCredentials: true
     });
 
     // 이미 등록된 이미지들 가져오기.
     $scope.onGalleryItem = function (fileItem, type) {
-      if (!Jakduk.isEmpty($scope.images)) {
-        var tempImages = JSON.parse($scope.images);
-        var rmIdx = -1;
+      var rmIdx = -1, imageInfo;
 
-        tempImages.forEach(function (entry, index) {
-          if (entry.uid == fileItem.uid) {
-            rmIdx = index;
-          }
-        });
-
-        if (rmIdx != -1) {
-          if (type == 'queue') {
-            var imageInfo = {
-              uid: fileItem.uid,
-              name: fileItem.newName,
-              fileName: fileItem.file.name,
-              size: fileItem.file.size
-            };
-          } else if (type == 'stored') {
-            var imageInfo = {
-              uid: fileItem.uid,
-              name: fileItem.name,
-              fileName: fileItem.fileName,
-              size: fileItem.size
-            };
-          }
-
-          tempImages.splice(rmIdx, 1, imageInfo);
-          $scope.images = JSON.stringify(tempImages);
-          console.log("fileItem updated(queue). fileInfo=", imageInfo);
+      images.forEach(function (entry, index) {
+        if (entry.id === fileItem.id) {
+          rmIdx = index;
         }
+      });
+
+      if (rmIdx != -1) {
+        if (type == 'queue') {
+          imageInfo = {
+            id: fileItem.id,
+            name: fileItem.newName,
+            fileName: fileItem.file.name,
+            size: fileItem.file.size
+          };
+        } else if (type == 'stored') {
+          imageInfo = {
+            id: fileItem.id,
+            name: fileItem.name,
+            fileName: fileItem.fileName,
+            size: fileItem.size
+          };
+        }
+
+        images.splice(rmIdx, 1, imageInfo);
       }
     };
 
     // 이미 등록된 이미지 삭제.
     $scope.removeStoredItem = function (fileItem) {
-      if (fileItem.uid != null) {
-        var bUrl = '{{apiServerUrl}}/gallery/' + fileItem.uid;
-
-        var reqPromise = $http.delete(bUrl);
-
-        reqPromise.success(function (data, status, headers, config) {
+      if (fileItem.id) {
+        $http.delete('{{apiServerUrl}}/gallery/' + fileItem.id).then(function () {
+          var rmIdx = -1;
 
           if (!Jakduk.isEmpty($scope.storedImages)) {
-            var rmIdx = -1;
-
             $scope.storedImages.forEach(function (entry, index) {
-              if (entry.uid == fileItem.uid) {
+              if (entry.id === fileItem.id) {
                 rmIdx = index;
               }
             });
@@ -260,115 +251,85 @@
             }
           }
 
-          if (!Jakduk.isEmpty($scope.images)) {
-            var tempImages = JSON.parse($scope.images);
-            var rmIdx = -1;
-
-            tempImages.forEach(function (entry, index) {
-              if (entry.uid == fileItem.uid) {
-                rmIdx = index;
-              }
-            });
-
-            if (rmIdx != -1) {
-              tempImages.splice(rmIdx, 1);
-              $scope.images = JSON.stringify(tempImages);
+          images.forEach(function (entry, index) {
+            if (entry.id === fileItem.id) {
+              rmIdx = index;
             }
-          }
+          });
 
-          console.log("fileItem removed(stored). status=" + status);
+          if (rmIdx != -1) {
+            images.splice(rmIdx, 1);
+          }
+        }, function (response) {
+          console.error(response.data.message);
         });
-        reqPromise.error(function (data, status, headers, config) {
-          console.error(data.message);
-        });
+      } else {
+        fileItem.remove();
       }
     };
 
     // 지금 업로드한 이미지를 큐에서 삭제.
     $scope.removeQueueItem = function (fileItem) {
-
-      if (fileItem.uid != null) {
-
-        var bUrl = '{{apiServerUrl}}/gallery/' + fileItem.uid;
-
-        var reqPromise = $http.delete(bUrl);
-
-        reqPromise.success(function (data, status, headers, config) {
-
+      if (fileItem.id) {
+        $http.delete('{{apiServerUrl}}/gallery/' + fileItem.id).then(function () {
           fileItem.remove();
 
-          if (!Jakduk.isEmpty($scope.images)) {
-            var tempImages = JSON.parse($scope.images);
-            var rmIdx = -1;
+          var rmIdx = -1;
 
-            tempImages.forEach(function (entry, index) {
-              if (entry.uid == fileItem.uid) {
-                rmIdx = index;
-              }
-            });
-
-            if (rmIdx != -1) {
-              tempImages.splice(rmIdx, 1);
-              $scope.images = JSON.stringify(tempImages);
+          images.forEach(function (entry, index) {
+            if (entry.id == fileItem.id) {
+              rmIdx = index;
             }
-            console.log("fileItem removed(queue). status=" + status);
+          });
+
+          if (rmIdx != -1) {
+            images.splice(rmIdx, 1);
           }
 
+        }, function (response) {
+          console.error(response.data.message);
         });
-        reqPromise.error(function (data, status, headers, config) {
-          console.error(data.message);
-        });
+      } else {
+        fileItem.remove();
       }
     };
 
     // 이미지 업로드를 완료.
-    $scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
-
-      if (status == 200) {
-        var imageUrl = "{{thumbnailServerUrl}}/gallery/" + response.id;
-
-        fileItem.uid = response.id;
+    $scope.uploader.onCompleteItem = function (fileItem, data, status) {
+      if (status === 200) {
+        fileItem.id = data.id;
+        fileItem.url = data.imageUrl;
 
         var imageInfo = {
-          uid: fileItem.uid,
+          id: fileItem.id,
           name: fileItem.newName,
           fileName: fileItem.file.name,
           size: fileItem.file.size
         };
 
-        if (!Jakduk.isEmpty($scope.images)) {
-          var tempImages = JSON.parse($scope.images);
-          tempImages.push(imageInfo);
-          $scope.images = JSON.stringify(tempImages);
-        } else {
-          var tempImages = [];
-          tempImages.push(imageInfo);
-          $scope.images = JSON.stringify(tempImages);
-        }
+        images.push(imageInfo);
 
-        $(".summernote").summernote("insertImage", imageUrl, function ($image) {
+        $(".summernote").summernote("insertImage", data.imageUrl, function ($image) {
           $image.addClass("img-responsive");
         });
       } else {
-        console.error(response.message);
+        console.error(data.message);
       }
     };
 
     // 에디터 아래의 이미지 업로드 버튼을 누를 때.
-    $scope.insertImage = function (item) {
-      var imageUrl = "{{thumbnailServerUrl}}/gallery/" + item.uid;
-
-      $(".summernote").summernote("insertImage", imageUrl, function ($image) {
+    $scope.insertImage = function (fileItem) {
+      $(".summernote").summernote("insertImage", fileItem.url, function ($image) {
         $image.addClass("img-responsive");
       });
     };
 
-    $scope.imageUpload = function (files, editor) {
+    $scope.imageUpload = function (files) {
       $scope.uploader.addToQueue(files);
     };
 
     $scope.validationCategory = function () {
-      if ($scope.boardFreeWrite.categoryName.$invalid) {
+      if ($scope.boardFreeWrite.category.$invalid) {
         $scope.categoryAlert = {
           "classType": "text-danger",
           "msg": '{{TRANSLATION "common.msg.required"}}'
@@ -417,25 +378,43 @@
     };
 
     $scope.validationGalleries = function () {
-      if (!Jakduk.isEmpty($scope.images)) {
-        var tempImages = JSON.parse($scope.images);
-        tempImages.forEach(function (entry, index) {
-          if (entry.name != null && (entry.name.length < 2 || entry.name.length > 50)) {
-            entry.name = "";
-          }
-        });
-
-        $scope.images = JSON.stringify(tempImages);
-      }
+      images.forEach(function (entry) {
+        if (entry.name != null && (entry.name.length < 2 || entry.name.length > 50)) {
+          entry.name = "";
+        }
+      });
     };
 
     function onSubmit(event) {
       if ($scope.boardFreeWrite.$valid && $scope.content.length >= Jakduk.SummernoteContentsMinSize) {
-        isSubmitted = true;
         $scope.btnSubmit = true;
         $scope.validationGalleries();
+
+      {{#if post}}
+        $http.put('{{apiServerUrl}}/board/free/{{post.seq}}', {
+          id: '{{post.id}}',
+          subject: $scope.subject,
+          content: $scope.content,
+          categoryCode: $scope.category,
+          images: images
+        }).then(function () {
+          $window.location = '/board/free/{{post.seq}}'
+        }, function () {
+          $scope.submitErred = true;
+        });
+      {{else}}
+        $http.post('{{apiServerUrl}}/board/free', {
+          subject: $scope.subject,
+          content: $scope.content,
+          categoryCode: $scope.category,
+          images: images
+        }).then(function (response) {
+          $window.location = '/board/free/' + response.data.seq
+        }, function () {
+          $scope.submitErred = true;
+        });
+      {{/if}}
       } else {
-        isSubmitted = false;
         $scope.validationCategory();
         $scope.validationSubject();
         $scope.validationContent();
@@ -449,9 +428,9 @@
     }
 
     function onDiscard() {
-      $window.location.href = '/board';
+      $window.location = '/board/free';
     }
-  });
+  }]);
 
   $(document).ready(function () {
     App.init();

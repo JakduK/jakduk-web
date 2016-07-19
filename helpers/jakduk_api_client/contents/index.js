@@ -59,4 +59,10 @@ module.exports = function(ApiClient) {
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
+
+  ApiClient.prototype.getBoardCategories = function() {
+    return new Promise(function(resolve) {
+      rest.json(this.serverUrl + '/board/free/categories').on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
 };

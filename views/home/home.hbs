@@ -35,8 +35,8 @@
                   <span aria-hidden="true" class="icon-user"></span>
                   <span ng-bind="post.writer.username"></span>
                   &nbsp;
-                  <span ng-if="{{timeNow}} > (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'longDate'"></span>
-                  <span ng-if="{{timeNow}} <= (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'shortTime'"></span>
+                  <span ng-if="{{todayDate}} > (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'longDate'"></span>
+                  <span ng-if="{{todayDate}} <= (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'shortTime'"></span>
                   &nbsp;
                   <span aria-hidden="true" class="icon-eye"></span> <span ng-bind="post.views"></span>
                 </small>
@@ -61,7 +61,8 @@
                   <span ng-bind="comment.writer.username"></span>
                 </strong>
                 <a href="/board/free/{{comment.boardItem.seq}}" ng-bind="comment.content"></a>
-                <span class="twitter-time" ng-bind="comment.id | dateFromObjectId | date:'medium'"></span>
+                <span class="twitter-time" ng-if="{{todayDate}} > (comment.id | intFromObjectId)" ng-bind="comment.id | dateFromObjectId | date:'longDate'"></span>
+                <span class="twitter-time" ng-if="{{todayDate}} <= (comment.id | intFromObjectId)" ng-bind="comment.id | dateFromObjectId | date:'shortTime'"></span>
               </div>
             </div>
           </div>

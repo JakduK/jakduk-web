@@ -60,11 +60,11 @@
 
     {{#if (OPR '&&' isAdmin (NOT_EQ post.status.notice 'DELETE'))}}
       {{#if (EQ post.status.notice 'NOTICE')}}
-        <button type="button" class="btn-u btn-u-default rounded" onclick="location.href='/board/notice/cancel/{{post.seq}}'">
+        <button type="button" class="btn-u btn-u-default rounded" onclick="location='/board/notice/cancel/{{post.seq}}'">
           {{TRANSLATION "common.button.cancel.notice"}}
         </button>
       {{else}}
-        <button type="button" class="btn-u rounded" onclick="location.href='/board/notice/set/{{post.seq}}'">
+        <button type="button" class="btn-u rounded" onclick="location='/board/notice/set/{{post.seq}}'">
           {{TRANSLATION "common.button.set.as.notice"}}
         </button>
       {{/if}}
@@ -105,7 +105,7 @@
 			<div class="blog-post-tags">
 				<ul class="list-unstyled list-inline blog-info">
 					<li><span aria-hidden="true" class="icon-user"></span> {{post.writer.username}}</li>
-					<li ng-bind="'{{post.id}}' | dateFromObjectId | date:'medium'"></li>
+					<li>{{DATE_FORMAT (DATE_BY_ID post.id) 'LLL' ../locale}}</li>
 					<li><span aria-hidden="true" class="icon-eye"></span> {{post.views}}</li>
 				</ul>
 			</div>
@@ -293,11 +293,11 @@
 
     {{#if (OPR '&&' isAdmin (NOT_EQ post.status.delete 'DELETE'))}}
       {{#if (EQ post.status.notice 'NOTICE')}}
-        <button type="button" class="btn-u btn-u-default rounded" onclick="location.href='/board/notice/cancel/{{post.seq}}'">
+        <button type="button" class="btn-u btn-u-default rounded" onclick="location='/board/notice/cancel/{{post.seq}}'">
           {{TRANSLATION "common.button.cancel.notice"}}
         </button>
       {{else}}
-        <button type="button" class="btn-u rounded" onclick="location.href='/board/notice/set/{{post.seq}}'">
+        <button type="button" class="btn-u rounded" onclick="location='/board/notice/set/{{post.seq}}'">
           {{TRANSLATION "common.button.set.as.notice"}}
         </button>
       {{/if}}
@@ -329,7 +329,7 @@
 <script src="/jakduk/js/jakduk.js"></script>
 
 <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-<script src="/bower_components/summernote/lang/summernote-ko-KR.js"></script>
+<script src="/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}.js"></script>
 
 <script type="text/javascript">
 	angular.module("jakdukApp", [
@@ -418,35 +418,39 @@
     };
 
     $scope.backToList = function () {
-      $window.location.href = '/board/free' + $window.location.search;
+      $window.location = '/board/free' + $window.location.search;
     };
 
     $scope.prevPost = function () {
-      $window.location.href = '/board/free/' + {{prevPost.seq}} + '/' + $window.location.search;
+      $window.location = '/board/free/' + {{prevPost.seq}} + '/' + $window.location.search;
     };
 
     $scope.nextPost = function () {
-      $window.location.href = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
+      $window.location = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
     };
 
     $scope.confirmDelete = function () {
+      var message, type;
       if ($scope.commentCount > 0) {
-        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}')) {
-          $window.location.href = '/board/free/delete/{{post.seq}}?type=postonly';
-        }
+        message = '{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}';
+        type = 'postonly';
       } else {
-        if ($window.confirm('{{TRANSLATION "board.msg.confirm.delete.post"}}')) {
-          $window.location.href = '/board/free/delete/{{post.seq}}?type=all';
-        }
+        message = '{{TRANSLATION "board.msg.confirm.delete.post"}}';
+        type = 'all';
+      }
+      if ($window.confirm(message)) {
+        $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}?type=' + type).then(function() {
+          $window.location = '/board/free';
+        });
       }
     };
 
     $scope.confirmEdit = function () {
       if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
-        $window.location.href = '/board/free/edit/{{post.seq}}';
+        $window.location = '/board/free/edit/{{post.seq}}';
       }
     };
-  }]).controller("commentCtrl", function ($scope, $http) {
+  }]).controller("commentCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
     $scope.boardCommentContentLengthMin = Jakduk.BoardCommentContentLengthMin;
     $scope.boardCommentContentLengthMax = Jakduk.BoardCommentContentLengthMax;
 
@@ -465,7 +469,7 @@
     // summernote config
     $scope.options = {
       height: 0,
-      lang: "${summernoteLang}",
+      lang: '{{SUMMERNOTE_LOCALE locale}}',
       toolbar: [
         ['font', ['bold']],
         // ['fontsize', ['fontsize']], // Still buggy
@@ -475,20 +479,20 @@
       ]
     };
 
-    $scope.focus = function (e) {
-      if ({{NOT isAuthenticated}}) {
-        if (window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}') == true) {
-          location.href = '/login';
+    $scope.focus = function () {
+      {{#if (NOT isAuthenticated)}}
+        if ($window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
+          $window.location = '/login';
         }
-      }
+      {{/if}}
     };
 
-    if ({{NOT isAuthenticated}}) {
+    {{#if (NOT isAuthenticated)}}
       $scope.summernoteAlert = {
         "classType": "text-danger",
         "msg": '{{TRANSLATION "board.msg.need.login.for.write"}}'
       };
-    }
+    {{/if}}
 
     // 댓글 달기
     $scope.btnWriteComment = function () {
@@ -602,7 +606,7 @@
         });
       }
     };
-  });
+  }]);
 
 	$(document).ready(function () {
 		App.init();

@@ -94,17 +94,20 @@
     <div class="row">
       <div class="col-sm-6 margin-bottom-10">
         <button type="button" class="btn-u rounded dropdown-toggle" data-toggle="dropdown">
-        {{#if (NOT_EQ category 'none')}}
-          {{GET_PROP categories category}}
+        {{#if (NOT_EQ category 'ALL')}}
+          {{CATEGORY_NAME (PICK_CATEGORY categories category) locale}}
         {{else}}
-          {{TRANSLATION "board.category"}}
+          {{TRANSLATION "board.category.all"}}
         {{/if}}
           <i class="fa fa-angle-down"></i>
         </button>
         <ul class="dropdown-menu" role="menu">
-        {{#each categories as |value key|}}
-          {{#if (NOT_EQ value (GET_PROP ../categories ../category))}}
-            <li><a href="?category={{key}}">{{value}}</a></li>
+        {{#if (NOT_EQ category 'ALL')}}
+          <li><a href="?category=ALL">{{TRANSLATION "board.category.all"}}</a></li>
+        {{/if}}
+        {{#each categories as |category|}}
+          {{#if (NOT_EQ category.code ../category)}}
+            <li><a href="?category={{category.code}}">{{CATEGORY_NAME category ../locale}}</a></li>
           {{/if}}
         {{/each}}
         </ul>
@@ -158,10 +161,10 @@
               </div>
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-user visible-xs-inline"></span>{{writer.username}} |
-              {{#if (OPR '<' (DATE_BY_ID id) ../nowDate)}}
-                <span ng-bind="'{{DATE_BY_ID id}}' | date:'mediumDate'"></span>
+              {{#if (OPR '<' (DATE_BY_ID id) ../todayDate)}}
+                <span>{{DATE_FORMAT (DATE_BY_ID id) 'LL' ../locale}}</span>
               {{else}}
-                <span ng-bind="'{{DATE_BY_ID id}}' | date:'shortTime'"></span>
+                <span>{{DATE_FORMAT (DATE_BY_ID id) 'LTS' ../locale}}</span>
               {{/if}}
               </div>
               <div class="col-sm-3 hidden-xs">
@@ -186,7 +189,8 @@
               <div class="col-sm-2">
               {{seq}} <span class="hidden-xs">|</span>
               {{#if category}}
-                <span aria-hidden="true" class="icon-directions visible-xs-inline"></span> {{GET_PROP ../categories category}}
+                <span aria-hidden="true" class="icon-directions visible-xs-inline"></span>
+                {{CATEGORY_NAME (PICK_CATEGORY ../categories category) ../locale}}
               {{/if}}
               </div>
               <div class="col-sm-4">
@@ -207,10 +211,10 @@
 
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-user visible-xs-inline"></span> {{writer.username}} |
-                {{#if (OPR '<' (DATE_BY_ID id) ../nowDate)}}
-                  <span ng-bind="'{{DATE_BY_ID id}}' | date:'mediumDate'"></span>
+                {{#if (OPR '<' (DATE_BY_ID id) ../todayDate)}}
+                  <span>{{DATE_FORMAT (DATE_BY_ID id) 'LL' ../locale}}</span>
                 {{else}}
-                  <span ng-bind="'{{DATE_BY_ID id}}' | date:'shortTime'"></span>
+                  <span>{{DATE_FORMAT (DATE_BY_ID id) 'LTS' ../locale}}</span>
                 {{/if}}
               </div>
               <div class="col-sm-3">
