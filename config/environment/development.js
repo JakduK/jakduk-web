@@ -7,5 +7,6 @@ module.exports = {
   },
   daum: {
     callbackURL:  'https://staging.jakduk.com/auth/daum/callback'
-  }
+  },
+  gaAccount: ''
 };

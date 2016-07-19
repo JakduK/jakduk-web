@@ -44,7 +44,9 @@ var all = {
     clientID:     process.env.DAUM_ID || '',
     clientSecret: process.env.DAUM_SECRET || '',
     callbackURL:  process.env.DOMAIN + '/auth/daum/callback'
-  }
+  },
+
+  gaAccount: 'UA-59051176-1'
 };
 
 var local = {};
