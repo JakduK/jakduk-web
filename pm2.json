@@ -1,0 +1,17 @@
+{
+  "apps" : [{
+    "name": "jakduk-web",
+    "script": "bin/www",
+    "max_memory_restart": "100M",
+    "env": {
+      "NODE_ENV": "development",
+    },
+    "env_production" : {
+      "NODE_ENV": "production"
+    },
+    "exec_mode"  : "cluster",
+    "instances"  : 2,
+    "error_file": "/dev/null",
+    "out_file": "/dev/null"
+  }]
+}

@@ -9,13 +9,15 @@ var compression = require('compression');
 var config = require('../config/environment');
 
 function setup(app) {
+  app.set('env', config.env);
+  app.set('port', config.port);
   app.locals.gaAccount = config.gaAccount;
 
   // view engine setup
   app.set('views', path.join(__dirname, '..', 'views'));
   require('./handlebars')(app);
 
-  app.use(logger('dev'));
+  app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(compression());
   app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());

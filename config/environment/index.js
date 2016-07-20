@@ -43,7 +43,7 @@ var all = {
   daum: {
     clientID:     process.env.DAUM_ID || '',
     clientSecret: process.env.DAUM_SECRET || '',
-    callbackURL:  process.env.DOMAIN + '/auth/daum/callback'
+    callbackURL:  origin + '/auth/daum/callback'
   },
 
   gaAccount: 'UA-59051176-1'
