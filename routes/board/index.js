@@ -64,6 +64,11 @@ function viewPost(req, res) {
 }
 
 function writePost(req, res) {
+  if (!req.isAuthenticated) {
+    res.redirect('/login');
+    return;
+  }
+
   req.api.getBoardCategories().then(function (response) {
     res.render('board/post_write', {
       title: ['board.write', 'common.jakduk'],
@@ -74,6 +79,11 @@ function writePost(req, res) {
 }
 
 function editPost(req, res) {
+  if (!req.isAuthenticated) {
+    res.redirect('/login');
+    return;
+  }
+
   Promise.all([
     req.api.getBoardCategories(),
     req.api.getPost(req.params.id)
