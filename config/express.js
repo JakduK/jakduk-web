@@ -12,6 +12,7 @@ function setup(app) {
   app.set('env', config.env);
   app.set('port', config.port);
   app.locals.gaAccount = config.gaAccount;
+  app.locals.kakaoClientID = config.kakao.clientID;
 
   // view engine setup
   app.set('views', path.join(__dirname, '..', 'views'));

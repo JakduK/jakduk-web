@@ -46,6 +46,10 @@ var all = {
     callbackURL:  origin + '/auth/daum/callback'
   },
 
+  kakao: {
+    clientID: '238c2001d9c0e423b20adf0d6774223e'
+  },
+
   gaAccount: 'UA-59051176-1'
 };
 

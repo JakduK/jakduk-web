@@ -233,7 +233,7 @@
 			<div class="post-comment">
 				<h4 class="text-primary">{{TRANSLATION "board.comment.leave.comment"}}</h4>
 				<div class="margin-bottom-10">
-					<summernote config="options" on-keyUp="focus(evt)" ng-model="summernote.contents" ng-init="summernote={contents:'', seq:'{{post.seq}}'}"></summernote>
+					<summernote config="options" on-keyUp="focus(evt)" ng-model="summernote.content" ng-init="summernote={content:'', seq:'{{post.seq}}'}"></summernote>
 					<span ng-class="summernoteAlert.classType" ng-show="summernoteAlert.msg" ng-bind="summernoteAlert.msg"></span>
 				</div>
 
@@ -249,7 +249,7 @@
             {{TRANSLATION "common.button.write.comment"}}
           </button>
         {{/if}}
-					<span ng-bind="summernote.contents.length"></span> / <span ng-bind="boardCommentContentLengthMax"></span>
+					<span ng-bind="summernote.content.length"></span> / <span ng-bind="boardCommentContentLengthMax"></span>
 				</div>
 				<p ng-show="writeCommentAlert.msg" ng-class="writeCommentAlert.classType" ng-bind="writeCommentAlert.msg"></p>
 			</div>
@@ -362,7 +362,7 @@
         if (type === "LIKE") {
           $scope.likeConn = "connecting";
           $scope.btnLike = true;
-        } else if (type == "DISLIKE") {
+        } else if (type === "DISLIKE") {
           $scope.dislikeConn = "connecting";
           $scope.btnDislike = true;
         }
@@ -395,10 +395,10 @@
           $scope.alert.msg = data.message;
           $scope.alert.classType = "alert-danger";
 
-          if (type == "LIKE") {
+          if (type === "LIKE") {
             $scope.likeConn = "none";
             $scope.btnLike = false;
-          } else if (type == "DISLIKE") {
+          } else if (type === "DISLIKE") {
             $scope.dislikeConn = "none";
             $scope.btnDislike = false;
           }
@@ -430,16 +430,14 @@
     };
 
     $scope.confirmDelete = function () {
-      var message, type;
+      var message;
       if ($scope.commentCount > 0) {
         message = '{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}';
-        type = 'postonly';
       } else {
         message = '{{TRANSLATION "board.msg.confirm.delete.post"}}';
-        type = 'all';
       }
       if ($window.confirm(message)) {
-        $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}?type=' + type).then(function() {
+        $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}').then(function() {
           $window.location = '/board/free';
         });
       }
@@ -496,8 +494,8 @@
 
     // 댓글 달기
     $scope.btnWriteComment = function () {
-      if ($scope.summernote.contents.length < Jakduk.BoardCommentContentLengthMin
-        || $scope.summernote.contents.length > Jakduk.BoardCommentContentLengthMax) {
+      if ($scope.summernote.content.length < Jakduk.BoardCommentContentLengthMin
+        || $scope.summernote.content.length > Jakduk.BoardCommentContentLengthMax) {
         $scope.summernoteAlert = {
           "classType": "text-danger",
           "msg": '{{TRANSLATION "Size.board.comment.content"}}'
@@ -511,7 +509,7 @@
 
         $http.post('{{apiServerUrl}}/board/free/comment', $scope.summernote).then(function () {
           $scope.btnMoreComment();
-          $scope.summernote.contents = "";
+          $scope.summernote.content = '';
           $scope.commentAlert = {};
           $scope.summernoteAlert = {};
           $scope.writeCommentAlert = {};
@@ -611,29 +609,23 @@
 	$(document).ready(function () {
 		App.init();
 
-    // 사용할 앱의 Javascript 키를 설정해 주세요.
-    Kakao.init('{{kakaoKey}}');
-
-    var label = '{{post.subject}}\r{{TRANSLATION "board.name.free"}} · {{TRANSLATION "common.jakduk"}}';
-
-    var kakaoLinkContent = {};
-    kakaoLinkContent.container = '#kakao-link-btn';
-    kakaoLinkContent.label = label;
-
+    var kakaoLinkContent = {
+      container: '#kakao-link-btn',
+      label: '{{post.subject}}\r{{TRANSLATION "board.name.free"}} · {{TRANSLATION "common.jakduk"}}',
+      webLink: {
+        text: Jakduk.origin + '/board/free/{{post.seq}}',
+        url: Jakduk.origin + '/board/free/{{post.seq}}'
+      },
     {{#if post.galleries}}
-      kakaoLinkContent.image = {
+      image: {
         src: Jakduk.origin + '/gallery/{{post.galleries.[0].id}}',
         width: '300',
         height: '200'
-      };
+      }
     {{/if}}
-
-    kakaoLinkContent.webLink = {
-      text: Jakduk.origin + '/board/free/{{post.seq}}',
-      url: Jakduk.origin + '/board/free/{{post.seq}}'
     };
 
-    // 카카오톡 링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+    Kakao.init('{{kakaoClientID}}');
     Kakao.Link.createTalkLinkButton(kakaoLinkContent);
 	});
 </script>
