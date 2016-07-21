@@ -50,6 +50,9 @@ function commentList(req, res) {
 function viewPost(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
     var postData = response.data;
+    res.cookie('FREE_BOARD_' + req.params.id, 'r', {
+      httpOnly: true
+    });
     res.render('board/post_view', {
       preTitle: postData.post.subject,
       title: ['board.name.free', 'common.jakduk'],

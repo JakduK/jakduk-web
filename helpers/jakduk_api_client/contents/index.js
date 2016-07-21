@@ -48,7 +48,11 @@ module.exports = function(ApiClient) {
 
   ApiClient.prototype.getPost = function(seq) {
     return new Promise(function(resolve) {
-      rest.json(this.serverUrl + '/board/free/' + seq).on('complete', callback.bind(null, resolve));
+      rest.json(this.serverUrl + '/board/free/' + seq, null, {
+        headers: {
+          Cookie: this.session
+        }
+      }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
 
