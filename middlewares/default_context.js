@@ -22,6 +22,7 @@ module.exports = function (app) {
         res.locals.isAdmin = req.userInfo.roles.some(function (role) {
           return role === 'ROLE_ROOT';
         });
+        req.isAdmin = res.locals.isAdmin;
       }
 
       _.merge(res.locals, {
