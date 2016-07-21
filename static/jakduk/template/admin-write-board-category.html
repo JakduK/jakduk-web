@@ -21,7 +21,7 @@
 		<div class="form-group">
 			<h6><strong>USING BOARD :</strong></h6>
 			<label ng-repeat="board in ctrl.usingBoard">
-				<input type="checkbox" ng-model="ctrl.usingBoard[$index].value"> {{::board.name}}
+				<input type="checkbox" ng-model="ctrl.usingBoard[$index].value"> <span ng-bind="::board.name"></span>
 			</label>
 		</div>
 

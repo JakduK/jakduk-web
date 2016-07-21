@@ -1,4 +1,6 @@
-<p ng-show="ctrl.message">{{ctrl.message}}</p>
+<div class="alert alert-info" ng-if="ctrl.message">
+  <p ng-bind="ctrl.message"></p>
+</div>
 
 <div ng-show="ctrl.encyclopedias.length">
   <h4>Encyclopedia</h4>
@@ -7,11 +9,11 @@
       <th>Seq</th><th>Kind</th><th>Language</th><th>Subject</th><th>Content</th>
     </tr>
     <tr ng-repeat="encyclopedia in ctrl.encyclopedias">
-      <td><a ng-href="admin/encyclopedia/write/{{encyclopedia.id}}">{{encyclopedia.seq}}</a></td>
-      <td>{{encyclopedia.kind}}</td>
-      <td>{{encyclopedia.language}}</td>
-      <td>{{encyclopedia.subject}}</td>
-      <td>{{encyclopedia.content}}</td>
+      <td><a ng-href="admin/encyclopedia/write/{%encyclopedia.id%}" ng-bind="encyclopedia.seq"></a></td>
+      <td ng-bind="encyclopedia.kind"></td>
+      <td ng-bind="encyclopedia.language"></td>
+      <td ng-bind="encyclopedia.subject"></td>
+      <td ng-bind="encyclopedia.content"></td>
     </tr>
   </table>
 </div>
@@ -23,10 +25,10 @@
       <th>Name</th><th>Club Type</th><th>Age</th><th>Sex</th>
     </tr>
     <tr ng-repeat="fcOrigin in ctrl.originFCs">
-      <td><a ng-href="admin/fcOrigin/write/{{fcOrigin.id}}">{{fcOrigin.name}}</a></td>
-      <td>{{fcOrigin.clubType}}</td>
-      <td>{{fcOrigin.age}}</td>
-      <td>{{fcOrigin.sex}}</td>
+      <td><a ng-href="admin/fcOrigin/write/{%fcOrigin.id%}" ng-bind="fcOrigin.name"></a></td>
+      <td ng-bind="fcOrigin.clubType"></td>
+      <td ng-bind="fcOrigin.age"></td>
+      <td ng-bind="fcOrigin.sex"></td>
     </tr>
   </table>
 </div>
@@ -38,9 +40,14 @@
       <th>Origin</th><th>Active</th><th>Names</th>
     </tr>
     <tr ng-repeat="fc in ctrl.fcs">
-      <td><a ng-href="admin/fc/write/{{fc.id}}">{{fc.origin.name}}</a></td>
-      <td>{{fc.active}}</td>
-      <td><div ng-repeat="name in fc.names">Lang={{name.language}} F.N.={{name.fullName}} S.N.={{name.shortName}}</div>
+      <td><a ng-href="admin/fc/write/{%fc.id%}" ng-bind="fc.origin.name"></a></td>
+      <td ng-bind="fc.active"></td>
+      <td>
+        <div ng-repeat="name in fc.names">
+          Lang=<span ng-bind="name.language"></span>
+          F.N.=<span ng-bind="name.fullName"></span>
+          S.N.=<span ng-bind="name.shortName"></span>
+        </div>
       </td>
     </tr>
   </table>
@@ -50,12 +57,13 @@
   <h4>Board Category</h4>
   <table class="table">
     <tr>
-      <th>Name</th><th>ResName</th><th>UsingBoard</th>
+      <th>Name</th><th>ResName</th>
     </tr>
     <tr ng-repeat="boardCategory in ctrl.boardCategories">
-      <td><a ng-href="admin/boardCategory/write/{{boardCategory.id}}">{{boardCategory.name}}</a></td>
-      <td>{{boardCategory.resName}}</td>
-      <td><div ng-repeat="usingBoard in boardCategory.usingBoard">{{usingBoard}}</div>
+      <td><a ng-href="admin/boardCategory/write/{%boardCategory.id%}" ng-bind="boardCategory.code"></a></td>
+      <td>
+        <div ng-repeat="name in boardCategory.names" ng-bind="name.name"></div>
+      </td>
       </td>
     </tr>
   </table>
@@ -70,9 +78,9 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
-        <li><a ng-href="{{'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KL'}}" ng-hide="ctrl.activeLeague === 'KL'">K LEAGUE</a></li>
-        <li><a ng-href="{{'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KLCL'}}" ng-hide="ctrl.activeLeague === 'KLCL'">K LEAGUE CLASSIC</a></li>
-        <li><a ng-href="{{'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KLCH'}}" ng-hide="ctrl.activeLeague === 'KLCH'">K LEAGUE CHALLENGE</a></li>
+        <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KL'%}" ng-hide="ctrl.activeLeague === 'KL'">K LEAGUE</a></li>
+        <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KLCL'%}" ng-hide="ctrl.activeLeague === 'KLCL'">K LEAGUE CLASSIC</a></li>
+        <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KLCH'%}" ng-hide="ctrl.activeLeague === 'KLCH'">K LEAGUE CHALLENGE</a></li>
       </ul>
     </div>
   </div>
@@ -81,12 +89,12 @@
       <th>League</th><th>Season</th><th>Games</th><th>Total</th><th>Average</th><th>Number Of Clubs</th>
     </tr>
     <tr ng-repeat="attendanceLeague in ctrl.leagueAttendances">
-      <td>{{attendanceLeague.league}}</td>
-      <td><a ng-href="admin/attendance/league/write/{{attendanceLeague.id}}" target="_self">{{attendanceLeague.season}}</a></td>
-      <td>{{attendanceLeague.games}}</td>
-      <td>{{attendanceLeague.total}}</td>
-      <td>{{attendanceLeague.average}}</td>
-      <td>{{attendanceLeague.numberOfClubs}}</td>
+      <td ng-bind="attendanceLeague.league"></td>
+      <td><a ng-href="admin/attendance/league/write/{%attendanceLeague.id%}" target="_self" ng-bind="attendanceLeague.season"></a></td>
+      <td ng-bind="attendanceLeague.games"></td>
+      <td ng-bind="attendanceLeague.total"></td>
+      <td ng-bind="attendanceLeague.average"></td>
+      <td ng-bind="attendanceLeague.numberOfClubs"></td>
     </tr>
   </table>
 </div>
@@ -98,12 +106,12 @@
       <th>Club</th><th>Season</th><th>League</th><th>Games</th><th>Total</th><th>Average</th>
     </tr>
     <tr ng-repeat="attendanceClub in ctrl.attendanceClubs">
-      <td><a ng-href="admin/attendance/club/write/{{attendanceClub.id}}" target="_self">{{attendanceClub.club.name}}</a></td>
-      <td>{{attendanceClub.season}}</td>
-      <td>{{attendanceClub.league}}</td>
-      <td>{{attendanceClub.games}}</td>
-      <td>{{attendanceClub.total}}</td>
-      <td>{{attendanceClub.average}}</td>
+      <td><a ng-href="admin/attendance/club/write/{%attendanceClub.id%}" target="_self" ng-bind="attendanceClub.club.name"></a></td>
+      <td ng-bind="attendanceClub.season"></td>
+      <td ng-bind="attendanceClub.league"></td>
+      <td ng-bind="attendanceClub.games"></td>
+      <td ng-bind="attendanceClub.total"></td>
+      <td ng-bind="attendanceClub.average"></td>
     </tr>
   </table>
 </div>
@@ -115,9 +123,9 @@
       <th>id</th><th>Priority</th><th>Description</th>
     </tr>
     <tr ng-repeat="homeDescription in ctrl.homeDescriptions">
-      <td><a ng-href="admin/homeDescription/write/{{homeDescription.id}}">{{homeDescription.id}}</a></td>
-      <td>{{homeDescription.priority}}</td>
-      <td>{{homeDescription.desc}}</td>
+      <td><a ng-href="admin/homeDescription/write/{%homeDescription.id%}" ng-bind="homeDescription.id"></a></td>
+      <td ng-bind="homeDescription.priority"></td>
+      <td ng-bind="homeDescription.desc"></td>
     </tr>
   </table>
 </div>
@@ -129,20 +137,26 @@
       <th>id</th><th>Date</th><th>Home</th><th>Away</th><th>Group</th><th>Competition</th><th>Score</th><th>isTimeUp</th>
     </tr>
     <tr ng-repeat="jakduSchedule in ctrl.jakduSchedules">
-      <td><a ng-href="admin/jakdu/schedule/write/{{jakduSchedule.id}}" target="_self">{{jakduSchedule.id}}</a></td>
-      <td>{{jakduSchedule.date | date:'short' }}</td>
-      <td>{{jakduSchedule.home.name}}</td>
-      <td>{{jakduSchedule.away.name}}</td>
-      <td>{{jakduSchedule.group.seq}}</td>
-      <td>{{jakduSchedule.competition.code}}</td>
+      <td><a ng-href="admin/jakdu/schedule/write/{%jakduSchedule.id%}" target="_self" ng-bind="jakduSchedule.id"></a></td>
+      <td ng-bind="jakduSchedule.date | date:'short' "></td>
+      <td ng-bind="jakduSchedule.home.name"></td>
+      <td ng-bind="jakduSchedule.away.name"></td>
+      <td ng-bind="jakduSchedule.group.seq"></td>
+      <td ng-bind="jakduSchedule.competition.code"></td>
       <td>
           <span ng-if="jakduSchedule.score">
-            <span ng-if="jakduSchedule.score.homeFullTime && jakduSchedule.score.awayFullTime">FT {{jakduSchedule.score.homeFullTime}} : {{jakduSchedule.score.awayFullTime}}</span>
-            <span ng-if="jakduSchedule.score.homeOverTime && jakduSchedule.score.awayOverTime">OT {{jakduSchedule.score.homeOverTime}} : {{jakduSchedule.score.awayOverTime}}</span>
-            <span ng-if="jakduSchedule.score.homePenaltyShootout && jakduSchedule.score.awayPenaltyShootout">P {{jakduSchedule.score.homePenaltyShootout}} : {{jakduSchedule.score.awayPenaltyShootout}}</span>
+            <span ng-if="jakduSchedule.score.homeFullTime && jakduSchedule.score.awayFullTime">
+              FT <span ng-bind="jakduSchedule.score.homeFullTime"></span> : <span ng-bind="jakduSchedule.score.awayFullTime"></span>
+            </span>
+            <span ng-if="jakduSchedule.score.homeOverTime && jakduSchedule.score.awayOverTime">
+              OT <span ng-bind="jakduSchedule.score.homeOverTime"></span> : <span ng-bind="jakduSchedule.score.awayOverTime"></span>
+            </span>
+            <span ng-if="jakduSchedule.score.homePenaltyShootout && jakduSchedule.score.awayPenaltyShootout">
+              P <span ng-bind="jakduSchedule.score.homePenaltyShootout"></span> : <span ng-bind="jakduSchedule.score.awayPenaltyShootout"></span>
+            </span>
           </span>
       </td>
-      <td>{{jakduSchedule.timeUp}}</td>
+      <td ng-bind="jakduSchedule.timeUp"></td>
     </tr>
   </table>
 </div>
@@ -154,10 +168,10 @@
       <th>id</th><th>Seq</th><th>State</th><th>OpenDate</th>
     </tr>
     <tr ng-repeat="jakduScheduleGroup in ctrl.jakduScheduleGroups">
-      <td><a ng-href="admin/jakdu/schedule/group/write/{{jakduScheduleGroup.id}}" target="_self">{{jakduScheduleGroup.id}}</a></td>
-      <td>{{jakduScheduleGroup.seq}}</td>
-      <td>{{jakduScheduleGroup.state}}</td>
-      <td>{{jakduScheduleGroup.openDate | date:'short' }}</td>
+      <td><a ng-href="admin/jakdu/schedule/group/write/{%jakduScheduleGroup.id%}" target="_self" ng-bind="jakduScheduleGroup.id"></a></td>
+      <td ng-bind="jakduScheduleGroup.seq"></td>
+      <td ng-bind="jakduScheduleGroup.state"></td>
+      <td ng-bind="jakduScheduleGroup.openDate | date:'short'"></td>
     </tr>
   </table>
 </div>
@@ -169,8 +183,13 @@
       <th>Code</th><th>Names</th>
     </tr>
     <tr ng-repeat="competition in ctrl.competitions">
-      <td><a ng-href="admin/competition/write/{{competition.id}}" target="_self">{{competition.code}}</a></td>
-      <td><div ng-repeat="name in competition.names">Lang={{name.language}} F.N.={{name.fullName}} S.N.={{name.shortName}}</div>
+      <td><a ng-href="admin/competition/write/{%competition.id%}" target="_self" ng-bind="competition.code"></a></td>
+      <td>
+        <div ng-repeat="name in competition.names">
+          Lang=<span ng-bind="name.language"></span>
+          F.N.=<span ng-bind="name.fullName"></span>
+          S.N.=<span ng-bind="name.shortName"></span>
+        </div>
       </td>
     </tr>
   </table>
