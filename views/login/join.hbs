@@ -162,7 +162,7 @@
       $scope.equalPasswordStatus = "true";
 
       $window.onbeforeunload = function (e) {
-        if (!$scope.userWrite.$pristine) {
+        if (!$scope.btnSubmit && !$scope.userWrite.$pristine) {
           (e || window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
           return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
         }
