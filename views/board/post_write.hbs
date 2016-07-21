@@ -57,50 +57,47 @@
         {{TRANSLATION "board.gallery.list"}}
       </h4>
 
-      <div class="row ng-cloak">
-        <!-- sotred Images -->
-        <div class="media col-xs-12 col-sm-4" ng-repeat="item in storedImages">
-          <div class="media-left media-middle">
-            <img class="media-object" ng-src="{%item.url%}" style="width:50px; height:50px;">
-          </div>
-          <div class="media-body">
-            <h5 class="media-heading">
-              <button type="button" class="btn btn-success btn-xs" ng-click="insertImage(item)">
-                <span class="glyphicon glyphicon-upload"></span>
-              </button>
-              <button type="button" class="btn btn-danger btn-xs" ng-click="removeStoredItem(item)">
-                <span class="glyphicon glyphicon-remove-circle"></span>
-              </button>
-              <small>{%item.size/1024|number:1%} KB</small>
-            </h5>
-            <div class="form-group has-feedback"
-               ng-class="{'has-success':item.name.length >= 2, 'has-warning':item.name.length < 2 || item.name == null}">
-              <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.name" ng-blur="onGalleryItem(item, 'stored')">
-              <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':item.name.length >= 2, 'glyphicon-warning-sign':item.name.length < 2 || item.name == null}"></span>
-            </div>
+      <!-- sotred Images -->
+      <div class="media" ng-repeat="item in storedImages">
+        <div class="media-left media-middle">
+          <img class="media-object" ng-src="{{thumbnailServerUrl}}/gallery/{%item.id%}" style="width: 50px;">
+        </div>
+        <div class="media-body">
+          <h5 class="media-heading">
+            <button type="button" class="btn btn-success btn-xs" ng-click="insertImage(item)">
+              <span class="glyphicon glyphicon-upload"></span>
+            </button>
+            <button type="button" class="btn btn-danger btn-xs" ng-click="removeStoredItem(item)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </button>
+            <small>{%item.size/1024|number:1%} KB</small>
+          </h5>
+          <div class="form-group has-feedback" ng-class="{'has-success':item.name.length >= 2, 'has-warning':item.name.length < 2 || item.name == null}">
+            <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.name" ng-blur="onGalleryItem(item, 'stored')">
+            <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':item.name.length >= 2, 'glyphicon-warning-sign':item.name.length < 2 || item.name == null}"></span>
           </div>
         </div>
-        <!-- queue Images -->
-        <div class="media col-xs-12 col-sm-4" ng-repeat="item in uploader.queue">
-          <div class="media-left media-middle">
-            <img class="media-object" ng-src="{%item.url%}" style="width:50px; height:50px;">
-          </div>
-          <div class="media-body">
-            <h5 class="media-heading">
-              <button type="button" class="btn btn-success btn-xs" ng-click="insertImage(item)">
-                <span class="glyphicon glyphicon-upload"></span>
-              </button>
-              <button type="button" class="btn btn-danger btn-xs" ng-click="removeQueueItem(item)">
-                <span class="glyphicon glyphicon-remove-circle"></span>
-              </button>
-              <small>{%item.file.size/1024|number:1%} KB
-                <code>{%item.progress%}%</code>
-              </small>
-            </h5>
-            <div class="form-group has-feedback" ng-class="{'has-success':item.newName.length >= 2, 'has-warning':item.newName.length < 2 || item.newName == null}">
-              <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.newName" ng-blur="onGalleryItem(item, 'queue')">
-              <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':item.newName.length >= 2,'glyphicon-warning-sign':item.newName.length < 2 || item.newName == null}"></span>
-            </div>
+      </div>
+      <!-- queue Images -->
+      <div class="media" ng-repeat="item in uploader.queue">
+        <div class="media-left media-middle">
+          <img class="media-object" ng-src="{%item._url%}" style="width: 50px;">
+        </div>
+        <div class="media-body">
+          <h5 class="media-heading">
+            <button type="button" class="btn btn-success btn-xs" ng-click="insertImage(item)">
+              <span class="glyphicon glyphicon-upload"></span>
+            </button>
+            <button type="button" class="btn btn-danger btn-xs" ng-click="removeQueueItem(item)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </button>
+            <small>{%item.file.size/1024|number:1%} KB
+              <code>{%item.progress%}%</code>
+            </small>
+          </h5>
+          <div class="form-group has-feedback" ng-class="{'has-success':item.newName.length >= 2, 'has-warning':item.newName.length < 2 || item.newName == null}">
+            <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.newName" ng-blur="onGalleryItem(item, 'queue')">
+            <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':item.newName.length >= 2,'glyphicon-warning-sign':item.newName.length < 2 || item.newName == null}"></span>
           </div>
         </div>
       </div>
@@ -207,7 +204,7 @@
       var rmIdx = -1, imageInfo;
 
       images.forEach(function (entry, index) {
-        if (entry.id === fileItem.id) {
+        if (entry.id === fileItem._id) {
           rmIdx = index;
         }
       });
@@ -215,17 +212,17 @@
       if (rmIdx != -1) {
         if (type == 'queue') {
           imageInfo = {
-            id: fileItem.id,
+            id: fileItem._id,
             name: fileItem.newName,
             fileName: fileItem.file.name,
             size: fileItem.file.size
           };
         } else if (type == 'stored') {
           imageInfo = {
-            id: fileItem.id,
-            name: fileItem.name,
+            id: fileItem._id,
+            name: fileItem._name,
             fileName: fileItem.fileName,
-            size: fileItem.size
+            size: fileItem._size
           };
         }
 
@@ -235,13 +232,13 @@
 
     // 이미 등록된 이미지 삭제.
     $scope.removeStoredItem = function (fileItem) {
-      if (fileItem.id) {
-        $http.delete('{{apiServerUrl}}/gallery/' + fileItem.id).then(function () {
+      if (fileItem._id) {
+        $http.delete('{{apiServerUrl}}/gallery/' + fileItem._id).then(function () {
           var rmIdx = -1;
 
           if (!Jakduk.isEmpty($scope.storedImages)) {
             $scope.storedImages.forEach(function (entry, index) {
-              if (entry.id === fileItem.id) {
+              if (entry.id === fileItem._id) {
                 rmIdx = index;
               }
             });
@@ -252,7 +249,7 @@
           }
 
           images.forEach(function (entry, index) {
-            if (entry.id === fileItem.id) {
+            if (entry.id === fileItem._id) {
               rmIdx = index;
             }
           });
@@ -270,14 +267,14 @@
 
     // 지금 업로드한 이미지를 큐에서 삭제.
     $scope.removeQueueItem = function (fileItem) {
-      if (fileItem.id) {
-        $http.delete('{{apiServerUrl}}/gallery/' + fileItem.id).then(function () {
+      if (fileItem._id) {
+        $http.delete('{{apiServerUrl}}/gallery/' + fileItem._id).then(function () {
           fileItem.remove();
 
           var rmIdx = -1;
 
           images.forEach(function (entry, index) {
-            if (entry.id == fileItem.id) {
+            if (entry.id === fileItem._id) {
               rmIdx = index;
             }
           });
@@ -297,11 +294,11 @@
     // 이미지 업로드를 완료.
     $scope.uploader.onCompleteItem = function (fileItem, data, status) {
       if (status === 200) {
-        fileItem.id = data.id;
-        fileItem.url = data.imageUrl;
+        fileItem._id = data.id;
+        fileItem._url = data.imageUrl;
 
         var imageInfo = {
-          id: fileItem.id,
+          id: fileItem._id,
           name: fileItem.newName,
           fileName: fileItem.file.name,
           size: fileItem.file.size
@@ -319,7 +316,7 @@
 
     // 에디터 아래의 이미지 업로드 버튼을 누를 때.
     $scope.insertImage = function (fileItem) {
-      $(".summernote").summernote("insertImage", fileItem.url, function ($image) {
+      $(".summernote").summernote("insertImage", fileItem._url, function ($image) {
         $image.addClass("img-responsive");
       });
     };
@@ -392,26 +389,27 @@
 
       {{#if post}}
         $http.put('{{apiServerUrl}}/board/free/{{post.seq}}', {
-          id: '{{post.id}}',
           subject: $scope.subject,
           content: $scope.content,
           categoryCode: $scope.category,
-          images: images
+          galleries: images
         }).then(function () {
           $window.location = '/board/free/{{post.seq}}'
         }, function () {
           $scope.submitErred = true;
+          $scope.btnSubmit = false;
         });
       {{else}}
         $http.post('{{apiServerUrl}}/board/free', {
           subject: $scope.subject,
           content: $scope.content,
           categoryCode: $scope.category,
-          images: images
+          galleries: images
         }).then(function (response) {
           $window.location = '/board/free/' + response.data.seq
         }, function () {
           $scope.submitErred = true;
+          $scope.btnSubmit = false;
         });
       {{/if}}
       } else {
