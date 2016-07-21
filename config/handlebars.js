@@ -92,7 +92,7 @@ hbs.registerHelper('CONCAT', function() {
 
 hbs.registerHelper('CATEGORY_NAME', function(category, locale) {
   return (_.find((category || {}).names || [], function (name) {
-    return locale === name.language;
+    return name.language.startsWith(locale);
   }) || {name: ''}).name || '';
 });
 

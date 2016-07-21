@@ -13,7 +13,7 @@ function postList(req, res) {
       size: req.query.size,
       category: category
     }),
-    req.api.getBoardCategories()
+    req.api.getBoardCategories(req.query.lang)
   ]).then(function (responses) {
     responses.forEach(function (response) {
       _.merge(res.locals, response.data);
@@ -85,7 +85,7 @@ function editPost(req, res) {
   }
 
   Promise.all([
-    req.api.getBoardCategories(),
+    req.api.getBoardCategories(req.query.lang),
     req.api.getPost(req.params.id)
   ]).then(function (responses) {
     var categories = responses[0].data.categories;

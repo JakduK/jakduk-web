@@ -60,9 +60,13 @@ module.exports = function(ApiClient) {
     }.bind(this));
   };
 
-  ApiClient.prototype.getBoardCategories = function() {
+  ApiClient.prototype.getBoardCategories = function(lang) {
     return new Promise(function(resolve) {
-      rest.json(this.serverUrl + '/board/free/categories').on('complete', callback.bind(null, resolve));
+      rest.json(this.serverUrl + '/board/free/categories', null, {
+        query: {
+          lang: lang
+        }
+      }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
 };
