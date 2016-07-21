@@ -23,7 +23,7 @@
     },
     needLogin: function (message) {
       if (window.confirm(message)) {
-        window.location = '/board/free/write';
+        window.location.href = '/board/free/write';
       }
     }
   };
