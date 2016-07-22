@@ -36,7 +36,8 @@ module.exports = function (app) {
         og: {
           description: i18n.__('about.jakduk'),
           url: config.origin + req.path,
-          image: config.origin + '/jakduk/img/logo_256.png'
+          image: config.origin + '/jakduk/img/logo_256.png',
+          type: 'website'
         }
       });
 
