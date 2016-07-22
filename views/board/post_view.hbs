@@ -93,7 +93,7 @@
           {{#if (EQ post.status.device 'TABLET')}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
           {{#if galleries}}<span aria-hidden="true" class="icon-picture"></span>{{/if}}
 				</small>
-      {{#if (EQ post.status.delete 'DELETE')}}
+      {{#if post.status.delete}}
         {{TRANSLATION "board.msg.deleted"}}
       {{else}}
         {{post.subject}}
@@ -110,7 +110,7 @@
 				</ul>
 			</div>
 
-      {{#if (EQ post.status.delete 'DELETE')}}
+      {{#if post.status.delete}}
         <p>{{TRANSLATION "board.msg.deleted"}}</p>
       {{else}}
         <p>{{{post.content}}}</p>
@@ -142,6 +142,7 @@
 							<i class="fa fa-thumbs-o-up fa-lg"></i>
 							<span ng-hide="likeConn == 'connecting'" ng-bind="numberOfLike"></span>
 						</button>
+            &mid;
 						<button type="button" class="btn-u btn-u-sm btn-u-red rounded ladda-button"
 							ng-click="btnFeeling('DISLIKE')" ng-init="numberOfDislike={{ARRAY_SIZE post.usersDisliking}}"
 							ladda="btnDislike" data-style="expand-right" data-spinner-color="Gainsboro"
@@ -206,6 +207,7 @@
 								<span ng-bind="numberOfCommentLike[comment.id]"></span>
 							</span>
 						</button>
+            &mid;
 						<button type="button" class="btn btn-xs rounded btn-weibo" ng-click="btnCommentFeeling(comment.id, 'DISLIKE')" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.dislike"}}">
 							<span ng-init="numberOfCommentDislike[comment.id]=comment.usersDisliking.length">
 								<i class="fa fa-thumbs-o-down fa-lg"></i>
@@ -243,7 +245,7 @@
             <span aria-hidden="true" class="icon-pencil"></span>
             {{TRANSLATION "common.button.write.comment"}}
           </button>
-        {{else if (NOT isAdmin)}}
+        {{else}}
           <button type="button" class="btn-u btn-brd rounded btn-u-sm ladda-button" ng-click="btnWriteComment()" ladda="writeComment" data-style="expand-right" data-spinner-color="Gainsboro">
             <span aria-hidden="true" class="icon-pencil"></span>
             {{TRANSLATION "common.button.write.comment"}}
@@ -291,7 +293,7 @@
       </button>
     {{/if}}
 
-    {{#if (OPR '&&' isAdmin (NOT_EQ post.status.delete 'DELETE'))}}
+    {{#if (OPR '&&' isAdmin (NOT post.status.delete))}}
       {{#if (EQ post.status.notice 'NOTICE')}}
         <button type="button" class="btn-u btn-u-default rounded" onclick="location='/board/notice/cancel/{{post.seq}}'">
           {{TRANSLATION "common.button.cancel.notice"}}

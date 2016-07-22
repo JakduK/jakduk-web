@@ -1,25 +1,25 @@
 'use strict';
 
+var i18n = require('i18n');
+
 module.exports.setup = function (app) {
   app.use('/admin', function (req, res) {
     if (!req.isAdmin) {
       res.render('error/denied', {
-        title: [{
-          val: 'ADMIN PAGE'
-        }, {
-          key: 'common.jakduk'
-        }],
+        title: [
+          'ADMIN PAGE',
+          i18n.__('common.jakduk')
+        ],
         headPage: 'head_error'
       });
       return;
     }
 
     res.render('admin/admin', {
-      title: [{
-        val: 'ADMIN PAGE'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        'ADMIN PAGE',
+        i18n.__('common.jakduk')
+      ],
       baseHref: '/',
       headPage: 'head_admin'
     });

@@ -33,7 +33,7 @@
             <tr>
               <td class="text-overflow max-width-240">
                 <a href="/board/free/{{seq}}">
-                {{#if (EQ status.delete 'DELETE')}}
+                {{#if status.delete}}
                   <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
                 {{else}}
                   <strong>{{subject}}</strong>
@@ -63,7 +63,7 @@
             <tr>
               <td class="text-overflow max-width-240">
                 <a href="/board/free/{{seq}}">
-                {{#if (EQ status.delete 'DELETE')}}
+                {{#if status.delete}}
                   <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
                 {{else}}
                   <strong>{{subject}}</strong>

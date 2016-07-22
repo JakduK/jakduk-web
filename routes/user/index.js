@@ -1,15 +1,15 @@
 'use strict';
 
 var express = require('express');
+var i18n = require('i18n');
 
 function index(req, res) {
   req.api.getUserProfile().then(function (response) {
     res.render('user/profile', {
-      title: [{
-        key: 'common.jakduk'
-      }, {
-        key: 'user.profile'
-      }],
+      title: [
+        i18n.__('common.jakduk'),
+        i18n.__('user.profile')
+      ],
       headPage: 'head_profile',
       userProfile: response.data
     });
@@ -22,11 +22,10 @@ function editProfile(req, res) {
     req.api.footballClubs(req.locale)
   ]).then(function (responses) {
     res.render('user/profile_edit', {
-      title: [{
-        key: 'common.jakduk'
-      }, {
-        key: 'user.profile.update'
-      }],
+      title: [
+        i18n.__('common.jakduk'),
+        i18n.__('user.profile.update')
+      ],
       headPage: 'head_profile',
       userProfile: responses[0].data,
       footballClubs: responses[1].data

@@ -6,13 +6,12 @@ var filesize = require('filesize');
 var _ = require('lodash');
 var moment = require('moment');
 
-hbs.registerHelper('TITLE', function(val, options) {
-  var TRANSLATION = hbs.handlebars.helpers.TRANSLATION;
+hbs.registerHelper('TITLE', function(val) {
   var arrVal = [].concat(val);
   var first = arrVal.shift();
   return arrVal.reduce(function(prev, each) {
-    return prev + ' &middot; ' + (each.key ? TRANSLATION(each.key, options) : each.val);
-  }, first.key ? TRANSLATION(first.key, options) : first.val);
+    return prev + ' &middot; ' + each;
+  }, first);
 });
 
 hbs.registerHelper('TRANSLATION', function(key, options) {

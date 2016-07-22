@@ -1,6 +1,7 @@
 'use strict';
 
 var moment = require('moment');
+var i18n = require('i18n');
 
 module.exports.setup = function (app) {
   app.get('/', function (req, res) {
@@ -13,11 +14,10 @@ module.exports.setup = function (app) {
       req.api.encyclopedia(res.locals.locale)
     ]).then(function (responses) {
       res.render('home/home', {
-        title: [{
-          key: 'common.home'
-        }, {
-          key: 'common.jakduk'
-        }],
+        title: [
+          i18n.__('common.home'),
+          i18n.__('common.jakduk')
+        ],
         headPage: 'head_home',
         todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),
         data: {

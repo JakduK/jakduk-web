@@ -1,17 +1,17 @@
 'use strict';
 
 var express = require('express');
+var i18n = require('i18n');
 var SessionUtil = require('../../helpers/jakduk_session_util');
 
 function index(req, res) {
   req.api.footballClubs(req.locale).then(function (response) {
     var footballClubs = response.data;
     res.render('login/join', {
-      title: [{
-        key: 'user.register'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('user.register'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
@@ -35,11 +35,10 @@ function submit(req, res) {
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
-        title: [{
-          key: 'user.register'
-        }, {
-          key: 'common.jakduk'
-        }],
+        title: [
+          i18n.__('user.register'),
+          i18n.__('common.jakduk')
+        ],
         headPage: 'head_join'
       });
     }
@@ -81,11 +80,10 @@ function submitOAuth(req, res) {
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
-        title: [{
-          key: 'user.register'
-        }, {
-          key: 'common.jakduk'
-        }],
+        title: [
+          i18n.__('user.register'),
+          i18n.__('common.jakduk')
+        ],
         headPage: 'head_login'
       });
     }

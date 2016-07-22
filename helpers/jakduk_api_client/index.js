@@ -6,7 +6,7 @@ function ApiClient(session, serverUrl) {
 }
 
 ApiClient.prototype._callback = function(resolve, data, response) {
-  response.data = data;
+  response = (response || {}).data = data;
   resolve(response);
 };
 

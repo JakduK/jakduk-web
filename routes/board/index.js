@@ -3,6 +3,7 @@
 var express = require('express');
 var _ = require('lodash');
 var moment = require('moment');
+var i18n = require('i18n');
 var TagUtil = require('../../helpers/tag_util');
 
 function postList(req, res) {
@@ -20,13 +21,11 @@ function postList(req, res) {
       _.merge(res.locals, response.data);
     });
     res.render('board/post_list', {
-      title: [{
-        key: 'board.free.breadcrumbs.posts'
-      }, {
-        key: 'board.name.free'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('board.free.breadcrumbs.posts'),
+        i18n.__('board.name.free'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_board',
       todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),
       category: category,
@@ -47,13 +46,11 @@ function commentList(req, res) {
       _.merge(res.locals, response.data);
     });
     res.render('board/comment_list', {
-      title: [{
-        key: 'board.free.breadcrumbs.comments'
-      }, {
-        key: 'board.name.free'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('board.free.breadcrumbs.comments'),
+        i18n.__('board.name.free'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_board',
       number: res.locals.number + 1
     });
@@ -62,31 +59,33 @@ function commentList(req, res) {
 
 function viewPost(req, res) {
   req.api.getPost(req.params.id).then(function (response) {
+    var context = res.locals;
     var postData = response.data;
-    var og = res.locals.og;
+    var metaContent;
 
-    _.merge(og, TagUtil.ogFrom(postData.post.content, 120), {
-      type: 'article'
-    });
+    if (!postData.post.status.delete) {
+      metaContent = TagUtil.ogFrom(postData.post.content, 120);
 
-    res.cookie('FREE_BOARD_' + req.params.id, 'r', {
-      httpOnly: true
-    });
+      _.merge(context.og, {
+        image: metaContent.image || context.og.image,
+        description: metaContent.description || postData.post.subject,
+        type: 'article'
+      });
+    }
+
+    res.append('Set-Cookie', response.headers['set-cookie']);
     res.render('board/post_view', {
-      title: [{
-        val: postData.post.subject
-      }, {
-        key: 'board.name.free'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        postData.post.status.delete ? i18n.__('board.msg.deleted') : postData.post.subject,
+        i18n.__('board.name.free'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_board_view',
       nextPost: postData.nextPost,
       prevPost: postData.prevPost,
       post: _.merge(postData.post, {
         galleries: postData.post.galleries || []
-      }),
-      og: og
+      })
     });
   });
 }
@@ -99,11 +98,10 @@ function writePost(req, res) {
 
   req.api.getBoardCategories().then(function (response) {
     res.render('board/post_write', {
-      title: [{
-        key: 'board.write'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('board.write'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_board_view',
       categories: response.data.categories
     });
@@ -123,13 +121,11 @@ function editPost(req, res) {
     var categories = responses[0].data.categories;
     var postData = responses[1].data;
     res.render('board/post_write', {
-      title: [{
-        val: postData.post.subject
-      }, {
-        key: 'board.edit'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__(postData.post.subject),
+        i18n.__('board.edit'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_board_view',
       categories: categories,
       post: postData.post

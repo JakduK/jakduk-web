@@ -1,5 +1,7 @@
 'use strict';
 
+var i18n = require('i18n');
+
 module.exports.setup = function (app) {
   app.use(function notFound(req, res, next) {
     var err = new Error('Not Found');
@@ -11,11 +13,10 @@ module.exports.setup = function (app) {
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error/error', {
-      title: [{
-        key: 'common.error'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('common.error'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_error',
       message: err.message,
       error: isProd ? '' : err.stack,

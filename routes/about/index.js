@@ -1,13 +1,14 @@
 'use strict';
 
+var i18n = require('i18n');
+
 module.exports.setup = function(app) {
   app.get('/about', function(req, res) {
     res.render('about/intro', {
-      title: [{
-        key: 'about.site'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('about.site'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_about'
     })
   });

@@ -29,7 +29,7 @@
             <ul class="ng-cloak list-unstyled blog-trending">
               <li ng-repeat="post in postsLatest">
                 <h3>
-                  <a ng-href="/board/free/{{post.seq}}" ng-bind="post.status.delete === 'delete' ? '{{TRANSLATION "board.msg.deleted"}}' : post.subject"></a>
+                  <a ng-href="/board/free/{{post.seq}}" ng-bind="post.status.delete ? '{{TRANSLATION "board.msg.deleted"}}' : post.subject"></a>
                 </h3>
                 <small>
                   <span aria-hidden="true" class="icon-user"></span>
