@@ -42,11 +42,11 @@ module.exports = function(ApiClient) {
     }.bind(this));
   };
 
-  ApiClient.prototype.socialAttempted = function(session) {
+  ApiClient.prototype.socialAttempted = function() {
     return new Promise(function(resolve) {
       rest.get(this.serverUrl + '/social/attempted', {
         headers: {
-          Cookie: session
+          Cookie: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
