@@ -4,7 +4,7 @@
 
   <div class="image-block">
     <div class="container mCustomScrollbar" data-mcs-theme="minimal-dark">
-      <div class="company-description" ng-bind-html="homeDescription"></div>
+      <div class="company-description">{{{data.homeDescription.desc}}}</div>
     </div>
   </div>
 
@@ -25,24 +25,24 @@
               </a>
             </div>
 
-            <!-- Trending -->
+          {{#if data.posts.length}}
             <ul class="ng-cloak list-unstyled blog-trending">
-              <li ng-repeat="post in postsLatest">
+            {{#each data.posts}}
+              <li>
                 <h3>
-                  <a ng-href="/board/free/{{post.seq}}" ng-bind="post.status.delete ? '{{TRANSLATION "board.msg.deleted"}}' : post.subject"></a>
+                  <a href="/board/free/{{seq}}">{{TERNARY status.delete (TRANSLATION "board.msg.deleted") subject}}</a>
                 </h3>
                 <small>
-                  <span aria-hidden="true" class="icon-user"></span>
-                  <span ng-bind="post.writer.username"></span>
+                  <span aria-hidden="true" class="icon-user"></span> {{writer.username}}
                   &nbsp;
-                  <span ng-if="{{todayDate}} > (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'longDate'"></span>
-                  <span ng-if="{{todayDate}} <= (post.id | intFromObjectId)" ng-bind="post.id | dateFromObjectId | date:'shortTime'"></span>
+                  {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LTS')}}
                   &nbsp;
-                  <span aria-hidden="true" class="icon-eye"></span> <span ng-bind="post.views"></span>
+                  <span aria-hidden="true" class="icon-eye"></span> {{views}}
                 </small>
               </li>
+            {{/each}}
             </ul>
-            <!-- End Trending -->
+          {{/if}}
           </div>
 
           <!-- 최근 댓글  -->
@@ -54,22 +54,20 @@
               </a>
             </div>
 
+          {{#if data.comments.length}}
             <div class="blog-twitter ng-cloak">
-              <div class="blog-twitter-inner" ng-repeat="comment in commentsLatest">
-                <strong>
-                  <span aria-hidden="true" class="icon-user"></span>
-                  <span ng-bind="comment.writer.username"></span>
-                </strong>
-                <a href="/board/free/{{comment.boardItem.seq}}" ng-bind="comment.content"></a>
-                <span class="twitter-time" ng-if="{{todayDate}} > (comment.id | intFromObjectId)" ng-bind="comment.id | dateFromObjectId | date:'longDate'"></span>
-                <span class="twitter-time" ng-if="{{todayDate}} <= (comment.id | intFromObjectId)" ng-bind="comment.id | dateFromObjectId | date:'shortTime'"></span>
+            {{#each data.comments}}
+              <div class="blog-twitter-inner">
+                <strong><i aria-hidden="true" class="icon-user"></i> {{writer.username}}</strong>
+                <a href="/board/free/{{boardItem.seq}}">{{content}}</a>
+                <span class="twitter-time" >{{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LTS')}}</span>
               </div>
+            {{/each}}
             </div>
+          {{/if}}
+
           </div>
-
         </div>
-        <!--End Blog Post-->
-
       </div>
       <!-- End Left Sidebar -->
 
@@ -87,14 +85,14 @@
                 <div class="item" ng-repeat="user in usersLatest" ng-class="{'active':$index == 0}">
                   <p ng-bind="user.about"></p>
                   <div class="testimonial-info">
-												<span class="testimonial-author">
-													<i aria-hidden="true" class="icon-user-follow"></i>
-													<span class="latest-user-name" ng-bind="user.username"></span>
-													<em class="latest-user-club">
-														<i class="fa fa-futbol-o"></i>
-														<span ng-bind="user.supportFC.names[0].fullName"></span>
-													</em>
-												</span>
+                    <span class="testimonial-author">
+                      <i aria-hidden="true" class="icon-user-follow"></i>
+                      <span class="latest-user-name" ng-bind="user.username"></span>
+                      <em class="latest-user-club">
+                        <i class="fa fa-futbol-o"></i>
+                        <span ng-bind="user.supportFC.names[0].fullName"></span>
+                      </em>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -201,11 +199,8 @@
     $scope.dataLatestConn = 'none';
     $scope.encyclopediaConn = 'none';
 
-    $scope.postsLatest = angular.fromJson('{{{JSON_STRINGIFY data.posts}}}');
     $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
-    $scope.commentsLatest = angular.fromJson('{{{JSON_STRINGIFY data.comments}}}');
     $scope.galleriesLatest = angular.fromJson('{{{JSON_STRINGIFY data.galleries}}}');
-    $scope.homeDescription = angular.fromJson('{{{JSON_STRINGIFY data.homeDescription}}}').desc;
 
     $scope.encyclopedia = angular.fromJson('{{{JSON_STRINGIFY data.encyclopedia}}}');
 

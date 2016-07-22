@@ -30,6 +30,10 @@ hbs.registerHelper('NOT', function(val) {
   return !val;
 });
 
+hbs.registerHelper('TERNARY', function(cond, val1, val2) {
+  return cond ? val1 : val2;
+});
+
 hbs.registerHelper('OR', function() {
   var val = arguments[0];
   var others = Array.prototype.slice.call(arguments, 1, arguments.length - 1);
