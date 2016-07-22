@@ -46,19 +46,17 @@ function submit(req, res) {
 }
 
 function indexOAuth(req, res) {
-  var session = req.headers.cookie;
   Promise.all([
     req.api.footballClubs(req.locale),
-    req.api.socialAttempted(session)
+    req.api.socialAttempted()
   ]).then(function (responses) {
     var footballClubs = responses[0].data;
     var snsProfile = responses[1].data;
     res.render('login/join', {
-      title: [{
-        key: 'user.register'
-      }, {
-        key: 'common.jakduk'
-      }],
+      title: [
+        i18n.__('user.register'),
+        i18n.__('common.jakduk')
+      ],
       headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
