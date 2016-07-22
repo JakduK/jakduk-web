@@ -47,11 +47,16 @@ function submit(req, res) {
 
 function indexOAuth(req, res) {
   Promise.all([
+    req.api.socialAttempted(),
     req.api.footballClubs(req.locale),
-    req.api.socialAttempted()
   ]).then(function (responses) {
-    var footballClubs = responses[0].data;
-    var snsProfile = responses[1].data;
+    if (responses[0].statusCode !== 200) {
+      res.redirect('/login');
+      return;
+    }
+
+    var snsProfile = responses[0].data;
+    var footballClubs = responses[1].data;
     res.render('login/join', {
       title: [
         i18n.__('user.register'),
