@@ -60,30 +60,16 @@
 
     {{#if (OPR '&&' isAdmin (NOT_EQ post.status.notice 'DELETE'))}}
       {{#if (EQ post.status.notice 'NOTICE')}}
-        <button type="button" class="btn-u btn-u-default rounded" onclick="location='/board/notice/cancel/{{post.seq}}'">
+        <button type="button" class="btn-u btn-u-default rounded" onclick="window.location='/board/notice/cancel/{{post.seq}}'">
           {{TRANSLATION "common.button.cancel.notice"}}
         </button>
       {{else}}
-        <button type="button" class="btn-u rounded" onclick="location='/board/notice/set/{{post.seq}}'">
+        <button type="button" class="btn-u rounded" onclick="window.location='/board/notice/set/{{post.seq}}'">
           {{TRANSLATION "common.button.set.as.notice"}}
         </button>
       {{/if}}
     {{/if}}
 		</div> <!-- End Buttons -->
-
-  {{#if (EQ result 'setNotice')}}
-    <div class="contex-bg"><p class="bg-success rounded">{{TRANSLATION "board.msg.set.as.notice"}}</p></div>
-  {{else if (EQ result 'cancelNotice')}}
-    <div class="contex-bg"><p class="bg-success rounded">{{TRANSLATION "board.msg.cancel.notice"}}</p></div>
-  {{else if (EQ result 'alreadyNotice')}}
-    <div class="contex-bg"><p class="bg-danger rounded">{{TRANSLATION "board.msg.error.already.notice"}}</p></div>
-  {{else if (EQ result 'alreadyNotNotice')}}
-    <div class="contex-bg"><p class="bg-danger rounded">{{TRANSLATION "board.msg.error.already.not.notice"}}</p></div>
-  {{else if (EQ result 'existComment')}}
-    <div class="contex-bg"><p class="bg-danger rounded">{{TRANSLATION "board.msg.error.can.not.delete.post"}}</p></div>
-  {{else if (EQ result 'emptyComment')}}
-    <div class="contex-bg"><p class="bg-danger rounded">{{TRANSLATION "board.msg.error.can.not.delete.post.except.comment"}}</p></div>
-  {{/if}}
 
 		<!--Blog Post-->
 		<div class="blog margin-bottom-20">
@@ -201,20 +187,26 @@
 							<span ng-bind-html="comment.content"></span>
 						</p>
 
-						<button type="button" class="btn btn-xs rounded btn-dropbox" ng-click="btnCommentFeeling(comment.id, 'LIKE')" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.like"}}">
-							<span ng-init="numberOfCommentLike[comment.id]=comment.usersLiking.length">
-								<i class="fa fa-thumbs-o-up fa-lg"></i>
-								<span ng-bind="numberOfCommentLike[comment.id]"></span>
-							</span>
-						</button>
-            &mid;
-						<button type="button" class="btn btn-xs rounded btn-weibo" ng-click="btnCommentFeeling(comment.id, 'DISLIKE')" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.dislike"}}">
-							<span ng-init="numberOfCommentDislike[comment.id]=comment.usersDisliking.length">
-								<i class="fa fa-thumbs-o-down fa-lg"></i>
-								<span ng-bind="numberOfCommentDislike[comment.id]"></span>
-							</span>
-						</button>
-						<div class="text-danger" ng-show="commentFeelingConn[comment.id]" ng-bind="commentFeelingAlert[comment.id]"></div>
+            <div class="margin-bottom-10">
+              <button type="button" class="btn btn-xs rounded btn-dropbox" ng-click="btnCommentFeeling(comment.id, 'LIKE')" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.like"}}">
+                <span ng-init="numberOfCommentLike[comment.id]=comment.usersLiking.length">
+                  <i class="fa fa-thumbs-o-up fa-lg"></i>
+                  <span ng-bind="numberOfCommentLike[comment.id]"></span>
+                </span>
+              </button>
+              &mid;
+              <button type="button" class="btn btn-xs rounded btn-weibo" ng-click="btnCommentFeeling(comment.id, 'DISLIKE')" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.dislike"}}">
+                <span ng-init="numberOfCommentDislike[comment.id]=comment.usersDisliking.length">
+                  <i class="fa fa-thumbs-o-down fa-lg"></i>
+                  <span ng-bind="numberOfCommentDislike[comment.id]"></span>
+                </span>
+              </button>
+            </div>
+
+            <div class="alert alert-info" ng-show="commentFeelingConn[comment.id]">
+              <p ng-bind="commentFeelingAlert[comment.id]"></p>
+            </div>
+
 						<hr class="padding-5">
 					</div>
 
@@ -299,11 +291,11 @@
 
     {{#if (OPR '&&' isAdmin (NOT post.status.delete))}}
       {{#if (EQ post.status.notice 'NOTICE')}}
-        <button type="button" class="btn-u btn-u-default rounded" onclick="location='/board/notice/cancel/{{post.seq}}'">
+        <button type="button" class="btn-u btn-u-default rounded" onclick="window.location='/board/notice/cancel/{{post.seq}}'">
           {{TRANSLATION "common.button.cancel.notice"}}
         </button>
       {{else}}
-        <button type="button" class="btn-u rounded" onclick="location='/board/notice/set/{{post.seq}}'">
+        <button type="button" class="btn-u rounded" onclick="window.location='/board/notice/set/{{post.seq}}'">
           {{TRANSLATION "common.button.set.as.notice"}}
         </button>
       {{/if}}
@@ -383,21 +375,21 @@
 
           if (data.feeling === 'LIKE') {
             message = '{{TRANSLATION "board.msg.select.like"}}';
-            $scope.likeConn = "success";
+            $scope.likeConn = "done";
             $scope.btnLike = false;
           } else if (data.feeling === 'DISLIKE') {
             message = "{{TRANSLATION 'board.msg.select.dislike'}}";
-            $scope.dislikeConn = "success";
+            $scope.dislikeConn = "done";
             $scope.btnDislike = false;
           }
 
           $scope.alert.msg = message;
-          $scope.alert.classType = "alert-success";
+          $scope.alert.classType = "alert-info";
         }, function (response) {
           var data = response.data;
 
           $scope.alert.msg = data.message;
-          $scope.alert.classType = "alert-danger";
+          $scope.alert.classType = "alert-info";
 
           if (type === "LIKE") {
             $scope.likeConn = "none";
@@ -491,7 +483,7 @@
 
     {{#if (NOT isAuthenticated)}}
       $scope.summernoteAlert = {
-        classType: "text-danger",
+        classType: "text-info",
         msg: '{{TRANSLATION "board.msg.need.login.for.write"}}'
       };
     {{/if}}
@@ -501,7 +493,7 @@
       if ($scope.summernote.content.length < Jakduk.BoardCommentContentLengthMin
         || $scope.summernote.content.length > Jakduk.BoardCommentContentLengthMax) {
         $scope.summernoteAlert = {
-          "classType": "text-danger",
+          "classType": "text-info",
           "msg": '{{TRANSLATION "Size.board.comment.content"}}'
         };
         return;
@@ -521,7 +513,9 @@
           $scope.writeComment = false;
         }, function (response) {
           var data = response.data;
-          $scope.writeCommentAlert = {"classType":"text-danger", "msg":data.message};
+          $scope.writeCommentAlert = {
+            msg: data.message
+          };
           $scope.writeCommentConn = "none";
           $scope.writeComment = false;
         });
