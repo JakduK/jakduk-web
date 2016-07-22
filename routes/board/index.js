@@ -65,7 +65,7 @@ function viewPost(req, res) {
     var postData = response.data;
     var og = res.locals.og;
 
-    _.merge(og, TagUtil.ogFrom(postData.post.content, 100), {
+    _.merge(og, TagUtil.ogFrom(postData.post.content, 120), {
       type: 'article'
     });
 
