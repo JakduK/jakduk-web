@@ -65,6 +65,8 @@ module.exports.setup = function (app) {
 
   router.get('/profile', index);
 
+  router.get('/social/profile', index);
+
   router.get('/profile/edit', editProfile);
 
   router.post('/profile/update', updateProfile);
