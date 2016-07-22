@@ -164,7 +164,7 @@
 				</div>
 			</div>
 
-			<div class="alert fade in rounded ng-cloak" ng-class="alert.classType" ng-show="alert.msg">
+			<div class="alert" ng-class="alert.classType" ng-show="alert.msg">
 				<span ng-bind="alert.msg"></span>
 				<a class="alert-link" ng-href="{%alert.linkUrl%}" ng-show="alert.linkUrl" ng-bind="alert.linkLabel"></a>
 			</div>
@@ -225,8 +225,8 @@
 						</button>
 					</div>
 
-					<div class="contex-bg" ng-show="commentAlert.msg">
-						<p class="commentAlert.classType rounded" ng-bind="commentAlert.msg"></p>
+					<div class="alert alert-info" ng-show="commentAlert.msg">
+						<p ng-bind="commentAlert.msg"></p>
 					</div>
 				</div>
 			</div>
@@ -236,8 +236,10 @@
 				<h4 class="text-primary">{{TRANSLATION "board.comment.leave.comment"}}</h4>
 				<div class="margin-bottom-10">
 					<summernote config="options" on-keyUp="focus(evt)" ng-model="summernote.content" ng-init="summernote={content:'', seq:'{{post.seq}}'}"></summernote>
-					<span ng-class="summernoteAlert.classType" ng-show="summernoteAlert.msg" ng-bind="summernoteAlert.msg"></span>
 				</div>
+        <div class="alert alert-info" ng-show="summernoteAlert.msg">
+          <p ng-bind="summernoteAlert.msg"></p>
+        </div>
 
 				<div class="margin-bottom-10">
         {{#if (NOT isAuthenticated)}}
@@ -253,7 +255,9 @@
         {{/if}}
 					<span ng-bind="summernote.content.length"></span> / <span ng-bind="boardCommentContentLengthMax"></span>
 				</div>
-				<p ng-show="writeCommentAlert.msg" ng-class="writeCommentAlert.classType" ng-bind="writeCommentAlert.msg"></p>
+        <div class="alert alert-info" ng-show="writeCommentAlert.msg">
+          <p ng-bind="writeCommentAlert.msg"></p>
+        </div>
 			</div>
 
 		</div> <!-- End Comment -->
@@ -352,11 +356,11 @@
         $scope.alert.msg = '{{TRANSLATION "board.msg.need.login.for.feel"}}';
         $scope.alert.linkUrl = '/login';
         $scope.alert.linkLabel = '{{TRANSLATION "common.button.login"}}';
-        $scope.alert.classType = "alert-warning";
+        $scope.alert.classType = "alert-info";
         return;
       } else if ({{EQ userInfo.id post.writer.userId}}) {
         $scope.alert.msg = '{{TRANSLATION "board.msg.you.are.writer"}}';
-        $scope.alert.classType = "alert-warning";
+        $scope.alert.classType = "alert-info";
         return;
       }
 
@@ -487,8 +491,8 @@
 
     {{#if (NOT isAuthenticated)}}
       $scope.summernoteAlert = {
-        "classType": "text-danger",
-        "msg": '{{TRANSLATION "board.msg.need.login.for.write"}}'
+        classType: "text-danger",
+        msg: '{{TRANSLATION "board.msg.need.login.for.write"}}'
       };
     {{/if}}
 
@@ -544,7 +548,6 @@
             if (type == "init") {
             } else {
               $scope.commentAlert.msg = '{{TRANSLATION "board.msg.there.is.no.new.comment"}}';
-              $scope.commentAlert.classType = "bg-warning";
             }
           } else {	// 댓글을 1개 이상 가져왔을 때
             if (type == "init" || type == "btnRefreshComment") {

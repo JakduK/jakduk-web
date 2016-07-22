@@ -83,6 +83,7 @@
               <i class="fa fa-thumbs-o-up fa-lg"></i>
               <span ng-hide="likeConn == 'connecting'" ng-bind="numberOfLike"></span>
             </button>
+            &mid;
             <button class="btn-u btn-brd btn-brd-hover rounded btn-u-red btn-u-sm ladda-button" type="button" ng-click="btnFeeling('DISLIKE')" ng-init="numberOfDislike={{ARRAY_SIZE gallery.usersDisliking}}" ladda="btnDislike" data-style="expand-right" data-spinner-color="Gainsboro">
               <i class="fa fa-thumbs-o-down fa-lg"></i>
               <span ng-hide="dislikeConn == 'connecting'" ng-bind="numberOfDislike"></span>
@@ -170,12 +171,12 @@
       if ({{NOT isAuthenticated}}) {
         $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.need.login.for.feel"}}';
         $scope.feelingAlert.icon = "glyphicon-warning-sign";
-        $scope.feelingAlert.classType = "alert-warning";
+        $scope.feelingAlert.classType = "alert-info";
         return;
       } else if ({{EQ userInfo.id gallery.writer.userId}}) {
         $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.you.are.writer"}}';
         $scope.feelingAlert.icon = "glyphicon-warning-sign";
-        $scope.feelingAlert.classType = "alert-warning";
+        $scope.feelingAlert.classType = "alert-info";
         return;
       }
 
@@ -215,7 +216,7 @@
 
           $scope.feelingAlert.msg = data.message;
           $scope.feelingAlert.icon = "glyphicon-warning-sign";
-          $scope.feelingAlert.classType = "alert-warning";
+          $scope.feelingAlert.classType = "alert-info";
 
           $scope.dislikeConn = "none";
           $scope.likeConn = "none";
