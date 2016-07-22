@@ -110,7 +110,7 @@ hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
   return locale.startsWith('ko') ? 'ko-KR' : 'en-US';
 });
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'production') {
   hbsUtils.registerWatchedPartials(path.join(__dirname, '..', 'views', 'include'));
 } else {
   hbs.registerPartials(path.join(__dirname, '..', 'views', 'include'));
