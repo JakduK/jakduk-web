@@ -14,13 +14,16 @@ i18n.configure({
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
-    var userLocale = req.query.lang || req.acceptsLanguages(locale.list);
+    var userLocale = req.query.lang || req.cookies.lang || req.acceptsLanguages(locale.list);
+
     if (!locale.alias[userLocale]) {
       userLocale = locale.alias[userLocale.replace('_', '-').split('-')[0] + '-*'] || userLocale.default;
     }
     i18n.setLocale(userLocale);
     req.locale = userLocale;
     res.locals.locale = userLocale;
+    res.cookie('lang', userLocale);
+
     next();
   });
 };
