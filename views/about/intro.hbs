@@ -12,11 +12,27 @@
 
   <!--=== Content Part ===-->
   <div class="container content">
-  {{#if (EQ locale 'ko')}}
-    {{> about_ko}}
-  {{else}}
-    {{> about_en}}
-  {{/if}}
+    <div class="overflow-h">
+      <div class="pull-left">
+        <h3>{{{TRANSLATION 'common.jakduk'}}}</h3>
+      </div>
+    </div>
+    <p>{{{TRANSLATION 'about.jakdu'}}}</p>
+
+    <div class="overflow-h">
+      <div class="pull-left">
+        <h3>{{{TRANSLATION 'common.jakduk.description'}}}</h3>
+      </div>
+    </div>
+    <p>{{{TRANSLATION 'about.jakduk'}}}</p>
+
+    <div class="overflow-h">
+      <div class="pull-left">
+        <h3>{{{TRANSLATION 'common.msg.project.jakduk'}}}</h3>
+      </div>
+    </div>
+    <p>{{TRANSLATION 'about.contribution'}}</p>
+    <p><a href="https://github.com/JakduK" target="_blank">https://github.com/JakduK</a></p>
   </div>
 
   {{> footer}}
