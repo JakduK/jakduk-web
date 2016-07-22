@@ -11,7 +11,11 @@ module.exports.setup = function (app) {
   app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error/error', {
-      title: ['common.error', 'common.jakduk'],
+      title: [{
+        key: 'common.error'
+      }, {
+        key: 'common.jakduk'
+      }],
       headPage: 'head_error',
       message: err.message,
       error: isProd ? '' : err.stack,

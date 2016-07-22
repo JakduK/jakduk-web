@@ -9,9 +9,10 @@ var moment = require('moment');
 hbs.registerHelper('TITLE', function(val, options) {
   var TRANSLATION = hbs.handlebars.helpers.TRANSLATION;
   var arrVal = [].concat(val);
+  var first = arrVal.shift();
   return arrVal.reduce(function(prev, each) {
-    return prev + ' &middot; ' + TRANSLATION(each, options);
-  }, TRANSLATION(arrVal.shift(), options));
+    return prev + ' &middot; ' + (each.key ? TRANSLATION(each.key, options) : each.val);
+  }, first.key ? TRANSLATION(first.key, options) : first.val);
 });
 
 hbs.registerHelper('TRANSLATION', function(key, options) {
@@ -77,8 +78,7 @@ hbs.registerHelper('SIZE_FORMAT', function(val) {
   return filesize(val);
 });
 
-hbs.registerHelper('DATE_FORMAT', function(val, format, locale) {
-  moment.locale(locale);
+hbs.registerHelper('DATE_FORMAT', function(val, format) {
   return moment(val).format(format);
 });
 

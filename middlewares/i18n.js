@@ -4,12 +4,15 @@ var path = require('path');
 var config = require('../config/environment');
 var locale = config.locale;
 var i18n = require('i18n');
+var moment = require('moment');
 
 i18n.configure({
   defaultLocale: locale.default,
   locales: locale.list,
   directory: path.join(__dirname, '..', 'i18n'),
-  extension: '.json'
+  extension: '.json',
+  autoReload: true,
+  updateFiles: false
 });
 
 module.exports = function (app) {
@@ -19,7 +22,10 @@ module.exports = function (app) {
     if (!locale.alias[userLocale]) {
       userLocale = locale.alias[userLocale.replace('_', '-').split('-')[0] + '-*'] || userLocale.default;
     }
+
     i18n.setLocale(userLocale);
+    moment.locale(userLocale);
+
     req.locale = userLocale;
     res.locals.locale = userLocale;
     res.cookie('lang', userLocale);

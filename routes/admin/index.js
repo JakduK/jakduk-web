@@ -4,16 +4,22 @@ module.exports.setup = function (app) {
   app.use('/admin', function (req, res) {
     if (!req.isAdmin) {
       res.render('error/denied', {
-        preTitle: 'ADMIN PAGE',
-        title: ['common.jakduk'],
+        title: [{
+          val: 'ADMIN PAGE'
+        }, {
+          key: 'common.jakduk'
+        }],
         headPage: 'head_error'
       });
       return;
     }
 
     res.render('admin/admin', {
-      preTitle: 'ADMIN PAGE',
-      title: ['common.jakduk'],
+      title: [{
+        val: 'ADMIN PAGE'
+      }, {
+        key: 'common.jakduk'
+      }],
       baseHref: '/',
       headPage: 'head_admin'
     });

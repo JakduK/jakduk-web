@@ -7,7 +7,11 @@ function index(req, res) {
   req.api.footballClubs(req.locale).then(function (response) {
     var footballClubs = response.data;
     res.render('login/join', {
-      title: ['user.register', 'common.jakduk'],
+      title: [{
+        key: 'user.register'
+      }, {
+        key: 'common.jakduk'
+      }],
       headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
@@ -31,7 +35,11 @@ function submit(req, res) {
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
-        title: ['user.register', 'common.jakduk'],
+        title: [{
+          key: 'user.register'
+        }, {
+          key: 'common.jakduk'
+        }],
         headPage: 'head_join'
       });
     }
@@ -47,7 +55,11 @@ function indexOAuth(req, res) {
     var footballClubs = responses[0].data;
     var snsProfile = responses[1].data;
     res.render('login/join', {
-      title: ['user.register', 'common.jakduk'],
+      title: [{
+        key: 'user.register'
+      }, {
+        key: 'common.jakduk'
+      }],
       headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
@@ -69,7 +81,11 @@ function submitOAuth(req, res) {
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
-        title: ['user.register', 'common.jakduk'],
+        title: [{
+          key: 'user.register'
+        }, {
+          key: 'common.jakduk'
+        }],
         headPage: 'head_login'
       });
     }

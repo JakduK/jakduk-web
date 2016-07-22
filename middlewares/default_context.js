@@ -4,6 +4,7 @@ var SessionUtil = require('../helpers/jakduk_session_util');
 var ApiClient = require('../helpers/jakduk_api_client');
 var config = require('../config/environment');
 var _ = require('lodash');
+var i18n = require('i18n');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -31,7 +32,12 @@ module.exports = function (app) {
         apiServerUrl: config.apiServerUrl,
         thumbnailServerUrl: config.thumbnailServerUrl,
         userInfo: req.userInfo,
-        isAuthenticated: req.isAuthenticated
+        isAuthenticated: req.isAuthenticated,
+        og: {
+          description: i18n.__('about.jakduk'),
+          url: config.origin + req.path,
+          image: config.origin + '/jakduk/img/logo_256.png'
+        }
       });
 
       next();

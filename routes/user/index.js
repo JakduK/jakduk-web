@@ -5,7 +5,11 @@ var express = require('express');
 function index(req, res) {
   req.api.getUserProfile().then(function (response) {
     res.render('user/profile', {
-      title: ['common.jakduk', 'user.profile'],
+      title: [{
+        key: 'common.jakduk'
+      }, {
+        key: 'user.profile'
+      }],
       headPage: 'head_profile',
       userProfile: response.data
     });
@@ -18,7 +22,11 @@ function editProfile(req, res) {
     req.api.footballClubs(req.locale)
   ]).then(function (responses) {
     res.render('user/profile_edit', {
-      title: ['common.jakduk', 'user.profile.update'],
+      title: [{
+        key: 'common.jakduk'
+      }, {
+        key: 'user.profile.update'
+      }],
       headPage: 'head_profile',
       userProfile: responses[0].data,
       footballClubs: responses[1].data
@@ -32,7 +40,11 @@ function updateProfile(req, res, next) {
 
 function editPassword(req, res) {
   res.render('user/password_edit', {
-    title: ['common.jakduk', 'user.password.change'],
+    title: [{
+      key: 'common.jakduk'
+    }, {
+      key: 'user.password.change'
+    }],
     headPage: 'head_profile'
   });
 }

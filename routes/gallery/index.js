@@ -7,14 +7,22 @@ module.exports.setup = function (app) {
 
   router.get('/', function (req, res) {
     res.render('error/coming_soon', {
-      title: ['gallery', 'common.jakduk'],
+      title: [{
+        key: 'gallery'
+      }, {
+        key: 'common.jakduk'
+      }],
       headPage: 'head_error'
     });
   });
 
   router.get('/list', function (req, res) {
     res.render('error/coming_soon', {
-      title: ['gallery', 'common.jakduk'],
+      title: [{
+        key: 'gallery'
+      }, {
+        key: 'common.jakduk'
+      }],
       headPage: 'head_error'
     });
   });

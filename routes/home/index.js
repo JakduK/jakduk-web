@@ -13,7 +13,11 @@ module.exports.setup = function (app) {
       req.api.encyclopedia(res.locals.locale)
     ]).then(function (responses) {
       res.render('home/home', {
-        title: ['common.home', 'common.jakduk'],
+        title: [{
+          key: 'common.home'
+        }, {
+          key: 'common.jakduk'
+        }],
         headPage: 'head_home',
         todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),
         data: {
