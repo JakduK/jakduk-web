@@ -1,0 +1,247 @@
+<div class="wrapper">
+
+  {{> header_navigation}}
+
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left"><a href="/gallery">{{TRANSLATION "gallery"}}</a></h1>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
+
+  <!--=== Content Part ===-->
+  <div class="container content blog-page blog-item">
+
+    <div class="margin-bottom-10">
+      <button type="button" class="btn-u btn-brd rounded" onclick="window.location='/gallery'">
+        <i class="fa fa-th"></i>
+      </button>
+
+    {{#if prev}}
+      <button type="button" class="btn-u btn-brd rounded" onclick="window.location='/gallery/{{prev.id}}'">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    {{else}}
+      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled>
+        <i class="fa fa-chevron-left text-muted"></i>
+      </button>
+    {{/if}}
+
+    {{#if next}}
+      <button type="button" class="btn-u btn-brd rounded" onclick="location.href='/gallery/{{next.id}}'">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    {{else}}
+      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
+        <i class="fa fa-chevron-right text-muted"></i>
+      </button>
+    {{/if}}
+    </div>
+
+    <div class="blog margin-bottom-20" ng-controller="galleryController">
+      <h2>{{gallery.name}}</h2>
+      <div class="blog-post-tags">
+        <ul class="list-unstyled list-inline blog-info">
+          <li>
+            <i class="fa fa-user"></i>
+            {{gallery.writer.username}}
+          </li>
+          <li>
+            <i class="fa fa-clock-o"></i>
+            <span ng-bind="'{{gallery.id}}' | dateFromObjectId | date:'medium'"></span>
+          </li>
+          <li>
+            <i class="fa fa-eye"></i>
+            {{gallery.views}}
+          </li>
+        </ul>
+      </div>
+
+      <p><img class="img-responsive" src="{{thumbnailServerUrl}}/gallery/{{gallery.id}}" alt="{{gallery.name}}"></p>
+
+      <!-- 엮인 글 -->
+      <ul class="list-group">
+        <li class="list-group-item">
+          <strong>{{TRANSLATION "gallery.linked.posts"}}</strong>
+          {{#each linkedPosts}}
+            <div>
+              <a href="/board/free/{{seq}}">{{subject}}</a>
+              |
+              &nbsp;<span class="glyphicon glyphicon-user"></span>
+              {{writer.username}}
+              &nbsp;<span class="glyphicon glyphicon-time"></span>
+              {{DATE_FORMAT (DATE_BY_ID id) 'LLL'}}
+            </div>
+          {{/each}}
+        </li>
+      </ul>
+
+      <div class="ladda-btn margin-bottom-10">
+        <div class="row">
+          <div class="col-xs-6">
+            <button class="btn-u btn-brd btn-brd-hover rounded btn-u-blue btn-u-sm ladda-button" type="button" ng-click="btnFeeling('LIKE')" ng-init="numberOfLike={{ARRAY_SIZE gallery.usersLiking}}" ladda="btnLike" data-style="expand-right" data-spinner-color="Gainsboro">
+              <i class="fa fa-thumbs-o-up fa-lg"></i>
+              <span ng-hide="likeConn == 'connecting'" ng-bind="numberOfLike"></span>
+            </button>
+            <button class="btn-u btn-brd btn-brd-hover rounded btn-u-red btn-u-sm ladda-button" type="button" ng-click="btnFeeling('DISLIKE')" ng-init="numberOfDislike={{ARRAY_SIZE gallery.usersDisliking}}" ladda="btnDislike" data-style="expand-right" data-spinner-color="Gainsboro">
+              <i class="fa fa-thumbs-o-down fa-lg"></i>
+              <span ng-hide="dislikeConn == 'connecting'" ng-bind="numberOfDislike"></span>
+            </button>
+          </div>
+          <div class="col-xs-6 text-right">
+            <a id="kakao-link-btn" href="javascript:void(0);">
+              <img src="/kakao/icon/kakaolink_btn_small.png">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="alert" ng-class="feelingAlert.classType" role="alert" ng-show="feelingAlert.msg">
+        <span class="glyphicon" ng-class="feelingAlert.icon" aria-hidden="true"></span>
+        <span ng-bind="feelingAlert.msg"></span>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="margin-bottom-10">
+      <button type="button" class="btn-u btn-brd rounded" onclick="window.location='/gallery'">
+        <i class="fa fa-th"></i>
+      </button>
+    {{#if prev}}
+      <button type="button" class="btn-u btn-brd rounded" onclick="window.location='/gallery/{{prev.id}}'">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    {{else}}
+      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled>
+        <i class="fa fa-chevron-left text-muted"></i>
+      </button>
+    {{/if}}
+
+    {{#if next}}
+      <button type="button" class="btn-u btn-brd rounded" onclick="window.location='/gallery/{{next.id}}'">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    {{else}}
+      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled>
+        <i class="fa fa-chevron-right text-muted"></i>
+      </button>
+    {{/if}}
+    </div>
+
+  </div>
+
+  {{> footer}}
+
+</div><!-- /.container -->
+
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/unify/assets/plugins/back-to-top.js"></script>
+<script src="/unify/assets/plugins/smoothScroll.js"></script>
+<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/unify/assets/js/app.js"></script>
+<script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
+<script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
+<script src="/bower_components/slick-carousel/slick/slick.js"></script>
+<script src="/bower_components/angular-slick-carousel/dist/angular-slick.js"></script>
+<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="/bower_components/angular-lazy-img/release/angular-lazy-img.js"></script>
+<script src="/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.js"></script>
+<script src="/bower_components/angular-touch/angular-touch.js"></script>
+<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
+<script src="/bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
+<script src="/kakao/js/kakao.min.js"></script>
+<script src="/jakduk/js/jakduk.js"></script>
+
+<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+
+<script type="text/javascript">
+  angular.module("jakdukApp", [
+    "angular-ladda", 'jakdukCommon'
+  ]).controller("galleryController", ['$scope', '$http', function ($scope, $http) {
+    $scope.feelingAlert = {};
+    $scope.likeConn = "none";
+    $scope.dislikeConn = "none";
+
+    $scope.btnFeeling = function (type) {
+      if ({{NOT isAuthenticated}}) {
+        $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.need.login.for.feel"}}';
+        $scope.feelingAlert.icon = "glyphicon-warning-sign";
+        $scope.feelingAlert.classType = "alert-warning";
+        return;
+      } else if ({{EQ userInfo.id gallery.writer.userId}}) {
+        $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.you.are.writer"}}';
+        $scope.feelingAlert.icon = "glyphicon-warning-sign";
+        $scope.feelingAlert.classType = "alert-warning";
+        return;
+      }
+
+      if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
+        if (type === "like") {
+          $scope.likeConn = "connecting";
+          $scope.btnLike = true;
+        } else if (type === "dislike") {
+          $scope.dislikeConn = "connecting";
+          $scope.btnDislike = true;
+        }
+
+        $http.post('{{apiServerUrl}}/gallery/{{gallery.id}}/' + type).then(function (response) {
+          var data = response.data;
+
+          if (data.feeling === "LIKE") {
+            angular.extend($scope.feelingAlert, {
+              msg: '{{TRANSLATION "gallery.msg.select.like"}}',
+              icon: "glyphicon-thumbs-up",
+              classType: "alert-info"
+            });
+            $scope.numberOfLike = data.numberOfLike;
+            $scope.likeConn = "info";
+            $scope.btnLike = false;
+          } else {
+            angular.extend($scope.feelingAlert, {
+              msg: '{{TRANSLATION "gallery.msg.select.dislike"}}',
+              icon: "glyphicon-thumbs-down",
+              classType: "alert-danger"
+            });
+            $scope.numberOfDislike = data.numberOfDislike;
+            $scope.dislikeConn = "danger";
+            $scope.btnDislike = false;
+          }
+        }, function (response) {
+          var data = response.data;
+
+          $scope.feelingAlert.msg = data.message;
+          $scope.feelingAlert.icon = "glyphicon-warning-sign";
+          $scope.feelingAlert.classType = "alert-warning";
+
+          $scope.dislikeConn = "none";
+          $scope.likeConn = "none";
+          $scope.btnLike = false;
+          $scope.btnDislike = false;
+        });
+      }
+    };
+  }]);
+
+ $(function () {
+    App.init();
+
+    Kakao.init('{{kakaoClientID}}');
+    Kakao.Link.createTalkLinkButton({
+      container: '#kakao-link-btn',
+      label: '{{gallery.name}}\r{{TRANSLATION "gallery"}} · {{TRANSLATION "common.jakduk"}}',
+      image: {
+        src: '{{thumbnailServerUrl}}/{{gallery.id}}',
+        width: '360',
+        height: '230'
+      },
+      webLink: {
+        text: Jakduk.origin + '/gallery/{{gallery.id}}',
+        url: Jakduk.origin +  + '/gallery/{{gallery.id}}'
+      }
+    });
+  });
+</script>

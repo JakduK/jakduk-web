@@ -223,7 +223,7 @@
 					};
 				};
 
-				LightboxProvider.templateUrl = "<%=request.getContextPath()%>/resources/jakduk/template/lightbox01.jsp";
+				LightboxProvider.templateUrl = "<%=request.getContextPath()%>/resources/jakduk/template/lightbox-search.jsp";
 			});
 
 			jakdukApp.controller("searchCtrl", function ($scope, $http, $location, Lightbox) {

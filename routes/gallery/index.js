@@ -6,24 +6,34 @@ module.exports.setup = function (app) {
   var router = express.Router();
 
   router.get('/', function (req, res) {
-    res.render('error/coming_soon', {
+    res.render('gallery/list', {
       title: [{
         key: 'gallery'
       }, {
         key: 'common.jakduk'
       }],
-      headPage: 'head_error'
+      headPage: 'head_gallery'
     });
   });
 
-  router.get('/list', function (req, res) {
-    res.render('error/coming_soon', {
-      title: [{
-        key: 'gallery'
-      }, {
-        key: 'common.jakduk'
-      }],
-      headPage: 'head_error'
+  router.get('/:id', function (req, res) {
+    req.api.getGalleryItem(req.params.id).then(function (response) {
+      var data = response.data;
+      res.cookie('GALLERY_' + req.params.id, 'r', {
+        httpOnly: true
+      });
+      res.render('gallery/item_view', {
+        title: [{
+          key: 'gallery'
+        }, {
+          key: 'common.jakduk'
+        }],
+        headPage: 'head_gallery',
+        gallery: data.gallery,
+        linkedPosts: data.linkedPosts,
+        next: data.next,
+        prev: data.prev
+      });
     });
   });
 

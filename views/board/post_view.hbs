@@ -124,7 +124,7 @@
 						{{#each post.galleries}}
 							<div>
 								<span aria-hidden="true" class="icon-paper-clip"></span>
-								<a href="/gallery/view/{{id}}">{{DEFAULT_VALUE name fileName}}</a> | {{SIZE_FORMAT size}}
+								<a href="/gallery/{{id}}">{{DEFAULT_VALUE name fileName}}</a> | {{SIZE_FORMAT size}}
 							</div>
             {{/each}}
 					</li>
@@ -377,12 +377,10 @@
 
           if (data.feeling === 'LIKE') {
             message = '{{TRANSLATION "board.msg.select.like"}}';
-
             $scope.likeConn = "success";
             $scope.btnLike = false;
           } else if (data.feeling === 'DISLIKE') {
             message = "{{TRANSLATION 'board.msg.select.dislike'}}";
-
             $scope.dislikeConn = "success";
             $scope.btnDislike = false;
           }

@@ -73,4 +73,14 @@ module.exports = function(ApiClient) {
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
+
+  ApiClient.prototype.getGalleryItem = function(id) {
+    return new Promise(function(resolve) {
+      rest.json(this.serverUrl + '/gallery/' + id, null, {
+        headers: {
+          Cookie: this.session
+        }
+      }).on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
 };

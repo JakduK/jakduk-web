@@ -142,10 +142,10 @@
 
       <!-- 최근 사진 -->
       <div class="owl-carousel-v1 owl-work-v1 col-sm-12">
-        <div class="headline">
+        <div class="headline clearfix">
           <h2 class="pull-left">{{TRANSLATION "home.pictures.latest"}}</h2>
           <div class="owl-navigation">
-            <a style="margin:6px 0px 0px 6px;" class="btn-u btn-u-xs btn-u-default rounded pull-left" href="/gallery/list">{{TRANSLATION "common.button.more"}}</a>
+            <a style="margin:6px 0px 0px 6px;" class="btn-u btn-u-xs btn-u-default rounded pull-left" href="/gallery">{{TRANSLATION "common.button.more"}}</a>
 
             <div class="customNavigation">
               <a class="owl-btn prev-v2" id="slickPrev"><i class="fa fa-angle-left"></i></a>
@@ -156,15 +156,13 @@
 
         <slick settings="slickConfig" ng-if="dataLoaded">
           <div ng-repeat="image in galleriesLatest">
-            <div class="simple-block">
-              <a ng-href="/gallery/view/{%image.id%}">
-                <img style="width:225px; margin:5px;" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
-              </a>
-              <p class="img-responsive" ng-bind="image.name"></p>
-            </div>
-
+            <a ng-href="/gallery/{%image.id%}">
+              <img class="img-thumbnail img-home-carousel" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
+            </a>
+            <h5 class="text-center" ng-bind="image.name"></h5>
           </div>
         </slick>
+
       </div>
 
     </div>
