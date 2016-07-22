@@ -200,14 +200,11 @@
                 {{else}}
                   <strong>{{subject}}</strong>
                 {{/if}}
-                {{#if commentCount}}
-                  <span class="text-success">&nbsp;[{{commentCount}}]</span>
-                {{/if}}
+                {{#if (EQ status.device 'MOBILE')}}&nbsp;<i aria-hidden="true" class="icon-screen-smartphone"></i>{{/if}}
+                {{#if (EQ status.device 'TABLET')}}&nbsp;<i aria-hidden="true" class="icon-screen-tablet"></i>{{/if}}
+                {{#if (OPR '>' galleries.length 0)}}&nbsp;<i aria-hidden="true" class="icon-picture text-info"></i>{{/if}}
+                {{#if commentCount}}&nbsp;<strong>[{{commentCount}}]</strong>{{/if}}
                 </a>
-                &nbsp;
-                {{#if (EQ status.device 'MOBILE')}}<i aria-hidden="true" class="icon-screen-smartphone"></i>{{/if}}
-                {{#if (EQ status.device 'TABLET')}}<i aria-hidden="true" class="icon-screen-tablet"></i>{{/if}}
-                {{#if (OPR '>' galleries.length 0)}}<i aria-hidden="true" class="icon-picture text-info"></i>{{/if}}
               </div>
 
               <div class="col-sm-3">

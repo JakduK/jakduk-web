@@ -18,9 +18,9 @@
 
           <!--  최근 글 -->
           <div class="col-sm-6 sm-margin-bottom-30">
-            <div class="headline">
+            <div class="headline clearfix">
               <h2>{{TRANSLATION "home.posts.latest"}}</h2>
-              <a class="btn-u btn-u-xs btn-u-default rounded" href="/board/free/posts">
+              <a class="btn-u btn-u-xs btn-u-default rounded pull-right" href="/board/free/posts">
                 {{TRANSLATION "common.button.more"}}
               </a>
             </div>
@@ -47,9 +47,9 @@
 
           <!-- 최근 댓글  -->
           <div class="col-sm-6 sm-margin-bottom-30">
-            <div class="headline">
-              <h2>{{TRANSLATION "home.comments.latest"}}</h2>
-              <a class="btn-u btn-u-xs btn-u-default rounded" href="/board/free/comments">
+            <div class="headline clearfix">
+              <h2 class>{{TRANSLATION "home.comments.latest"}}</h2>
+              <a class="btn-u btn-u-xs btn-u-default rounded pull-right" href="/board/free/comments">
                 {{TRANSLATION "common.button.more"}}
               </a>
             </div>
@@ -137,32 +137,26 @@
 
       </div>
       <!-- End Right Sidebar -->
+    </div>
 
-      <!-- 최근 사진 -->
-      <div class="owl-carousel-v1 owl-work-v1 col-sm-12">
-        <div class="headline clearfix">
-          <h2 class="pull-left">{{TRANSLATION "home.pictures.latest"}}</h2>
-          <div class="owl-navigation">
-            <a style="margin:6px 0px 0px 6px;" class="btn-u btn-u-xs btn-u-default rounded pull-left" href="/gallery">{{TRANSLATION "common.button.more"}}</a>
-
-            <div class="customNavigation">
-              <a class="owl-btn prev-v2" id="slickPrev"><i class="fa fa-angle-left"></i></a>
-              <a class="owl-btn next-v2" id="slickNext"><i class="fa fa-angle-right"></i></a>
-            </div>
-          </div><!--/navigation-->
-        </div>
-
-        <slick settings="slickConfig" ng-if="dataLoaded">
-          <div ng-repeat="image in galleriesLatest">
-            <a ng-href="/gallery/{%image.id%}">
-              <img class="img-thumbnail img-home-carousel" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
-            </a>
-            <h5 class="text-center" ng-bind="image.name"></h5>
-          </div>
-        </slick>
-
+    <!-- 최근 사진 -->
+    <div class="headline clearfix">
+      <h2 class="pull-left">{{TRANSLATION "home.pictures.latest"}}</h2>
+      <a class="btn-u btn-u-xs btn-u-default rounded pull-right" href="/gallery">{{TRANSLATION "common.button.more"}}</a>
+    </div>
+    <div class="container-fluid">
+      <div class="customNavigation text-center margin-bottom-10">
+        <a class="owl-btn prev-v2" id="slickPrev"><i class="fa fa-angle-left"></i></a>
+        <a class="owl-btn next-v2" id="slickNext"><i class="fa fa-angle-right"></i></a>
       </div>
-
+      <slick settings="slickConfig" ng-if="dataLoaded">
+        <div ng-repeat="image in galleriesLatest">
+          <a ng-href="/gallery/{%image.id%}">
+            <img class="img-thumbnail img-home-carousel" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
+          </a>
+          <h5 class="text-center" ng-bind="image.name"></h5>
+        </div>
+      </slick>
     </div>
 
   </div><!--/container-->
@@ -196,26 +190,19 @@
     $scope.refreshEncyclopedia = refreshEncyclopedia;
 
     $scope.dataLoaded = true;
-    $scope.dataLatestConn = 'none';
     $scope.encyclopediaConn = 'none';
-
     $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
     $scope.galleriesLatest = angular.fromJson('{{{JSON_STRINGIFY data.galleries}}}');
-
     $scope.encyclopedia = angular.fromJson('{{{JSON_STRINGIFY data.encyclopedia}}}');
-
     $scope.slickConfig = {
       infinite: false,
       autoplay: true,
       draggable: true,
       autoplaySpeed: 3000,
-      //slidesToScroll : 2,
-      //arrows: false,
       prevArrow: '#slickPrev',
       nextArrow: '#slickNext',
       variableWidth: true,
       lazyLoad: 'ondemand',
-      //centerPadding: '60px',
       method: {},
       event: {
         beforeChange: function (event, slick, currentSlide, nextSlide) {
