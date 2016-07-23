@@ -40,8 +40,6 @@ module.exports.setup = function (app) {
         next: data.next,
         prev: data.prev
       });
-    }).catch(function (err) {
-      next(err);
     });
   });
 
