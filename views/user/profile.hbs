@@ -53,7 +53,9 @@
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-4">
           <a class="btn btn-default" href="/user/profile/edit">{{TRANSLATION "common.button.user.profile.update"}}</a>
+        {{#if (EQ userProfile.providerId 'JAKDUK')}}
           <a class="btn btn-default" href="/user/password/edit">{{TRANSLATION "common.button.user.password.update"}}</a>
+        {{/if}}
         </div>
       </div>
     </form>
