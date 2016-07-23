@@ -42,6 +42,9 @@ module.exports = function (app) {
             url: config.origin + req.path,
             image: config.origin + '/jakduk/img/logo_256.png',
             type: 'website'
+          },
+          facebook: {
+            appId: config.facebook.clientID
           }
         }
       });
