@@ -33,11 +33,16 @@ module.exports = function (app) {
         thumbnailServerUrl: config.thumbnailServerUrl,
         userInfo: req.userInfo,
         isAuthenticated: req.isAuthenticated,
-        og: {
-          description: i18n.__('about.jakduk'),
-          url: config.origin + req.path,
-          image: config.origin + '/jakduk/img/logo_256.png',
-          type: 'website'
+        meta: {
+          twitter: {
+            card: 'summary'
+          },
+          og: {
+            description: i18n.__('about.jakduk'),
+            url: config.origin + req.path,
+            image: config.origin + '/jakduk/img/logo_256.png',
+            type: 'website'
+          }
         }
       });
 

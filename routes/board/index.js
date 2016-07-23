@@ -66,10 +66,12 @@ function viewPost(req, res) {
     if (!postData.post.status.delete) {
       metaContent = TagUtil.ogFrom(postData.post.content, 120);
 
-      _.merge(context.og, {
-        image: metaContent.image || context.og.image,
-        description: metaContent.description || postData.post.subject,
-        type: 'article'
+      _.merge(context.meta, {
+        og: {
+          image: metaContent.image || context.meta.og.image,
+          description: metaContent.description || postData.post.subject,
+          type: 'article'
+        }
       });
     }
 

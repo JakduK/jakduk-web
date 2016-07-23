@@ -22,9 +22,14 @@ module.exports.setup = function (app) {
       var context = res.locals;
       var data = response.data;
 
-      _.merge(context.og, {
-        image: context.thumbnailServerUrl + req.baseUrl +'/' + req.params.id,
-        description: data.gallery.name
+      _.merge(context.meta, {
+        og: {
+          image: context.thumbnailServerUrl + req.baseUrl +'/' + req.params.id,
+          description: data.gallery.name
+        },
+        twitter: {
+          card: 'summary_large_image'
+        }
       });
 
       res.append('Set-Cookie', response.headers['set-cookie']);
