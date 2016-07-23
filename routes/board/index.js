@@ -57,7 +57,7 @@ function commentList(req, res) {
   });
 }
 
-function viewPost(req, res) {
+function viewPost(req, res, next) {
   req.api.getPost(req.params.id).then(function (response) {
     var context = res.locals;
     var postData = response.data;
@@ -87,6 +87,8 @@ function viewPost(req, res) {
         galleries: postData.post.galleries || []
       })
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
