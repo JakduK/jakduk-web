@@ -13,7 +13,7 @@
   <!--=== Content Part ===-->
   <div class="container content">
 
-    <form name="userProfileForm" action="/user/profile/update" method="POST" class="form-horizontal" ng-submit="onSubmit($event)">
+    <form name="userProfileForm" class="form-horizontal" ng-submit="onSubmit($event)">
       <div class="form-group">
         <label class="col-sm-2 control-label">{{TRANSLATION "user.email"}}</label>
         <div class="col-sm-4">
@@ -32,8 +32,7 @@
             ng-blur="onUsername()" ng-keyup="validationUsername()"
             ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
 
-      <span class="glyphicon form-control-feedback"
-          ng-class="{'glyphicon-ok':userProfileForm.username.$valid, 'glyphicon-remove':userProfileForm.username.$invalid || usernameStatus !== 'OK'}"></span>
+      <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userProfileForm.username.$valid, 'glyphicon-remove':userProfileForm.username.$invalid || usernameStatus !== 'OK'}"></span>
           <i class="fa fa-spinner fa-spin" ng-show="usernameConn === 'connecting'"></i>
           <span ng-class="usernameAlert.classType" ng-show="usernameAlert.msg" ng-bind="usernameAlert.msg"></span>
         </div>
@@ -44,7 +43,7 @@
           {{TRANSLATION "user.support.football.club"}}
         </label>
         <div class="col-sm-4">
-          <select name="footballClub" class="form-control">
+          <select name="footballClub" class="form-control" ng-model="footballClub">
             <option value="">{{TRANSLATION "common.none"}}</option>
             {{#each footballClubs as |club|}}
               {{#each club.names}}
@@ -70,7 +69,7 @@
           <button type="submit" class="btn btn-success">
             <span class="glyphicon glyphicon-upload"></span> {{TRANSLATION "common.button.write"}}
           </button>
-          <button type="button" class="btn btn-warning" onclick="location.href='/user/profile'">
+          <button type="button" class="btn btn-warning" onclick="window.location='/user/profile'">
             <span class="glyphicon glyphicon-ban-circle"></span> {{TRANSLATION "common.button.cancel"}}
           </button>
           <div>
@@ -88,7 +87,7 @@
 </div>
 
 <script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script src="/unify/assets/plugins/back-to-top.js"></script>
 <script src="/unify/assets/plugins/smoothScroll.js"></script>
 <script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -102,10 +101,8 @@
   angular.module("jakdukApp", [
     'jakdukCommon'
   ]).controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    var submitted = false;
-
     $window.onbeforeunload = function (e) {
-      if (!$scope.userProfileForm.$pristine) {
+      if ($scope.submitConn !== 'connecting' && !$scope.userProfileForm.$pristine) {
         (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
         return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
       }
@@ -120,22 +117,35 @@
     $scope.buttonAlert = {};
 
     $scope.onSubmit = function (event) {
-      if ($scope.userProfileForm.$valid && $scope.usernameStatus === "OK") {
-        submitted = true;
+      if ($scope.userProfileForm.$valid && ($scope.userProfileForm.username.$pristine || $scope.usernameStatus === "OK")) {
         $scope.submitConn = "connecting";
         $scope.buttonAlert = {
-          "classType": "text-info",
-          "msg": '{{TRANSLATION "common.msg.be.cummunicating.server"}}'
+          classType: 'text-info',
+          msg: '{{TRANSLATION "common.msg.be.cummunicating.server"}}'
         };
+
+        $http.put('{{apiServerUrl}}/user/profile/me', {
+          about: $scope.about,
+          email: $scope.email,
+          footballClub: $scope.footballClub,
+          username: $scope.username
+        }).then(function () {
+          $window.location = '/user/profile';
+        }, function (response) {
+          $scope.submitConn = 'none';
+          $scope.buttonAlert = {
+            classType: 'text-info',
+            msg: response.data.message
+          };
+        });
       } else {
         if ($scope.userProfileForm.username.$invalid) {
           $scope.validationUsername();
         }
-
-        $scope.submitConn = "none";
+        $scope.submitConn = 'none';
         $scope.buttonAlert = {
-          "classType": "text-danger",
-          "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
+          classType: 'text-info',
+          msg: '{{TRANSLATION "common.msg.need.form.validation"}}'
         };
         event.preventDefault();
       }
@@ -145,17 +155,20 @@
       if ($scope.userProfileForm.username.$valid) {
         if ($scope.usernameConn === "none") {
           $scope.usernameConn = "connecting";
-          $http.get('{{apiServerUrl}}/user/exist/username/update?username=' + encodeURIComponent($scope.username)).then(function (response) {
+          $http.get('{{apiServerUrl}}/user/exist/username/edit?username=' + encodeURIComponent($scope.username)).then(function (response) {
             var data = response.data;
             $scope.usernameStatus = data ? 'INVALID' : 'OK';
             $scope.usernameAlert = {
-              "classType": data ? "text-danger" : "text-success",
-              "msg": data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+              classType: data ? "text-danger" : "text-success",
+              msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
             };
           }, function (response) {
             var data = response.data;
             $scope.usernameStatus = 'INVALID';
-            $scope.usernameAlert = {"classType": "text-danger", "msg": data.message};
+            $scope.usernameAlert = {
+              classType: "text-danger",
+              msg: data.message
+            };
           }).then(function () {
             $scope.usernameConn = "none";
           });

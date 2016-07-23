@@ -37,8 +37,7 @@ function submit(req, res) {
           i18n.__('common.jakduk')
         ],
         headPage: 'head_login',
-        result: 'failure',
-        message: response.data.message
+        message: i18n.__('common.exception.not.found.jakduk.account')
       });
     }
   });

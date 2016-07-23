@@ -7,8 +7,8 @@ function index(req, res) {
   req.api.getUserProfile().then(function (response) {
     res.render('user/profile', {
       title: [
-        i18n.__('common.jakduk'),
-        i18n.__('user.profile')
+        i18n.__('user.profile'),
+        i18n.__('common.jakduk')
       ],
       headPage: 'head_profile',
       userProfile: response.data
@@ -23,8 +23,8 @@ function editProfile(req, res) {
   ]).then(function (responses) {
     res.render('user/profile_edit', {
       title: [
-        i18n.__('common.jakduk'),
-        i18n.__('user.profile.update')
+        i18n.__('user.profile.update'),
+        i18n.__('common.jakduk')
       ],
       headPage: 'head_profile',
       userProfile: responses[0].data,
@@ -33,23 +33,14 @@ function editProfile(req, res) {
   });
 }
 
-function updateProfile(req, res, next) {
-  next();
-}
-
 function editPassword(req, res) {
   res.render('user/password_edit', {
-    title: [{
-      key: 'common.jakduk'
-    }, {
-      key: 'user.password.change'
-    }],
+    title: [
+      i18n.__('user.password.change'),
+      i18n.__('common.jakduk')
+    ],
     headPage: 'head_profile'
   });
-}
-
-function updatePassword(req, res, next) {
-  next();
 }
 
 module.exports.setup = function (app) {
@@ -69,11 +60,7 @@ module.exports.setup = function (app) {
 
   router.get('/profile/edit', editProfile);
 
-  router.post('/profile/update', updateProfile);
-
   router.get('/password/edit', editPassword);
-
-  router.post('/password/update', updatePassword);
 
   app.use('/user', router);
 };

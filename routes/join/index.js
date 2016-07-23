@@ -48,7 +48,7 @@ function submit(req, res) {
 function indexOAuth(req, res) {
   Promise.all([
     req.api.socialAttempted(),
-    req.api.footballClubs(req.locale),
+    req.api.footballClubs(req.locale)
   ]).then(function (responses) {
     if (responses[0].statusCode !== 200) {
       res.redirect('/login');

@@ -206,6 +206,7 @@
                 classType: data ? "text-danger" : "text-success",
                 msg: data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
               };
+              $scope.emailConn = "none";
             }, function (response) {
               var data = response.data;
               $scope.emailStatus = 'INVALID';
@@ -213,7 +214,6 @@
                 classType: "text-danger",
                 msg: data.message
               };
-            }).then(function () {
               $scope.emailConn = "none";
             });
           }
@@ -234,6 +234,7 @@
                 classType: data ? "text-danger" : "text-success",
                 msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
               };
+              $scope.usernameConn = "none";
             }, function (response) {
               var data = response.data;
               $scope.usernameStatus = 'INVALID';
@@ -241,7 +242,6 @@
                 classType: "text-danger",
                 msg: data.message
               };
-            }).then(function () {
               $scope.usernameConn = "none";
             });
           }
