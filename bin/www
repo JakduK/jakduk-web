@@ -4,6 +4,10 @@
  * Module dependencies.
  */
 
+require('pmx').init({
+  http : true
+});
+
 var app = require('../app');
 var config = require('../config/environment');
 var debug = require('debug')('jakduk-web:server');

@@ -22,6 +22,7 @@
     "lodash": "^4.13.1",
     "moment": "^2.14.1",
     "morgan": "^1.7.0",
+    "pmx": "^0.6.2",
     "restler": "^3.4.0",
     "serve-favicon": "^2.3.0"
   },
