@@ -26,18 +26,17 @@
 
     <hr class="padding-5"/>
 
-    <!-- search results of gallery -->
-    <div ng-show="galleries != null">
-      <div class="row">
-        <!-- Begin Easy Block v2 -->
-        <div class="col-md-3 col-sm-4 col-xs-6 md-margin-bottom-10" ng-repeat="gallery in galleries">
-          <div class="simple-block">
-            <img class="img-responsive img-bordered" ng-src="{{thumbnailServerUrl}}/gallery/{%gallery.id%}" alt="{%gallery.name%}" ng-click="openLightboxModal($index)">
-            <p class="text-overflow max-width-360" ng-bind="gallery.name"></p>
+    <div class="row" ng-show="galleries != null">
+      <ul class="list-unstyled">
+        <li class="col-md-3 col-sm-4 col-xs-6" ng-repeat="gallery in galleries">
+          <div class="thumbnail">
+            <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%gallery.id%}" alt="{%gallery.name%}" ng-click="openLightboxModal($index)">
+            <div class="caption">
+              <h5 class="text-center"><a ng-href="/gallery/{%gallery.id%}" class="text-overflow text-center" ng-bind="gallery.name"></a></h5>
+            </div>
           </div>
-        </div>
-        <!-- End Simple Block -->
-      </div>
+        </li>
+      </ul>
     </div>
 
     <div infinite-scroll="infiniteScroll()" infinite-scroll-disabled="infiniteDisabled">
@@ -50,8 +49,8 @@
       </button>
     </div>
 
-    <div class="contex-bg" ng-show="moreAlert.msg">
-      <p ng-class="moreAlert.classType" class="rounded" ng-bind="moreAlert.msg"></p>
+    <div class="alert alert-info" ng-show="moreAlert.msg">
+      <p ng-bind="moreAlert.msg"></p>
     </div>
   </div> <!-- container end -->
 
@@ -165,7 +164,6 @@
             if (type === "init") {
             } else {
               $scope.moreAlert.msg = '{{TRANSLATION "gallery.msg.there.are.no.new.galleries"}}';
-              $scope.moreAlert.classType = "bg-warning";
             }
           } else {
             data.galleries.forEach(function (gallery) {

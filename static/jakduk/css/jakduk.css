@@ -263,3 +263,7 @@ td a {
 .img-home-carousel {
   width: 250px;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
