@@ -23,21 +23,30 @@ function submit(req, res) {
     req.body.password,
     req.body.remember === 'on'
   ).then(function (response) {
-    if (response.statusCode === 200) {
+    var status = response.statusCode;
+    var redir;
+    var message;
+
+    if (status === 200) {
       SessionUtil.saveSession(res, response);
-      var redir = req.body.redir || '/';
+      redir = req.body.redir || '/';
       redir = _.some(req.noRedirectPaths, function (value) {
         return redir.endsWith(value);
       }) ? '/' : redir;
       res.redirect(redir);
     } else {
+      if (status === 400) {
+        message = 'common.exception.wrong.password';
+      } else {
+        message = 'common.exception.not.found.jakduk.account';
+      }
       res.render('login/login', {
         title: [
           i18n.__('user.sign.in'),
           i18n.__('common.jakduk')
         ],
         headPage: 'head_login',
-        message: i18n.__('common.exception.not.found.jakduk.account')
+        message: i18n.__(message)
       });
     }
   });
