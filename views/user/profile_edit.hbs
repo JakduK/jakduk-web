@@ -17,20 +17,17 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">{{TRANSLATION "user.email"}}</label>
         <div class="col-sm-4">
-          <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}' ng-init="email='{{userProfile.email}}'" ng-model="email" disabled="disabled">
+          <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}' ng-model="email" disabled>
         </div>
       </div>
 
       <div class="form-group has-feedback"
-         ng-class="{'has-success':userProfileForm.username.$valid, 'has-error':userProfileForm.username.$invalid || usernameStatus !== 'OK'}">
+         ng-class="{'has-success':userProfileForm.username.$valid, 'has-error':userProfileForm.username.$invalid || usernameStatus === 'INVALID'}">
         <label class="col-sm-2 control-label">
-          <abbr title='<spring:message code="common.msg.required"/>'>*</abbr> {{TRANSLATION "user.nickname"}}
+          <abbr title="{{TRANSLATION "common.msg.required"}}">*</abbr> {{TRANSLATION "user.nickname"}}
         </label>
         <div class="col-sm-4">
-          <input type="text" name="username" class="form-control" placeholder="{{TRANSLATION "user.placeholder.username"}}"
-            ng-model="username" ng-init="username='{{userProfile.username}}'"
-            ng-blur="onUsername()" ng-keyup="validationUsername()"
-            ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
+          <input type="text" name="username" class="form-control" placeholder="{{TRANSLATION "user.placeholder.username"}}" ng-model="username" ng-blur="onUsername()" ng-keyup="validationUsername()" ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
 
       <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userProfileForm.username.$valid, 'glyphicon-remove':userProfileForm.username.$invalid || usernameStatus !== 'OK'}"></span>
           <i class="fa fa-spinner fa-spin" ng-show="usernameConn === 'connecting'"></i>
@@ -59,8 +56,7 @@
       <div class="form-group">
         <label class="col-sm-2 control-label">{{TRANSLATION "user.comment"}}</label>
         <div class="col-sm-4">
-          <!-- form:textarea 태그를 사용하면서 placeholder에 spring:message를 넣으면 제대로 안나온다. -->
-          <textarea ng-init="about='{{userProfile.about}}'" ng-model="about" name="about" class="form-control" cols="40" rows="3"></textarea>
+          <textarea ng-model="about" name="about" class="form-control" cols="40" rows="3"></textarea>
         </div>
       </div>
 
@@ -110,6 +106,10 @@
 
     $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
     $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
+
+    $scope.username = '{{userProfile.username}}';
+    $scope.email= '{{userProfile.email}}';
+    $scope.about = '{{userProfile.about}}';
 
     $scope.usernameConn = "none";
     $scope.submitConn = "none";
