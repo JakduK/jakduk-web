@@ -19,8 +19,8 @@ function index(req, res) {
 
 function submit(req, res) {
   req.api.login(
-    req.body.j_username,
-    req.body.j_password,
+    req.body.username,
+    req.body.password,
     req.body.remember === 'on'
   ).then(function (response) {
     if (response.statusCode === 200) {

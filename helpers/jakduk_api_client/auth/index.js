@@ -28,7 +28,7 @@ module.exports = function(ApiClient) {
         data: {
           username: username,
           password: password,
-          remember_me: remember
+          'remember-me': remember
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
