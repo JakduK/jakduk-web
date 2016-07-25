@@ -75,7 +75,9 @@ function viewPost(req, res) {
       });
     }
 
-    res.append('Set-Cookie', response.headers['set-cookie']);
+    if (response.headers['set-cookie']) {
+      res.append('Set-Cookie', response.headers['set-cookie']);
+    }
     res.render('board/post_view', {
       title: [
         postData.post.status.delete ? i18n.__('board.msg.deleted') : postData.post.subject,

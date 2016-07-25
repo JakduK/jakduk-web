@@ -32,7 +32,9 @@ module.exports.setup = function (app) {
         }
       });
 
-      res.append('Set-Cookie', response.headers['set-cookie']);
+      if (response.headers['set-cookie']) {
+        res.append('Set-Cookie', response.headers['set-cookie']);
+      }
       res.render('gallery/item_view', {
         title: [
           data.gallery.name,
