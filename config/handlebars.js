@@ -110,7 +110,7 @@ hbs.registerHelper('DEFAULT_VALUE', function(val1, val2) {
 });
 
 hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
-  return locale.startsWith('ko') ? 'ko-KR' : 'en-US';
+  return locale.startsWith('ko') ? 'ko-KR' : '';
 });
 
 if (process.env.NODE_ENV !== 'production') {

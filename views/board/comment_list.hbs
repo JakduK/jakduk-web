@@ -188,9 +188,10 @@
 <script src="/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.js"></script>
 <script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
 <script src="/jakduk/js/jakduk.js"></script>
-
 <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+{{#if (SUMMERNOTE_LOCALE locale)}}
 <script src="/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}.js"></script>
+{{/if}}
 
 <script type="text/javascript">
   angular.module('jakdukApp', [
