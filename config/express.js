@@ -1,11 +1,15 @@
 'use strict';
 
-var express = require('express');
 var path = require('path');
+var url = require('url');
+
+var express = require('express');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compression = require('compression');
+var proxy = require('express-http-proxy');
+
 var config = require('../config/environment');
 
 function setup(app) {
@@ -19,6 +23,18 @@ function setup(app) {
   require('./handlebars')(app);
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
+  app.use('/api/gallery', proxy(config.internalApiServerUrl, {
+    reqBodyEncoding: null,
+    forwardPath: function (req) {
+      return '/api/gallery' + url.parse(req.url).path;
+    }
+  }));
+  app.use('/api', proxy(config.internalApiServerUrl, {
+    forwardPath: function (req) {
+      return '/api' + url.parse(req.url).path;
+    }
+  }));
+
   app.use(compression());
   app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());

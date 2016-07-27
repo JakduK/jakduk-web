@@ -14,7 +14,7 @@ var all = {
 
   apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com',
 
-  thumbnailServerUrl: 'https://jakduk.com',
+  thumbnailServerUrl: 'https://api.jakduk.com',
 
   locale: {
     list: ['ko', 'en'],

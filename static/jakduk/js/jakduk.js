@@ -37,6 +37,7 @@
       $interpolateProvider.startSymbol('{%');
       $interpolateProvider.endSymbol('%}');
       $httpProvider.defaults.withCredentials = true;
+      $httpProvider.useLegacyPromiseExtensions(false);
     }])
     // mongodb id의 앞 8자리(16진수)로 Date 객체 생성.
     .filter('dateFromObjectId', function () {
