@@ -12,7 +12,7 @@ var all = {
 
   origin: origin,
 
-  apiServerUrl: process.env.API_SERVER || 'https://jakduk.com/api',
+  apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com',
 
   thumbnailServerUrl: 'https://jakduk.com',
 
@@ -35,19 +35,19 @@ var all = {
   ],
 
   facebook: {
-    clientID:     process.env.FACEBOOK_ID || '',
+    clientID: process.env.FACEBOOK_ID || '',
     clientSecret: process.env.FACEBOOK_SECRET || '',
-    callbackURL:  origin + '/auth/facebook/callback'
+    callbackURL: origin + '/auth/facebook/callback'
   },
 
   daum: {
-    clientID:     process.env.DAUM_ID || '',
+    clientID: process.env.DAUM_ID || '',
     clientSecret: process.env.DAUM_SECRET || '',
-    callbackURL:  origin + '/auth/daum/callback'
+    callbackURL: origin + '/auth/daum/callback'
   },
 
   kakao: {
-    clientID: '238c2001d9c0e423b20adf0d6774223e'
+    clientID: process.env.KAKAO_ID || ''
   },
 
   gaAccount: 'UA-59051176-1'
@@ -56,7 +56,8 @@ var all = {
 var local = {};
 try {
   local = require('./local');
-} catch (e) {}
+} catch (e) {
+}
 
 module.exports = _.merge(
   all,
