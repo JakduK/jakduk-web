@@ -23,7 +23,7 @@ module.exports.setup = function (app) {
     });
   });
 
-  attendanceRouter.get('/', function (req, res) {
+  attendanceRouter.get('/league', function (req, res) {
     res.render('stats/attendance_league', {
       title: [
         i18n.__('stats.attendance.league.title'),
