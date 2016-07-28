@@ -59,7 +59,7 @@ try {
 } catch (e) {
 }
 
-module.exports = _.merge(
+module.exports = _.extend(
   all,
   require('./' + env + '.js') || {},
   local

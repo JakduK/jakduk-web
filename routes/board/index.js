@@ -18,7 +18,7 @@ function postList(req, res) {
     req.api.getBoardCategories(req.query.lang || req.cookies.lang)
   ]).then(function (responses) {
     responses.forEach(function (response) {
-      _.merge(res.locals, response.data);
+      _.extend(res.locals, response.data);
     });
     res.render('board/post_list', {
       title: [
@@ -43,7 +43,7 @@ function commentList(req, res) {
     req.api.getTopPosts()
   ]).then(function (responses) {
     responses.forEach(function (response) {
-      _.merge(res.locals, response.data);
+      _.extend(res.locals, response.data);
     });
     res.render('board/comment_list', {
       title: [
@@ -66,7 +66,7 @@ function viewPost(req, res) {
     if (!postData.post.status.delete) {
       metaContent = TagUtil.ogFrom(postData.post.content, 120);
 
-      _.merge(context.meta, {
+      _.extend(context.meta, {
         og: {
           image: metaContent.image || context.meta.og.image,
           description: metaContent.description || postData.post.subject,
@@ -87,7 +87,7 @@ function viewPost(req, res) {
       headPage: 'head_board_view',
       nextPost: postData.nextPost,
       prevPost: postData.prevPost,
-      post: _.merge(postData.post, {
+      post: _.extend(postData.post, {
         galleries: postData.post.galleries || []
       })
     });

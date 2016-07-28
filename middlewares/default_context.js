@@ -26,7 +26,7 @@ module.exports = function (app) {
         req.isAdmin = res.locals.isAdmin;
       }
 
-      _.merge(res.locals, {
+      _.extend(res.locals, {
         layout: 'layout',
         bodyClass: 'header-fixed',
         apiServerUrl: config.apiServerUrl,

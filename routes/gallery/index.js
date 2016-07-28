@@ -22,7 +22,7 @@ module.exports.setup = function (app) {
       var context = res.locals;
       var data = response.data;
 
-      _.merge(context.meta, {
+      _.extend(context.meta, {
         og: {
           image: context.thumbnailServerUrl + req.baseUrl +'/' + req.params.id,
           description: data.gallery.name
