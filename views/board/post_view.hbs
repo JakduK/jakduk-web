@@ -580,7 +580,7 @@
     $scope.btnCommentFeeling = function (commentId, type) {
       var conn = $scope.commentFeelingConn[commentId];
 
-      if (conn === "none" || conn === null) {
+      if (conn === "none" || !conn) {
         $scope.commentFeelingConn[commentId] = "loading";
 
         $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + type).then(function (response) {
