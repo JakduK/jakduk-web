@@ -41,6 +41,7 @@ module.exports = {
            return false;
          }
       });
+      og.description = og.description.slice(0, limit - 3) + '...';
     }
 
     return og;
