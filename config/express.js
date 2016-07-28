@@ -8,13 +8,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compression = require('compression');
-var proxy = require('express-http-proxy');
+var proxy = require('http-proxy-middleware');
 
 var config = require('../config/environment');
 
 function setup(app) {
   app.set('env', config.env);
   app.set('port', config.port);
+  app.set('trust proxy', true);
   app.locals.gaAccount = config.gaAccount;
   app.locals.kakaoClientID = config.kakao.clientID;
 
@@ -23,16 +24,11 @@ function setup(app) {
   require('./handlebars')(app);
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
-  app.use('/api/gallery', proxy(config.internalApiServerUrl, {
-    reqBodyEncoding: null,
-    forwardPath: function (req) {
-      return '/api/gallery' + url.parse(req.url).path;
-    }
-  }));
-  app.use('/api', proxy(config.internalApiServerUrl, {
-    forwardPath: function (req) {
-      return '/api' + url.parse(req.url).path;
-    }
+  app.use(proxy('/api', {
+    logLevel: config.env === 'production' ? 'info' : 'debug',
+    pathRewrite: {'^/api': ''},
+    changeOrigin: true,
+    target: config.internalApiServerUrl
   }));
 
   app.use(compression());
