@@ -577,24 +577,22 @@
     };
 
     // 댓글 감정 표현
-    $scope.btnCommentFeeling = function (commentId, status) {
+    $scope.btnCommentFeeling = function (commentId, type) {
       var conn = $scope.commentFeelingConn[commentId];
 
-      if (conn == "none" || conn == null) {
+      if (conn === "none" || conn === null) {
         $scope.commentFeelingConn[commentId] = "loading";
 
-        $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + status).then(function (response) {
+        $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + type).then(function (response) {
           var data = response.data;
-
           if (data.feeling == 'LIKE') {
             $scope.numberOfCommentLike[commentId] = data.numberOfLike;
+            $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.like"}}';
           } else if (data.feeling == 'DISLIKE') {
             $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
+            $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.dislike"}}';
           }
-
-          $scope.commentFeelingAlert[commentId] = '';
           $scope.commentFeelingConn[commentId] = "ok";
-
         }, function (response) {
           var data = response.data;
           $scope.commentFeelingConn[commentId] = "none";
