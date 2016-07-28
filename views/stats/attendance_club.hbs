@@ -25,6 +25,8 @@
 
     <div class="alert alert-info" ng-class="alert.classType" ng-show="alert.msg"><p ng-bind="alert.msg"></p></div>
 
+    <h3 ng-hide="clubOrigin">{{TRANSLATION "stats.msg.choose.football.club"}}</h3>
+
     <div class="row">
       <div class="col-xs-8 col-sm-4 col-md-3">
         <select class="form-control" ng-model="footballClub" ng-options="opt.names[0].fullName for opt in footballClubs" ng-change="changeFootballClub()">
@@ -33,18 +35,13 @@
       </div>
     </div>
 
-    <span class="color-blue" ng-class="{'hidden':clubOrigin != ''}">{{TRANSLATION "stats.msg.choose.football.club"}}</span>
+    <highchart id="chart1" config="chartConfig" class="margin-bottom-10" ng-show="clubOrigin"></highchart>
 
-    <highchart id="chart1" config="chartConfig" class="margin-bottom-10"></highchart>
-
-    <div class="tag-box tag-box-v4 margin-bottom-20">
+    <div class="tag-box tag-box-v4 margin-bottom-20" ng-show="clubOrigin">
       <h2 ng-bind="chartConfig.title.text"></h2>
-      <p>
-        {{{TRANSLATION "stats.msg.total.number.of.attendance.matches" n="<strong ng-bind=\"gamesSum | number:0\"></strong>"}}}</p>
-      <p>
-        {{{TRANSLATION "stats.msg.total.number.of.attendance.total" n="<strong ng-bind=\"totalSum | number:0\"></strong>"}}}</p>
-      <p>
-        {{{TRANSLATION "stats.msg.total.number.of.attendance.average" n="<strong ng-bind=\"average | number:0\"></strong>"}}}</p>
+      <p>{{{TRANSLATION "stats.msg.total.number.of.attendance.matches" n="<strong ng-bind=\"gamesSum | number:0\"></strong>"}}}</p>
+      <p>{{{TRANSLATION "stats.msg.total.number.of.attendance.total" n="<strong ng-bind=\"totalSum | number:0\"></strong>"}}}</p>
+      <p>{{{TRANSLATION "stats.msg.total.number.of.attendance.average" n="<strong ng-bind=\"average | number:0\"></strong>"}}}</p>
     </div>
 
     <div class="text-right">
@@ -71,10 +68,10 @@
 <script src="/bower_components/highcharts/highcharts.src.js"></script>
 <script src="/bower_components/highcharts/modules/exporting.src.js"></script>
 <script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
 <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="/bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
 <script src="/jakduk/js/jakduk.js"></script>
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
 
 <script type="text/javascript">
   angular.module("jakdukApp", [
@@ -208,9 +205,14 @@
         $scope.footballClubsConn = "loading";
 
         $http.get('{{apiServerUrl}}/football/clubs?lang={{locale}}').then(function (response) {
-          $scope.footballClubs = $scope.footballClubs.concat(response.data);
           $scope.footballClubsConn = "none";
-          cb();
+          $scope.footballClubs = $scope.footballClubs.concat(response.data);
+          $scope.footballClubs.forEach(function (value, index) {
+            if (value.origin.name === $scope.clubOrigin) {
+              $scope.footballClub = $scope.footballClubs[index];
+              $scope.chartConfig.title.text = $scope.footballClub.names[0].fullName + ' {{TRANSLATION "stats.attendance.club.title"}}';
+            }
+          });
         }, function () {
           $scope.footballClubsConn = "none";
           $scope.error = '{{TRANSLATION "common.msg.error.network.unstable"}}';
@@ -219,6 +221,10 @@
     };
 
     $scope.changeFootballClub = function () {
+      if (!$scope.footballClub) {
+        return;
+      }
+
       $scope.clubOrigin = $scope.footballClub.origin.name;
 
       if (!$scope.attendances[$scope.clubOrigin]) {
@@ -315,19 +321,11 @@
       });
     };
 
-    $scope.getFootballClubs(function () {
-      $scope.footballClubs.forEach(function (value, index) {
-        if (value.origin.name === $scope.clubOrigin) {
-          $scope.footballClub = $scope.footballClubs[index];
-          $scope.chartConfig.title.text = $scope.footballClub.names[0].fullName + ' {{TRANSLATION "stats.attendance.club.title"}}';
-        }
-      });
-    });
+    $scope.getFootballClubs();
 
     if ($scope.clubOrigin) {
       $scope.getAttendance();
     }
-
   }]);
 
   $(document).ready(function () {
