@@ -1,13 +1,14 @@
-var _ = require('lodash');
-var cookie = require('cookie');
+var config = require('../config/environment');
 
 module.exports = {
-  saveSession: function (res, apiResponse) {
-    var session = apiResponse.headers['set-cookie'];
-    res.append('Set-Cookie', session);
+  saveSession: function (res, token, remember) {
+    var options = {httpOnly: true};
+    if (remember) {
+      options.maxAge = config.tokenMaxAge;
+    }
+    res.cookie(config.tokenCookieName, token, options);
   },
   clearSession: function(res) {
-    res.clearCookie('JSESSIONID');
-    res.clearCookie('remember-me');
+    res.clearCookie(config.tokenCookieName);
   }
 };

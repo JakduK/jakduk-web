@@ -19,15 +19,14 @@ function index(req, res) {
 function submit(req, res, next) {
   req.api.login(
     req.body.username,
-    req.body.password,
-    req.body.remember === 'on'
+    req.body.password
   ).then(function (response) {
     var status = response.statusCode;
     var redir;
     var message;
 
     if (status === 200) {
-      SessionUtil.saveSession(res, response);
+      SessionUtil.saveSession(res, response.data.token, req.body.remember === 'on');
       redir = req.body.redir || '/';
       redir = _.some(req.noRedirectPaths, function (value) {
         return redir.endsWith(value);

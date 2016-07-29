@@ -32,7 +32,7 @@ function submit(req, res, next) {
     about: body.about
   }).then(function (response) {
     if (response.statusCode === 200) {
-      SessionUtil.saveSession(res, response);
+      SessionUtil.saveSession(res, response.data.token);
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {
@@ -81,7 +81,7 @@ function submitOAuth(req, res, next) {
     username: body.username,
     footballClub: body.footballClub,
     about: body.about
-  }, req.headers.cookie).then(function (response) {
+  }).then(function (response) {
     if (response.statusCode === 200) {
       res.redirect(body.redir || '/');
     } else {

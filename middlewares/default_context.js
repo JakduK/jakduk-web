@@ -9,7 +9,7 @@ var i18n = require('i18n');
 module.exports = function (app) {
   app.use(function (req, res, next) {
     req.noRedirectPaths = config.noRedirectPaths;
-    req.api = new ApiClient(req.headers.cookie || '', config.internalApiServerUrl);
+    req.api = new ApiClient(req.cookies[config.tokenCookieName] || '', config.internalApiServerUrl);
 
     req.api.getUserInfo().then(function (response) {
       if (response.statusCode === 200) {
@@ -29,8 +29,6 @@ module.exports = function (app) {
       _.extend(res.locals, {
         layout: 'layout',
         bodyClass: 'header-fixed',
-        apiServerUrl: config.apiServerUrl,
-        thumbnailServerUrl: config.thumbnailServerUrl,
         userInfo: req.userInfo,
         isAuthenticated: req.isAuthenticated,
         meta: {

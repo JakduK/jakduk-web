@@ -12,6 +12,10 @@ var all = {
 
   origin: origin,
 
+  tokenCookieName: 'JKTK',
+
+  tokenMaxAge: 1000 * 60 * 60 * 24 * 365 * 2,
+
   apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com/api',
 
   thumbnailServerUrl: 'https://api.jakduk.com',

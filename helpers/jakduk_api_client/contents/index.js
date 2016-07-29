@@ -50,7 +50,7 @@ module.exports = function(ApiClient) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/' + seq, null, {
         headers: {
-          Cookie: this.session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
@@ -78,7 +78,7 @@ module.exports = function(ApiClient) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/gallery/' + id, null, {
         headers: {
-          Cookie: this.session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));

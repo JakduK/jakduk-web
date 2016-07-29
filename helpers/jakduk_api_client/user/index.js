@@ -9,7 +9,7 @@ module.exports = function(ApiClient) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/user/profile/me', null, {
         headers: {
-          Cookie: this.session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this))
@@ -19,7 +19,7 @@ module.exports = function(ApiClient) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/auth/user', null, {
         headers: {
-          Cookie: this.session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this))

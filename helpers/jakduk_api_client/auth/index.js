@@ -12,24 +12,21 @@ module.exports = function(ApiClient) {
     }.bind(this));
   };
 
-  ApiClient.prototype.joinWith = function(data, session) {
+  ApiClient.prototype.joinWith = function(data) {
     return new Promise(function(resolve) {
       rest.postJson(this.serverUrl + '/user/social', data, {
         headers: {
-          Cookie: session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
 
-  ApiClient.prototype.login = function(username, password, remember) {
+  ApiClient.prototype.login = function(username, password) {
     return new Promise(function(resolve) {
-      rest.post(this.serverUrl + '/login', {
-        data: {
-          username: username,
-          password: password,
-          'remember-me': remember
-        }
+      rest.postJson(this.serverUrl + '/login', {
+        username: username,
+        password: password
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
@@ -46,7 +43,7 @@ module.exports = function(ApiClient) {
     return new Promise(function(resolve) {
       rest.get(this.serverUrl + '/social/attempted', {
         headers: {
-          Cookie: this.session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
@@ -56,7 +53,7 @@ module.exports = function(ApiClient) {
     return new Promise(function(resolve) {
       rest.get(this.serverUrl + '/logout', {
         headers: {
-          Cookie: this.session
+          Authorization: this.session
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
