@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
 	<!--=== Breadcrumbs ===-->
 	<div class="breadcrumbs">
@@ -174,7 +174,7 @@
 					</button>
 				</h2>
 
-				<div class="media-body ng-cloak">
+				<div class="media-body">
 					<div ng-repeat="comment in comments">
 						<h6 class="clearfix">
 							<i aria-hidden="true" class="icon-user"></i>
@@ -306,322 +306,316 @@
 	{{> footer}}
 
 </div> <!-- /.container -->
-
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/bower_components/summernote/dist/summernote.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/kakao/js/kakao.min.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script src="/bower_components/angular-animate/angular-animate.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/bower_components/angular-summernote/dist/angular-summernote.js"></script>
-<script src="/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.js"></script>
-<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-{{#if (SUMMERNOTE_LOCALE locale)}}
-<script src="/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}.js"></script>
-{{/if}}
-
-<script type="text/javascript">
-	angular.module("jakdukApp", [
-	  "summernote",
-    "infinite-scroll",
-    "ngSanitize",
-    "angular-ladda",
-    'ui.bootstrap',
-    'jakdukCommon'
-  ]).controller("boardFreeCtrl", ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
-    $scope.alert = {};
-    $scope.likeConn = "none";
-    $scope.dislikeConn = "none";
-
-    // 글 감정 표현.
-    $scope.btnFeeling = function (type) {
-      if ({{NOT isAuthenticated}}) {
-        $scope.alert.msg = '{{TRANSLATION "board.msg.need.login.for.feel"}}';
-        $scope.alert.linkUrl = '/login';
-        $scope.alert.linkLabel = '{{TRANSLATION "common.button.login"}}';
-        $scope.alert.classType = "alert-info";
-        return;
-      } else if ({{EQ userInfo.id post.writer.userId}}) {
-        $scope.alert.msg = '{{TRANSLATION "board.msg.you.are.writer"}}';
-        $scope.alert.classType = "alert-info";
-        return;
-      }
-
-      if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
-        if (type === "LIKE") {
-          $scope.likeConn = "connecting";
-          $scope.btnLike = true;
-        } else if (type === "DISLIKE") {
-          $scope.dislikeConn = "connecting";
-          $scope.btnDislike = true;
-        }
-
-        $http.post('{{apiServerUrl}}/board/free/{{post.seq}}/' + type).then(function (response) {
-          var data = response.data;
-
-          $scope.numberOfLike = data.numberOfLike;
-          $scope.numberOfDislike = data.numberOfDislike;
-
-          var message = "";
-
-          if (data.feeling === 'LIKE') {
-            message = '{{TRANSLATION "board.msg.select.like"}}';
-            $scope.likeConn = "done";
-            $scope.btnLike = false;
-          } else if (data.feeling === 'DISLIKE') {
-            message = "{{TRANSLATION 'board.msg.select.dislike'}}";
-            $scope.dislikeConn = "done";
-            $scope.btnDislike = false;
-          }
-
-          $scope.alert.msg = message;
-          $scope.alert.classType = "alert-info";
-        }, function (response) {
-          var data = response.data;
-
-          $scope.alert.msg = data.message;
-          $scope.alert.classType = "alert-info";
-
-          if (type === "LIKE") {
-            $scope.likeConn = "none";
-            $scope.btnLike = false;
-          } else if (type === "DISLIKE") {
-            $scope.dislikeConn = "none";
-            $scope.btnDislike = false;
-          }
-        });
-      }
-    };
-
-    $scope.btnUrlCopy = function () {
-      if ($window.clipboardData) {
-        // IE처리
-        // 클립보드에 문자열 복사
-        $window.clipboardData.setData('text', $location.absUrl());
-      } else {
-        // 비IE 처리
-        $window.prompt('{{TRANSLATION "common.msg.copy.to.clipboard"}}', $location.absUrl());
-      }
-    };
-
-    $scope.backToList = function () {
-      $window.location = '/board/free' + $window.location.search;
-    };
-
-    $scope.prevPost = function () {
-      $window.location = '/board/free/' + {{prevPost.seq}} + '/' + $window.location.search;
-    };
-
-    $scope.nextPost = function () {
-      $window.location = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
-    };
-
-    $scope.confirmDelete = function () {
-      var message;
-      if ($scope.commentCount > 0) {
-        message = '{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}';
-      } else {
-        message = '{{TRANSLATION "board.msg.confirm.delete.post"}}';
-      }
-      if ($window.confirm(message)) {
-        $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}').then(function() {
-          $window.location = '/board/free';
-        });
-      }
-    };
-
-    $scope.confirmEdit = function () {
-      if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
-        $window.location = '/board/free/edit/{{post.seq}}';
-      }
-    };
-  }]).controller("commentCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    $scope.boardCommentContentLengthMin = Jakduk.BoardCommentContentLengthMin;
-    $scope.boardCommentContentLengthMax = Jakduk.BoardCommentContentLengthMax;
-
-    $scope.comments = [];
-    $scope.commentAlert = {};
-    $scope.summernoteAlert = {};
-    $scope.commentFeelingConn = {};
-    $scope.commentFeelingAlert = {};
-    $scope.numberOfCommentLike = {};
-    $scope.numberOfCommentDislike = {};
-    $scope.loadCommentConn = "none";
-    $scope.writeCommentConn = "none";
-    $scope.writeCommentAlert = {};
-    $scope.infiniteDisabled = false;
-
-    // summernote config
-    $scope.options = {
-      height: 0,
-      lang: '{{SUMMERNOTE_LOCALE locale}}',
-      toolbar: [
-        ['font', ['bold']],
-        // ['fontsize', ['fontsize']], // Still buggy
-        ['color', ['color']],
-        ['insert', ['link']],
-        ['help', ['help']]
-      ]
-    };
-
-    $scope.focus = function () {
-      {{#if (NOT isAuthenticated)}}
-        if ($window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
-          $window.location = '/login';
-        }
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/css/pages/blog.css">
+  <link rel="stylesheet" href="/bower_components/summernote/dist/summernote.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular',
+      'kakao',
+      'jakduk',
+      {{#if (SUMMERNOTE_LOCALE locale)}}
+        'summernote-{{SUMMERNOTE_LOCALE locale}}',
       {{/if}}
-    };
+      'angular-ladda',
+      'angular-infinite-scroll',
+      'angular-summernote'
+    ], function (angular, Kakao, Jakduk) {
+      angular.module("jakdukApp", [
+        "summernote",
+        "infinite-scroll",
+        "ngSanitize",
+        "angular-ladda",
+        'ui.bootstrap',
+        'jakdukCommon'
+      ]).controller("boardFreeCtrl", ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
+        $scope.alert = {};
+        $scope.likeConn = "none";
+        $scope.dislikeConn = "none";
 
-    {{#if (NOT isAuthenticated)}}
-      $scope.summernoteAlert = {
-        classType: "text-info",
-        msg: '{{TRANSLATION "board.msg.need.login.for.write"}}'
-      };
-    {{/if}}
+        // 글 감정 표현.
+        $scope.btnFeeling = function (type) {
+          if ({{NOT isAuthenticated}}) {
+            $scope.alert.msg = '{{TRANSLATION "board.msg.need.login.for.feel"}}';
+            $scope.alert.linkUrl = '/login';
+            $scope.alert.linkLabel = '{{TRANSLATION "common.button.login"}}';
+            $scope.alert.classType = "alert-info";
+            return;
+          } else if ({{EQ userInfo.id post.writer.userId}}) {
+            $scope.alert.msg = '{{TRANSLATION "board.msg.you.are.writer"}}';
+            $scope.alert.classType = "alert-info";
+            return;
+          }
 
-    // 댓글 달기
-    $scope.btnWriteComment = function () {
-      if ($scope.summernote.content.length < Jakduk.BoardCommentContentLengthMin
-        || $scope.summernote.content.length > Jakduk.BoardCommentContentLengthMax) {
-        $scope.summernoteAlert = {
-          "classType": "text-info",
-          "msg": '{{TRANSLATION "Size.board.comment.content"}}'
+          if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
+            if (type === "LIKE") {
+              $scope.likeConn = "connecting";
+              $scope.btnLike = true;
+            } else if (type === "DISLIKE") {
+              $scope.dislikeConn = "connecting";
+              $scope.btnDislike = true;
+            }
+
+            $http.post('{{apiServerUrl}}/board/free/{{post.seq}}/' + type).then(function (response) {
+              var data = response.data;
+
+              $scope.numberOfLike = data.numberOfLike;
+              $scope.numberOfDislike = data.numberOfDislike;
+
+              var message = "";
+
+              if (data.feeling === 'LIKE') {
+                message = '{{TRANSLATION "board.msg.select.like"}}';
+                $scope.likeConn = "done";
+                $scope.btnLike = false;
+              } else if (data.feeling === 'DISLIKE') {
+                message = "{{TRANSLATION 'board.msg.select.dislike'}}";
+                $scope.dislikeConn = "done";
+                $scope.btnDislike = false;
+              }
+
+              $scope.alert.msg = message;
+              $scope.alert.classType = "alert-info";
+            }, function (response) {
+              var data = response.data;
+
+              $scope.alert.msg = data.message;
+              $scope.alert.classType = "alert-info";
+
+              if (type === "LIKE") {
+                $scope.likeConn = "none";
+                $scope.btnLike = false;
+              } else if (type === "DISLIKE") {
+                $scope.dislikeConn = "none";
+                $scope.btnDislike = false;
+              }
+            });
+          }
         };
-        return;
-      }
 
-      if ($scope.writeCommentConn == "none") {
-        $scope.writeCommentConn = "connecting";
-        $scope.writeComment = true;
+        $scope.btnUrlCopy = function () {
+          if ($window.clipboardData) {
+            // IE처리
+            // 클립보드에 문자열 복사
+            $window.clipboardData.setData('text', $location.absUrl());
+          } else {
+            // 비IE 처리
+            $window.prompt('{{TRANSLATION "common.msg.copy.to.clipboard"}}', $location.absUrl());
+          }
+        };
 
-        $http.post('{{apiServerUrl}}/board/free/comment', $scope.summernote).then(function () {
-          $scope.btnMoreComment();
-          $scope.summernote.content = '';
-          $scope.commentAlert = {};
-          $scope.summernoteAlert = {};
-          $scope.writeCommentAlert = {};
-          $scope.writeCommentConn = "none";
-          $scope.writeComment = false;
-        }, function (response) {
-          var data = response.data;
-          $scope.writeCommentAlert = {
-            msg: data.message
+        $scope.backToList = function () {
+          $window.location = '/board/free' + $window.location.search;
+        };
+
+        $scope.prevPost = function () {
+          $window.location = '/board/free/' + {{prevPost.seq}} + '/' + $window.location.search;
+        };
+
+        $scope.nextPost = function () {
+          $window.location = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
+        };
+
+        $scope.confirmDelete = function () {
+          var message;
+          if ($scope.commentCount > 0) {
+            message = '{{TRANSLATION "board.msg.confirm.delete.post.except.comment"}}';
+          } else {
+            message = '{{TRANSLATION "board.msg.confirm.delete.post"}}';
+          }
+          if ($window.confirm(message)) {
+            $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}').then(function() {
+              $window.location = '/board/free';
+            });
+          }
+        };
+
+        $scope.confirmEdit = function () {
+          if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
+            $window.location = '/board/free/edit/{{post.seq}}';
+          }
+        };
+      }]).controller("commentCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
+        $scope.boardCommentContentLengthMin = Jakduk.BoardCommentContentLengthMin;
+        $scope.boardCommentContentLengthMax = Jakduk.BoardCommentContentLengthMax;
+
+        $scope.comments = [];
+        $scope.commentAlert = {};
+        $scope.summernoteAlert = {};
+        $scope.commentFeelingConn = {};
+        $scope.commentFeelingAlert = {};
+        $scope.numberOfCommentLike = {};
+        $scope.numberOfCommentDislike = {};
+        $scope.loadCommentConn = "none";
+        $scope.writeCommentConn = "none";
+        $scope.writeCommentAlert = {};
+        $scope.infiniteDisabled = false;
+
+        // summernote config
+        $scope.options = {
+          height: 0,
+          lang: '{{SUMMERNOTE_LOCALE locale}}',
+          toolbar: [
+            ['font', ['bold']],
+            // ['fontsize', ['fontsize']], // Still buggy
+            ['color', ['color']],
+            ['insert', ['link']],
+            ['help', ['help']]
+          ]
+        };
+
+        $scope.focus = function () {
+          {{#if (NOT isAuthenticated)}}
+            if ($window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
+              $window.location = '/login';
+            }
+          {{/if}}
+        };
+
+        {{#if (NOT isAuthenticated)}}
+          $scope.summernoteAlert = {
+            classType: "text-info",
+            msg: '{{TRANSLATION "board.msg.need.login.for.write"}}'
           };
-          $scope.writeCommentConn = "none";
-          $scope.writeComment = false;
-        });
-      }
-    };
+        {{/if}}
 
-    // infinite 초기 설정
-    $scope.initComment = function () {
-      $scope.loadComments("init", "");
-      $scope.infiniteDisabled = true;
-    };
-
-    // 댓글 목록 가져오기.
-    $scope.loadComments = function (type, commentId) {
-      if ($scope.loadCommentConn == "none") {
-        $scope.loadCommentConn = "connecting";
-
-        $http.get('{{apiServerUrl}}/board/free/comments/{{post.seq}}?commentId=' + commentId).then(function (response) {
-          var data = response.data;
-
-          $scope.commentCount = data.count;
-
-          if (data.comments.length < 1) { // 댓글이 하나도 없을때
-            if (type == "init") {
-            } else {
-              $scope.commentAlert.msg = '{{TRANSLATION "board.msg.there.is.no.new.comment"}}';
-            }
-          } else {	// 댓글을 1개 이상 가져왔을 때
-            if (type == "init" || type == "btnRefreshComment") {
-              $scope.comments = data.comments;
-            } else if (type == "btnMoreComment" || type == "btnWriteComment") {
-              $scope.comments = $scope.comments.concat(data.comments);
-            }
+        // 댓글 달기
+        $scope.btnWriteComment = function () {
+          if ($scope.summernote.content.length < Jakduk.BoardCommentContentLengthMin
+            || $scope.summernote.content.length > Jakduk.BoardCommentContentLengthMax) {
+            $scope.summernoteAlert = {
+              "classType": "text-info",
+              "msg": '{{TRANSLATION "Size.board.comment.content"}}'
+            };
+            return;
           }
 
-          $scope.loadCommentConn = "none";
-        }, function () {
-          $scope.loadCommentConn = "none";
-        });
-      }
-    };
+          if ($scope.writeCommentConn == "none") {
+            $scope.writeCommentConn = "connecting";
+            $scope.writeComment = true;
 
-    // 댓글 더보기 단추.
-    $scope.btnMoreComment = function () {
-      if ($scope.comments.length > 0) {
-        var lastComment = $scope.comments[$scope.comments.length - 1];
-        $scope.loadComments("btnMoreComment", lastComment.id);
-      } else {
-        $scope.loadComments("btnMoreComment", "");
-      }
-    };
-
-    // 댓글 새로고침 단추.
-    $scope.btnRefreshComment = function () {
-      $scope.commentAlert = {};
-      $scope.comments = [];
-      $scope.loadComments("btnRefreshComment", "");
-    };
-
-    // 댓글 감정 표현
-    $scope.btnCommentFeeling = function (commentId, type) {
-      var conn = $scope.commentFeelingConn[commentId];
-
-      if (conn === "none" || !conn) {
-        $scope.commentFeelingConn[commentId] = "loading";
-
-        $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + type).then(function (response) {
-          var data = response.data;
-          if (data.feeling == 'LIKE') {
-            $scope.numberOfCommentLike[commentId] = data.numberOfLike;
-            $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.like"}}';
-          } else if (data.feeling == 'DISLIKE') {
-            $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
-            $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.dislike"}}';
+            $http.post('{{apiServerUrl}}/board/free/comment', $scope.summernote).then(function () {
+              $scope.btnMoreComment();
+              $scope.summernote.content = '';
+              $scope.commentAlert = {};
+              $scope.summernoteAlert = {};
+              $scope.writeCommentAlert = {};
+              $scope.writeCommentConn = "none";
+              $scope.writeComment = false;
+            }, function (response) {
+              var data = response.data;
+              $scope.writeCommentAlert = {
+                msg: data.message
+              };
+              $scope.writeCommentConn = "none";
+              $scope.writeComment = false;
+            });
           }
-          $scope.commentFeelingConn[commentId] = "ok";
-        }, function (response) {
-          var data = response.data;
-          $scope.commentFeelingConn[commentId] = "none";
-          $scope.commentFeelingAlert[commentId] = data.message;
-        });
-      }
-    };
-  }]);
+        };
 
-	$(document).ready(function () {
-		App.init();
+        // infinite 초기 설정
+        $scope.initComment = function () {
+          $scope.loadComments("init", "");
+          $scope.infiniteDisabled = true;
+        };
 
-    var kakaoLinkContent = {
-      container: '#kakao-link-btn',
-      label: '{{post.subject}}\r{{TRANSLATION "board.name.free"}} · {{TRANSLATION "common.jakduk"}}',
-      webLink: {
-        text: Jakduk.origin + '/board/free/{{post.seq}}',
-        url: Jakduk.origin + '/board/free/{{post.seq}}'
-      },
-    {{#if post.galleries}}
-      image: {
-        src: Jakduk.origin + '/gallery/{{post.galleries.[0].id}}',
-        width: '300',
-        height: '200'
-      }
-    {{/if}}
-    };
+        // 댓글 목록 가져오기.
+        $scope.loadComments = function (type, commentId) {
+          if ($scope.loadCommentConn == "none") {
+            $scope.loadCommentConn = "connecting";
 
-    Kakao.init('{{kakaoClientID}}');
-    Kakao.Link.createTalkLinkButton(kakaoLinkContent);
-	});
-</script>
+            $http.get('{{apiServerUrl}}/board/free/comments/{{post.seq}}?commentId=' + commentId).then(function (response) {
+              var data = response.data;
+
+              $scope.commentCount = data.count;
+
+              if (data.comments.length < 1) { // 댓글이 하나도 없을때
+                if (type == "init") {
+                } else {
+                  $scope.commentAlert.msg = '{{TRANSLATION "board.msg.there.is.no.new.comment"}}';
+                }
+              } else {	// 댓글을 1개 이상 가져왔을 때
+                if (type == "init" || type == "btnRefreshComment") {
+                  $scope.comments = data.comments;
+                } else if (type == "btnMoreComment" || type == "btnWriteComment") {
+                  $scope.comments = $scope.comments.concat(data.comments);
+                }
+              }
+
+              $scope.loadCommentConn = "none";
+            }, function () {
+              $scope.loadCommentConn = "none";
+            });
+          }
+        };
+
+        // 댓글 더보기 단추.
+        $scope.btnMoreComment = function () {
+          if ($scope.comments.length > 0) {
+            var lastComment = $scope.comments[$scope.comments.length - 1];
+            $scope.loadComments("btnMoreComment", lastComment.id);
+          } else {
+            $scope.loadComments("btnMoreComment", "");
+          }
+        };
+
+        // 댓글 새로고침 단추.
+        $scope.btnRefreshComment = function () {
+          $scope.commentAlert = {};
+          $scope.comments = [];
+          $scope.loadComments("btnRefreshComment", "");
+        };
+
+        // 댓글 감정 표현
+        $scope.btnCommentFeeling = function (commentId, type) {
+          var conn = $scope.commentFeelingConn[commentId];
+
+          if (conn === "none" || !conn) {
+            $scope.commentFeelingConn[commentId] = "loading";
+
+            $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + type).then(function (response) {
+              var data = response.data;
+              if (data.feeling == 'LIKE') {
+                $scope.numberOfCommentLike[commentId] = data.numberOfLike;
+                $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.like"}}';
+              } else if (data.feeling == 'DISLIKE') {
+                $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
+                $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.dislike"}}';
+              }
+              $scope.commentFeelingConn[commentId] = "ok";
+            }, function (response) {
+              var data = response.data;
+              $scope.commentFeelingConn[commentId] = "none";
+              $scope.commentFeelingAlert[commentId] = data.message;
+            });
+          }
+        };
+      }]);
+
+      angular.bootstrap(document, ['jakdukApp']);
+
+      $(function () {
+        var kakaoLinkContent = {
+          container: '#kakao-link-btn',
+          label: '{{post.subject}}\r{{TRANSLATION "board.name.free"}} · {{TRANSLATION "common.jakduk"}}',
+          webLink: {
+            text: Jakduk.origin + '/board/free/{{post.seq}}',
+            url: Jakduk.origin + '/board/free/{{post.seq}}'
+          },
+        {{#if post.galleries}}
+          image: {
+            src: Jakduk.origin + '/gallery/{{post.galleries.[0].id}}',
+            width: '300',
+            height: '200'
+          }
+        {{/if}}
+        };
+
+        Kakao.init('{{kakaoClientID}}');
+        Kakao.Link.createTalkLinkButton(kakaoLinkContent);
+      });
+    });
+  </script>
+{{/CHUNK}}

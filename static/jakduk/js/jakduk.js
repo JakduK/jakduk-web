@@ -1,37 +1,6 @@
-(function () {
-  'use strict';
+'use strict';
 
-  window.Jakduk = {
-    BoardCommentSize: 30,
-    BoardCommentContentLengthMin: 3, // 게시판 댓글 입력 가능한 최소한의 문자열 수
-    BoardCommentContentLengthMax: 800, // 게시판 댓글 입력 가능한 최대 문자열 수
-    SummernoteContentsMinSize: 5,
-    FormEmailLengthMin: 6,
-    FormEmailLengthMax: 30,
-    FormPasswordLengthMin: 4,
-    FormPasswordLengthMax: 20,
-    FormUsernameLengthMin: 2,
-    FormUsernameLengthMax: 20,
-    ItemsPerPageOnSearch: 10, 			// 찾기에서 페이지 당 아이템 수
-    ItemsPerPageOnSearchGallery: 12, 	// 찾기에서 사진첩의 페이지 당 아이템 수
-    ItemsPerPageOnGallery: 24,  		// 사진첩에서 한번 로딩할때 가져오는 그림의 수
-    ItemsPerPageOnBoardComments: 10,
-    origin: window.location.protocol + window.location.hostname + (window.location.port ? ':' + window.location.port : ''),
-    isEmpty: function (str) {
-      var obj = String(str);
-      return !!(obj === null || obj === undefined || obj === 'null' || obj === 'undefined' || obj === '');
-    },
-    needLogin: function (message) {
-      if (window.confirm(message)) {
-        window.location.href = '/board/free/write';
-      }
-    }
-  };
-}());
-
-(function () {
-  'use strict';
-
+define(['angular', 'common'], function (angular) {
   angular.module('jakdukCommon', [])
     .config(['$interpolateProvider', '$httpProvider', function ($interpolateProvider, $httpProvider) {
       $interpolateProvider.startSymbol('{%');
@@ -80,7 +49,7 @@
         $scope.searchFocusOnHeader = true;
       };
     }])
-    .directive('focus', ['$timeout', '$parse', function ($timeout, $parse) {
+    .directive('focus', ['$timeout', function ($timeout) {
       /**
        * focus directive
        * http://fiddle.jshell.net/ubenzer/9FSL4/8/
@@ -107,4 +76,30 @@
       }
     }]);
 
-}());
+  return window.Jakduk = {
+    BoardCommentSize: 30,
+    BoardCommentContentLengthMin: 3, // 게시판 댓글 입력 가능한 최소한의 문자열 수
+    BoardCommentContentLengthMax: 800, // 게시판 댓글 입력 가능한 최대 문자열 수
+    SummernoteContentsMinSize: 5,
+    FormEmailLengthMin: 6,
+    FormEmailLengthMax: 30,
+    FormPasswordLengthMin: 4,
+    FormPasswordLengthMax: 20,
+    FormUsernameLengthMin: 2,
+    FormUsernameLengthMax: 20,
+    ItemsPerPageOnSearch: 10, 			// 찾기에서 페이지 당 아이템 수
+    ItemsPerPageOnSearchGallery: 12, 	// 찾기에서 사진첩의 페이지 당 아이템 수
+    ItemsPerPageOnGallery: 24,  		// 사진첩에서 한번 로딩할때 가져오는 그림의 수
+    ItemsPerPageOnBoardComments: 10,
+    origin: window.location.protocol + window.location.hostname + (window.location.port ? ':' + window.location.port : ''),
+    isEmpty: function (str) {
+      var obj = String(str);
+      return !!(obj === null || obj === undefined || obj === 'null' || obj === 'undefined' || obj === '');
+    },
+    needLogin: function (message) {
+      if (window.confirm(message)) {
+        window.location.href = '/board/free/write';
+      }
+    }
+  };
+});

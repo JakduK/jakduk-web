@@ -3,20 +3,21 @@
 var express = require('express');
 var i18n = require('i18n');
 
-function index(req, res) {
+function index(req, res, next) {
   req.api.getUserProfile().then(function (response) {
     res.render('user/profile', {
       title: [
         i18n.__('user.profile'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_profile',
       userProfile: response.data
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function editProfile(req, res) {
+function editProfile(req, res, next) {
   Promise.all([
     req.api.getUserProfile(),
     req.api.footballClubs(req.locale)
@@ -26,10 +27,11 @@ function editProfile(req, res) {
         i18n.__('user.profile.update'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_profile',
       userProfile: responses[0].data,
       footballClubs: responses[1].data
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
@@ -38,8 +40,7 @@ function editPassword(req, res) {
     title: [
       i18n.__('user.password.change'),
       i18n.__('common.jakduk')
-    ],
-    headPage: 'head_profile'
+    ]
   });
 }
 

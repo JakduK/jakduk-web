@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -18,11 +18,12 @@
 
   {{> footer}}
 
-  <script src="/bower_components/angular/angular.js"></script>
-  <script src="/jakduk/js/jakduk.js"></script>
-  <script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-  <script>
-    angular.module('jakdukApp', ['jakdukCommon']);
-  </script>
 </div>
+{{#CHUNK 'js'}}
+  <script>
+    require(['angular', 'jakduk'], function (angular) {
+      angular.module('jakdukApp', ['jakdukCommon']);
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

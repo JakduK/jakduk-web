@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <div class="breadcrumbs">
     <div class="container">
@@ -134,115 +134,108 @@
   {{> footer}}
 
 </div><!-- /.container -->
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css">
+  <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css">
+  <link rel="stylesheet" href="/unify/assets/css/pages/blog.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular',
+      'kakao',
+      'jakduk',
+      'angular-slick',
+      'angular-infinite-scroll',
+      'angular-bootstrap-lightbox'
+    ], function (angular, Kakao, Jakduk) {
+      angular.module("jakdukApp", [
+        "angular-ladda", 'jakdukCommon'
+      ]).controller("galleryController", ['$scope', '$http', function ($scope, $http) {
+        $scope.feelingAlert = {};
+        $scope.likeConn = "none";
+        $scope.dislikeConn = "none";
 
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-<script src="/bower_components/slick-carousel/slick/slick.js"></script>
-<script src="/bower_components/angular-slick-carousel/dist/angular-slick.js"></script>
-<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script src="/bower_components/angular-lazy-img/release/angular-lazy-img.js"></script>
-<script src="/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.js"></script>
-<script src="/bower_components/angular-touch/angular-touch.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
-<script src="/bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
-<script src="/kakao/js/kakao.min.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-<script type="text/javascript">
-  angular.module("jakdukApp", [
-    "angular-ladda", 'jakdukCommon'
-  ]).controller("galleryController", ['$scope', '$http', function ($scope, $http) {
-    $scope.feelingAlert = {};
-    $scope.likeConn = "none";
-    $scope.dislikeConn = "none";
-
-    $scope.btnFeeling = function (type) {
-      if ({{NOT isAuthenticated}}) {
-        $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.need.login.for.feel"}}';
-        $scope.feelingAlert.icon = "glyphicon-warning-sign";
-        $scope.feelingAlert.classType = "alert-info";
-        return;
-      } else if ({{EQ userInfo.id gallery.writer.userId}}) {
-        $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.you.are.writer"}}';
-        $scope.feelingAlert.icon = "glyphicon-warning-sign";
-        $scope.feelingAlert.classType = "alert-info";
-        return;
-      }
-
-      if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
-        if (type === "like") {
-          $scope.likeConn = "connecting";
-          $scope.btnLike = true;
-        } else if (type === "dislike") {
-          $scope.dislikeConn = "connecting";
-          $scope.btnDislike = true;
-        }
-
-        $http.post('{{apiServerUrl}}/gallery/{{gallery.id}}/' + type).then(function (response) {
-          var data = response.data;
-
-          if (data.feeling === "LIKE") {
-            angular.extend($scope.feelingAlert, {
-              msg: '{{TRANSLATION "gallery.msg.select.like"}}',
-              icon: "glyphicon-thumbs-up",
-              classType: "alert-info"
-            });
-            $scope.numberOfLike = data.numberOfLike;
-            $scope.likeConn = "info";
-            $scope.btnLike = false;
-          } else {
-            angular.extend($scope.feelingAlert, {
-              msg: '{{TRANSLATION "gallery.msg.select.dislike"}}',
-              icon: "glyphicon-thumbs-down",
-              classType: "alert-danger"
-            });
-            $scope.numberOfDislike = data.numberOfDislike;
-            $scope.dislikeConn = "danger";
-            $scope.btnDislike = false;
+        $scope.btnFeeling = function (type) {
+          if ({{NOT isAuthenticated}}) {
+            $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.need.login.for.feel"}}';
+            $scope.feelingAlert.icon = "glyphicon-warning-sign";
+            $scope.feelingAlert.classType = "alert-info";
+            return;
+          } else if ({{EQ userInfo.id gallery.writer.userId}}) {
+            $scope.feelingAlert.msg = '{{TRANSLATION "gallery.msg.you.are.writer"}}';
+            $scope.feelingAlert.icon = "glyphicon-warning-sign";
+            $scope.feelingAlert.classType = "alert-info";
+            return;
           }
-        }, function (response) {
-          var data = response.data;
 
-          $scope.feelingAlert.msg = data.message;
-          $scope.feelingAlert.icon = "glyphicon-warning-sign";
-          $scope.feelingAlert.classType = "alert-info";
+          if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
+            if (type === "like") {
+              $scope.likeConn = "connecting";
+              $scope.btnLike = true;
+            } else if (type === "dislike") {
+              $scope.dislikeConn = "connecting";
+              $scope.btnDislike = true;
+            }
 
-          $scope.dislikeConn = "none";
-          $scope.likeConn = "none";
-          $scope.btnLike = false;
-          $scope.btnDislike = false;
+            $http.post('{{apiServerUrl}}/gallery/{{gallery.id}}/' + type).then(function (response) {
+              var data = response.data;
+
+              if (data.feeling === "LIKE") {
+                angular.extend($scope.feelingAlert, {
+                  msg: '{{TRANSLATION "gallery.msg.select.like"}}',
+                  icon: "glyphicon-thumbs-up",
+                  classType: "alert-info"
+                });
+                $scope.numberOfLike = data.numberOfLike;
+                $scope.likeConn = "info";
+                $scope.btnLike = false;
+              } else {
+                angular.extend($scope.feelingAlert, {
+                  msg: '{{TRANSLATION "gallery.msg.select.dislike"}}',
+                  icon: "glyphicon-thumbs-down",
+                  classType: "alert-danger"
+                });
+                $scope.numberOfDislike = data.numberOfDislike;
+                $scope.dislikeConn = "danger";
+                $scope.btnDislike = false;
+              }
+            }, function (response) {
+              var data = response.data;
+
+              $scope.feelingAlert.msg = data.message;
+              $scope.feelingAlert.icon = "glyphicon-warning-sign";
+              $scope.feelingAlert.classType = "alert-info";
+
+              $scope.dislikeConn = "none";
+              $scope.likeConn = "none";
+              $scope.btnLike = false;
+              $scope.btnDislike = false;
+            });
+          }
+        };
+      }]);
+
+      $(function () {
+        App.init();
+
+        Kakao.init('{{kakaoClientID}}');
+        Kakao.Link.createTalkLinkButton({
+          container: '#kakao-link-btn',
+          label: '{{gallery.name}}\r{{TRANSLATION "gallery"}} · {{TRANSLATION "common.jakduk"}}',
+          image: {
+            src: '{{thumbnailServerUrl}}/{{gallery.id}}',
+            width: '360',
+            height: '230'
+          },
+          webLink: {
+            text: Jakduk.origin + '/gallery/{{gallery.id}}',
+            url: Jakduk.origin +  + '/gallery/{{gallery.id}}'
+          }
         });
-      }
-    };
-  }]);
+      });
 
- $(function () {
-    App.init();
-
-    Kakao.init('{{kakaoClientID}}');
-    Kakao.Link.createTalkLinkButton({
-      container: '#kakao-link-btn',
-      label: '{{gallery.name}}\r{{TRANSLATION "gallery"}} · {{TRANSLATION "common.jakduk"}}',
-      image: {
-        src: '{{thumbnailServerUrl}}/{{gallery.id}}',
-        width: '360',
-        height: '230'
-      },
-      webLink: {
-        text: Jakduk.origin + '/gallery/{{gallery.id}}',
-        url: Jakduk.origin +  + '/gallery/{{gallery.id}}'
-      }
+      angular.bootstrap(document, ['jakdukApp']);
     });
-  });
-</script>
+  </script>
+{{/CHUNK}}

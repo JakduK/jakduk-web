@@ -50,6 +50,8 @@ module.exports = function (app) {
       });
 
       next();
+    }).catch(function (err) {
+      next(err);
     });
   });
 };

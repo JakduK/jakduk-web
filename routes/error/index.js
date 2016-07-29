@@ -17,7 +17,6 @@ module.exports.setup = function (app) {
         i18n.__('common.error'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_error',
       message: err.message,
       error: isProd ? '' : err.stack,
       code: err.status || 500,

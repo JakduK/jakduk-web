@@ -1,6 +1,6 @@
 <div class="wrapper" ng-controller="homeCtrl">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <div class="image-block">
     <div class="container mCustomScrollbar" data-mcs-theme="minimal-dark">
@@ -26,7 +26,7 @@
             </div>
 
           {{#if data.posts.length}}
-            <ul class="ng-cloak list-unstyled blog-trending">
+            <ul class="list-unstyled blog-trending">
             {{#each data.posts}}
               <li>
                 <h3>
@@ -55,7 +55,7 @@
             </div>
 
           {{#if data.comments.length}}
-            <div class="blog-twitter ng-cloak">
+            <div class="blog-twitter">
             {{#each data.comments}}
               <div class="blog-twitter-inner">
                 <strong><i aria-hidden="true" class="icon-user"></i> {{writer.username}}</strong>
@@ -165,81 +165,74 @@
   {{> footer}}
 
 </div><!-- /.container -->
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick.css">
+  <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick-theme.css">
+  <link rel="stylesheet" href="unify/assets/css/pages/page_job_inner.css">
+  <link rel="stylesheet" href="unify/assets/css/pages/profile.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script>
+    require([
+      'angular', 'jakduk', 'slick', 'angular-slick'
+    ], function(angular, Jakduk) {
+      angular.module('jakdukApp', [
+        'ngSanitize',
+        'slickCarousel',
+        'jakdukCommon'
+      ]).controller("homeCtrl", ['$scope', '$http', function ($scope, $http) {
+        $scope.refreshEncyclopedia = refreshEncyclopedia;
 
-<!-- script:css -->
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/slick-carousel/slick/slick.js"></script>
-<script src="/bower_components/angular-slick-carousel/dist/angular-slick.js"></script>
-<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-<!-- endinject -->
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-<script type="text/javascript">
-  angular.module('jakdukApp', [
-    'ngSanitize',
-    'slickCarousel',
-    'jakdukCommon'
-  ]).controller("homeCtrl", function ($scope, $http) {
-    $scope.refreshEncyclopedia = refreshEncyclopedia;
-
-    $scope.dataLoaded = true;
-    $scope.encyclopediaConn = 'none';
-    $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
-    $scope.galleriesLatest = angular.fromJson('{{{JSON_STRINGIFY data.galleries}}}');
-    $scope.encyclopedia = angular.fromJson('{{{JSON_STRINGIFY data.encyclopedia}}}');
-    $scope.slickConfig = {
-      infinite: false,
-      autoplay: true,
-      draggable: true,
-      autoplaySpeed: 3000,
-      prevArrow: '#slickPrev',
-      nextArrow: '#slickNext',
-      variableWidth: true,
-      lazyLoad: 'ondemand',
-      method: {},
-      event: {
-        beforeChange: function (event, slick, currentSlide, nextSlide) {
-        },
-        afterChange: function (event, slick, currentSlide, nextSlide) {
-        }
-      }
-    };
-
-    function refreshEncyclopedia() {
-      if ($scope.encyclopediaConn === "none") {
-        $scope.encyclopediaConn = "loading";
-
-        $http.get('{{apiServerUrl}}/home/encyclopedia?lang={{locale}}').then(function(response) {
-          var data = response.data;
-
-          if (!Jakduk.isEmpty(data)) {
-            if (data.kind === "player") {
-              $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.best.player"}}';
-            } else if (data.encyclopedia.kind === "book") {
-              $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.recommend.book"}}';
+        $scope.dataLoaded = true;
+        $scope.encyclopediaConn = 'none';
+        $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
+        $scope.galleriesLatest = angular.fromJson('{{{JSON_STRINGIFY data.galleries}}}');
+        $scope.encyclopedia = angular.fromJson('{{{JSON_STRINGIFY data.encyclopedia}}}');
+        $scope.slickConfig = {
+          infinite: false,
+          autoplay: true,
+          draggable: true,
+          autoplaySpeed: 3000,
+          prevArrow: '#slickPrev',
+          nextArrow: '#slickNext',
+          variableWidth: true,
+          lazyLoad: 'ondemand',
+          method: {},
+          event: {
+            beforeChange: function (event, slick, currentSlide, nextSlide) {
+            },
+            afterChange: function (event, slick, currentSlide, nextSlide) {
             }
-
-            $scope.encyclopedia.subject = data.subject;
-            $scope.encyclopedia.content = data.content;
           }
+        };
 
-          $scope.encyclopediaConn = "none";
-        }, function () {
-          $scope.encyclopediaConn = "none";
-        });
-      }
-    }
-  });
+        function refreshEncyclopedia() {
+          if ($scope.encyclopediaConn === "none") {
+            $scope.encyclopediaConn = "loading";
 
-  $(document).ready(function() {
-    App.init();
-    App.initScrollBar();
-  });
-</script>
+            $http.get('{{apiServerUrl}}/home/encyclopedia?lang={{locale}}').then(function(response) {
+              var data = response.data;
+
+              if (!Jakduk.isEmpty(data)) {
+                if (data.kind === "player") {
+                  $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.best.player"}}';
+                } else if (data.encyclopedia.kind === "book") {
+                  $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.recommend.book"}}';
+                }
+
+                $scope.encyclopedia.subject = data.subject;
+                $scope.encyclopedia.content = data.content;
+              }
+
+              $scope.encyclopediaConn = "none";
+            }, function () {
+              $scope.encyclopediaConn = "none";
+            });
+          }
+        }
+      }]);
+
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

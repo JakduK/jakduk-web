@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -61,7 +61,7 @@
           <span>{{TRANSLATION "board.top.comments"}}</span>
         </h2>
         {{#if topComments.length}}
-        <table class="table table-hover ng-cloak">
+        <table class="table table-hover">
           <tbody>
             {{#each topComments}}
             <tr>
@@ -240,56 +240,49 @@
   {{> footer}}
 
 </div><!-- /.container -->
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/css/pages/blog.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular',
+      'jakduk'
+    ], function (angular, Jakduk) {
+      angular.module("jakdukApp", [
+        "ngAnimate",
+        "ui.bootstrap",
+        'jakdukCommon'
+      ]).controller("boardCtrl", ['$scope', '$window', function ($scope, $window) {
+        var page = parseInt('{{number}}');
+        var size = parseInt('{{size}}');
+        var total = parseInt('{{totalElements}}');
 
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script src="/bower_components/angular-animate/angular-animate.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
+        if (page > 0) {
+          $scope.currentPage = page;
+        } else {
+          $scope.currentPage = 1;
+        }
+        $scope.totalItems = total;
+        $scope.itemsPerPage = size;
 
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+        $scope.btnEnter = function () {
+          var isValid = true;
+          if ($scope.searchWords.trim() < 1) {
+            isValid = false;
+          }
+          if (isValid) {
+            $window.location = '/search?q=' + $scope.searchWords.trim() + '&w=PO;CO;';
+          }
+        };
 
-<script type="text/javascript">
-  angular.module("jakdukApp", [
-    "ngAnimate",
-    "ui.bootstrap",
-    'jakdukCommon'
-  ]).controller("boardCtrl", ['$scope', function ($scope) {
-    var page = parseInt('{{number}}');
-    var size = parseInt('{{size}}');
-    var total = parseInt('{{totalElements}}');
+        $scope.pageChanged = function () {
+          var page = $scope.currentPage;
+          $window.location = '/board/free?page=' + page + '&category={{category}}';
+        };
+      }]);
 
-    if (page > 0) {
-      $scope.currentPage = page;
-    } else {
-      $scope.currentPage = 1;
-    }
-    $scope.totalItems = total;
-    $scope.itemsPerPage = size;
-
-    $scope.btnEnter = function () {
-      var isValid = true;
-      if ($scope.searchWords.trim() < 1) {
-        isValid = false;
-      }
-      if (isValid) {
-        location.href = '/search?q=' + $scope.searchWords.trim() + '&w=PO;CO;';
-      }
-    };
-
-    $scope.pageChanged = function () {
-      var page = $scope.currentPage;
-      location.href = '/board/free?page=' + page + '&category={{category}}';
-    };
-  }]);
-
-  $(document).ready(function () {
-    App.init();
-  });
-</script>
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

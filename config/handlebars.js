@@ -113,6 +113,21 @@ hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
   return locale.startsWith('ko') ? 'ko-KR' : '';
 });
 
+hbs.registerHelper('CHUNK', function(name, options) {
+  if (!this.$INJECT) {
+    this.$INJECT = {};
+  }
+  if (!this.$INJECT[name]) {
+    this.$INJECT[name] = [];
+  }
+  this.$INJECT[name].push(options.fn(this));
+  return null;
+});
+
+hbs.registerHelper('INJECT', function(name) {
+  return this.$INJECT && this.$INJECT[name] && this.$INJECT[name].join('');
+});
+
 if (process.env.NODE_ENV !== 'production') {
   hbsUtils.registerWatchedPartials(path.join(__dirname, '..', 'views', 'include'));
 } else {

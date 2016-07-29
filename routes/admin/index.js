@@ -9,8 +9,7 @@ module.exports.setup = function (app) {
         title: [
           'ADMIN PAGE',
           i18n.__('common.jakduk')
-        ],
-        headPage: 'head_error'
+        ]
       });
       return;
     }
@@ -20,8 +19,7 @@ module.exports.setup = function (app) {
         'ADMIN PAGE',
         i18n.__('common.jakduk')
       ],
-      baseHref: '/',
-      headPage: 'head_admin'
+      baseHref: '/'
     });
   });
 };

@@ -1,6 +1,6 @@
 <div class="wrapper" ng-controller="statsCtrl">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -57,279 +57,272 @@
   {{> footer}}
 
 </div>
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css">
+  <link rel="stylesheet" href="/unify/assets/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular', 'kakao', 'jakduk', 'angular-highcharts'
+    ], function (angular, Kakao, Jakduk) {
+      angular.module("jakdukApp", [
+        "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
+      ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+        $scope.footballClubsConn = "none";
+        $scope.attendancesConn = "none";
+        $scope.attendances = {};
+        $scope.footballClubs = [];
+        $scope.alert = {};
+        $scope.clubOrigin = "";
+        $scope.totalSum = 0;
+        $scope.gamesSum = 0;
+        $scope.average = 0;
+        $scope.clubOrigin = "{{clubOrigin}}";
 
-<script src="/kakao/js/kakao.min.js"></script>
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/highcharts/highcharts.src.js"></script>
-<script src="/bower_components/highcharts/modules/exporting.src.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-
-<script type="text/javascript">
-  angular.module("jakdukApp", [
-    "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-  ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    $scope.footballClubsConn = "none";
-    $scope.attendancesConn = "none";
-    $scope.attendances = {};
-    $scope.footballClubs = [];
-    $scope.alert = {};
-    $scope.clubOrigin = "";
-    $scope.totalSum = 0;
-    $scope.gamesSum = 0;
-    $scope.average = 0;
-    $scope.clubOrigin = "{{clubOrigin}}";
-
-    Highcharts.setOptions({
-      lang: {
-        thousandsSep: ','
-      }
-    });
-
-    $scope.chartConfig = {
-      options: {
-        chart: {
-          type: 'column',
-          height: 500
-        },
-        tooltip: {
-          shared: true
-        }
-      },
-      title: {
-        text: '{{TRANSLATION "stats.attendance.club.chart.title"}}'
-      },
-      subtitle: {
-        text: 'Source: blog.daum.net/vhgksl'
-      },
-      xAxis: {
-        type: 'category',
-        labels: {
-          style: {
-            fontSize: '13px'
+        Highcharts.setOptions({
+          lang: {
+            thousandsSep: ','
           }
-        },
-        crosshair: true
-      },
-      yAxis: [{ // Total yAxis
-        min: 0,
-        title: {
-          text: '{{TRANSLATION "stats.attendance.total"}}',
-          align: 'middle'
-        },
-        labels: {
-          x: 0,
-          formatter: function () {
-            return Highcharts.numberFormat(this.value, 0);
-          }
-        }
-      },
-        { // Average yAxis
-          labels: {
-            x: 0,
-            formatter: function () {
-              return Highcharts.numberFormat(this.value, 0);
+        });
+
+        $scope.chartConfig = {
+          options: {
+            chart: {
+              type: 'column',
+              height: 500
+            },
+            tooltip: {
+              shared: true
             }
           },
           title: {
-            text: '{{TRANSLATION "stats.attendance.average"}}'
+            text: '{{TRANSLATION "stats.attendance.club.chart.title"}}'
           },
-          opposite: true
-        },
-        { // Games yAxis
-          labels: {
-            x: 0,
-            formatter: function () {
-              return Highcharts.numberFormat(this.value, 0);
+          subtitle: {
+            text: 'Source: blog.daum.net/vhgksl'
+          },
+          xAxis: {
+            type: 'category',
+            labels: {
+              style: {
+                fontSize: '13px'
+              }
+            },
+            crosshair: true
+          },
+          yAxis: [{ // Total yAxis
+            min: 0,
+            title: {
+              text: '{{TRANSLATION "stats.attendance.total"}}',
+              align: 'middle'
+            },
+            labels: {
+              x: 0,
+              formatter: function () {
+                return Highcharts.numberFormat(this.value, 0);
+              }
             }
           },
-          title: {
-            text: '{{TRANSLATION "stats.attendance.matches"}}'
-          },
-          opposite: true
-        }],
-      series: [{
-        name: '{{TRANSLATION "stats.attendance.total"}}',
-        yAxis: 0,
-        type: 'column',
-        data: $scope.footballClubs,
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}',
-          style: {
-            fontSize: '13px'
-          }
-        }
-      },
-        {
-          name: '{{TRANSLATION "stats.attendance.average"}}',
-          yAxis: 1,
-          type: 'column',
-          data: [],
-          dataLabels: {
-            enabled: true,
-            color: '#FFFFFF',
-            format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}',
-            style: {
-              fontSize: '13px'
+            { // Average yAxis
+              labels: {
+                x: 0,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.value, 0);
+                }
+              },
+              title: {
+                text: '{{TRANSLATION "stats.attendance.average"}}'
+              },
+              opposite: true
+            },
+            { // Games yAxis
+              labels: {
+                x: 0,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.value, 0);
+                }
+              },
+              title: {
+                text: '{{TRANSLATION "stats.attendance.matches"}}'
+              },
+              opposite: true
+            }],
+          series: [{
+            name: '{{TRANSLATION "stats.attendance.total"}}',
+            yAxis: 0,
+            type: 'column',
+            data: $scope.footballClubs,
+            dataLabels: {
+              enabled: true,
+              color: '#FFFFFF',
+              format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}',
+              style: {
+                fontSize: '13px'
+              }
             }
+          },
+            {
+              name: '{{TRANSLATION "stats.attendance.average"}}',
+              yAxis: 1,
+              type: 'column',
+              data: [],
+              dataLabels: {
+                enabled: true,
+                color: '#FFFFFF',
+                format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}',
+                style: {
+                  fontSize: '13px'
+                }
+              }
+            },
+            {
+              name: '{{TRANSLATION "stats.attendance.matches"}}',
+              yAxis: 2,
+              type: 'spline',
+              data: [],
+              dataLabels: {
+                enabled: true,
+                format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.match"}}'
+              }
+            }],
+          loading: true,
+          credits: {enabled: true}
+        };
+
+        $scope.getFootballClubs = function (cb) {
+          if ($scope.footballClubsConn === "none") {
+
+            $scope.chartConfig.loading = true;
+            $scope.footballClubsConn = "loading";
+
+            $http.get('{{apiServerUrl}}/football/clubs?lang={{locale}}').then(function (response) {
+              $scope.footballClubsConn = "none";
+              $scope.footballClubs = $scope.footballClubs.concat(response.data);
+              $scope.footballClubs.forEach(function (value, index) {
+                if (value.origin.name === $scope.clubOrigin) {
+                  $scope.footballClub = $scope.footballClubs[index];
+                  $scope.chartConfig.title.text = $scope.footballClub.names[0].fullName + ' {{TRANSLATION "stats.attendance.club.title"}}';
+                }
+              });
+            }, function () {
+              $scope.footballClubsConn = "none";
+              $scope.error = '{{TRANSLATION "common.msg.error.network.unstable"}}';
+            });
           }
-        },
-        {
-          name: '{{TRANSLATION "stats.attendance.matches"}}',
-          yAxis: 2,
-          type: 'spline',
-          data: [],
-          dataLabels: {
-            enabled: true,
-            format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.match"}}'
+        };
+
+        $scope.changeFootballClub = function () {
+          if (!$scope.footballClub) {
+            return;
           }
-        }],
-      loading: true,
-      credits: {enabled: true}
-    };
 
-    $scope.getFootballClubs = function (cb) {
-      if ($scope.footballClubsConn === "none") {
+          $scope.clubOrigin = $scope.footballClub.origin.name;
 
-        $scope.chartConfig.loading = true;
-        $scope.footballClubsConn = "loading";
+          if (!$scope.attendances[$scope.clubOrigin]) {
+            $scope.getAttendance();
+          } else {
+            $scope.refreshData();
+          }
+        };
 
-        $http.get('{{apiServerUrl}}/football/clubs?lang={{locale}}').then(function (response) {
-          $scope.footballClubsConn = "none";
-          $scope.footballClubs = $scope.footballClubs.concat(response.data);
-          $scope.footballClubs.forEach(function (value, index) {
-            if (value.origin.name === $scope.clubOrigin) {
-              $scope.footballClub = $scope.footballClubs[index];
-              $scope.chartConfig.title.text = $scope.footballClub.names[0].fullName + ' {{TRANSLATION "stats.attendance.club.title"}}';
+        $scope.getAttendance = function () {
+          if ($scope.attendancesConn == "none") {
+
+            $scope.chartConfig.loading = true;
+            $scope.attendancesConn = "loading";
+
+            $http.get('{{apiServerUrl}}/stats/attendance/club/' + $scope.clubOrigin).then(function (response) {
+              $scope.attendances[$scope.clubOrigin] = response.data;
+              $scope.chartConfig.loading = false;
+              $scope.attendancesConn = "none";
+              $scope.refreshData();
+            }, function (response) {
+              var data = response.data;
+              $scope.attendancesConn = "none";
+              $scope.alert.msg = data.message;
+              $scope.alert.classType = "alert-danger";
+            });
+          }
+        };
+
+        $scope.refreshData = function () {
+          if (!$scope.clubOrigin) {
+            return;
+          }
+
+          $scope.chartConfig.series.forEach(function (series) {
+            series.data = [];
+          });
+
+          var attendances = $scope.attendances[$scope.clubOrigin];
+          var totalSum = 0;
+          var gamesSum = 0;
+
+          if (attendances != null) {
+            attendances.forEach(function (attendance) {
+              var itemTotal = [attendance.season, attendance.total];
+              var itemAverage = [attendance.season, attendance.average];
+              var itemGames = [attendance.season, attendance.games];
+
+              totalSum += attendance.total;
+              gamesSum += attendance.games;
+
+              $scope.chartConfig.series[0].data.push(itemTotal);
+              $scope.chartConfig.series[1].data.push(itemAverage);
+              $scope.chartConfig.series[2].data.push(itemGames);
+            });
+          }
+
+          $scope.totalSum = totalSum;
+          $scope.gamesSum = gamesSum;
+          $scope.average = totalSum / gamesSum;
+
+          $scope.chartConfig.title.text = $scope.footballClub.names[0].fullName + ' {{TRANSLATION "stats.attendance.club.title"}}';
+        };
+
+        $scope.btnUrlCopy = function () {
+          var url = Jakduk.origin + '/stats/attendance/club?clubOrigin=' + $scope.clubOrigin;
+
+          if ($window.clipboardData) {
+            // IE처리
+            // 클립보드에 문자열 복사
+            $window.clipboardData.setData('text', url);
+
+            // 클립보드의 내용 가져오기
+            // window.clipboardData.getData('Text');
+
+            // 클립보드의 내용 지우기
+            // window.clipboardData.clearData("Text");
+          } else {
+            // 비IE 처리
+            $window.prompt('{{TRANSLATION "common.msg.copy.to.clipboard"}}', url);
+          }
+        };
+
+        $scope.sendLink = function () {
+          var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
+          var url = Jakduk.origin + '/stats/attendance/club?clubOrigin=' + $scope.clubOrigin;
+
+          Kakao.Link.sendTalkLink({
+            label: label,
+            webLink: {
+              text: url,
+              url: url
             }
           });
-        }, function () {
-          $scope.footballClubsConn = "none";
-          $scope.error = '{{TRANSLATION "common.msg.error.network.unstable"}}';
-        });
-      }
-    };
+        };
 
-    $scope.changeFootballClub = function () {
-      if (!$scope.footballClub) {
-        return;
-      }
+        $scope.getFootballClubs();
 
-      $scope.clubOrigin = $scope.footballClub.origin.name;
-
-      if (!$scope.attendances[$scope.clubOrigin]) {
-        $scope.getAttendance();
-      } else {
-        $scope.refreshData();
-      }
-    };
-
-    $scope.getAttendance = function () {
-      if ($scope.attendancesConn == "none") {
-
-        $scope.chartConfig.loading = true;
-        $scope.attendancesConn = "loading";
-
-        $http.get('{{apiServerUrl}}/stats/attendance/club/' + $scope.clubOrigin).then(function (response) {
-          $scope.attendances[$scope.clubOrigin] = response.data;
-          $scope.chartConfig.loading = false;
-          $scope.attendancesConn = "none";
-          $scope.refreshData();
-        }, function (response) {
-          var data = response.data;
-          $scope.attendancesConn = "none";
-          $scope.alert.msg = data.message;
-          $scope.alert.classType = "alert-danger";
-        });
-      }
-    };
-
-    $scope.refreshData = function () {
-      if (!$scope.clubOrigin) {
-        return;
-      }
-
-      $scope.chartConfig.series.forEach(function (series) {
-        series.data = [];
-      });
-
-      var attendances = $scope.attendances[$scope.clubOrigin];
-      var totalSum = 0;
-      var gamesSum = 0;
-
-      if (attendances != null) {
-        attendances.forEach(function (attendance) {
-          var itemTotal = [attendance.season, attendance.total];
-          var itemAverage = [attendance.season, attendance.average];
-          var itemGames = [attendance.season, attendance.games];
-
-          totalSum += attendance.total;
-          gamesSum += attendance.games;
-
-          $scope.chartConfig.series[0].data.push(itemTotal);
-          $scope.chartConfig.series[1].data.push(itemAverage);
-          $scope.chartConfig.series[2].data.push(itemGames);
-        });
-      }
-
-      $scope.totalSum = totalSum;
-      $scope.gamesSum = gamesSum;
-      $scope.average = totalSum / gamesSum;
-
-      $scope.chartConfig.title.text = $scope.footballClub.names[0].fullName + ' {{TRANSLATION "stats.attendance.club.title"}}';
-    };
-
-    $scope.btnUrlCopy = function () {
-      var url = Jakduk.origin + '/stats/attendance/club?clubOrigin=' + $scope.clubOrigin;
-
-      if ($window.clipboardData) {
-        // IE처리
-        // 클립보드에 문자열 복사
-        $window.clipboardData.setData('text', url);
-
-        // 클립보드의 내용 가져오기
-        // window.clipboardData.getData('Text');
-
-        // 클립보드의 내용 지우기
-        // window.clipboardData.clearData("Text");
-      } else {
-        // 비IE 처리
-        $window.prompt('{{TRANSLATION "common.msg.copy.to.clipboard"}}', url);
-      }
-    };
-
-    $scope.sendLink = function () {
-      var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
-      var url = Jakduk.origin + '/stats/attendance/club?clubOrigin=' + $scope.clubOrigin;
-
-      Kakao.Link.sendTalkLink({
-        label: label,
-        webLink: {
-          text: url,
-          url: url
+        if ($scope.clubOrigin) {
+          $scope.getAttendance();
         }
-      });
-    };
+      }]);
 
-    $scope.getFootballClubs();
+      angular.bootstrap(document, ['jakdukApp']);
 
-    if ($scope.clubOrigin) {
-      $scope.getAttendance();
-    }
-  }]);
-
-  $(document).ready(function () {
-    App.init();
-    Kakao.init('{{kakaoClientID}}');
-  });
-</script>
+      Kakao.init('{{kakaoClientID}}');
+    });
+  </script>
+{{/CHUNK}}

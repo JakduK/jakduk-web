@@ -25,7 +25,6 @@
     "angular-lazy-img": ">=1.2.0",
     "highcharts": ">=4.2.0",
     "highcharts-ng": ">=0.0.8",
-    "jquery-migrate": ">=1.3.0",
     "angular-animate": ">=1.4.4",
     "angular-bootstrap": ">=1.2.0",
     "angular-bootstrap-lightbox": ">=0.10.0",
@@ -37,6 +36,7 @@
     "Bootflat": "^2.0.4",
     "angular-ui-router": "1.0.0-alpha.5",
     "angular-i18n": "^1.5.6",
-    "jquery": "^1.12.4"
+    "jquery": "^1.12.4",
+    "requirejs": "^2.2.0"
   }
 }

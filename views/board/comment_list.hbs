@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -169,100 +169,85 @@
   {{> footer}}
 
 </div> <!-- End wrapper -->
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/css/pages/blog.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular',
+      'kakao',
+      'jakduk'
+    ], function (angular, Kakao, Jakduk) {
+      angular.module('jakdukApp', [
+        'ngSanitize',
+        'ui.bootstrap',
+        'jakdukCommon'
+      ]).controller("boardCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
+        var page = parseInt('{{number}}');
+        var size = parseInt('{{size}}');
+        var total = parseInt('{{totalElements}}');
 
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/bower_components/summernote/dist/summernote.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/kakao/js/kakao.min.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script src="/bower_components/angular-animate/angular-animate.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/bower_components/angular-summernote/dist/angular-summernote.js"></script>
-<script src="/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.js"></script>
-<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-{{#if (SUMMERNOTE_LOCALE locale)}}
-<script src="/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}.js"></script>
-{{/if}}
+        $scope.commentFeelingConn = {};
+        $scope.commentFeelingAlert = {};
+        $scope.numberOfCommentLike = {};
+        $scope.numberOfCommentDislike = {};
+        $scope.itemsPerPage = Jakduk.ItemsPerPageOnBoardComments;
 
-<script type="text/javascript">
-  angular.module('jakdukApp', [
-    'ngSanitize',
-    'ui.bootstrap',
-    'jakdukCommon'
-  ]).controller("boardCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    var page = parseInt('{{number}}');
-    var size = parseInt('{{size}}');
-    var total = parseInt('{{totalElements}}');
+        if (page > 0) {
+          $scope.currentPage = page;
+        } else {
+          $scope.currentPage = 1;
+        }
+        $scope.totalItems = total;
+        $scope.itemsPerPage = size;
 
-    $scope.commentFeelingConn = {};
-    $scope.commentFeelingAlert = {};
-    $scope.numberOfCommentLike = {};
-    $scope.numberOfCommentDislike = {};
-    $scope.itemsPerPage = Jakduk.ItemsPerPageOnBoardComments;
-
-    if (page > 0) {
-      $scope.currentPage = page;
-    } else {
-      $scope.currentPage = 1;
-    }
-    $scope.totalItems = total;
-    $scope.itemsPerPage = size;
-
-    // 댓글 감정 표현
-    $scope.btnCommentFeeling = function (commentId, status) {
-      var conn = $scope.commentFeelingConn[commentId];
-      if (conn !== 'loading') {
-        $scope.commentFeelingConn[commentId] = "loading";
-        $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + status).then(function (response) {
-          var data = response.data;
-          if (data.feeling === 'LIKE') {
-            $scope.numberOfCommentLike[commentId] = data.numberOfLike;
-          } else if (data.feeling === 'DISLIKE') {
-            $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
+        // 댓글 감정 표현
+        $scope.btnCommentFeeling = function (commentId, status) {
+          var conn = $scope.commentFeelingConn[commentId];
+          if (conn !== 'loading') {
+            $scope.commentFeelingConn[commentId] = "loading";
+            $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + status).then(function (response) {
+              var data = response.data;
+              if (data.feeling === 'LIKE') {
+                $scope.numberOfCommentLike[commentId] = data.numberOfLike;
+              } else if (data.feeling === 'DISLIKE') {
+                $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
+              }
+              $scope.commentFeelingAlert[commentId] = '';
+              $scope.commentFeelingConn[commentId] = "ok";
+            }, function (response) {
+              var data = response.data;
+              $scope.commentFeelingConn[commentId] = "none";
+              $scope.commentFeelingAlert[commentId] = data.message;
+            });
           }
-          $scope.commentFeelingAlert[commentId] = '';
-          $scope.commentFeelingConn[commentId] = "ok";
-        }, function (response) {
-          var data = response.data;
-          $scope.commentFeelingConn[commentId] = "none";
-          $scope.commentFeelingAlert[commentId] = data.message;
-        });
-      }
-    };
+        };
 
-    $scope.btnEnter = function () {
-      var isValid = true;
-      if ($scope.searchWords.trim() < 1) {
-        $scope.enterAlert = '{{TRANSLATION "search.msg.enter.words.you.want.search.words"}}';
-        isValid = false;
-      }
-      if (isValid) {
-        $window.location.href = '/search?q=' + $scope.searchWords.trim() + '&w=CO;';
-      }
-    };
+        $scope.btnEnter = function () {
+          var isValid = true;
+          if ($scope.searchWords.trim() < 1) {
+            $scope.enterAlert = '{{TRANSLATION "search.msg.enter.words.you.want.search.words"}}';
+            isValid = false;
+          }
+          if (isValid) {
+            $window.location.href = '/search?q=' + $scope.searchWords.trim() + '&w=CO;';
+          }
+        };
 
-    $scope.pageChanged = function () {
-      var page = $scope.currentPage;
-      $window.location.href = '/board/free/comments?page=' + page;
-    };
+        $scope.pageChanged = function () {
+          var page = $scope.currentPage;
+          $window.location.href = '/board/free/comments?page=' + page;
+        };
 
-    $scope.needLogin = function () {
-      if ($window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
-        $window.location.href = '/board/free/write';
-      }
-    }
-  }]);
+        $scope.needLogin = function () {
+          if ($window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
+            $window.location.href = '/board/free/write';
+          }
+        }
+      }]);
 
-  $(document).ready(function () {
-    App.init();
-  });
-</script>
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

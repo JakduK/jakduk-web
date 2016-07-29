@@ -1,6 +1,8 @@
-(function () {
-  'use strict';
+'use strict';
 
+define([
+  'angular', 'jakduk', 'angular-ui-router'
+], function (angular) {
   angular.module('jakdukAdmin', ['ui.router'])
     .constant('MENU_ID_MAP', {
       HOME: {
@@ -700,4 +702,4 @@
 
     }]);
 
-})();
+});

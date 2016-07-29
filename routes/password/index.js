@@ -9,8 +9,7 @@ function index(req, res) {
     title: [
       i18n.__('user.msg.reset.your.password.title'),
       i18n.__('common.jakduk')
-    ],
-    headPage: 'head_password'
+    ]
   });
 }
 
@@ -19,67 +18,65 @@ function indexFindPassword(req, res) {
     title: [
       i18n.__('user.msg.find.your.password.title'),
       i18n.__('common.jakduk')
-    ],
-    headPage: 'head_password'
+    ]
   });
 }
 
-function submitFindPassword(req, res) {
-  req.api.findPassword(req.body.email, config.origin + '/password/reset')
-    .then(function (response) {
-      var data = response.data;
+function submitFindPassword(req, res, next) {
+  req.api.findPassword(req.body.email, config.origin + '/password/reset').then(function (response) {
+    var data = response.data;
+    res.render('login/password_find_message', {
+      title: [
+        i18n.__('user.msg.find.your.password.title'),
+        i18n.__('common.jakduk')
+      ],
+      subject: data.subject,
+      message: data.message
+    });
+  }).catch(function (err) {
+    next(err);
+  });
+}
+
+function indexResetPassword(req, res, next) {
+  req.api.checkResetPasswordCode(req.params.code).then(function (response) {
+    if (response.statusCode === 200) {
+      res.render('login/password_reset', {
+        title: [
+          i18n.__('user.msg.reset.your.password.title'),
+          i18n.__('common.jakduk')
+        ],
+        message: response.data.message,
+        code: req.params.code
+      });
+    } else {
       res.render('login/password_find_message', {
         title: [
           i18n.__('user.msg.find.your.password.title'),
           i18n.__('common.jakduk')
         ],
-        headPage: 'head_password',
-        subject: data.subject,
-        message: data.message
+        message: response.data.message
       });
-    });
+    }
+  }).catch(function (err) {
+    next(err);
+  });
 }
 
-function indexResetPassword(req, res) {
-  req.api.checkResetPasswordCode(req.params.code)
-    .then(function (response) {
-      if (response.statusCode === 200) {
-        res.render('login/password_reset', {
-          title: [
-            i18n.__('user.msg.reset.your.password.title'),
-            i18n.__('common.jakduk')
-          ],
-          headPage: 'head_password',
-          message: response.data.message,
-          code: req.params.code
-        });
-      } else {
-        res.render('login/password_find_message', {
-          title: [
-            i18n.__('user.msg.find.your.password.title'),
-            i18n.__('common.jakduk')
-          ],
-          headPage: 'head_password',
-          message: response.data.message
-        });
-      }
+function submitResetPassword(req, res, next) {
+  req.api.resetPassword(req.body.code, req.body.password).then(function (response) {
+    var data = response.data;
+    res.render('login/password_find_message', {
+      title: [
+        i18n.__('user.msg.find.your.password.title'),
+        i18n.__('common.jakduk')
+      ],
+      subject: data.subject,
+      message: data.message
     });
-}
-
-function submitResetPassword(req, res) {
-  req.api.resetPassword(req.body.code, req.body.password)
-    .then(function (response) {
-      var data = response.data;
-      res.render('login/password_find_message', {
-        title: [
-          i18n.__('user.msg.find.your.password.title'),
-          i18n.__('common.jakduk')
-        ],
-        headPage: 'head_password',
-        subject: data.subject,
-        message: data.message
-      });
-    });
+  }).catch(function (err) {
+    next(err);
+  });
 }
 
 module.exports.setup = function (app) {

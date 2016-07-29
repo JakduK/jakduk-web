@@ -1,6 +1,6 @@
 <div class="wrapper" ng-controller="statsCtrl">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -53,283 +53,276 @@
   {{> footer}}
 
 </div>
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css">
+  <link rel="stylesheet" href="/unify/assets/plugins/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular', 'kakao', 'jakduk', 'angular-highcharts'
+    ], function (angular, Kakao, Jakduk) {
+      angular.module("jakdukApp", [
+        "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
+      ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+        var KLCLId = 'KLCL';
+        var KLCHId = 'KLCH';
+        var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
+        var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
+        var league = "{{league}}";
 
-<script src="/kakao/js/kakao.min.js"></script>
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/highcharts/highcharts.src.js"></script>
-<script src="/bower_components/highcharts/modules/exporting.src.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-<script type="text/javascript">
-  var jakdukApp = angular.module("jakdukApp", ["highcharts-ng", "ui.bootstrap", 'jakdukCommon']);
-
-  jakdukApp.controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    var KLCLId = 'KLCL';
-    var KLCHId = 'KLCH';
-    var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
-    var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
-    var league = "{{league}}";
-
-    $scope.leagues = {'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}};
-    if (Object.keys($scope.leagues).indexOf(league) >= 0) {
-      $scope.leagueId = league;
-    } else {
-      $scope.leagueId = KLCLId;
-    }
-
-    $scope.attendancesConn = "none";
-    $scope.attendances = {};
-    $scope.alert = {};
-    $scope.totalSum = 0;
-    $scope.gamesSum = 0;
-
-    Highcharts.setOptions({
-      lang: {
-        thousandsSep: ','
-      }
-    });
-
-    $scope.chartConfig = {
-      options: {
-        chart: {
-          type: 'bar',
-          height: 200
-        },
-        tooltip: {
-          shared: true
-        }
-      },
-      title: {
-        text: '{{TRANSLATION "stats.attendance.league.classic.title"}}'
-      },
-      subtitle: {
-        text: 'Source: http://www.kleague.com'
-      },
-      xAxis: {
-        type: 'category',
-        labels: {
-          style: {
-            fontSize: '13px'
-          }
-        },
-        crosshair: true
-      },
-      yAxis: [{ // Total yAxis
-        min: 0,
-        title: {
-          text: '{{TRANSLATION "stats.attendance.total"}}',
-          align: 'middle'
-        },
-        labels: {
-          x: 0,
-          rotation: -30,
-          formatter: function () {
-            return Highcharts.numberFormat(this.value, 0);
-          }
-        },
-        opposite: true
-      },
-        { // Average yAxis
-          labels: {
-            x: 0,
-            formatter: function () {
-              return Highcharts.numberFormat(this.value, 0);
-            }
-          },
-          title: {
-            text: '{{TRANSLATION "stats.attendance.average"}}'
-          }
-        },
-        { // Games yAxis
-          labels: {
-            x: 0,
-            formatter: function () {
-              return Highcharts.numberFormat(this.value, 0);
-            }
-          },
-          title: {
-            text: '{{TRANSLATION "stats.attendance.matches"}}'
-          }
-        },
-        { // Number Of Clubs yAxis
-          labels: {
-            x: 0,
-            formatter: function () {
-              return Highcharts.numberFormat(this.value, 0);
-            }
-          },
-          title: {
-            text: '{{TRANSLATION "stats.attendance.number.of.clubs"}}'
-          },
-          opposite: true
-        }],
-      series: [{
-        name: '{{TRANSLATION "stats.attendance.total"}}',
-        yAxis: 0,
-        type: 'column',
-        data: [],
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          align: 'right',
-          format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}',
-          style: {
-            fontSize: '13px'
-          }
-        }
-      },
-        {
-          name: '{{TRANSLATION "stats.attendance.average"}}',
-          yAxis: 1,
-          type: 'spline',
-          data: [],
-          dataLabels: {
-            enabled: true,
-            format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}'
-          }
-        },
-        {
-          name: '{{TRANSLATION "stats.attendance.matches"}}',
-          yAxis: 2,
-          visible: false,
-          type: 'spline',
-          data: [],
-          dataLabels: {
-            enabled: true,
-            format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.match"}}'
-          }
-        },
-        {
-          name: '{{TRANSLATION "stats.attendance.number.of.clubs"}}',
-          yAxis: 3,
-          visible: false,
-          type: 'spline',
-          data: [],
-          dataLabels: {
-            enabled: true,
-            format: '{point.y:,.0f}'
-          }
-        }],
-      loading: true,
-      credits: {enabled: true}
-    };
-
-    $scope.getAttendance = function () {
-      if ($scope.attendancesConn == "none") {
-
-        $scope.chartConfig.loading = true;
-        $scope.attendancesConn = "loading";
-
-        $http.get('{{apiServerUrl}}/stats/league/attendances?competitionCode=' + $scope.leagueId).then(function (response) {
-          $scope.attendances[$scope.leagueId] = response.data;
-          $scope.chartConfig.loading = false;
-          $scope.attendancesConn = "none";
-          $scope.refreshData();
-        }, function (response) {
-          var data = response.data;
-          $scope.attendancesConn = "none";
-          $scope.alert.msg = data.message;
-          $scope.alert.classType = "alert-danger";
-        });
-      }
-    };
-
-    $scope.refreshData = function () {
-      if (!$scope.leagueId) {
-        return;
-      }
-
-      $scope.chartConfig.series.forEach(function (series) {
-        series.data = [];
-      });
-
-      var attendances = $scope.attendances[$scope.leagueId];
-      var totalSum = 0;
-      var gamesSum = 0;
-
-      attendances.forEach(function (attendance) {
-        var itemTotal = [attendance.season, attendance.total];
-        var itemAverage = [attendance.season, attendance.average];
-        var itemGames = [attendance.season, attendance.games];
-        var itemNumberOfClubs = [attendance.season, attendance.numberOfClubs];
-        totalSum += attendance.total;
-        gamesSum += attendance.games;
-
-        $scope.chartConfig.series[0].data.push(itemTotal);
-        $scope.chartConfig.series[1].data.push(itemAverage);
-        $scope.chartConfig.series[2].data.push(itemGames);
-        $scope.chartConfig.series[3].data.push(itemNumberOfClubs);
-      });
-
-      $scope.totalSum = totalSum;
-      $scope.gamesSum = gamesSum;
-
-      if ($scope.leagueId == KLCLId) {
-        $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.classic.title"}}';
-      } else if ($scope.leagueId == KLCHId) {
-        $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.challenge.title"}}';
-      }
-
-      $scope.chartConfig.options.chart.height = 300 + (attendances.length * 30);
-
-    };
-
-    $scope.changeLeague = function () {
-      if ($scope.leagueId != null) {
-        if (Jakduk.isEmpty($scope.attendances[$scope.leagueId])) {
-          $scope.getAttendance();
+        $scope.leagues = {'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}};
+        if (Object.keys($scope.leagues).indexOf(league) >= 0) {
+          $scope.leagueId = league;
         } else {
-          $scope.refreshData();
+          $scope.leagueId = KLCLId;
         }
-      }
-    };
 
-    $scope.btnUrlCopy = function () {
-      var url = Jakduk.origin + '/stats/attendance/league?league=' + $scope.leagueId;
+        $scope.attendancesConn = "none";
+        $scope.attendances = {};
+        $scope.alert = {};
+        $scope.totalSum = 0;
+        $scope.gamesSum = 0;
 
-      if ($window.clipboardData) {
-        // IE처리
-        // 클립보드에 문자열 복사
-        $window.clipboardData.setData('text', url);
+        Highcharts.setOptions({
+          lang: {
+            thousandsSep: ','
+          }
+        });
 
-        // 클립보드의 내용 가져오기
-        // window.clipboardData.getData('Text');
+        $scope.chartConfig = {
+          options: {
+            chart: {
+              type: 'bar',
+              height: 200
+            },
+            tooltip: {
+              shared: true
+            }
+          },
+          title: {
+            text: '{{TRANSLATION "stats.attendance.league.classic.title"}}'
+          },
+          subtitle: {
+            text: 'Source: http://www.kleague.com'
+          },
+          xAxis: {
+            type: 'category',
+            labels: {
+              style: {
+                fontSize: '13px'
+              }
+            },
+            crosshair: true
+          },
+          yAxis: [{ // Total yAxis
+            min: 0,
+            title: {
+              text: '{{TRANSLATION "stats.attendance.total"}}',
+              align: 'middle'
+            },
+            labels: {
+              x: 0,
+              rotation: -30,
+              formatter: function () {
+                return Highcharts.numberFormat(this.value, 0);
+              }
+            },
+            opposite: true
+          },
+            { // Average yAxis
+              labels: {
+                x: 0,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.value, 0);
+                }
+              },
+              title: {
+                text: '{{TRANSLATION "stats.attendance.average"}}'
+              }
+            },
+            { // Games yAxis
+              labels: {
+                x: 0,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.value, 0);
+                }
+              },
+              title: {
+                text: '{{TRANSLATION "stats.attendance.matches"}}'
+              }
+            },
+            { // Number Of Clubs yAxis
+              labels: {
+                x: 0,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.value, 0);
+                }
+              },
+              title: {
+                text: '{{TRANSLATION "stats.attendance.number.of.clubs"}}'
+              },
+              opposite: true
+            }],
+          series: [{
+            name: '{{TRANSLATION "stats.attendance.total"}}',
+            yAxis: 0,
+            type: 'column',
+            data: [],
+            dataLabels: {
+              enabled: true,
+              color: '#FFFFFF',
+              align: 'right',
+              format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}',
+              style: {
+                fontSize: '13px'
+              }
+            }
+          },
+            {
+              name: '{{TRANSLATION "stats.attendance.average"}}',
+              yAxis: 1,
+              type: 'spline',
+              data: [],
+              dataLabels: {
+                enabled: true,
+                format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.people"}}'
+              }
+            },
+            {
+              name: '{{TRANSLATION "stats.attendance.matches"}}',
+              yAxis: 2,
+              visible: false,
+              type: 'spline',
+              data: [],
+              dataLabels: {
+                enabled: true,
+                format: '{point.y:,.0f} {{TRANSLATION "stats.attendance.match"}}'
+              }
+            },
+            {
+              name: '{{TRANSLATION "stats.attendance.number.of.clubs"}}',
+              yAxis: 3,
+              visible: false,
+              type: 'spline',
+              data: [],
+              dataLabels: {
+                enabled: true,
+                format: '{point.y:,.0f}'
+              }
+            }],
+          loading: true,
+          credits: {enabled: true}
+        };
 
-        // 클립보드의 내용 지우기
-        // window.clipboardData.clearData("Text");
-      } else {
-        // 비IE 처리
-        $window.prompt('{{TRANSLATION "common.msg.copy.to.clipboard"}}', url);
-      }
-    };
+        $scope.getAttendance = function () {
+          if ($scope.attendancesConn == "none") {
 
-    $scope.sendLink = function () {
-      var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
-      var url = Jakduk.origin + 'jakduk.com/stats/attendance/league?league=' + $scope.leagueId;
+            $scope.chartConfig.loading = true;
+            $scope.attendancesConn = "loading";
 
-      Kakao.Link.sendTalkLink({
-        label: label,
-        webLink: {
-          text: url,
-          url: url
-        }
-      });
-    };
+            $http.get('{{apiServerUrl}}/stats/league/attendances?competitionCode=' + $scope.leagueId).then(function (response) {
+              $scope.attendances[$scope.leagueId] = response.data;
+              $scope.chartConfig.loading = false;
+              $scope.attendancesConn = "none";
+              $scope.refreshData();
+            }, function (response) {
+              var data = response.data;
+              $scope.attendancesConn = "none";
+              $scope.alert.msg = data.message;
+              $scope.alert.classType = "alert-danger";
+            });
+          }
+        };
 
-    $scope.getAttendance();
-  }]);
+        $scope.refreshData = function () {
+          if (!$scope.leagueId) {
+            return;
+          }
 
-  $(document).ready(function () {
-    App.init();
-    Kakao.init('{{kakaoClientID}}');
-  });
-</script>
+          $scope.chartConfig.series.forEach(function (series) {
+            series.data = [];
+          });
+
+          var attendances = $scope.attendances[$scope.leagueId];
+          var totalSum = 0;
+          var gamesSum = 0;
+
+          attendances.forEach(function (attendance) {
+            var itemTotal = [attendance.season, attendance.total];
+            var itemAverage = [attendance.season, attendance.average];
+            var itemGames = [attendance.season, attendance.games];
+            var itemNumberOfClubs = [attendance.season, attendance.numberOfClubs];
+            totalSum += attendance.total;
+            gamesSum += attendance.games;
+
+            $scope.chartConfig.series[0].data.push(itemTotal);
+            $scope.chartConfig.series[1].data.push(itemAverage);
+            $scope.chartConfig.series[2].data.push(itemGames);
+            $scope.chartConfig.series[3].data.push(itemNumberOfClubs);
+          });
+
+          $scope.totalSum = totalSum;
+          $scope.gamesSum = gamesSum;
+
+          if ($scope.leagueId == KLCLId) {
+            $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.classic.title"}}';
+          } else if ($scope.leagueId == KLCHId) {
+            $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.challenge.title"}}';
+          }
+
+          $scope.chartConfig.options.chart.height = 300 + (attendances.length * 30);
+
+        };
+
+        $scope.changeLeague = function () {
+          if ($scope.leagueId != null) {
+            if (Jakduk.isEmpty($scope.attendances[$scope.leagueId])) {
+              $scope.getAttendance();
+            } else {
+              $scope.refreshData();
+            }
+          }
+        };
+
+        $scope.btnUrlCopy = function () {
+          var url = Jakduk.origin + '/stats/attendance/league?league=' + $scope.leagueId;
+
+          if ($window.clipboardData) {
+            // IE처리
+            // 클립보드에 문자열 복사
+            $window.clipboardData.setData('text', url);
+
+            // 클립보드의 내용 가져오기
+            // window.clipboardData.getData('Text');
+
+            // 클립보드의 내용 지우기
+            // window.clipboardData.clearData("Text");
+          } else {
+            // 비IE 처리
+            $window.prompt('{{TRANSLATION "common.msg.copy.to.clipboard"}}', url);
+          }
+        };
+
+        $scope.sendLink = function () {
+          var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
+          var url = Jakduk.origin + 'jakduk.com/stats/attendance/league?league=' + $scope.leagueId;
+
+          Kakao.Link.sendTalkLink({
+            label: label,
+            webLink: {
+              text: url,
+              url: url
+            }
+          });
+        };
+
+        $scope.getAttendance();
+      }]);
+
+      angular.bootstrap(document, ['jakdukApp']);
+
+      Kakao.init('{{kakaoClientID}}');
+    });
+  </script>
+{{/CHUNK}}

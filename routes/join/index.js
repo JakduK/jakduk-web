@@ -4,7 +4,7 @@ var express = require('express');
 var i18n = require('i18n');
 var SessionUtil = require('../../helpers/jakduk_session_util');
 
-function index(req, res) {
+function index(req, res, next) {
   req.api.footballClubs(req.locale).then(function (response) {
     var footballClubs = response.data;
     res.render('login/join', {
@@ -12,15 +12,16 @@ function index(req, res) {
         i18n.__('user.register'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
       isEmailSignup: true
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function submit(req, res) {
+function submit(req, res, next) {
   var body = req.body;
   req.api.join({
     email: body.email,
@@ -38,14 +39,15 @@ function submit(req, res) {
         title: [
           i18n.__('user.register'),
           i18n.__('common.jakduk')
-        ],
-        headPage: 'head_join'
+        ]
       });
     }
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function indexOAuth(req, res) {
+function indexOAuth(req, res, next) {
   Promise.all([
     req.api.socialAttempted(),
     req.api.footballClubs(req.locale)
@@ -62,16 +64,17 @@ function indexOAuth(req, res) {
         i18n.__('user.register'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_join',
       footballClubs: footballClubs,
       redir: req.headers.referer,
       isEmailSignup: false,
       userWrite: snsProfile
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function submitOAuth(req, res) {
+function submitOAuth(req, res, next) {
   var body = req.body;
   req.api.joinWith({
     email: body.email,
@@ -86,10 +89,11 @@ function submitOAuth(req, res) {
         title: [
           i18n.__('user.register'),
           i18n.__('common.jakduk')
-        ],
-        headPage: 'head_login'
+        ]
       });
     }
+  }).catch(function (err) {
+    next(err);
   });
 }
 

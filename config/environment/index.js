@@ -12,7 +12,7 @@ var all = {
 
   origin: origin,
 
-  apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com',
+  apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com/api',
 
   thumbnailServerUrl: 'https://api.jakduk.com',
 

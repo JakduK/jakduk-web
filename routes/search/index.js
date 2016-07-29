@@ -8,8 +8,7 @@ module.exports.setup = function (app) {
       title: [
         i18n.__('search'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_error'
+      ]
     });
   });
 };

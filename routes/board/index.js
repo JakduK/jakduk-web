@@ -6,7 +6,7 @@ var moment = require('moment');
 var i18n = require('i18n');
 var TagUtil = require('../../helpers/tag_util');
 
-function postList(req, res) {
+function postList(req, res, next) {
   var category = _.toUpper(!req.query.category || req.query.category === 'none' ? 'all' : req.query.category);
   Promise.all([
     req.api.getTopPosts(),
@@ -26,15 +26,16 @@ function postList(req, res) {
         i18n.__('board.name.free'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_board',
       todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),
       category: category,
       number: res.locals.number + 1
     })
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function commentList(req, res) {
+function commentList(req, res, next) {
   Promise.all([
     req.api.getComments({
       page: req.query.page,
@@ -51,13 +52,14 @@ function commentList(req, res) {
         i18n.__('board.name.free'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_board',
       number: res.locals.number + 1
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function viewPost(req, res) {
+function viewPost(req, res, next) {
   req.api.getPost(req.params.id).then(function (response) {
     var context = res.locals;
     var postData = response.data;
@@ -84,17 +86,18 @@ function viewPost(req, res) {
         i18n.__('board.name.free'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_board_view',
       nextPost: postData.nextPost,
       prevPost: postData.prevPost,
       post: _.extend(postData.post, {
         galleries: postData.post.galleries || []
       })
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function writePost(req, res) {
+function writePost(req, res, next) {
   if (!req.isAuthenticated) {
     res.redirect('/login');
     return;
@@ -106,13 +109,14 @@ function writePost(req, res) {
         i18n.__('board.write'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_board_view',
       categories: response.data.categories
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 
-function editPost(req, res) {
+function editPost(req, res, next) {
   if (!req.isAuthenticated) {
     res.redirect('/login');
     return;
@@ -130,10 +134,11 @@ function editPost(req, res) {
         i18n.__('board.edit'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_board_view',
       categories: categories,
       post: postData.post
     });
+  }).catch(function (err) {
+    next(err);
   });
 }
 

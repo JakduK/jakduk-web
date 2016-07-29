@@ -41,10 +41,6 @@
 	position: relative;
 }
 
-.image-block {
-	background: url(../../img/bg/19.jpg) 70% 40% no-repeat;
-}
-
 /*Company Description*/
 .image-block .company-description {
 	max-width: 500px;

@@ -12,19 +12,23 @@
 <div class="container-fluid">
   <div class="row" ui-view></div>
 </div>
-
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-animate/angular-animate.js"></script>
-<script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-<script src="/jakduk/js/admin.js"></script>
-
-<script type="text/javascript">
-  angular.module("jakdukApp", ['jakdukCommon', 'jakdukAdmin', 'ui.bootstrap', 'ngAnimate'])
-    .constant('Config', {
-      apiServerUrl: '{{apiServerUrl}}'
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="/bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+  <link rel="stylesheet" href="/bower_components/Bootflat/bootflat/css/bootflat.css">
+  <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/jakduk/css/jakduk.css">
+  <link rel="stylesheet" href="/jakduk/css/admin.css">
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require(['angular', 'jakduk', 'admin'], function (angular) {
+      angular.module("jakdukApp", [
+        'jakdukCommon', 'jakdukAdmin', 'ui.bootstrap', 'ngAnimate'
+      ]).constant('Config', {
+        apiServerUrl: '{{apiServerUrl}}'
+      });
+      angular.bootstrap(document, ['jakdukApp']);
     });
-</script>
+  </script>
+{{/CHUNK}}

@@ -1,6 +1,6 @@
 <div class="wrapper" ng-controller="writeCtrl">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -127,245 +127,237 @@
   {{> footer}}
 
 </div>
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/css/pages/page_log_reg_v1.css"/>
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular', 'jakduk'
+    ], function (angular, Jakduk) {
+      angular.module("jakdukApp", ["angular-ladda", 'jakdukCommon'])
+        .controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
+          $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
+          $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
+          $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
+          $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
+          $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
+          $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
 
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/spin.min.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/ladda.min.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-<script type="text/javascript">
-  angular.module("jakdukApp", ["angular-ladda", 'jakdukCommon'])
-    .controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
-      $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
-      $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
-      $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
-      $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
-      $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
-      $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
-
-      $scope.emailConn = "none";
-      $scope.usernameConn = "none";
-      $scope.emailAlert = {};
-      $scope.usernameAlert = {};
-      $scope.passwordAlert = {};
-      $scope.passwordConfirmAlert = {};
-      $scope.buttonAlert = {};
-      $scope.equalPasswordStatus = "true";
-
-      $window.onbeforeunload = function (e) {
-        if (!$scope.btnSubmit && !$scope.userWrite.$pristine) {
-          (e || window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-          return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-        }
-      };
-
-      $scope.onSubmit = function (event) {
-        if ($scope.userWrite.$valid &&
-          $scope.emailStatus === 'OK' &&
-          $scope.usernameStatus === 'OK' &&
-          $scope.equalPasswordStatus === "true") {
-          $scope.btnSubmit = true;
-        } else {
-          if ($scope.userWrite.email.$invalid) {
-            $scope.validationEmail();
-          }
-
-          if ($scope.userWrite.username.$invalid) {
-            $scope.validationUsername();
-          }
-
-          if ($scope.userWrite.password) {
-            $scope.equalPasswordConfirm();
-          }
-
-          $scope.buttonAlert = {
-            "classType": "text-danger",
-            "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
-          };
-          event.preventDefault();
-        }
-      };
-
-      $scope.onEmail = function () {
-        if ($scope.userWrite.email.$valid) {
-          if ($scope.emailConn == "none") {
-            $scope.emailConn = "connecting";
-            $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email)).then(function (response) {
-              var data = response.data;
-              $scope.emailStatus = data ? 'INVALID' : 'OK';
-              $scope.emailAlert = {
-                classType: data ? "text-danger" : "text-success",
-                msg: data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
-              };
-              $scope.emailConn = "none";
-            }, function (response) {
-              var data = response.data;
-              $scope.emailStatus = 'INVALID';
-              $scope.emailAlert = {
-                classType: "text-danger",
-                msg: data.message
-              };
-              $scope.emailConn = "none";
-            });
-          }
-        } else {
-          $scope.emailStatus = "INVALID";
-          $scope.validationEmail();
-        }
-      };
-
-      $scope.onUsername = function () {
-        if ($scope.userWrite.username.$valid) {
-          if ($scope.usernameConn == "none") {
-            $scope.usernameConn = "connecting";
-            $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function (response) {
-              var data = response.data;
-              $scope.usernameStatus = data ? 'INVALID' : 'OK';
-              $scope.usernameAlert = {
-                classType: data ? "text-danger" : "text-success",
-                msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
-              };
-              $scope.usernameConn = "none";
-            }, function (response) {
-              var data = response.data;
-              $scope.usernameStatus = 'INVALID';
-              $scope.usernameAlert = {
-                classType: "text-danger",
-                msg: data.message
-              };
-              $scope.usernameConn = "none";
-            });
-          }
-        } else {
-          $scope.usernameStatus = 'INVALID';
-          $scope.validationUsername();
-        }
-      };
-
-      $scope.validationEmail = function () {
-        if ($scope.userWrite.email.$invalid) {
-          if ($scope.userWrite.email.$error.required) {
-            $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "common.msg.required"}}'};
-          } else if ($scope.userWrite.email.$error.minlength || $scope.userWrite.email.$error.maxlength) {
-            $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "Size.userWrite.email"}}'};
-          } else {
-            $scope.emailAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "user.msg.check.mail.format"}}'
-            };
-          }
-        } else {
-          $scope.emailAlert = {
-            classType: "text-info",
-            msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
-          };
-        }
-      };
-
-      $scope.validationUsername = function () {
-        if ($scope.userWrite.username.$invalid) {
-          if ($scope.userWrite.username.$error.required) {
-            $scope.usernameAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "common.msg.required"}}'
-            };
-          } else if ($scope.userWrite.username.$error.minlength || $scope.userWrite.username.$error.maxlength) {
-            $scope.usernameAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "Size.userWrite.username"}}'
-            };
-          }
-        } else {
-          $scope.usernameAlert = {
-            classType: "text-info",
-            msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
-          };
-        }
-      };
-
-      $scope.validationPassword = function () {
-        $scope.equalPasswordStatus = "false";
-        $scope.passwordConfirmAlert = {};
-
-        if ($scope.userWrite.password.$invalid) {
-          if ($scope.userWrite.password.$error.required) {
-            $scope.passwordAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "common.msg.required"}}'
-            };
-          } else if ($scope.userWrite.password.$error.minlength || $scope.userWrite.password.$error.maxlength) {
-            $scope.passwordAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "Size.userWrite.password"}}'
-            };
-          }
-        } else {
-          $scope.passwordAlert = {
-            classType: "text-success",
-            msg: '{{TRANSLATION "user.msg.available.data"}}'
-          };
-        }
-      };
-
-      $scope.equalPasswordConfirm = function () {
-
-        if ($scope.userWrite.password.$invalid) {
-          $scope.passwordConfirmAlert = {
-            classType: "text-danger",
-            msg: '{{TRANSLATION "user.msg.password.mismatch"}}'
-          };
-        }
-
-        if ($scope.userWrite.passwordConfirm.$invalid) return;
-
-        if ($scope.password == $scope.passwordConfirm) {
+          $scope.emailConn = "none";
+          $scope.usernameConn = "none";
+          $scope.emailAlert = {};
+          $scope.usernameAlert = {};
+          $scope.passwordAlert = {};
+          $scope.passwordConfirmAlert = {};
+          $scope.buttonAlert = {};
           $scope.equalPasswordStatus = "true";
-          $scope.passwordConfirmAlert = {
-            classType: "text-success",
-            msg: '{{TRANSLATION "user.msg.available.data"}}'
-          };
-        } else {
-          $scope.passwordConfirmAlert = {
-            classType: "text-danger",
-            msg: '{{TRANSLATION "user.msg.password.mismatch"}}'
-          };
-        }
-      };
 
-      $scope.validationPasswordConfirm = function () {
-        $scope.equalPasswordStatus = "false";
-
-        if ($scope.userWrite.passwordConfirm.$invalid) {
-          if ($scope.userWrite.passwordConfirm.$error.required) {
-            $scope.passwordConfirmAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "common.msg.required"}}'
-            };
-          } else if ($scope.userWrite.passwordConfirm.$error.minlength || $scope.userWrite.passwordConfirm.$error.maxlength) {
-            $scope.passwordConfirmAlert = {
-              classType: "text-danger",
-              msg: '{{TRANSLATION "Size.userWrite.password"}}'
-            };
-          }
-        } else {
-          $scope.passwordConfirmAlert = {
-            classType: "text-info",
-            msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+          $window.onbeforeunload = function (e) {
+            if (!$scope.btnSubmit && !$scope.userWrite.$pristine) {
+              (e || window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+              return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+            }
           };
-        }
-      };
-    }]);
 
-  $(document).ready(function () {
-    App.init();
-  });
-</script>
+          $scope.onSubmit = function (event) {
+            if ($scope.userWrite.$valid &&
+              $scope.emailStatus === 'OK' &&
+              $scope.usernameStatus === 'OK' &&
+              $scope.equalPasswordStatus === "true") {
+              $scope.btnSubmit = true;
+            } else {
+              if ($scope.userWrite.email.$invalid) {
+                $scope.validationEmail();
+              }
+
+              if ($scope.userWrite.username.$invalid) {
+                $scope.validationUsername();
+              }
+
+              if ($scope.userWrite.password) {
+                $scope.equalPasswordConfirm();
+              }
+
+              $scope.buttonAlert = {
+                "classType": "text-danger",
+                "msg": '{{TRANSLATION "common.msg.need.form.validation"}}'
+              };
+              event.preventDefault();
+            }
+          };
+
+          $scope.onEmail = function () {
+            if ($scope.userWrite.email.$valid) {
+              if ($scope.emailConn == "none") {
+                $scope.emailConn = "connecting";
+                $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email)).then(function (response) {
+                  var data = response.data;
+                  $scope.emailStatus = data ? 'INVALID' : 'OK';
+                  $scope.emailAlert = {
+                    classType: data ? "text-danger" : "text-success",
+                    msg: data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                  };
+                  $scope.emailConn = "none";
+                }, function (response) {
+                  var data = response.data;
+                  $scope.emailStatus = 'INVALID';
+                  $scope.emailAlert = {
+                    classType: "text-danger",
+                    msg: data.message
+                  };
+                  $scope.emailConn = "none";
+                });
+              }
+            } else {
+              $scope.emailStatus = "INVALID";
+              $scope.validationEmail();
+            }
+          };
+
+          $scope.onUsername = function () {
+            if ($scope.userWrite.username.$valid) {
+              if ($scope.usernameConn == "none") {
+                $scope.usernameConn = "connecting";
+                $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function (response) {
+                  var data = response.data;
+                  $scope.usernameStatus = data ? 'INVALID' : 'OK';
+                  $scope.usernameAlert = {
+                    classType: data ? "text-danger" : "text-success",
+                    msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                  };
+                  $scope.usernameConn = "none";
+                }, function (response) {
+                  var data = response.data;
+                  $scope.usernameStatus = 'INVALID';
+                  $scope.usernameAlert = {
+                    classType: "text-danger",
+                    msg: data.message
+                  };
+                  $scope.usernameConn = "none";
+                });
+              }
+            } else {
+              $scope.usernameStatus = 'INVALID';
+              $scope.validationUsername();
+            }
+          };
+
+          $scope.validationEmail = function () {
+            if ($scope.userWrite.email.$invalid) {
+              if ($scope.userWrite.email.$error.required) {
+                $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "common.msg.required"}}'};
+              } else if ($scope.userWrite.email.$error.minlength || $scope.userWrite.email.$error.maxlength) {
+                $scope.emailAlert = {"classType": "text-danger", "msg": '{{TRANSLATION "Size.userWrite.email"}}'};
+              } else {
+                $scope.emailAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "user.msg.check.mail.format"}}'
+                };
+              }
+            } else {
+              $scope.emailAlert = {
+                classType: "text-info",
+                msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+              };
+            }
+          };
+
+          $scope.validationUsername = function () {
+            if ($scope.userWrite.username.$invalid) {
+              if ($scope.userWrite.username.$error.required) {
+                $scope.usernameAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "common.msg.required"}}'
+                };
+              } else if ($scope.userWrite.username.$error.minlength || $scope.userWrite.username.$error.maxlength) {
+                $scope.usernameAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "Size.userWrite.username"}}'
+                };
+              }
+            } else {
+              $scope.usernameAlert = {
+                classType: "text-info",
+                msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+              };
+            }
+          };
+
+          $scope.validationPassword = function () {
+            $scope.equalPasswordStatus = "false";
+            $scope.passwordConfirmAlert = {};
+
+            if ($scope.userWrite.password.$invalid) {
+              if ($scope.userWrite.password.$error.required) {
+                $scope.passwordAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "common.msg.required"}}'
+                };
+              } else if ($scope.userWrite.password.$error.minlength || $scope.userWrite.password.$error.maxlength) {
+                $scope.passwordAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "Size.userWrite.password"}}'
+                };
+              }
+            } else {
+              $scope.passwordAlert = {
+                classType: "text-success",
+                msg: '{{TRANSLATION "user.msg.available.data"}}'
+              };
+            }
+          };
+
+          $scope.equalPasswordConfirm = function () {
+
+            if ($scope.userWrite.password.$invalid) {
+              $scope.passwordConfirmAlert = {
+                classType: "text-danger",
+                msg: '{{TRANSLATION "user.msg.password.mismatch"}}'
+              };
+            }
+
+            if ($scope.userWrite.passwordConfirm.$invalid) return;
+
+            if ($scope.password == $scope.passwordConfirm) {
+              $scope.equalPasswordStatus = "true";
+              $scope.passwordConfirmAlert = {
+                classType: "text-success",
+                msg: '{{TRANSLATION "user.msg.available.data"}}'
+              };
+            } else {
+              $scope.passwordConfirmAlert = {
+                classType: "text-danger",
+                msg: '{{TRANSLATION "user.msg.password.mismatch"}}'
+              };
+            }
+          };
+
+          $scope.validationPasswordConfirm = function () {
+            $scope.equalPasswordStatus = "false";
+
+            if ($scope.userWrite.passwordConfirm.$invalid) {
+              if ($scope.userWrite.passwordConfirm.$error.required) {
+                $scope.passwordConfirmAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "common.msg.required"}}'
+                };
+              } else if ($scope.userWrite.passwordConfirm.$error.minlength || $scope.userWrite.passwordConfirm.$error.maxlength) {
+                $scope.passwordConfirmAlert = {
+                  classType: "text-danger",
+                  msg: '{{TRANSLATION "Size.userWrite.password"}}'
+                };
+              }
+            } else {
+              $scope.passwordConfirmAlert = {
+                classType: "text-info",
+                msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+              };
+            }
+          };
+        }]);
+
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

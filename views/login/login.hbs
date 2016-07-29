@@ -1,6 +1,6 @@
 <div class="wrapper" ng-controller="loginCtrl">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -102,63 +102,54 @@
   {{> footer}}
 
 </div><!-- /.container -->
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/unify/assets/css/pages/page_log_reg_v1.css"/>
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular', 'jakduk'
+    ], function (angular, Jakduk) {
+      angular.module("jakdukApp", [
+        "ngCookies", "angular-ladda", "jakdukCommon"
+      ]).controller("loginCtrl", ['$scope', function ($scope) {
+        $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
+        $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
+        $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
+        $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
 
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/spin.js"></script>
-<script src="/unify/assets/plugins/ladda-buttons/js/ladda.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/angular-cookies/angular-cookies.js"></script>
-<script src="/bower_components/angular-ladda/dist/angular-ladda.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
+        $scope.onSubmit = function (event) {
+          if ($scope.loginForm.$valid) {
+            $scope.btnSubmit = true;
+          } else {
+            $scope.onEmail();
 
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
+            if ($scope.loginForm.password.$error.required) {
+              $scope.errorPassword = '{{TRANSLATION "common.msg.required"}}';
+            } else if ($scope.loginForm.password.$error.minlength || $scope.loginForm.password.$error.maxlength) {
+              $scope.errorPassword = '{{TRANSLATION "Size.userWrite.password"}}';
+            }
 
-<script type="text/javascript">
-  angular.module("jakdukApp", [
-    "ngCookies", "angular-ladda", "jakdukCommon"
-  ]).controller("loginCtrl", ['$scope', function ($scope) {
-    $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
-    $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
-    $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
-    $scope.passwordLengthMax = Jakduk.FormPasswordLengthMax;
+            event.preventDefault();
+          }
+        };
 
-    $scope.onSubmit = function (event) {
-      if ($scope.loginForm.$valid) {
-        $scope.btnSubmit = true;
-      } else {
-        $scope.onEmail();
+        $scope.onEmail = function () {
+          if ($scope.loginForm.username.$invalid) {
+            if ($scope.loginForm.username.$error.required) {
+              $scope.errorEmail = '{{TRANSLATION "common.msg.required"}}';
+            } else if ($scope.loginForm.username.$error.minlength || $scope.loginForm.username.$error.maxlength) {
+              $scope.errorEmail = '{{TRANSLATION "Size.userWrite.email"}}';
+            } else {
+              $scope.errorEmail = '{{TRANSLATION "user.msg.check.mail.format"}}';
+            }
+          } else {
+            $scope.errorEmail = "";
+          }
+        };
+      }]);
 
-        if ($scope.loginForm.password.$error.required) {
-          $scope.errorPassword = '{{TRANSLATION "common.msg.required"}}';
-        } else if ($scope.loginForm.password.$error.minlength || $scope.loginForm.password.$error.maxlength) {
-          $scope.errorPassword = '{{TRANSLATION "Size.userWrite.password"}}';
-        }
-
-        event.preventDefault();
-      }
-    };
-
-    $scope.onEmail = function () {
-      if ($scope.loginForm.username.$invalid) {
-        if ($scope.loginForm.username.$error.required) {
-          $scope.errorEmail = '{{TRANSLATION "common.msg.required"}}';
-        } else if ($scope.loginForm.username.$error.minlength || $scope.loginForm.username.$error.maxlength) {
-          $scope.errorEmail = '{{TRANSLATION "Size.userWrite.email"}}';
-        } else {
-          $scope.errorEmail = '{{TRANSLATION "user.msg.check.mail.format"}}';
-        }
-      } else {
-        $scope.errorEmail = "";
-      }
-    };
-  }]);
-
-  $(document).ready(function () {
-    App.init();
-  });
-</script>
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

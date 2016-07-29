@@ -1,6 +1,6 @@
 <div class="wrapper" ng-controller="writeCtrl">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -81,128 +81,120 @@
   {{> footer}}
 
 </div>
-
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-<script type="text/javascript">
-  angular.module("jakdukApp", [
-    'jakdukCommon'
-  ]).controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    $window.onbeforeunload = function (e) {
-      if ($scope.submitConn !== 'connecting' && !$scope.userProfileForm.$pristine) {
-        (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-        return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
-      }
-    };
-
-    $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
-    $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
-
-    $scope.username = '{{userProfile.username}}';
-    $scope.email= '{{userProfile.email}}';
-    $scope.about = '{{userProfile.about}}';
-
-    $scope.usernameConn = "none";
-    $scope.submitConn = "none";
-    $scope.usernameAlert = {};
-    $scope.buttonAlert = {};
-
-    $scope.onSubmit = function (event) {
-      if ($scope.userProfileForm.$valid && ($scope.userProfileForm.username.$pristine || $scope.usernameStatus === "OK")) {
-        $scope.submitConn = "connecting";
-        $scope.buttonAlert = {
-          classType: 'text-info',
-          msg: '{{TRANSLATION "common.msg.be.cummunicating.server"}}'
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular', 'jakduk'
+    ], function (angular, Jakduk) {
+      angular.module("jakdukApp", [
+        'jakdukCommon'
+      ]).controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
+        $window.onbeforeunload = function (e) {
+          if ($scope.submitConn !== 'connecting' && !$scope.userProfileForm.$pristine) {
+            (e || $window.event).returnValue = '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+            return '{{TRANSLATION "common.msg.are.you.sure.leave.page"}}';
+          }
         };
 
-        $http.put('{{apiServerUrl}}/user/profile/me', {
-          about: $scope.about,
-          email: $scope.email,
-          footballClub: $scope.footballClub,
-          username: $scope.username
-        }).then(function () {
-          $window.location = '/user/profile';
-        }, function (response) {
-          $scope.submitConn = 'none';
-          $scope.buttonAlert = {
-            classType: 'text-info',
-            msg: response.data.message
-          };
-        });
-      } else {
-        if ($scope.userProfileForm.username.$invalid) {
-          $scope.validationUsername();
-        }
-        $scope.submitConn = 'none';
-        $scope.buttonAlert = {
-          classType: 'text-info',
-          msg: '{{TRANSLATION "common.msg.need.form.validation"}}'
-        };
-        event.preventDefault();
-      }
-    };
+        $scope.usernameLengthMin = Jakduk.FormUsernameLengthMin;
+        $scope.usernameLengthMax = Jakduk.FormUsernameLengthMax;
 
-    $scope.onUsername = function () {
-      if ($scope.userProfileForm.username.$valid) {
-        if ($scope.usernameConn === "none") {
-          $scope.usernameConn = "connecting";
-          $http.get('{{apiServerUrl}}/user/exist/username/edit?username=' + encodeURIComponent($scope.username)).then(function (response) {
-            var data = response.data;
-            $scope.usernameStatus = data ? 'INVALID' : 'OK';
-            $scope.usernameAlert = {
-              classType: data ? "text-danger" : "text-success",
-              msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+        $scope.username = '{{userProfile.username}}';
+        $scope.email= '{{userProfile.email}}';
+        $scope.about = '{{userProfile.about}}';
+
+        $scope.usernameConn = "none";
+        $scope.submitConn = "none";
+        $scope.usernameAlert = {};
+        $scope.buttonAlert = {};
+
+        $scope.onSubmit = function (event) {
+          if ($scope.userProfileForm.$valid && ($scope.userProfileForm.username.$pristine || $scope.usernameStatus === "OK")) {
+            $scope.submitConn = "connecting";
+            $scope.buttonAlert = {
+              classType: 'text-info',
+              msg: '{{TRANSLATION "common.msg.be.cummunicating.server"}}'
             };
-          }, function (response) {
-            var data = response.data;
+
+            $http.put('{{apiServerUrl}}/user/profile/me', {
+              about: $scope.about,
+              email: $scope.email,
+              footballClub: $scope.footballClub,
+              username: $scope.username
+            }).then(function () {
+              $window.location = '/user/profile';
+            }, function (response) {
+              $scope.submitConn = 'none';
+              $scope.buttonAlert = {
+                classType: 'text-info',
+                msg: response.data.message
+              };
+            });
+          } else {
+            if ($scope.userProfileForm.username.$invalid) {
+              $scope.validationUsername();
+            }
+            $scope.submitConn = 'none';
+            $scope.buttonAlert = {
+              classType: 'text-info',
+              msg: '{{TRANSLATION "common.msg.need.form.validation"}}'
+            };
+            event.preventDefault();
+          }
+        };
+
+        $scope.onUsername = function () {
+          if ($scope.userProfileForm.username.$valid) {
+            if ($scope.usernameConn === "none") {
+              $scope.usernameConn = "connecting";
+              $http.get('{{apiServerUrl}}/user/exist/username/edit?username=' + encodeURIComponent($scope.username)).then(function (response) {
+                var data = response.data;
+                $scope.usernameStatus = data ? 'INVALID' : 'OK';
+                $scope.usernameAlert = {
+                  classType: data ? "text-danger" : "text-success",
+                  msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                };
+              }, function (response) {
+                var data = response.data;
+                $scope.usernameStatus = 'INVALID';
+                $scope.usernameAlert = {
+                  classType: "text-danger",
+                  msg: data.message
+                };
+              }).then(function () {
+                $scope.usernameConn = "none";
+              });
+            }
+          } else {
             $scope.usernameStatus = 'INVALID';
-            $scope.usernameAlert = {
-              classType: "text-danger",
-              msg: data.message
-            };
-          }).then(function () {
-            $scope.usernameConn = "none";
-          });
-        }
-      } else {
-        $scope.usernameStatus = 'INVALID';
-        $scope.validationUsername();
-      }
-    };
-
-    $scope.validationUsername = function () {
-      if ($scope.userProfileForm.username.$invalid) {
-        if ($scope.userProfileForm.username.$error.required) {
-          $scope.usernameAlert = {
-            classType: "text-danger",
-            msg: '{{TRANSLATION "common.msg.required"}}'
-          };
-        } else if ($scope.userProfileForm.username.$error.minlength || $scope.userProfileForm.username.$error.maxlength) {
-          $scope.usernameAlert = {
-            classType: "text-danger",
-            msg: '{{TRANSLATION "Size.userWrite.username"}}'
-          };
-        }
-      } else {
-        $scope.usernameAlert = {
-          classType: "text-info",
-          msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+            $scope.validationUsername();
+          }
         };
-      }
-    };
 
-  }]);
+        $scope.validationUsername = function () {
+          if ($scope.userProfileForm.username.$invalid) {
+            if ($scope.userProfileForm.username.$error.required) {
+              $scope.usernameAlert = {
+                classType: "text-danger",
+                msg: '{{TRANSLATION "common.msg.required"}}'
+              };
+            } else if ($scope.userProfileForm.username.$error.minlength || $scope.userProfileForm.username.$error.maxlength) {
+              $scope.usernameAlert = {
+                classType: "text-danger",
+                msg: '{{TRANSLATION "Size.userWrite.username"}}'
+              };
+            }
+          } else {
+            $scope.usernameAlert = {
+              classType: "text-info",
+              msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+            };
+          }
+        };
 
-  $(document).ready(function () {
-    App.init();
-  });
-</script>
+      }]);
+
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

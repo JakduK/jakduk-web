@@ -8,8 +8,7 @@ module.exports.setup = function(app) {
       title: [
         i18n.__('about.site'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_about'
+      ]
     })
   });
 };

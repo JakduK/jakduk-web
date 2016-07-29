@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-  {{> header_navigation}}
+  {{> navigation}}
 
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
@@ -57,171 +57,157 @@
   {{> footer}}
 
 </div><!-- /.wrapper -->
+{{#CHUNK 'js'}}
+  <script type="text/javascript">
+    require([
+      'angular',
+      'jakduk',
+      'angular-infinite-scroll',
+      'angular-bootstrap-lightbox'
+    ], function (angular, Jakduk) {
+      angular.module("jakdukApp", [
+        "infinite-scroll", "angularLazyImg", "ui.bootstrap", "bootstrapLightbox", 'jakdukCommon'
+      ]).config(['LightboxProvider', function (LightboxProvider) {
+        LightboxProvider.templateUrl = "/jakduk/template/lightbox-gallery.html";
 
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script src="/unify/assets/plugins/back-to-top.js"></script>
-<script src="/unify/assets/plugins/smoothScroll.js"></script>
-<script src="/unify/assets/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="/unify/assets/js/app.js"></script>
-<script src="/bower_components/angular/angular.js"></script>
-<script src="/bower_components/slick-carousel/slick/slick.js"></script>
-<script src="/bower_components/angular-slick-carousel/dist/angular-slick.js"></script>
-<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script src="/bower_components/angular-lazy-img/release/angular-lazy-img.js"></script>
-<script src="/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.js"></script>
-<script src="/bower_components/angular-touch/angular-touch.js"></script>
-<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-<script src="/bower_components/angular-loading-bar/build/loading-bar.js"></script>
-<script src="/bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.js"></script>
-<script src="/jakduk/js/jakduk.js"></script>
-
-<script src="/bower_components/angular-i18n/angular-locale_{{locale}}.js"></script>
-
-<script type="text/javascript">
-  angular.module("jakdukApp", [
-    "infinite-scroll", "angularLazyImg", "ui.bootstrap", "bootstrapLightbox", 'jakdukCommon'
-  ]).config(['LightboxProvider', function (LightboxProvider) {
-    LightboxProvider.templateUrl = "/jakduk/template/lightbox-gallery.html";
-
-    LightboxProvider.getImageUrl = function (image) {
-      return '{{thumbnailServerUrl}}/gallery/' + image.id;
-    };
-
-    LightboxProvider.getImageCaption = function (image) {
-      return image.name;
-    };
-
-    LightboxProvider.calculateImageDimensionLimits = function (dimensions) {
-      if (dimensions.windowWidth >= 768) {
-        return {
-          // 92px = 2 * (30px margin of .modal-dialog
-          //             + 1px border of .modal-content
-          //             + 15px padding of .modal-body)
-          // with the goal of 30px side margins; however, the actual side margins
-          // will be slightly less (at 22.5px) due to the vertical scrollbar
-          'maxWidth': dimensions.windowWidth - 92,
-          'maxHeight': dimensions.windowHeight - 180
+        LightboxProvider.getImageUrl = function (image) {
+          return '{{thumbnailServerUrl}}/gallery/' + image.id;
         };
-      } else {
-        return {
-          // 52px = 2 * (10px margin of .modal-dialog
-          //             + 1px border of .modal-content
-          //             + 15px padding of .modal-body)
-          'maxWidth': dimensions.windowWidth - 52,
-          'maxHeight': dimensions.windowHeight - 130
+
+        LightboxProvider.getImageCaption = function (image) {
+          return image.name;
         };
-      }
-    };
 
-    // the modal height calculation has to be changed since our custom template is
-    // taller than the default template
-    LightboxProvider.calculateModalDimensions = function (dimensions) {
-      var width = Math.max(400, dimensions.imageDisplayWidth + 32);
-
-      if (width >= dimensions.windowWidth - 20 || dimensions.windowWidth < 768) {
-        width = 'auto';
-      }
-
-      return {
-        'width': width,                             // default
-        'height': 'auto'                            // custom
-      };
-    };
-  }]).controller("galleryCtrl", [
-    '$scope', '$http', '$window', 'Lightbox',
-  function ($scope, $http, $window, Lightbox) {
-    $scope.galleriesConn = "none";
-    $scope.galleries = [];
-    $scope.usersLikingCount = [];
-    $scope.usersDislikingCount = [];
-    $scope.infiniteDisabled = false;
-    $scope.enterAlert = "";
-    $scope.moreAlert = {};
-
-    // infiniteScroll
-    $scope.infiniteScroll = function () {
-      $scope.getGalleries("init");
-      $scope.infiniteDisabled = true;
-    };
-
-    // 사진 가져오기.
-    $scope.getGalleries = function (type, galleryId) {
-      var query;
-
-      if (galleryId) {
-        query = 'id=' + galleryId + '&size=' + Jakduk.ItemsPerPageOnGallery;
-      } else {
-        query = 'size=' + Jakduk.ItemsPerPageOnGallery;
-      }
-
-      if ($scope.galleriesConn === "none") {
-        $scope.galleriesConn = "connecting";
-        $http.get('{{apiServerUrl}}/galleries?' + query).then(function (response) {
-          var data = response.data;
-
-          if (data.galleries.length < 1) { // 댓글이 하나도 없을때
-            if (type === "init") {
-            } else {
-              $scope.moreAlert.msg = '{{TRANSLATION "gallery.msg.there.are.no.new.galleries"}}';
-            }
+        LightboxProvider.calculateImageDimensionLimits = function (dimensions) {
+          if (dimensions.windowWidth >= 768) {
+            return {
+              // 92px = 2 * (30px margin of .modal-dialog
+              //             + 1px border of .modal-content
+              //             + 15px padding of .modal-body)
+              // with the goal of 30px side margins; however, the actual side margins
+              // will be slightly less (at 22.5px) due to the vertical scrollbar
+              'maxWidth': dimensions.windowWidth - 92,
+              'maxHeight': dimensions.windowHeight - 180
+            };
           } else {
-            data.galleries.forEach(function (gallery) {
-              $scope.galleries.push(gallery);
-            });
+            return {
+              // 52px = 2 * (10px margin of .modal-dialog
+              //             + 1px border of .modal-content
+              //             + 15px padding of .modal-body)
+              'maxWidth': dimensions.windowWidth - 52,
+              'maxHeight': dimensions.windowHeight - 130
+            };
+          }
+        };
 
-            angular.forEach(data.usersLikingCount, function (value, key) {
-              $scope.usersLikingCount[key] = value;
-            });
+        // the modal height calculation has to be changed since our custom template is
+        // taller than the default template
+        LightboxProvider.calculateModalDimensions = function (dimensions) {
+          var width = Math.max(400, dimensions.imageDisplayWidth + 32);
 
-            angular.forEach(data.usersDislikingCount, function (value, key) {
-              $scope.usersDislikingCount[key] = value;
-            });
+          if (width >= dimensions.windowWidth - 20 || dimensions.windowWidth < 768) {
+            width = 'auto';
           }
 
+          return {
+            'width': width,                             // default
+            'height': 'auto'                            // custom
+          };
+        };
+      }]).controller("galleryCtrl", [
+        '$scope', '$http', '$window', 'Lightbox',
+        function ($scope, $http, $window, Lightbox) {
           $scope.galleriesConn = "none";
-        }, function (response) {
-          var data = response.data;
-          $scope.galleriesConn = "none";
-          console.error(data.message);
-        });
-      }
-    };
+          $scope.galleries = [];
+          $scope.usersLikingCount = [];
+          $scope.usersDislikingCount = [];
+          $scope.infiniteDisabled = false;
+          $scope.enterAlert = "";
+          $scope.moreAlert = {};
 
-    // 사진 더보기 단추.
-    $scope.btnMoreGalleries = function () {
-      if ($scope.galleries.length > 0) {
-        var lastGallery = $scope.galleries[$scope.galleries.length - 1].id;
-        $scope.getGalleries("more", lastGallery);
-      } else {
-        $scope.getGalleries("more");
-      }
-    };
+          // infiniteScroll
+          $scope.infiniteScroll = function () {
+            $scope.getGalleries("init");
+            $scope.infiniteDisabled = true;
+          };
 
-    $scope.openLightboxModal = function (index) {
-      Lightbox.index = 0;
-      Lightbox.openModal($scope.galleries, index);
-    };
+          // 사진 가져오기.
+          $scope.getGalleries = function (type, galleryId) {
+            var query;
 
-    $scope.btnEnter = function () {
-      var isValid = true;
+            if (galleryId) {
+              query = 'id=' + galleryId + '&size=' + Jakduk.ItemsPerPageOnGallery;
+            } else {
+              query = 'size=' + Jakduk.ItemsPerPageOnGallery;
+            }
 
-      if ($scope.searchWords.trim() < 1) {
-        $scope.enterAlert = '{{TRANSLATION "search.msg.enter.words.you.want.search.words"}}';
-        isValid = false;
-      }
+            if ($scope.galleriesConn === "none") {
+              $scope.galleriesConn = "connecting";
+              $http.get('{{apiServerUrl}}/galleries?' + query).then(function (response) {
+                var data = response.data;
 
-      if (isValid) {
-        $window.location = '/search?q=' + $scope.searchWords.trim() + '&w=GA;';
-      }
-    };
-  }]).controller("LightboxCtrl", ['$scope', '$window', 'Lightbox', function ($scope, $window, Lightbox) {
-    $scope.openNewTab = function () {
-      $window.open(Lightbox.imageUrl);
-    };
-  }]);
+                if (data.galleries.length < 1) { // 댓글이 하나도 없을때
+                  if (type === "init") {
+                  } else {
+                    $scope.moreAlert.msg = '{{TRANSLATION "gallery.msg.there.are.no.new.galleries"}}';
+                  }
+                } else {
+                  data.galleries.forEach(function (gallery) {
+                    $scope.galleries.push(gallery);
+                  });
 
-  $(document).ready(function () {
-    App.init();
-  });
-</script>
+                  angular.forEach(data.usersLikingCount, function (value, key) {
+                    $scope.usersLikingCount[key] = value;
+                  });
+
+                  angular.forEach(data.usersDislikingCount, function (value, key) {
+                    $scope.usersDislikingCount[key] = value;
+                  });
+                }
+
+                $scope.galleriesConn = "none";
+              }, function (response) {
+                var data = response.data;
+                $scope.galleriesConn = "none";
+                console.error(data.message);
+              });
+            }
+          };
+
+          // 사진 더보기 단추.
+          $scope.btnMoreGalleries = function () {
+            if ($scope.galleries.length > 0) {
+              var lastGallery = $scope.galleries[$scope.galleries.length - 1].id;
+              $scope.getGalleries("more", lastGallery);
+            } else {
+              $scope.getGalleries("more");
+            }
+          };
+
+          $scope.openLightboxModal = function (index) {
+            Lightbox.index = 0;
+            Lightbox.openModal($scope.galleries, index);
+          };
+
+          $scope.btnEnter = function () {
+            var isValid = true;
+
+            if ($scope.searchWords.trim() < 1) {
+              $scope.enterAlert = '{{TRANSLATION "search.msg.enter.words.you.want.search.words"}}';
+              isValid = false;
+            }
+
+            if (isValid) {
+              $window.location = '/search?q=' + $scope.searchWords.trim() + '&w=GA;';
+            }
+          };
+        }]).controller("LightboxCtrl", ['$scope', '$window', 'Lightbox', function ($scope, $window, Lightbox) {
+        $scope.openNewTab = function () {
+          $window.open(Lightbox.imageUrl);
+        };
+      }]);
+
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}

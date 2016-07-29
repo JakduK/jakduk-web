@@ -12,12 +12,11 @@ module.exports.setup = function (app) {
       title: [
         i18n.__('gallery'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_gallery'
+      ]
     });
   });
 
-  router.get('/:id', function (req, res) {
+  router.get('/:id', function (req, res, next) {
     req.api.getGalleryItem(req.params.id).then(function (response) {
       var context = res.locals;
       var data = response.data;
@@ -41,12 +40,13 @@ module.exports.setup = function (app) {
           i18n.__('gallery'),
           i18n.__('common.jakduk')
         ],
-        headPage: 'head_gallery',
         gallery: data.gallery,
         linkedPosts: data.linkedPosts,
         next: data.next,
         prev: data.prev
       });
+    }).catch(function (err) {
+      next(err);
     });
   });
 

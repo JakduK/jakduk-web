@@ -12,12 +12,11 @@ function index(req, res) {
       i18n.__('user.sign.in'),
       i18n.__('common.jakduk')
     ],
-    headPage: 'head_login',
     redir: req.headers.referer
   });
 }
 
-function submit(req, res) {
+function submit(req, res, next) {
   req.api.login(
     req.body.username,
     req.body.password,
@@ -45,10 +44,11 @@ function submit(req, res) {
           i18n.__('user.sign.in'),
           i18n.__('common.jakduk')
         ],
-        headPage: 'head_login',
         message: i18n.__(message)
       });
     }
+  }).catch(function (err) {
+    next(err);
   });
 }
 

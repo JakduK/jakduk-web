@@ -11,8 +11,7 @@ module.exports.setup = function (app) {
       title: [
         i18n.__('jakdu'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_error'
+      ]
     });
   });
 
@@ -21,8 +20,7 @@ module.exports.setup = function (app) {
       title: [
         i18n.__('jakdu'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_error'
+      ]
     });
   });
 

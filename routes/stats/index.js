@@ -18,7 +18,6 @@ module.exports.setup = function (app) {
         i18n.__('stats'),
         i18n.__('common.jakduk')
       ],
-      headPage: 'head_stats',
       chartType: req.query.chartType
     });
   });
@@ -29,8 +28,7 @@ module.exports.setup = function (app) {
         i18n.__('stats.attendance.league.title'),
         i18n.__('stats'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_stats'
+      ]
     });
   });
 
@@ -40,8 +38,7 @@ module.exports.setup = function (app) {
         i18n.__('stats.attendance.club.title'),
         i18n.__('stats'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_stats'
+      ]
     });
   });
 
@@ -51,8 +48,7 @@ module.exports.setup = function (app) {
         i18n.__('stats.attendance.season.title'),
         i18n.__('stats'),
         i18n.__('common.jakduk')
-      ],
-      headPage: 'head_stats'
+      ]
     });
   });
 
