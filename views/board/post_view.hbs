@@ -59,15 +59,12 @@
     {{/if}}
 
     {{#if (OPR '&&' isAdmin (NOT_EQ post.status.notice 'DELETE'))}}
-      {{#if (EQ post.status.notice 'NOTICE')}}
-        <button type="button" class="btn-u btn-u-default rounded" onclick="window.location='/board/notice/cancel/{{post.seq}}'">
-          {{TRANSLATION "common.button.cancel.notice"}}
-        </button>
-      {{else}}
-        <button type="button" class="btn-u rounded" onclick="window.location='/board/notice/set/{{post.seq}}'">
-          {{TRANSLATION "common.button.set.as.notice"}}
-        </button>
-      {{/if}}
+      <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}}, false)" ng-class="{show:isNotice}" style="display:none;">
+        {{TRANSLATION "common.button.cancel.notice"}}
+      </button>
+      <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
+        {{TRANSLATION "common.button.set.as.notice"}}
+      </button>
     {{/if}}
 		</div> <!-- End Buttons -->
 
@@ -290,15 +287,12 @@
     {{/if}}
 
     {{#if (OPR '&&' isAdmin (NOT post.status.delete))}}
-      {{#if (EQ post.status.notice 'NOTICE')}}
-        <button type="button" class="btn-u btn-u-default rounded" onclick="window.location='/board/notice/cancel/{{post.seq}}'">
-          {{TRANSLATION "common.button.cancel.notice"}}
-        </button>
-      {{else}}
-        <button type="button" class="btn-u rounded" onclick="window.location='/board/notice/set/{{post.seq}}'">
-          {{TRANSLATION "common.button.set.as.notice"}}
-        </button>
-      {{/if}}
+      <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}},false)" ng-class="{show:isNotice}" style="display:none;">
+        {{TRANSLATION "common.button.cancel.notice"}}
+      </button>
+      <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
+        {{TRANSLATION "common.button.set.as.notice"}}
+      </button>
     {{/if}}
 		</div> <!-- End Buttons -->
 	</div>  <!-- End Content Part -->
@@ -334,20 +328,22 @@
         $scope.alert = {};
         $scope.likeConn = "none";
         $scope.dislikeConn = "none";
+        $scope.isNotice = {{EQ post.status.notice 'true'}}
 
         // 글 감정 표현.
         $scope.btnFeeling = function (type) {
-          if ({{NOT isAuthenticated}}) {
+          {{#if (NOT isAuthenticated)}}
+            $scope.alert.classType = "alert-info";
             $scope.alert.msg = '{{TRANSLATION "board.msg.need.login.for.feel"}}';
             $scope.alert.linkUrl = '/login';
             $scope.alert.linkLabel = '{{TRANSLATION "common.button.login"}}';
-            $scope.alert.classType = "alert-info";
             return;
-          } else if ({{EQ userInfo.id post.writer.userId}}) {
+          {{/if}}
+          {{#if (EQ userInfo.id post.writer.userId)}}
+            $scope.alert.classType = "alert-info";
             $scope.alert.msg = '{{TRANSLATION "board.msg.you.are.writer"}}';
-            $scope.alert.classType = "alert-info";
             return;
-          }
+          {{/if}}
 
           if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
             if (type === "LIKE") {
@@ -436,6 +432,12 @@
           if ($window.confirm('{{TRANSLATION "board.msg.confirm.edit.post"}}')) {
             $window.location = '/board/free/edit/{{post.seq}}';
           }
+        };
+
+        $scope.setNotice = function (seq, onOff) {
+          $http[onOff ? 'post' : 'delete']('{{apiServerUrl}}/board/free/' + seq + '/notice').then(function () {
+            $scope.isNotice = onOff;
+          });
         };
       }]).controller("commentCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
         $scope.boardCommentContentLengthMin = Jakduk.BoardCommentContentLengthMin;
