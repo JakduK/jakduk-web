@@ -33,8 +33,8 @@ define([
         SEARCH_DATA: {
           ID: 'admin.initSearchData',
           URL: '/search/data/init',
-          TEMPLATE: '/jakduk/template/admin-write-encyclopedia.html',
-          CONTROLLER: 'AdminWriteEncyclopediaController'
+          TEMPLATE: '/jakduk/template/admin-search-data-init.html',
+          CONTROLLER: 'AdminSearchDataInitController'
         }
       },
       WRITE: {
