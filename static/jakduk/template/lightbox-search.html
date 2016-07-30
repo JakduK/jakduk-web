@@ -23,7 +23,7 @@
 
   <div class="lightbox-image-container">
     <!-- image -->
-    <img ng-if="!Lightbox.isVideo(Lightbox.image)" lightbox-src="{{Lightbox.imageUrl}}">
+    <img class="center-block" ng-if="!Lightbox.isVideo(Lightbox.image)" lightbox-src="{{Lightbox.imageUrl}}">
 
     <!-- video -->
     <div ng-if="Lightbox.isVideo(Lightbox.image)" class="embed-responsive embed-responsive-16by9">
