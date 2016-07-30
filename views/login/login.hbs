@@ -35,20 +35,20 @@
 
             <div class="form-group">
               <div class="input-group has-feedback"
-                 ng-class="{'has-success':loginForm.username.$valid, 'has-error':(!loginForm.username.$pristine && loginForm.username.$invalid)}">
+                 ng-class="{'has-success':loginForm.username.$valid, 'has-error':!loginForm.username.$pristine && loginForm.username.$invalid}">
                 <span class="input-group-addon"><i class="fa fa-at fa-fw"></i></span>
                 <input type="email" class="form-control" id="username" name="username" placeholder="{{TRANSLATION "user.placeholder.email"}}" ng-model="email" ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax" autofocus>
-                <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':loginForm.username.$valid, 'glyphicon-remove':loginForm.username.$invalid}"></span>
+                <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':loginForm.username.$valid, 'glyphicon-remove':!loginForm.username.$pristine &&  loginForm.username.$invalid}"></span>
               </div>
               <p class="text-danger" ng-model="errorEmail" ng-show="errorEmail" ng-bind="errorEmail"></p>
             </div>
 
             <div class="form-group">
-              <div class="input-group has-feedback" ng-class="{'has-success':loginForm.password.$valid, 'has-error':(!loginForm.password.$pristine &&loginForm.password.$invalid)}">
+              <div class="input-group has-feedback" ng-class="{'has-success':loginForm.password.$valid, 'has-error':!loginForm.password.$pristine && loginForm.password.$invalid}">
                 <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
                 <input type="password" class="form-control" id="password" name="password" placeholder="{{TRANSLATION "user.placeholder.password"}}" ng-model="password" ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax">
               <span class="glyphicon form-control-feedback"
-                  ng-class="{'glyphicon-ok':loginForm.password.$valid, 'glyphicon-remove':loginForm.password.$invalid}"></span>
+                  ng-class="{'glyphicon-ok':loginForm.password.$valid, 'glyphicon-remove':!loginForm.password.$pristine && loginForm.password.$invalid}"></span>
               </div>
               <p class="text-danger" ng-model="errorPassword" ng-show="errorPassword" ng-bind="errorPassword"></p>
             </div>
