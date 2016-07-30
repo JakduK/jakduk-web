@@ -16,6 +16,10 @@ var all = {
 
   tokenMaxAge: 1000 * 60 * 60 * 24 * 365 * 2,
 
+  tokenHeader: 'authorization',
+
+  tempTokenHeader: 'x-attempted-token',
+
   apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com/api',
 
   thumbnailServerUrl: 'https://api.jakduk.com',

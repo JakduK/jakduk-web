@@ -32,7 +32,7 @@ function submit(req, res, next) {
     about: body.about
   }).then(function (response) {
     if (response.statusCode === 200) {
-      SessionUtil.saveSession(res, response.data.token);
+      SessionUtil.saveSession(res, response.headers[config.tokenHeader]);
       res.redirect(body.redir || '/');
     } else {
       res.render('login/join', {

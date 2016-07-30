@@ -26,7 +26,7 @@ function submit(req, res, next) {
     var message;
 
     if (status === 200) {
-      SessionUtil.saveSession(res, response.data.token, req.body.remember === 'on');
+      SessionUtil.saveSession(res, response.headers[config.tokenHeader], req.body.remember === 'on');
       redir = req.body.redir || '/';
       redir = _.some(req.noRedirectPaths, function (value) {
         return redir.endsWith(value);

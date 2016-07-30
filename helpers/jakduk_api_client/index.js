@@ -1,18 +1,22 @@
 'use strict';
 
-function ApiClient(session, serverUrl) {
-  this.session = session;
+var config = require('../../config/environment');
+
+function ApiClient(credentials, serverUrl) {
+  this.credentials = credentials;
   this.serverUrl = serverUrl;
 }
 
-ApiClient.prototype._callback = function(resolve, data, response) {
-  response = response || {statusCode: 0};
-  response.data = data;
-  resolve(response);
+var internalFn = {
+  callback: function(resolve, data, response) {
+    response = response || {statusCode: 0};
+    response.data = data;
+    resolve(response);
+  }
 };
 
-require('./auth')(ApiClient);
-require('./contents')(ApiClient);
-require('./user')(ApiClient);
+require('./auth')(ApiClient, internalFn);
+require('./contents')(ApiClient, internalFn);
+require('./user')(ApiClient, internalFn);
 
 module.exports = ApiClient;

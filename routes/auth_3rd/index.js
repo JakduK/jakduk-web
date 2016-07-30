@@ -31,10 +31,10 @@ function callback(provider, req, res) {
     var status = response.statusCode;
     if (status === 200) {
       var extra = querystring.parse(querystring.decode(req.query.state));
-      SessionUtil.saveSession(res, response.data.token);
+      SessionUtil.saveSession(res, response.headers[config.tokenHeader]);
       res.redirect(extra.redir || '/');
     } else if (status === 404) {
-      SessionUtil.saveSession(res, response.headers['x-attempted-token'] || '');
+      SessionUtil.saveSession(res, response.headers[config.tempTokenHeader] || '');
       res.redirect('/join/oauth');
     } else {
       return Promise.reject();

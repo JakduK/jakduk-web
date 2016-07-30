@@ -3,8 +3,8 @@
 var rest = require('restler');
 var querystring = require('querystring');
 
-module.exports = function(ApiClient) {
-  var callback = ApiClient.prototype._callback;
+module.exports = function(ApiClient, internalFn) {
+  var callback = internalFn.callback;
 
   ApiClient.prototype.join = function(data) {
     return new Promise(function(resolve) {
@@ -15,9 +15,7 @@ module.exports = function(ApiClient) {
   ApiClient.prototype.joinWith = function(data) {
     return new Promise(function(resolve) {
       rest.postJson(this.serverUrl + '/user/social', data, {
-        headers: {
-          Authorization: this.session
-        }
+        headers: this.credentials
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
@@ -42,9 +40,7 @@ module.exports = function(ApiClient) {
   ApiClient.prototype.socialAttempted = function() {
     return new Promise(function(resolve) {
       rest.get(this.serverUrl + '/social/attempted', {
-        headers: {
-          Authorization: this.session
-        }
+        headers: this.credentials
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
@@ -52,9 +48,7 @@ module.exports = function(ApiClient) {
   ApiClient.prototype.logout = function() {
     return new Promise(function(resolve) {
       rest.get(this.serverUrl + '/logout', {
-        headers: {
-          Authorization: this.session
-        }
+        headers: this.credentials
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };

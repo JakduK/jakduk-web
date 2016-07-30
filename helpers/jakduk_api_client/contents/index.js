@@ -3,8 +3,8 @@
 var rest = require('restler');
 var querystring = require('querystring');
 
-module.exports = function(ApiClient) {
-  var callback = ApiClient.prototype._callback;
+module.exports = function(ApiClient, internalFn) {
+  var callback = internalFn.callback;
 
   ApiClient.prototype.latest = function() {
     return new Promise(function(resolve) {
@@ -49,9 +49,7 @@ module.exports = function(ApiClient) {
   ApiClient.prototype.getPost = function(seq) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/' + seq, null, {
-        headers: {
-          Authorization: this.session
-        }
+        headers: this.credentials
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
@@ -77,9 +75,7 @@ module.exports = function(ApiClient) {
   ApiClient.prototype.getGalleryItem = function(id) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/gallery/' + id, null, {
-        headers: {
-          Authorization: this.session
-        }
+        headers: this.credentials
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };

@@ -8,8 +8,10 @@ var i18n = require('i18n');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
+    var credentials = {};
+    credentials[config.tokenHeader] = req.cookies[config.tokenCookieName] || '';
+    req.api = new ApiClient(credentials, config.internalApiServerUrl);
     req.noRedirectPaths = config.noRedirectPaths;
-    req.api = new ApiClient(req.cookies[config.tokenCookieName] || '', config.internalApiServerUrl);
 
     req.api.getUserInfo().then(function (response) {
       if (response.statusCode === 200) {
