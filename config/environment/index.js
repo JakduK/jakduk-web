@@ -20,7 +20,9 @@ var all = {
 
   tempTokenHeader: 'x-attempted-token',
 
-  apiServerUrl: process.env.API_SERVER || 'https://api.jakduk.com/api',
+  apiServerUrl: process.env.API_SERVER || 'https://jakduk.com/api',
+
+  internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'https://api.jakduk.com/api',
 
   thumbnailServerUrl: 'https://api.jakduk.com',
 

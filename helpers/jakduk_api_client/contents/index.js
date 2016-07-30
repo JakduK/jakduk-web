@@ -79,4 +79,12 @@ module.exports = function(ApiClient, internalFn) {
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
+
+  ApiClient.prototype.search = function(query) {
+    return new Promise(function(resolve) {
+      rest.json(this.serverUrl + '/search', null, {
+        query: query
+      }).on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
 };

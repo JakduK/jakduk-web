@@ -25,7 +25,7 @@ define(['angular', 'common'], function (angular) {
         return Math.floor(date.getTime() / 1000).toString(16) + "0000000000000000";
       }
     })
-    .controller("headerCtrl", ['$scope', '$location', function ($scope, $location) {
+    .controller("headerCtrl", ['$scope', '$location', '$window', function ($scope, $location, $window) {
 
       var port = $location.port();
       var prefix = $location.protocol() + '://' + $location.host();
@@ -37,12 +37,12 @@ define(['angular', 'common'], function (angular) {
         return path.match(viewLocation);
       };
 
-      $scope.btnEnterOnHeaderSearch = function (url) {
+      $scope.btnEnterOnHeaderSearch = function () {
         if ($scope.searchOnHeader.trim() < 1) {
           return;
         }
 
-        location.href = url + '?q=' + $scope.searchOnHeader.trim() + '&w=PO;CO;GA;';
+        $window.location = '/search?q=' + $scope.searchOnHeader.trim() + '&w=PO;CO;GA;';
       };
 
       $scope.btnSearchOnHeader = function () {
