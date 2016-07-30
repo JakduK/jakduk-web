@@ -142,12 +142,12 @@
           <li class="list-group-item list-group-item-info">
             <div class="row">
               <div class="col-sm-2">
-                <span aria-hidden="true" class="icon-directions visible-xs-inline"></span>{{TRANSLATION "board.notice"}}
+                <i aria-hidden="true" class="icon-directions visible-xs-inline"></i> {{TRANSLATION "board.notice"}}
               </div>
               <div class="col-sm-4">
-                {{#if (EQ status.device 'MOBILE')}}<span aria-hidden="true" class="icon-screen-smartphone"></span>{{/if}}
-                {{#if (EQ status.device 'TABLET')}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
-                {{#if (OPR '>' galleries.length 0)}}<span aria-hidden="true" class="icon-picture"></span>{{/if}}
+                {{#if (EQ status.device 'MOBILE')}}<i aria-hidden="true" class="icon-screen-smartphone"></i>{{/if}}
+                {{#if (EQ status.device 'TABLET')}}<i aria-hidden="true" class=" icon-screen-tablet"></i>{{/if}}
+                {{#if (OPR '>' galleries.length 0)}}<i aria-hidden="true" class="icon-picture"></i>{{/if}}
                 <a href="/board/free/{{seq}}?page={{../number}}&category={{category}}">
                   {{#if status.delete}}
                     <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
@@ -160,7 +160,7 @@
                 </a>
               </div>
               <div class="col-sm-3">
-                <span aria-hidden="true" class="icon-user visible-xs-inline"></span>{{writer.username}} |
+                <i aria-hidden="true" class="icon-user visible-xs-inline"></i> {{writer.username}} &mid;
               {{#if (OPR '<' (DATE_BY_ID id) ../todayDate)}}
                 <span>{{DATE_FORMAT (DATE_BY_ID id) 'LL'}}</span>
               {{else}}
@@ -168,7 +168,7 @@
               {{/if}}
               </div>
               <div class="col-sm-3 hidden-xs">
-                <span aria-hidden="true" class="icon-eye"></span> <strong>{{views}}</strong>
+                <i aria-hidden="true" class="icon-eye"></i> <strong>{{views}}</strong>
                 <span class="text-primary">
                   <i class="fa fa-thumbs-o-up"></i>
                   <strong>{{likingCount}}</strong>
@@ -189,7 +189,7 @@
               <div class="col-sm-2">
               {{seq}} <span class="hidden-xs">&mid;</span>
               {{#if category}}
-                <span aria-hidden="true" class="icon-directions visible-xs-inline"></span>
+                <i aria-hidden="true" class="icon-directions visible-xs-inline"></i>
                 {{CATEGORY_NAME (PICK_CATEGORY ../categories category) ../locale}}
               {{/if}}
               </div>

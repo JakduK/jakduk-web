@@ -2,96 +2,96 @@
 
   {{> navigation}}
 
-	<!--=== Breadcrumbs ===-->
-	<div class="breadcrumbs">
-		<div class="container">
-			<h1 class="pull-left">
-				<a href="/board/free">{{TRANSLATION "board.name.free"}}</a></h1>
-			<ul class="pull-right breadcrumb">
-				<li><a href="/board/free/posts">{{TRANSLATION "board.free.breadcrumbs.posts"}}</a>
-				</li>
-				<li>
-					<a href="/board/free/comments">{{TRANSLATION "board.free.breadcrumbs.comments"}}</a>
-				</li>
-			</ul>
-		</div><!--/container-->
-	</div><!--/breadcrumbs-->
-	<!--=== End Breadcrumbs ===-->
+  <!--=== Breadcrumbs ===-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left">
+        <a href="/board/free">{{TRANSLATION "board.name.free"}}</a></h1>
+      <ul class="pull-right breadcrumb">
+        <li><a href="/board/free/posts">{{TRANSLATION "board.free.breadcrumbs.posts"}}</a>
+        </li>
+        <li>
+          <a href="/board/free/comments">{{TRANSLATION "board.free.breadcrumbs.comments"}}</a>
+        </li>
+      </ul>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
 
-	<!--=== Content Part ===-->
-	<div class="container content blog-page blog-item" ng-controller="boardFreeCtrl">
+  <!--=== Content Part ===-->
+  <div class="container content blog-page blog-item" ng-controller="boardFreeCtrl">
 
-		<!-- Buttons -->
-		<div class="margin-bottom-10">
-			<button type="button" class="btn-u btn-brd rounded" ng-click="backToList()" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "board.list"}}">
-				<i class="fa fa-list"></i>
-			</button>
+    <!-- Buttons -->
+    <div class="margin-bottom-10">
+      <button type="button" class="btn-u btn-brd rounded" ng-click="backToList()" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "board.list"}}">
+        <i class="fa fa-list"></i>
+      </button>
 
-    {{#if prevPost}}
-      <button type="button" class="btn-u btn-brd rounded" ng-click="prevPost()"
-        tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.prev"}}">
-        <i class="fa fa-chevron-left"></i>
-      </button>
-    {{else}}
-      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
-        <i class="fa fa-chevron-left text-muted"></i>
-      </button>
-    {{/if}}
-
-    {{#if nextPost}}
-      <button type="button" class="btn-u btn-brd rounded" ng-click="nextPost()"
-        tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION  "common.button.next"}}">
-        <i class="fa fa-chevron-right"></i>
-      </button>
-    {{else}}
-      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
-        <i class="fa fa-chevron-right text-muted"></i>
-      </button>
-    {{/if}}
-
-    {{#if (OPR '&&' isAuthenticated (EQ userInfo.id post.writer.userId))}}
-      <button type="button" class="btn-u rounded" ng-click="confirmEdit();">
-        <i class="fa fa-pencil-square-o"></i>{{TRANSLATION "common.button.edit"}}
-      </button>
-      <button type="button" class="btn-u btn-u-default rounded" ng-click="confirmDelete();">
-        <i class="fa fa-trash-o"></i>{{TRANSLATION "common.button.delete"}}
-      </button>
-    {{/if}}
-
-    {{#if (OPR '&&' isAdmin (NOT_EQ post.status.notice 'DELETE'))}}
-      <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}}, false)" ng-class="{show:isNotice}" style="display:none;">
-        {{TRANSLATION "common.button.cancel.notice"}}
-      </button>
-      <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
-        {{TRANSLATION "common.button.set.as.notice"}}
-      </button>
-    {{/if}}
-		</div> <!-- End Buttons -->
-
-		<!--Blog Post-->
-		<div class="blog margin-bottom-20">
-			<h2>
-				<small>
-					{{#if (EQ post.status.device 'MOBILE')}}<span aria-hidden="true" class=" icon-screen-smartphone"></span>{{/if}}
-          {{#if (EQ post.status.device 'TABLET')}}<span aria-hidden="true" class=" icon-screen-tablet"></span>{{/if}}
-          {{#if galleries}}<span aria-hidden="true" class="icon-picture"></span>{{/if}}
-				</small>
-      {{#if post.status.delete}}
-        {{TRANSLATION "board.msg.deleted"}}
+      {{#if prevPost}}
+        <button type="button" class="btn-u btn-brd rounded" ng-click="prevPost()"
+          tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.prev"}}">
+          <i class="fa fa-chevron-left"></i>
+        </button>
       {{else}}
-        {{post.subject}}
+        <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
+          <i class="fa fa-chevron-left text-muted"></i>
+        </button>
       {{/if}}
-      {{#if post.category}}
-        <small><span aria-hidden="true" class="icon-directions"></span> {{CATEGORY_NAME post.category locale}}</small>
+
+      {{#if nextPost}}
+        <button type="button" class="btn-u btn-brd rounded" ng-click="nextPost()"
+          tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION  "common.button.next"}}">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      {{else}}
+        <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
+          <i class="fa fa-chevron-right text-muted"></i>
+        </button>
       {{/if}}
-			</h2>
-			<div class="blog-post-tags">
-				<ul class="list-unstyled list-inline blog-info">
-					<li><span aria-hidden="true" class="icon-user"></span> {{post.writer.username}}</li>
-					<li>{{DATE_FORMAT (DATE_BY_ID post.id) 'LLL'}}</li>
-					<li><span aria-hidden="true" class="icon-eye"></span> {{post.views}}</li>
-				</ul>
-			</div>
+
+      {{#if (OPR '&&' isAuthenticated (EQ userInfo.id post.writer.userId))}}
+        <button type="button" class="btn-u rounded" ng-click="confirmEdit();">
+          <i class="fa fa-pencil-square-o"></i>{{TRANSLATION "common.button.edit"}}
+        </button>
+        <button type="button" class="btn-u btn-u-default rounded" ng-click="confirmDelete();">
+          <i class="fa fa-trash-o"></i>{{TRANSLATION "common.button.delete"}}
+        </button>
+      {{/if}}
+
+      {{#if (OPR '&&' isAdmin (NOT_EQ post.status.notice 'DELETE'))}}
+        <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}}, false)" ng-class="{show:isNotice}" style="display:none;">
+          {{TRANSLATION "common.button.cancel.notice"}}
+        </button>
+        <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
+          {{TRANSLATION "common.button.set.as.notice"}}
+        </button>
+      {{/if}}
+    </div> <!-- End Buttons -->
+
+    <!--Blog Post-->
+    <div class="blog margin-bottom-20">
+      <h2>
+        <small>
+        {{#if (EQ post.status.device 'MOBILE')}}<i aria-hidden="true" class=" icon-screen-smartphone"></i>{{/if}}
+        {{#if (EQ post.status.device 'TABLET')}}<i aria-hidden="true" class=" icon-screen-tablet"></i>{{/if}}
+        {{#if galleries}}<i aria-hidden="true" class="icon-picture"></i>{{/if}}
+        </small>
+        {{#if post.status.delete}}
+          {{TRANSLATION "board.msg.deleted"}}
+        {{else}}
+          {{post.subject}}
+        {{/if}}
+        {{#if post.category}}
+          <small><i aria-hidden="true" class="icon-directions"></i> {{CATEGORY_NAME post.category locale}}</small>
+        {{/if}}
+      </h2>
+      <div class="blog-post-tags">
+        <ul class="list-unstyled list-inline blog-info">
+          <li><span aria-hidden="true" class="icon-user"></span> {{post.writer.username}}</li>
+          <li>{{DATE_FORMAT (DATE_BY_ID post.id) 'LLL'}}</li>
+          <li><span aria-hidden="true" class="icon-eye"></span> {{post.views}}</li>
+        </ul>
+      </div>
 
       {{#if post.status.delete}}
         <p>{{TRANSLATION "board.msg.deleted"}}</p>
@@ -99,90 +99,90 @@
         <p>{{{post.content}}}</p>
       {{/if}}
 
-			<!-- galleries -->
-			{{#if post.galleries}}
-				<ul class="list-group">
-					<li class="list-group-item">
-						<strong>{{TRANSLATION "board.gallery.list"}}</strong>
-						{{#each post.galleries}}
-							<div>
-								<span aria-hidden="true" class="icon-paper-clip"></span>
-								<a href="/gallery/{{id}}">{{DEFAULT_VALUE name fileName}}</a> | {{SIZE_FORMAT size}}
-							</div>
+      <!-- galleries -->
+      {{#if post.galleries}}
+        <ul class="list-group">
+          <li class="list-group-item">
+            <strong>{{TRANSLATION "board.gallery.list"}}</strong>
+            {{#each post.galleries}}
+              <div>
+                <span aria-hidden="true" class="icon-paper-clip"></span>
+                <a href="/gallery/{{id}}">{{DEFAULT_VALUE name fileName}}</a> | {{SIZE_FORMAT size}}
+              </div>
             {{/each}}
-					</li>
-				</ul>
+          </li>
+        </ul>
       {{/if}}
 
-			<!-- buttons -->
-			<div class="ladda-btn margin-bottom-10">
-				<div class="row">
-					<div class="col-xs-6">
-						<button type="button" class="btn-u btn-u-sm btn-u-blue rounded ladda-button"
-							ng-click="btnFeeling('LIKE')" ng-init="numberOfLike={{ARRAY_SIZE post.usersLiking}}"
-							ladda="btnLike" data-style="expand-right" data-spinner-color="Gainsboro"
-							tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.like"}}">
-							<i class="fa fa-thumbs-o-up fa-lg"></i>
-							<span ng-hide="likeConn == 'connecting'" ng-bind="numberOfLike"></span>
-						</button>
+      <!-- buttons -->
+      <div class="ladda-btn margin-bottom-10">
+        <div class="row">
+          <div class="col-xs-6">
+            <button type="button" class="btn-u btn-u-sm btn-u-blue rounded ladda-button"
+              ng-click="btnFeeling('LIKE')" ng-init="numberOfLike={{ARRAY_SIZE post.usersLiking}}"
+              ladda="btnLike" data-style="expand-right" data-spinner-color="Gainsboro"
+              tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.like"}}">
+              <i class="fa fa-thumbs-o-up fa-lg"></i>
+              <span ng-hide="likeConn == 'connecting'" ng-bind="numberOfLike"></span>
+            </button>
             &mid;
-						<button type="button" class="btn-u btn-u-sm btn-u-red rounded ladda-button"
-							ng-click="btnFeeling('DISLIKE')" ng-init="numberOfDislike={{ARRAY_SIZE post.usersDisliking}}"
-							ladda="btnDislike" data-style="expand-right" data-spinner-color="Gainsboro"
-							tooltip-popup-close-delay='300' uib-tooltip='{{TRANSLATION "common.button.dislike"}}'>
-							<i class="fa fa-thumbs-o-down fa-lg"></i>
-							<span ng-hide="dislikeConn == 'connecting'" ng-bind="numberOfDislike"></span>
-						</button>
-					</div>
-					<div class="col-xs-6 text-right">
-						<button class="btn btn-u-sm rounded btn-android" type="button" ng-click="btnUrlCopy()"
-							tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.copy.to.clipboard"}}">
-							<i class="icon-link"></i>
-						</button>
-						<a id="kakao-link-btn" href="javascript:void(0);"
-							tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.send.to.kakao"}}">
-							<img src="/kakao/icon/kakaolink_btn_small.png">
-						</a>
-					</div>
-				</div>
-			</div>
+            <button type="button" class="btn-u btn-u-sm btn-u-red rounded ladda-button"
+              ng-click="btnFeeling('DISLIKE')" ng-init="numberOfDislike={{ARRAY_SIZE post.usersDisliking}}"
+              ladda="btnDislike" data-style="expand-right" data-spinner-color="Gainsboro"
+              tooltip-popup-close-delay='300' uib-tooltip='{{TRANSLATION "common.button.dislike"}}'>
+              <i class="fa fa-thumbs-o-down fa-lg"></i>
+              <span ng-hide="dislikeConn == 'connecting'" ng-bind="numberOfDislike"></span>
+            </button>
+          </div>
+          <div class="col-xs-6 text-right">
+            <button class="btn btn-u-sm rounded btn-android" type="button" ng-click="btnUrlCopy()"
+              tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.copy.to.clipboard"}}">
+              <i class="icon-link"></i>
+            </button>
+            <a id="kakao-link-btn" href="javascript:void(0);"
+              tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.send.to.kakao"}}">
+              <img src="/kakao/icon/kakaolink_btn_small.png">
+            </a>
+          </div>
+        </div>
+      </div>
 
-			<div class="alert" ng-class="alert.classType" ng-show="alert.msg">
-				<span ng-bind="alert.msg"></span>
-				<a class="alert-link" ng-href="{%alert.linkUrl%}" ng-show="alert.linkUrl" ng-bind="alert.linkLabel"></a>
-			</div>
+      <div class="alert" ng-class="alert.classType" ng-show="alert.msg">
+        <span ng-bind="alert.msg"></span>
+        <a class="alert-link" ng-href="{%alert.linkUrl%}" ng-show="alert.linkUrl" ng-bind="alert.linkLabel"></a>
+      </div>
 
-		</div> <!--End Blog Post-->
+    </div> <!--End Blog Post-->
 
-		<hr class="padding-10"/>
+    <hr class="padding-10"/>
 
-		<!-- comment -->
-		<div ng-controller="commentCtrl">
-			<!-- 댓글 목록  -->
-			<div class="media margin-bottom-10">
+    <!-- comment -->
+    <div ng-controller="commentCtrl">
+      <!-- 댓글 목록  -->
+      <div class="media margin-bottom-10">
 
-				<h2 class="heading-sm text-primary">
-					<i class="fa fa-comments"></i>
-					<span infinite-scroll="initComment()" infinite-scroll-disabled="infiniteDisabled">
+        <h2 class="heading-sm text-primary">
+          <i class="fa fa-comments"></i>
+          <span infinite-scroll="initComment()" infinite-scroll-disabled="infiniteDisabled">
             {{{TRANSLATION "board.msg.comment.count" n='<span ng-bind="commentCount"></span>'}}}
-					</span>
-					<button type="button" class="btn btn-link" ng-click="btnRefreshComment()" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.refresh.comments"}}">
-						<i class="fa fa-refresh text-muted" ng-class="{'fa-spin':loadCommentConn == 'connecting'}"></i>
-					</button>
-				</h2>
+          </span>
+          <button type="button" class="btn btn-link" ng-click="btnRefreshComment()" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.refresh.comments"}}">
+            <i class="fa fa-refresh text-muted" ng-class="{'fa-spin':loadCommentConn == 'connecting'}"></i>
+          </button>
+        </h2>
 
-				<div class="media-body">
-					<div ng-repeat="comment in comments">
-						<h6 class="clearfix">
-							<i aria-hidden="true" class="icon-user"></i>
-							<span ng-bind="comment.writer.username"></span>
-							<span class="pull-right" ng-bind="comment.id | dateFromObjectId | date:'medium'"></span>
-						</h6>
-						<p>
-							<span aria-hidden="true" class="icon-screen-smartphone" ng-if="comment.status.device === 'MOBILE'"></span>
-							<span aria-hidden="true" class="icon-screen-tablet" ng-if="comment.status.device === 'TABLET'"></span>
-							<span ng-bind-html="comment.content"></span>
-						</p>
+        <div class="media-body">
+          <div ng-repeat="comment in comments">
+            <h6 class="clearfix">
+              <i aria-hidden="true" class="icon-user"></i>
+              <span ng-bind="comment.writer.username"></span>
+              <span class="pull-right" ng-bind="comment.id | dateFromObjectId | date:'medium'"></span>
+            </h6>
+            <p>
+              <span aria-hidden="true" class="icon-screen-smartphone" ng-if="comment.status.device === 'MOBILE'"></span>
+              <span aria-hidden="true" class="icon-screen-tablet" ng-if="comment.status.device === 'TABLET'"></span>
+              <span ng-bind-html="comment.content"></span>
+            </p>
 
             <div class="margin-bottom-10">
               <button type="button" class="btn btn-xs rounded btn-dropbox" ng-click="btnCommentFeeling(comment.id, 'LIKE')" tooltip-popup-close-delay="300" uib-tooltip="{{TRANSLATION "common.button.like"}}">
@@ -204,100 +204,100 @@
               <p ng-bind="commentFeelingAlert[comment.id]"></p>
             </div>
 
-						<hr class="padding-5">
-					</div>
+            <hr class="padding-5">
+          </div>
 
-					<div class="margin-bottom-10" ng-show="commentCount || commentAlert.msg">
-						<button type="button" class="btn-u btn-brd rounded btn-block btn-u-dark" ng-click="btnMoreComment()" ng-show="commentCount">
+          <div class="margin-bottom-10" ng-show="commentCount || commentAlert.msg">
+            <button type="button" class="btn-u btn-brd rounded btn-block btn-u-dark" ng-click="btnMoreComment()" ng-show="commentCount">
               {{TRANSLATION "common.button.more.comments"}} <i class="fa fa-angle-down"></i>
-							<i class="fa fa-circle-o-notch fa-spin" ng-show="loadCommentConn === 'connecting'"></i>
-						</button>
-					</div>
+              <i class="fa fa-circle-o-notch fa-spin" ng-show="loadCommentConn === 'connecting'"></i>
+            </button>
+          </div>
 
-					<div class="alert alert-info" ng-show="commentAlert.msg">
-						<p ng-bind="commentAlert.msg"></p>
-					</div>
-				</div>
-			</div>
+          <div class="alert alert-info" ng-show="commentAlert.msg">
+            <p ng-bind="commentAlert.msg"></p>
+          </div>
+        </div>
+      </div>
 
-			<!-- 댓글 남기기 -->
-			<div class="post-comment">
-				<h4 class="text-primary">{{TRANSLATION "board.comment.leave.comment"}}</h4>
-				<div class="margin-bottom-10">
-					<summernote config="options" on-keyUp="focus(evt)" ng-model="summernote.content" ng-init="summernote={content:'', seq:'{{post.seq}}'}"></summernote>
-				</div>
+      <!-- 댓글 남기기 -->
+      <div class="post-comment">
+        <h4 class="text-primary">{{TRANSLATION "board.comment.leave.comment"}}</h4>
+        <div class="margin-bottom-10">
+          <summernote config="options" on-keyUp="focus(evt)" ng-model="summernote.content" ng-init="summernote={content:'', seq:'{{post.seq}}'}"></summernote>
+        </div>
         <div class="alert alert-info" ng-show="summernoteAlert.msg">
           <p ng-bind="summernoteAlert.msg"></p>
         </div>
 
-				<div class="margin-bottom-10">
-        {{#if (NOT isAuthenticated)}}
-          <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
-            <span aria-hidden="true" class="icon-pencil"></span>
-            {{TRANSLATION "common.button.write.comment"}}
-          </button>
-        {{else}}
-          <button type="button" class="btn-u btn-brd rounded btn-u-sm ladda-button" ng-click="btnWriteComment()" ladda="writeComment" data-style="expand-right" data-spinner-color="Gainsboro">
-            <span aria-hidden="true" class="icon-pencil"></span>
-            {{TRANSLATION "common.button.write.comment"}}
-          </button>
-        {{/if}}
-					<span ng-bind="summernote.content.length"></span> / <span ng-bind="boardCommentContentLengthMax"></span>
-				</div>
+        <div class="margin-bottom-10">
+          {{#if (NOT isAuthenticated)}}
+            <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
+              <span aria-hidden="true" class="icon-pencil"></span>
+              {{TRANSLATION "common.button.write.comment"}}
+            </button>
+          {{else}}
+            <button type="button" class="btn-u btn-brd rounded btn-u-sm ladda-button" ng-click="btnWriteComment()" ladda="writeComment" data-style="expand-right" data-spinner-color="Gainsboro">
+              <span aria-hidden="true" class="icon-pencil"></span>
+              {{TRANSLATION "common.button.write.comment"}}
+            </button>
+          {{/if}}
+          <span ng-bind="summernote.content.length"></span> / <span ng-bind="boardCommentContentLengthMax"></span>
+        </div>
         <div class="alert alert-info" ng-show="writeCommentAlert.msg">
           <p ng-bind="writeCommentAlert.msg"></p>
         </div>
-			</div>
+      </div>
 
-		</div> <!-- End Comment -->
+    </div> <!-- End Comment -->
 
-		<!-- Buttons -->
-		<div class="margin-bottom-10">
-			<button type="button" class="btn-u btn-brd rounded" ng-click="backToList()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "board.list"}}">
-				<i class="fa fa-list"></i>
-			</button>
+    <!-- Buttons -->
+    <div class="margin-bottom-10">
+      <button type="button" class="btn-u btn-brd rounded" ng-click="backToList()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "board.list"}}">
+        <i class="fa fa-list"></i>
+      </button>
 
-    {{#if prevPost}}
-      <button type="button" class="btn-u btn-brd rounded" ng-click="prevPost()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.prev"}}">
-        <i class="fa fa-chevron-left"></i>
-      </button>
-    {{else}}
-      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
-        <i class="fa fa-chevron-left text-muted"></i>
-      </button>
-    {{/if}}
+      {{#if prevPost}}
+        <button type="button" class="btn-u btn-brd rounded" ng-click="prevPost()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.prev"}}">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+      {{else}}
+        <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
+          <i class="fa fa-chevron-left text-muted"></i>
+        </button>
+      {{/if}}
 
-    {{#if nextPost}}
-      <button type="button" class="btn-u btn-brd rounded" ng-click="nextPost()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.next"}}">
-        <i class="fa fa-chevron-right"></i>
-      </button>
-    {{else}}
-      <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
-        <i class="fa fa-chevron-right text-muted"></i>
-      </button>
-    {{/if}}
+      {{#if nextPost}}
+        <button type="button" class="btn-u btn-brd rounded" ng-click="nextPost()" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.button.next"}}">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      {{else}}
+        <button type="button" class="btn-u btn-brd rounded btn-u-default disabled" disabled="disabled">
+          <i class="fa fa-chevron-right text-muted"></i>
+        </button>
+      {{/if}}
 
-    {{#if (OPR '&&' isAuthenticated (EQ userInfo.id post.writer.userId))}}
-      <button type="button" class="btn-u rounded" ng-click="confirmEdit();">
-        <i class="fa fa-pencil-square-o"></i>{{TRANSLATION "common.button.edit"}}
-      </button>
-      <button type="button" class="btn-u btn-u-default rounded" ng-click="confirmDelete();">
-        <i class="fa fa-trash-o"></i>{{TRANSLATION "common.button.delete"}}
-      </button>
-    {{/if}}
+      {{#if (OPR '&&' isAuthenticated (EQ userInfo.id post.writer.userId))}}
+        <button type="button" class="btn-u rounded" ng-click="confirmEdit();">
+          <i class="fa fa-pencil-square-o"></i>{{TRANSLATION "common.button.edit"}}
+        </button>
+        <button type="button" class="btn-u btn-u-default rounded" ng-click="confirmDelete();">
+          <i class="fa fa-trash-o"></i>{{TRANSLATION "common.button.delete"}}
+        </button>
+      {{/if}}
 
-    {{#if (OPR '&&' isAdmin (NOT post.status.delete))}}
-      <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}},false)" ng-class="{show:isNotice}" style="display:none;">
-        {{TRANSLATION "common.button.cancel.notice"}}
-      </button>
-      <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
-        {{TRANSLATION "common.button.set.as.notice"}}
-      </button>
-    {{/if}}
-		</div> <!-- End Buttons -->
-	</div>  <!-- End Content Part -->
+      {{#if (OPR '&&' isAdmin (NOT post.status.delete))}}
+        <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}},false)" ng-class="{show:isNotice}" style="display:none;">
+          {{TRANSLATION "common.button.cancel.notice"}}
+        </button>
+        <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
+          {{TRANSLATION "common.button.set.as.notice"}}
+        </button>
+      {{/if}}
+    </div> <!-- End Buttons -->
+  </div>  <!-- End Content Part -->
 
-	{{> footer}}
+  {{> footer}}
 
 </div> <!-- /.container -->
 {{#CHUNK 'css'}}
@@ -330,66 +330,66 @@
         $scope.dislikeConn = "none";
         $scope.isNotice = {{EQ post.status.notice 'true'}}
 
-        // 글 감정 표현.
-        $scope.btnFeeling = function (type) {
-          {{#if (NOT isAuthenticated)}}
-            $scope.alert.classType = "alert-info";
-            $scope.alert.msg = '{{TRANSLATION "board.msg.need.login.for.feel"}}';
-            $scope.alert.linkUrl = '/login';
-            $scope.alert.linkLabel = '{{TRANSLATION "common.button.login"}}';
-            return;
-          {{/if}}
-          {{#if (EQ userInfo.id post.writer.userId)}}
-            $scope.alert.classType = "alert-info";
-            $scope.alert.msg = '{{TRANSLATION "board.msg.you.are.writer"}}';
-            return;
-          {{/if}}
-
-          if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
-            if (type === "LIKE") {
-              $scope.likeConn = "connecting";
-              $scope.btnLike = true;
-            } else if (type === "DISLIKE") {
-              $scope.dislikeConn = "connecting";
-              $scope.btnDislike = true;
-            }
-
-            $http.post('{{apiServerUrl}}/board/free/{{post.seq}}/' + type).then(function (response) {
-              var data = response.data;
-
-              $scope.numberOfLike = data.numberOfLike;
-              $scope.numberOfDislike = data.numberOfDislike;
-
-              var message = "";
-
-              if (data.feeling === 'LIKE') {
-                message = '{{TRANSLATION "board.msg.select.like"}}';
-                $scope.likeConn = "done";
-                $scope.btnLike = false;
-              } else if (data.feeling === 'DISLIKE') {
-                message = "{{TRANSLATION 'board.msg.select.dislike'}}";
-                $scope.dislikeConn = "done";
-                $scope.btnDislike = false;
-              }
-
-              $scope.alert.msg = message;
+          // 글 감정 표현.
+          $scope.btnFeeling = function (type) {
+            {{#if (NOT isAuthenticated)}}
               $scope.alert.classType = "alert-info";
-            }, function (response) {
-              var data = response.data;
-
-              $scope.alert.msg = data.message;
+              $scope.alert.msg = '{{TRANSLATION "board.msg.need.login.for.feel"}}';
+              $scope.alert.linkUrl = '/login';
+              $scope.alert.linkLabel = '{{TRANSLATION "common.button.login"}}';
+              return;
+            {{/if}}
+            {{#if (EQ userInfo.id post.writer.userId)}}
               $scope.alert.classType = "alert-info";
+              $scope.alert.msg = '{{TRANSLATION "board.msg.you.are.writer"}}';
+              return;
+            {{/if}}
 
+            if ($scope.likeConn === "none" && $scope.dislikeConn === "none") {
               if (type === "LIKE") {
-                $scope.likeConn = "none";
-                $scope.btnLike = false;
+                $scope.likeConn = "connecting";
+                $scope.btnLike = true;
               } else if (type === "DISLIKE") {
-                $scope.dislikeConn = "none";
-                $scope.btnDislike = false;
+                $scope.dislikeConn = "connecting";
+                $scope.btnDislike = true;
               }
-            });
-          }
-        };
+
+              $http.post('{{apiServerUrl}}/board/free/{{post.seq}}/' + type).then(function (response) {
+                var data = response.data;
+
+                $scope.numberOfLike = data.numberOfLike;
+                $scope.numberOfDislike = data.numberOfDislike;
+
+                var message = "";
+
+                if (data.feeling === 'LIKE') {
+                  message = '{{TRANSLATION "board.msg.select.like"}}';
+                  $scope.likeConn = "done";
+                  $scope.btnLike = false;
+                } else if (data.feeling === 'DISLIKE') {
+                  message = "{{TRANSLATION 'board.msg.select.dislike'}}";
+                  $scope.dislikeConn = "done";
+                  $scope.btnDislike = false;
+                }
+
+                $scope.alert.msg = message;
+                $scope.alert.classType = "alert-info";
+              }, function (response) {
+                var data = response.data;
+
+                $scope.alert.msg = data.message;
+                $scope.alert.classType = "alert-info";
+
+                if (type === "LIKE") {
+                  $scope.likeConn = "none";
+                  $scope.btnLike = false;
+                } else if (type === "DISLIKE") {
+                  $scope.dislikeConn = "none";
+                  $scope.btnDislike = false;
+                }
+              });
+            }
+          };
 
         $scope.btnUrlCopy = function () {
           if ($window.clipboardData) {
@@ -407,11 +407,11 @@
         };
 
         $scope.prevPost = function () {
-          $window.location = '/board/free/' + {{prevPost.seq}} + '/' + $window.location.search;
+          $window.location = '/board/free/' + {{prevPost.seq}} +'/' + $window.location.search;
         };
 
         $scope.nextPost = function () {
-          $window.location = '/board/free/' + {{nextPost.seq}} + '/' + $window.location.search;
+          $window.location = '/board/free/' + {{nextPost.seq}} +'/' + $window.location.search;
         };
 
         $scope.confirmDelete = function () {
@@ -422,7 +422,7 @@
             message = '{{TRANSLATION "board.msg.confirm.delete.post"}}';
           }
           if ($window.confirm(message)) {
-            $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}').then(function() {
+            $http.delete('{{apiServerUrl}}/board/free/{{post.seq}}').then(function () {
               $window.location = '/board/free';
             });
           }
@@ -606,13 +606,13 @@
             text: Jakduk.origin + '/board/free/{{post.seq}}',
             url: Jakduk.origin + '/board/free/{{post.seq}}'
           },
-        {{#if post.galleries}}
-          image: {
-            src: Jakduk.origin + '/gallery/{{post.galleries.[0].id}}',
-            width: '300',
-            height: '200'
-          }
-        {{/if}}
+          {{#if post.galleries}}
+            image: {
+              src: Jakduk.origin + '/gallery/{{post.galleries.[0].id}}',
+              width: '300',
+              height: '200'
+            }
+          {{/if}}
         };
 
         Kakao.init('{{kakaoClientID}}');
