@@ -18,7 +18,7 @@ var all = {
 
   tokenHeader: 'authorization',
 
-  tempTokenHeader: 'x-attempted-token',
+  tempTokenHeader: 'x-attempt-token',
 
   apiServerUrl: process.env.API_SERVER || 'https://jakduk.com/api',
 
