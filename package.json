@@ -36,5 +36,9 @@
   },
   "bugs": {
     "url": "https://github.com/JakduK/jakduk-web/issues"
-  }
+  },
+  "contributors": [
+    "Pyohwan <phjang1983@gmail.com>",
+    "silverprize <silverprizelee@gmail.com>"
+  ]
 }

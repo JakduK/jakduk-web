@@ -1,9 +1,10 @@
 {
   "name": "jakduk-web",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/Pyohwan/JakduK",
   "authors": [
-    "Pyohwan <phjang1983@gmail.com>"
+    "Pyohwan <phjang1983@gmail.com>",
+    "silverprize <silverprizelee@gmail.com>"
   ],
   "license": "MIT",
   "ignore": [
