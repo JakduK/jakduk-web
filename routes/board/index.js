@@ -61,6 +61,11 @@ function commentList(req, res, next) {
 
 function viewPost(req, res, next) {
   req.api.getPost(req.params.id).then(function (response) {
+    if (response.statusCode !== 200) {
+      next();
+      return;
+    }
+
     var context = res.locals;
     var postData = response.data;
     var metaContent;
@@ -123,11 +128,16 @@ function editPost(req, res, next) {
   }
 
   Promise.all([
-    req.api.getBoardCategories(req.query.lang || req.cookies.lang),
-    req.api.getPost(req.params.id)
+    req.api.getPost(req.params.id),
+    req.api.getBoardCategories(req.query.lang || req.cookies.lang)
   ]).then(function (responses) {
-    var categories = responses[0].data.categories;
-    var postData = responses[1].data;
+    if (responses[0].statusCode !== 200) {
+      next();
+      return;
+    }
+
+    var postData = responses[0].data;
+    var categories = responses[1].data.categories;
     res.render('board/post_write', {
       title: [
         i18n.__(postData.post.subject),
