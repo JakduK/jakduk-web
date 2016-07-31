@@ -114,7 +114,7 @@
       <div class="text-right col-md-12 margin-bottom-10" ng-show="whereSize > 1">
         <ul class="list-unstyled">
           <li>
-            <a href="/search?q=${q}&w=CO;">
+            <a href="/search?q={{q}}&w=CO;">
               {{TRANSLATION "search.more.comment.results"}} <i class="fa fa-chevron-right"></i>
             </a>
           </li>
@@ -129,10 +129,12 @@
       <div class="row">
         <!-- Begin Easy Block v2 -->
         <div class="col-md-3 col-sm-4 col-xs-6 md-margin-bottom-10" ng-repeat="hit in galleries.hits.hits">
-          <div class="simple-block">
-            <img class="img-responsive img-bordered" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%hit._id%}"
+          <div class="thumbnail">
+            <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%hit._id%}"
               alt="{%hit._source.name%}" ng-click="openLightboxModal($index)">
-            <p ng-bind-html="hit.highlight.name[0]"></p>
+            <div class="caption text-center">
+              <a ng-href="/gallery/{%hit._id%}" ng-bind-html="hit.highlight.name[0]"></a>
+            </div>
           </div>
         </div>
         <!-- End Simple Block -->
@@ -146,7 +148,7 @@
       <div class="text-right col-md-12 margin-bottom-10" ng-show="whereSize > 1">
         <ul class="list-unstyled">
           <li>
-            <a href="/search?q=${q}&w=GA;">{{TRANSLATION "search.more.gallery.results"}}
+            <a href="/search?q={{q}}&w=GA;">{{TRANSLATION "search.more.gallery.results"}}
               <i class="fa fa-chevron-right"></i>
             </a>
           </li>
@@ -173,11 +175,11 @@
         LightboxProvider.templateUrl = "/jakduk/template/lightbox-search.html";
 
         LightboxProvider.getImageUrl = function (image) {
-          return '{{thumbnailServerUrl}}/gallery/' + image.id;
+          return '{{thumbnailServerUrl}}/gallery/' + image._id;
         };
 
         LightboxProvider.getImageCaption = function (image) {
-          return image.name;
+          return image._source.name;
         };
 
         LightboxProvider.calculateImageDimensionLimits = function (dimensions) {
