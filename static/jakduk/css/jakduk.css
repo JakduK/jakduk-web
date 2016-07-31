@@ -267,3 +267,7 @@ td a {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.show-inline {
+  display: inline-block !important;
+}

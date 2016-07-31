@@ -59,10 +59,10 @@
       {{/if}}
 
       {{#if (OPR '&&' isAdmin (NOT_EQ post.status.notice 'DELETE'))}}
-        <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}}, false)" ng-class="{show:isNotice}" style="display:none;">
+        <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}}, false)" ng-class="{'show-inline':isNotice}" style="display:none;">
           {{TRANSLATION "common.button.cancel.notice"}}
         </button>
-        <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
+        <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{'show-inline':!isNotice}" style="display:none;">
           {{TRANSLATION "common.button.set.as.notice"}}
         </button>
       {{/if}}
@@ -287,10 +287,10 @@
       {{/if}}
 
       {{#if (OPR '&&' isAdmin (NOT post.status.delete))}}
-        <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}},false)" ng-class="{show:isNotice}" style="display:none;">
+        <button type="button" class="btn-u btn-u-default rounded" ng-click="setNotice({{post.seq}},false)" ng-class="{'show-inline':isNotice}" style="display:none;">
           {{TRANSLATION "common.button.cancel.notice"}}
         </button>
-        <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{show:!isNotice}" style="display:none;">
+        <button type="button" class="btn-u rounded" ng-click="setNotice({{post.seq}}, true)" ng-class="{'show-inline':!isNotice}" style="display:none;">
           {{TRANSLATION "common.button.set.as.notice"}}
         </button>
       {{/if}}
