@@ -14,7 +14,7 @@ var all = {
 
   tokenCookieName: 'JKTK',
 
-  tokenMaxAge: 1000 * 60 * 60 * 24 * 365 * 2,
+  tokenMaxAge: Math.floor(1000 * 60 * 60 * 24 * 365 * 0.5),
 
   tokenHeader: 'authorization',
 
