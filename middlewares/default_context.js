@@ -10,7 +10,7 @@ module.exports = function (app) {
   app.use(function (req, res, next) {
     var credentials = {};
     credentials[config.tokenHeader] = req.cookies[config.tokenCookieName] || '';
-    req.api = new ApiClient(credentials, req.headers.cookie, config.internalApiServerUrl);
+    req.api = new ApiClient(credentials, req.headers.cookie || '', config.internalApiServerUrl);
     req.noRedirectPaths = config.noRedirectPaths;
 
     req.api.getUserInfo().then(function (response) {
