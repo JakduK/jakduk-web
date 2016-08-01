@@ -28,7 +28,7 @@ module.exports = function (app) {
         req.isAdmin = res.locals.isAdmin;
       }
 
-      _.extend(res.locals, {
+      _.merge(res.locals, {
         layout: 'layout',
         bodyClass: 'header-fixed',
         userInfo: req.userInfo,

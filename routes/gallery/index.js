@@ -3,6 +3,7 @@
 var express = require('express');
 var _ = require('lodash');
 var i18n = require('i18n');
+var config = require('../../config/environment');
 
 module.exports.setup = function (app) {
   var router = express.Router();
@@ -21,9 +22,9 @@ module.exports.setup = function (app) {
       var context = res.locals;
       var data = response.data;
 
-      _.extend(context.meta, {
+      _.merge(context.meta, {
         og: {
-          image: context.thumbnailServerUrl + req.baseUrl +'/' + req.params.id,
+          image: config.thumbnailServerUrl + req.baseUrl +'/' + req.params.id,
           description: data.gallery.name
         },
         twitter: {

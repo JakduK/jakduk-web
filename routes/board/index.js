@@ -72,8 +72,7 @@ function viewPost(req, res, next) {
 
     if (!postData.post.status.delete) {
       metaContent = TagUtil.ogFrom(postData.post.content, 120);
-
-      _.extend(context.meta, {
+      _.merge(context.meta, {
         og: {
           image: metaContent.image || context.meta.og.image,
           description: metaContent.description || postData.post.subject,
