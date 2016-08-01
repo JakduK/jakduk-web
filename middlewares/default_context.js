@@ -10,13 +10,13 @@ module.exports = function (app) {
   app.use(function (req, res, next) {
     var credentials = {};
     credentials[config.tokenHeader] = req.cookies[config.tokenCookieName] || '';
-    req.api = new ApiClient(credentials, config.internalApiServerUrl);
+    req.api = new ApiClient(credentials, req.headers.cookie, config.internalApiServerUrl);
     req.noRedirectPaths = config.noRedirectPaths;
 
     req.api.getUserInfo().then(function (response) {
       if (response.statusCode === 200) {
         req.userInfo = response.data;
-      } else if (response.statusCode === 401) {
+      } else if (req.cookies[config.tokenCookieName]) {
         SessionUtil.clearSession(res);
       }
 

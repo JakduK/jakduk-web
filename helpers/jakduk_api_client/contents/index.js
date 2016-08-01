@@ -49,7 +49,9 @@ module.exports = function(ApiClient, internalFn) {
   ApiClient.prototype.getPost = function(seq) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/' + seq, null, {
-        headers: this.credentials
+        headers: {
+          Cookie: this.clientCookie
+        }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
@@ -75,7 +77,9 @@ module.exports = function(ApiClient, internalFn) {
   ApiClient.prototype.getGalleryItem = function(id) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/gallery/' + id, null, {
-        headers: this.credentials
+        headers: {
+          Cookie: this.clientCookie
+        }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };

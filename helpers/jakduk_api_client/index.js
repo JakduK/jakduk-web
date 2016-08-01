@@ -1,8 +1,7 @@
 'use strict';
 
-var config = require('../../config/environment');
-
-function ApiClient(credentials, serverUrl) {
+function ApiClient(credentials, clientCookie, serverUrl) {
+  this.clientCookie = clientCookie;
   this.credentials = credentials;
   this.serverUrl = serverUrl;
 }
