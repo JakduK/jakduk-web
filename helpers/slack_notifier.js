@@ -12,12 +12,12 @@ module.exports = function(options, env) {
       data: 'payload=' + JSON.stringify({
         channel: options.channel,
         attachments: [{
-          pretext: options.author,
+          pretext: message.author,
           title: message.subject,
           title_link: message.link,
           text: message.text,
-          fallback: message.subject,
-          image_url: message.image
+          image_url: message.image,
+          fallback: message.subject
         }]
       })
     }).on('complete', function (data) {
