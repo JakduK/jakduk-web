@@ -8,8 +8,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compression = require('compression');
-var proxy = require('http-proxy-middleware');
 
+var apiProxy = require('../middlewares/api_proxy');
 var config = require('../config/environment');
 
 function setup(app) {
@@ -27,17 +27,7 @@ function setup(app) {
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(cookieParser());
-  app.use(proxy('/api', {
-    logLevel: config.env === 'production' ? 'info' : 'debug',
-    pathRewrite: {'^/api': ''},
-    changeOrigin: true,
-    target: config.internalApiServerUrl,
-    onProxyReq: function (proxyReq, req) {
-      if (req.cookies[config.tokenCookieName]) {
-        proxyReq.setHeader('Authorization', req.cookies[config.tokenCookieName]);
-      }
-    }
-  }));
+  app.use(apiProxy());
   app.use(compression());
   app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());

@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 
 var env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
@@ -59,6 +61,8 @@ var all = {
   kakao: {
     clientID: process.env.KAKAO_ID || ''
   },
+
+  slack: {},
 
   gaAccount: 'UA-59051176-1'
 };
