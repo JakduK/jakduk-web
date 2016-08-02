@@ -2,6 +2,8 @@
 
 var rest = require('restler');
 var querystring = require('querystring');
+var _ = require('lodash');
+var config = require('../../../config/environment');
 
 module.exports = function(ApiClient, internalFn) {
   var callback = internalFn.callback;
@@ -12,10 +14,12 @@ module.exports = function(ApiClient, internalFn) {
     }.bind(this));
   };
 
-  ApiClient.prototype.joinWith = function(data) {
+  ApiClient.prototype.joinWith = function(tempToken, data) {
+    var tokenHeader = {};
+    tokenHeader[config.tempTokenHeader] = tempToken;
     return new Promise(function(resolve) {
-      rest.postJson(this.serverUrl + '/user/social', data, {
-        headers: this.credentials
+      rest.postJson(this.serverUrl + '/user/social/', data, {
+        headers: _.merge(tokenHeader, this.credentials)
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
@@ -37,10 +41,12 @@ module.exports = function(ApiClient, internalFn) {
     }.bind(this));
   };
 
-  ApiClient.prototype.socialAttempted = function() {
+  ApiClient.prototype.socialAttempt = function(tempToken) {
+    var tokenHeader = {};
+    tokenHeader[config.tempTokenHeader] = tempToken;
     return new Promise(function(resolve) {
-      rest.get(this.serverUrl + '/social/attempted', {
-        headers: this.credentials
+      rest.get(this.serverUrl + '/social/attempt', {
+        headers: tokenHeader
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };

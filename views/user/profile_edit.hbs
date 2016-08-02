@@ -113,7 +113,7 @@
             $scope.submitConn = "connecting";
             $scope.buttonAlert = {
               classType: 'text-info',
-              msg: '{{TRANSLATION "common.msg.be.cummunicating.server"}}'
+              msg: '{{TRANSLATION "common.msg.be.communicating.server"}}'
             };
 
             $http.put('{{apiServerUrl}}/user/profile/me', {
@@ -187,7 +187,7 @@
           } else {
             $scope.usernameAlert = {
               classType: "text-info",
-              msg: '{{TRANSLATION "common.msg.error.shoud.check.redudancy"}}'
+              msg: '{{TRANSLATION "common.msg.error.should.check.redundancy"}}'
             };
           }
         };

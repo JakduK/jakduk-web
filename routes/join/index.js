@@ -2,6 +2,7 @@
 
 var express = require('express');
 var i18n = require('i18n');
+var config = require('../../config/environment');
 var SessionUtil = require('../../helpers/jakduk_session_util');
 
 function index(req, res, next) {
@@ -14,7 +15,7 @@ function index(req, res, next) {
       ],
       footballClubs: footballClubs,
       redir: req.headers.referer,
-      isEmailSignup: true
+      bySocialAccount: false
     });
   }).catch(function (err) {
     next(err);
@@ -48,8 +49,9 @@ function submit(req, res, next) {
 }
 
 function indexOAuth(req, res, next) {
+  var tempToken = req.cookies[config.tokenCookieName] || '';
   Promise.all([
-    req.api.socialAttempted(),
+    req.api.socialAttempt(tempToken),
     req.api.footballClubs(req.locale)
   ]).then(function (responses) {
     if (responses[0].statusCode !== 200) {
@@ -66,8 +68,9 @@ function indexOAuth(req, res, next) {
       ],
       footballClubs: footballClubs,
       redir: req.headers.referer,
-      isEmailSignup: false,
-      userWrite: snsProfile
+      bySocialAccount: true,
+      snsProfile: snsProfile,
+      tempToken: tempToken
     });
   }).catch(function (err) {
     next(err);
@@ -76,21 +79,17 @@ function indexOAuth(req, res, next) {
 
 function submitOAuth(req, res, next) {
   var body = req.body;
-  req.api.joinWith({
+  req.api.joinWith(body.tempToken || '', {
     email: body.email,
     username: body.username,
     footballClub: body.footballClub,
     about: body.about
   }).then(function (response) {
     if (response.statusCode === 200) {
+      SessionUtil.saveSession(res, response.headers[config.tokenHeader]);
       res.redirect(body.redir || '/');
     } else {
-      res.render('login/join', {
-        title: [
-          i18n.__('user.register'),
-          i18n.__('common.jakduk')
-        ]
-      });
+      res.redirect('/login');
     }
   }).catch(function (err) {
     next(err);
