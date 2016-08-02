@@ -98,7 +98,7 @@
         $scope.seasons = [2012, 2013, 2014];
 
         $scope.attendancesConn = "none";
-        $scope.fcNames = angular.fromJson('{{{DEFAULT_VALUE (JSON_STRINGIFY fcNames) '{}'}}}');
+        $scope.footballClubs = angular.fromJson('{{{DEFAULT_VALUE (JSON_STRINGIFY footballClubs) '{}'}}}');
         $scope.attendances = {};
         $scope.alert = {};
         $scope.rememberLeague = null;
@@ -252,8 +252,16 @@
 
           attendances.forEach(function (attendance) {
             if ($scope.leagueId == KLId || $scope.leagueId == attendance.league) {
-              var itemTotal = [$scope.fcNames[attendance.club.id], attendance.total];
-              var itemAverage = [$scope.fcNames[attendance.club.id], attendance.average];
+              var clubName = 'Unknown';
+              $scope.footballClubs.some(function (club) {
+                if (club.origin.id === (attendance.club && attendance.club.id)) {
+                  clubName = club.names[0].fullName;
+                  return true;
+                }
+                return false;
+              });
+              var itemTotal = [clubName, attendance.total];
+              var itemAverage = [clubName, attendance.average];
               totalSum += attendance.total;
               gamesSum += attendance.games;
 

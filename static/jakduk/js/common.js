@@ -17,7 +17,7 @@ define([
   'angular-ui-bootstrap',
   'angular-ladda'
 ], function () {
-  $(document).ready(function() {
+  $(function() {
     App.init();
     App.initScrollBar();
   });

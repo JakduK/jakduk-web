@@ -43,12 +43,16 @@ module.exports.setup = function (app) {
   });
 
   attendanceRouter.get('/season', function (req, res) {
-    res.render('stats/attendance_season', {
-      title: [
-        i18n.__('stats.attendance.season.title'),
-        i18n.__('stats'),
-        i18n.__('common.jakduk')
-      ]
+    req.api.footballClubs(req.locale).then(function (response) {
+      var footballClubs = response.data;
+      res.render('stats/attendance_season', {
+        title: [
+          i18n.__('stats.attendance.season.title'),
+          i18n.__('stats'),
+          i18n.__('common.jakduk')
+        ],
+        footballClubs: footballClubs
+      });
     });
   });
 

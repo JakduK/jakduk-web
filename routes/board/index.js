@@ -15,7 +15,7 @@ function postList(req, res, next) {
       size: req.query.size,
       category: category
     }),
-    req.api.getBoardCategories(req.query.lang || req.cookies.lang)
+    req.api.getBoardCategories(req.locale)
   ]).then(function (responses) {
     responses.forEach(function (response) {
       _.extend(res.locals, response.data);
@@ -107,7 +107,7 @@ function writePost(req, res, next) {
     return;
   }
 
-  req.api.getBoardCategories(req.query.lang || req.cookies.lang).then(function (response) {
+  req.api.getBoardCategories(req.locale).then(function (response) {
     res.render('board/post_write', {
       title: [
         i18n.__('board.write'),
@@ -128,7 +128,7 @@ function editPost(req, res, next) {
 
   Promise.all([
     req.api.getPost(req.params.id),
-    req.api.getBoardCategories(req.query.lang || req.cookies.lang)
+    req.api.getBoardCategories(req.locale)
   ]).then(function (responses) {
     if (responses[0].statusCode !== 200) {
       next();
