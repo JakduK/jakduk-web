@@ -12,7 +12,7 @@ module.exports = function(options, env) {
       data: 'payload=' + JSON.stringify({
         channel: options.channel,
         attachments: [{
-          pretext: 'By ' + '*' + message.author + '*',
+          pretext: 'Posted by ' + '*' + message.author + '*',
           title: message.subject,
           title_link: message.link,
           text: message.text,
