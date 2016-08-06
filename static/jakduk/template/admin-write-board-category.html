@@ -5,7 +5,7 @@
 
 	<div class="alert alert-danger" ng-bind="ctrl.errorMessage" ng-if="ctrl.errorMessage"></div>
 
-	<form name="boardCategoryWrite" ng-submit="ctrl.submit()" novalidate>
+	<form name="boardCategoryWrite" ng-submit="ctrl.submit()">
 		<div class="form-group">
 			<label>NAME :</label>
 			<input id="name" name="name" class="form-control" placeholder="name" ng-model="ctrl.name" required>

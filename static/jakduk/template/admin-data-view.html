@@ -78,6 +78,9 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
+        <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=ALL'%}"
+          ng-hide="ctrl.activeLeague === 'ALL'">ALL
+          LEAGUE</a></li>
         <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KL'%}" ng-hide="ctrl.activeLeague === 'KL'">K LEAGUE</a></li>
         <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KLCL'%}" ng-hide="ctrl.activeLeague === 'KLCL'">K LEAGUE CLASSIC</a></li>
         <li><a ng-href="{%'admin' + MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.URL + '=KLCH'%}" ng-hide="ctrl.activeLeague === 'KLCH'">K LEAGUE CHALLENGE</a></li>
@@ -86,11 +89,10 @@
   </div>
   <table class="table">
     <tr>
-      <th>League</th><th>Season</th><th>Games</th><th>Total</th><th>Average</th><th>Number Of Clubs</th>
+      <th>Season</th><th>Games</th><th>Total</th><th>Average</th><th>Number Of Clubs</th>
     </tr>
     <tr ng-repeat="attendanceLeague in ctrl.leagueAttendances">
-      <td ng-bind="attendanceLeague.league"></td>
-      <td><a ng-href="admin/attendance/league/write/{%attendanceLeague.id%}" target="_self" ng-bind="attendanceLeague.season"></a></td>
+      <td><a ng-href="admin/attendanceLeague/write/{%attendanceLeague.id%}" ng-bind="attendanceLeague.season"></a></td>
       <td ng-bind="attendanceLeague.games"></td>
       <td ng-bind="attendanceLeague.total"></td>
       <td ng-bind="attendanceLeague.average"></td>
@@ -106,7 +108,7 @@
       <th>Club</th><th>Season</th><th>League</th><th>Games</th><th>Total</th><th>Average</th>
     </tr>
     <tr ng-repeat="attendanceClub in ctrl.attendanceClubs">
-      <td><a ng-href="admin/attendance/club/write/{%attendanceClub.id%}" target="_self" ng-bind="attendanceClub.club.name"></a></td>
+      <td><a ng-href="admin/attendanceClub/write/{%attendanceClub.id%}" ng-bind="attendanceClub.club.name"></a></td>
       <td ng-bind="attendanceClub.season"></td>
       <td ng-bind="attendanceClub.league"></td>
       <td ng-bind="attendanceClub.games"></td>
@@ -137,7 +139,7 @@
       <th>id</th><th>Date</th><th>Home</th><th>Away</th><th>Group</th><th>Competition</th><th>Score</th><th>isTimeUp</th>
     </tr>
     <tr ng-repeat="jakduSchedule in ctrl.jakduSchedules">
-      <td><a ng-href="admin/jakdu/schedule/write/{%jakduSchedule.id%}" target="_self" ng-bind="jakduSchedule.id"></a></td>
+      <td><a ng-href="admin/jakduSchedule/write/{%jakduSchedule.id%}" ng-bind="jakduSchedule.id"></a></td>
       <td ng-bind="jakduSchedule.date | date:'short' "></td>
       <td ng-bind="jakduSchedule.home.name"></td>
       <td ng-bind="jakduSchedule.away.name"></td>
@@ -168,7 +170,7 @@
       <th>id</th><th>Seq</th><th>State</th><th>OpenDate</th>
     </tr>
     <tr ng-repeat="jakduScheduleGroup in ctrl.jakduScheduleGroups">
-      <td><a ng-href="admin/jakdu/schedule/group/write/{%jakduScheduleGroup.id%}" target="_self" ng-bind="jakduScheduleGroup.id"></a></td>
+      <td><a ng-href="admin/jakduScheduleGroup/write/{%jakduScheduleGroup.id%}" ng-bind="jakduScheduleGroup.id"></a></td>
       <td ng-bind="jakduScheduleGroup.seq"></td>
       <td ng-bind="jakduScheduleGroup.state"></td>
       <td ng-bind="jakduScheduleGroup.openDate | date:'short'"></td>
@@ -183,7 +185,7 @@
       <th>Code</th><th>Names</th>
     </tr>
     <tr ng-repeat="competition in ctrl.competitions">
-      <td><a ng-href="admin/competition/write/{%competition.id%}" target="_self" ng-bind="competition.code"></a></td>
+      <td><a ng-href="admin/competition/write/{%competition.id%}" ng-bind="competition.code"></a></td>
       <td>
         <div ng-repeat="name in competition.names">
           Lang=<span ng-bind="name.language"></span>

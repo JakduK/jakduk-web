@@ -292,25 +292,27 @@ define([
             apiUrl = '/admin/board/categories';
             break;
           case MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.ID:
-            self.activeLeague = ($state.params.competitionCode || 'KL');
+            self.activeLeague = ($state.params.competitionCode || 'ALL');
             self.activeLeagueName = getActiveLeage(self.activeLeague);
             apiUrl = '/admin/league/attendances';
-            apiParams = '?competitionCode=' + self.activeLeague;
+            if (self.activeLeague !== 'ALL') {
+              apiParams = '?competitionCode=' + self.activeLeague;
+            }
             break;
           case MENU_ID_MAP.GET.ATTENDANCE_CLUB.ID:
-            apiUrl = '/admin/data/attendance/club.json';
+            apiUrl = '/admin/club/attendances';
             break;
           case MENU_ID_MAP.GET.HOME_DESCRIPTION.ID:
             apiUrl = '/admin/home/descriptions';
             break;
           case MENU_ID_MAP.GET.JAKDU_SCHEDULE.ID:
-            apiUrl = '/admin/data/jakdu/schedule.json';
+            apiUrl = '/admin/jakdu/schedules';
             break;
           case MENU_ID_MAP.GET.JAKDU_SCHEDULE_GROUP.ID:
-            apiUrl = '/admin/data/jakdu/schedule/group.json';
+            apiUrl = '/admin/jakdu/schedule/groups';
             break;
           case MENU_ID_MAP.GET.COMPETITION.ID:
-            apiUrl = '/admin/data/competition.json';
+            apiUrl = '/admin/competitions';
             break;
         }
 
@@ -386,8 +388,10 @@ define([
             return 'K League Classic';
           case 'KLCH':
             return 'K League Challenge';
-          default:
+          case 'KL':
             return 'K League';
+          default:
+            return 'ALL LEAGUE';
         }
       }
 
@@ -652,7 +656,7 @@ define([
       });
 
       function submit() {
-        $http.post(Config.apiServerUrl + '/admin/thumbnail/size/write', {
+        $http.post(Config.apiServerUrl + '/admin/thumbnail/size', {
           width: self.width,
           height: self.height,
           galleryId: self.galleryId
@@ -701,11 +705,120 @@ define([
         });
       }
     }])
-    .controller('AdminWriteAttendanceLeagueController', ['$http', '$location', 'Config', function ($http, $location, Config) {
+    .controller('AdminWriteAttendanceLeagueController', ['$http', '$location', '$window', '$state', 'Config', function ($http, $location, $window, $state, Config) {
+      var self = this;
 
+      self.calcAve = function () {
+        self.average = Math.round(self.total / self.games);
+      };
+
+      $http.get(Config.apiServerUrl + '/admin/competitions').then(function (response) {
+        self.league = 'KL';
+        self.competitions = response.data.competitions;
+        if (self.competitions && self.competitions[0]) {
+          self.competition = self.competitions[0].id;
+        }
+      }).then(function () {
+        if ($state.params.id) {
+          $http.get(Config.apiServerUrl + '/admin/league/attendance/' + $state.params.id).then(function (response) {
+            var leagueAttendance = response.data.leagueAttendance;
+            if (leagueAttendance) {
+              self.leagueAttendance = leagueAttendance;
+              self.competition = leagueAttendance.competition.id;
+              self.origin = leagueAttendance.origin;
+              self.season = leagueAttendance.season;
+              self.games = leagueAttendance.games;
+              self.total = leagueAttendance.total;
+              self.average = leagueAttendance.average;
+              self.numberOfClubs = leagueAttendance.numberOfClubs;
+            }
+          });
+        }
+      });
+
+      self.submit = function () {
+        var data = {
+          competitionId: self.competition,
+          origin: self.origin,
+          season: self.season,
+          games: self.games,
+          total: self.total,
+          average: self.average,
+          numberOfClubs: self.numberOfClubs
+        };
+
+        var promise;
+
+        if ($state.params.id) {
+          promise = $http.put(Config.apiServerUrl + '/admin/league/attendance/' + $state.params.id, data)
+        } else {
+          promise = $http.post(Config.apiServerUrl + '/admin/league/attendance', data)
+        }
+
+        promise.then(function () {
+          $location.url('/admin/attendanceLeague');
+        });
+      };
+
+      self.confirmDelete = function () {
+        if ($window.confirm('delete?')) {
+          $http.delete(Config.apiServerUrl + '/admin/league/attendance/' + $state.params.id).then(function () {
+            $location.url('/admin/attendanceLeague');
+          });
+        }
+      };
     }])
-    .controller('AdminWriteAttendanceClubController', ['$http', '$location', 'Config', function ($http, $location, Config) {
+    .controller('AdminWriteAttendanceClubController', ['$http', '$location', '$state', 'Config', function ($http, $location, $state, Config) {
+      var self = this;
+      self.calcAve = function () {
+        self.average = Math.round(self.total / self.games);
+      };
 
+      $http.get(Config.apiServerUrl + '/admin/origin/football/clubs').then(function (response) {
+        self.footballClubs = response.data.originFCs;
+        if (self.footballClubs && self.footballClubs[0]) {
+          self.origin = self.footballClubs[0].id;
+        }
+        self.league = 'KL';
+      }).then(function () {
+        if ($state.params.id) {
+          $http.get(Config.apiServerUrl + '/admin/club/attendance/' + $state.params.id).then(function (response) {
+            var attendanceClub = response.data.attendanceLeagueWrite;
+            if (attendanceClub) {
+              self.attendanceClub = attendanceClub;
+              self.origin = attendanceClub.origin;
+              self.league = attendanceClub.league;
+              self.season = attendanceClub.season;
+              self.games = attendanceClub.games;
+              self.total = attendanceClub.total;
+              self.average = attendanceClub.average;
+            }
+          });
+        }
+      });
+
+      self.submit = function () {
+        var data = {
+          origin: self.origin,
+          league: self.league,
+          season: self.season,
+          games: self.games,
+          total: self.total,
+          average: self.average
+        };
+
+        var promise;
+
+        if ($state.params.id) {
+          promise = $http.put(Config.apiServerUrl + '/admin/club/attendance/' + $state.params.id, data)
+        } else {
+          promise = $http.post(Config.apiServerUrl + '/admin/club/attendance', data)
+        }
+
+        promise.then(function () {
+          $location.url('/admin/attendanceClub');
+        });
+      };
     }])
     .controller('AdminWriteJakduScheduleController', ['$http', '$location', 'Config', function ($http, $location, Config) {
 
@@ -713,8 +826,65 @@ define([
     .controller('AdminWriteJakduScheduleGroupController', ['$http', '$location', 'Config', function ($http, $location, Config) {
 
     }])
-    .controller('AdminWriteCompetitionController', ['$http', '$location', 'Config', function ($http, $location, Config) {
+    .controller('AdminWriteCompetitionController', ['$http', '$location', '$state', '$window', 'Config', function ($http, $location, $state, $window, Config) {
+      var self = this;
 
-    }]);
+      self.code = 'KL';
+
+      if ($state.params.id) {
+        $http.get(Config.apiServerUrl + '/admin/competition/' + $state.params.id).then(function (response) {
+          var competition = response.data;
+          if (competition) {
+            self.competition = competition;
+            self.code = competition.code;
+            self.shortNameKr = competition.shortNameKr;
+            self.fullNameKr = competition.fullNameKr;
+            self.shortNameEn = competition.shortNameEn;
+            self.fullNameEn = competition.fullNameEn;
+          }
+        });
+      }
+
+      self.submit = function () {
+        var data = {
+          code: self.code,
+          shortNameKr: self.shortNameKr,
+          fullNameKr: self.fullNameKr,
+          shortNameEn: self.shortNameEn,
+          fullNameEn: self.fullNameEn
+        };
+
+        var promise;
+
+        if ($state.params.id) {
+          promise = $http.put(Config.apiServerUrl + '/admin/competition/' + $state.params.id, data)
+        } else {
+          promise = $http.post(Config.apiServerUrl + '/admin/competition', data)
+        }
+
+        promise.then(function () {
+          $location.url('/admin/competition');
+        });
+      };
+
+      self.confirmDelete = function () {
+        if ($window.confirm('delete?')) {
+          $http.delete(Config.apiServerUrl + '/admin/competition/' + $state.params.id).then(function () {
+            $location.url('/admin/competition');
+          });
+        }
+      };
+    }])
+    .filter('serializeNames', function () {
+      return function (names) {
+        return names.reduce(function (prev, curr, idx) {
+          prev += curr.fullName;
+          if (idx !== names.length - 1) {
+            prev += ', ';
+          }
+          return prev;
+        }, '');
+      }
+    });
 
 });
