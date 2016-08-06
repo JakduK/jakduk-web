@@ -11,7 +11,7 @@
     },
     "exec_mode"  : "cluster",
     "instances"  : 2,
-    "error_file": "logs/err.log",
-    "out_file": "logs/out.log"
+    "error_file": ".logs/err.log",
+    "out_file": ".logs/out.log"
   }]
 }
