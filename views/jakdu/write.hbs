@@ -1,0 +1,151 @@
+<div class="wrapper" ng-controller="jakduCtrl">
+
+{{> navigation}}
+
+  <!--=== Breadcrumbs ===-->
+  <div class="breadcrumbs">
+    <div class="container">
+      <h1 class="pull-left">{{TRANSLATION "jakdu.write"}}</h1>
+    </div><!--/container-->
+  </div><!--/breadcrumbs-->
+  <!--=== End Breadcrumbs ===-->
+
+  <!--=== Content Part ===-->
+  <div class="container content">
+
+    <div class="form-horizontal">
+
+      <div class="row" ng-repeat="jakdu in jakdus">
+
+        <div class="row">
+          <div class="col-sm-4">
+            <label class="col-sm-3 control-label">{{TRANSLATION "common.date"}}</label>
+            <div class="col-sm-9">
+              <p class="form-control-static">{%jakdu.schedule.date | date:'mideum'%}</p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label class="col-sm-3 control-label">{{TRANSLATION "common.competition"}}</label>
+            <div class="col-sm-9">
+              <p class="form-control-static">{%competitionNames[jakdu.schedule.competition.id].fullName%}</p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <label class="col-sm-3 control-label">{{TRANSLATION "jakdu.match"}}</label>
+            <div class="col-sm-9">
+              <p class="form-control-static">{%fcNames[jakdu.schedule.home.id].shortName%} VS {%fcNames[jakdu.schedule.away.id].shortName%}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <label class="col-sm-2 control-label">{{TRANSLATION "jakdu.expect.score"}}</label>
+            <div class="col-sm-5">
+              <select class="form-control" ng-model="jakdu.homeScore">
+                <option value="">{{TRANSLATION "board.placeholder.expect.home.score"}}</option>
+                <option ng-repeat="opt in rangeScore" value="{%opt%}">{%opt%}</option>
+              </select>
+            </div>
+            <div class="col-sm-5">
+              <select class="form-control" ng-model="jakdu.awayScore">
+                <option value="">{{TRANSLATION "board.placeholder.expect.away.score"}}</option>
+                <option ng-repeat="opt in rangeScore" value="{%opt%}">{%opt%}</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-u" type="button" ng-click="btnTest()">Button Default</button>
+    </div>
+  </div>
+
+  {{> footer}}
+
+</div>
+{{#CHUNK 'js'}}
+    <script type="text/javascript">
+      require(['angular', 'jakduk'], function (angular) {
+        var jakdukApp = angular.module("jakdukApp", ["ui.bootstrap", 'jakdukCommon']);
+
+        jakdukApp.controller('jakduCtrl', function ($scope, $http) {
+          $scope.rangeScore = [];
+          $scope.dataJakdusConn = "none";
+          $scope.dateTimeFormat = {};
+          $scope.jakdus = [];
+          $scope.competitionNames = {};
+          $scope.fcNames = {};
+
+          for (i = 0; i < 19; i++) {
+            $scope.rangeScore.push(i);
+          }
+
+          // http config
+          var headers = {
+            "Content-Type": "application/json"
+          };
+
+          var config = {
+            headers: headers
+          };
+
+          $scope.btnTest = function () {
+            var bUrl = '/sample/rest01';
+            var reqData = {};
+            reqData.jakdus = $scope.jakdus;
+
+            var reqPromise = $http.post(bUrl, reqData, config);
+
+            reqPromise.then(function (response) {
+              var data = response.data;
+              console.log("success");
+            }, function (response) {
+              var data = response.data;
+              console.log("error=" + status);
+            });
+          };
+
+          $scope.getDataJakdus = function () {
+            if ($scope.dataJakdusConn == "none") {
+              $scope.dataJakdusConn = "loading";
+
+              $http.get('{{apiServerUrl}}/jakdu/schedules').then(function (response) {
+                var data = response.data;
+
+                if (data.dateTimeFormat != null) {
+                  $scope.dateTimeFormat = data.dateTimeFormat;
+                }
+
+                if (data.jakdus != null) {
+                  $scope.jakdus = data.jakdus;
+                }
+
+                if (data.competitionNames != null) {
+                  $scope.competitionNames = data.competitionNames;
+                }
+
+                if (data.fcNames != null) {
+                  $scope.fcNames = data.fcNames;
+                }
+
+                $scope.dataJakdusConn = "none";
+              }, function () {
+                $scope.dataJakdusConn = "none";
+                $scope.error = '{{TRANSLATION "common.msg.error.network.unstable"}}';
+              });
+            }
+          };
+
+          $scope.getDataJakdus();
+        });
+
+        $(function () {
+          App.init();
+        });
+
+        angular.bootstrap(document, ['jakdukApp']);
+      });
+    </script>
+{{/CHUNK}}
