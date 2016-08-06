@@ -161,11 +161,7 @@
               </div>
               <div class="col-sm-3">
                 <i aria-hidden="true" class="icon-user visible-xs-inline"></i> {{writer.username}} &mid;
-              {{#if (OPR '<' (DATE_BY_ID id) ../todayDate)}}
-                <span>{{DATE_FORMAT (DATE_BY_ID id) 'LL'}}</span>
-              {{else}}
-                <span>{{DATE_FORMAT (DATE_BY_ID id) 'LTS'}}</span>
-              {{/if}}
+                {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '<' (DATE_BY_ID id) ../todayDate) 'LL' 'LT')}}
               </div>
               <div class="col-sm-3 hidden-xs">
                 <i aria-hidden="true" class="icon-eye"></i> <strong>{{views}}</strong>
@@ -209,7 +205,7 @@
 
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-user visible-xs-inline"></span> {{writer.username}} &mid;
-                {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LTS')}}
+                {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '<' (DATE_BY_ID id) ../todayDate) 'LL' 'LT')}}
               </div>
               <div class="col-sm-3">
                 <span aria-hidden="true" class="icon-eye"></span> <strong>{{views}}</strong> &mid;

@@ -35,7 +35,7 @@
                 <small>
                   <span aria-hidden="true" class="icon-user"></span> {{writer.username}}
                   &nbsp;
-                  {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LTS')}}
+                  {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LT')}}
                   &nbsp;
                   <span aria-hidden="true" class="icon-eye"></span> {{views}}
                 </small>
@@ -60,7 +60,7 @@
               <div class="blog-twitter-inner">
                 <strong><i aria-hidden="true" class="icon-user"></i> {{writer.username}}</strong>
                 <a href="/board/free/{{boardItem.seq}}">{{content}}</a>
-                <span class="twitter-time" >{{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LTS')}}</span>
+                <span class="twitter-time" >{{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LT')}}</span>
               </div>
             {{/each}}
             </div>
