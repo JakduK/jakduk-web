@@ -1,36 +1,30 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<div class="container-fluid">
+  <div class="page-header">
+    <h4>Thumbnail Size Write.</h4>
+  </div>
 
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Insert title here</title>
-		<jsp:include page="../include/html-header.jsp"/>
-		<link rel="stylesheet" href="<%=request.getContextPath()%>/bundles/admin.css">
-	</head>
-	<body>
-		<h4>Thumbnail Size Write.</h4>
-		<c:set var="contextPath" value="<%=request.getContextPath()%>"/>
-		<form:form commandName="thumbnailSizeWrite" action="${contextPath}/admin/thumbnail/size/write" method="POST">
-			<p>
-				IN RESOURCE. WIDTH : ${resWidth}, HEIGHT : ${resHeight}
-			</p>
-			<p>
-				WIDTH : <form:input path="width" cssClass="form-control" placeholder="width" size="30"/>
-			</p>
-			<p>
-				HEIGHT : <form:input path="height" cssClass="form-control" placeholder="height" size="30"/>
-			</p>
+  <form name="thumbnailSizeWrite" ng-submit="ctrl.submit()" novalidate>
+    <p>
+      IN RESOURCE.
+      WIDTH : <span ng-bind="ctrl.resWidth"></span>,
+      HEIGHT : <span ng-bind="ctrl.resHeight"></span>
+    </p>
 
-			<p>
-				<label for="galleryId" class="control-label">GALLERY ID</label>
-				<form:input path="galleryId" cssClass="form-control" placeholder="Gallery ID"/>
-			</p>
+    <div class="form-group">
+      <label>WIDTH</label>
+      <input id="width" name="width" class="form-control" placeholder="width" ng-model="ctrl.width">
+    </div>
 
-			<input type="submit" value="<spring:message code="common.button.write"/>" class="btn btn-default"/>
-		</form:form>
-	</body>
-</html>
+    <div class="form-group">
+      <label>HEIGHT</label>
+      <input id="height" name="height" class="form-control" placeholder="height" ng-model="ctrl.height">
+    </div>
+
+    <div class="form-group">
+      <label for="galleryId" class="control-label">GALLERY ID</label>
+      <input name="galleryId" id="galleryId" class="form-control" placeholder="Gallery ID" ng-model="ctrl.galleryId">
+    </div>
+
+    <input type="submit" class="btn btn-default">
+  </form>
+</div>

@@ -642,7 +642,22 @@ define([
 
     }])
     .controller('AdminWriteThumbnailSizeController', ['$http', '$location', 'Config', function ($http, $location, Config) {
+      var self = this;
 
+      self.submit = submit;
+
+      $http.get(Config.apiServerUrl + '/admin/thumbnail/size').then(function (response) {
+        self.resWidth = response.data.resWidth;
+        self.resHeight = response.data.resHeight;
+      });
+
+      function submit() {
+        $http.post(Config.apiServerUrl + '/admin/thumbnail/size/write', {
+          width: self.width,
+          height: self.height,
+          galleryId: self.galleryId
+        });
+      }
     }])
     .controller('AdminWriteHomeDescriptionController', ['$scope', '$http', '$state', '$location', 'Config', function ($scope, $http, $state, $location, Config) {
       var self = this;
