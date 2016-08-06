@@ -280,39 +280,39 @@ define([
 
         switch (id) {
           case MENU_ID_MAP.GET.ENCYCLOPEDIA.ID:
-            apiUrl = '/admin/encyclopedias';
+            apiUrl = '/encyclopedias';
             break;
           case MENU_ID_MAP.GET.FC_ORIGIN.ID:
-            apiUrl = '/admin/origin/football/clubs';
+            apiUrl = '/origin/football/clubs';
             break;
           case MENU_ID_MAP.GET.FC.ID:
-            apiUrl = '/admin/football/clubs';
+            apiUrl = '/football/clubs';
             break;
           case MENU_ID_MAP.GET.BOARD_CATEGORY.ID:
-            apiUrl = '/admin/board/categories';
+            apiUrl = '/board/categories';
             break;
           case MENU_ID_MAP.GET.ATTENDANCE_LEAGUE.ID:
             self.activeLeague = ($state.params.competitionCode || 'ALL');
             self.activeLeagueName = getActiveLeage(self.activeLeague);
-            apiUrl = '/admin/league/attendances';
+            apiUrl = '/league/attendances';
             if (self.activeLeague !== 'ALL') {
               apiParams = '?competitionCode=' + self.activeLeague;
             }
             break;
           case MENU_ID_MAP.GET.ATTENDANCE_CLUB.ID:
-            apiUrl = '/admin/club/attendances';
+            apiUrl = '/club/attendances';
             break;
           case MENU_ID_MAP.GET.HOME_DESCRIPTION.ID:
-            apiUrl = '/admin/home/descriptions';
+            apiUrl = '/home/descriptions';
             break;
           case MENU_ID_MAP.GET.JAKDU_SCHEDULE.ID:
-            apiUrl = '/admin/jakdu/schedules';
+            apiUrl = '/jakdu/schedules';
             break;
           case MENU_ID_MAP.GET.JAKDU_SCHEDULE_GROUP.ID:
-            apiUrl = '/admin/jakdu/schedule/groups';
+            apiUrl = '/jakdu/schedule/groups';
             break;
           case MENU_ID_MAP.GET.COMPETITION.ID:
-            apiUrl = '/admin/competitions';
+            apiUrl = '/competitions';
             break;
         }
 
@@ -320,7 +320,7 @@ define([
 
           self.dataConn = "loading";
 
-          $http.get(Config.apiServerUrl + apiUrl + apiParams).then(function (response) {
+          $http.get(Config.apiServerUrl + '/admin' + apiUrl + apiParams).then(function (response) {
             clearData();
 
             var data = response.data;
@@ -820,11 +820,148 @@ define([
         });
       };
     }])
-    .controller('AdminWriteJakduScheduleController', ['$http', '$location', 'Config', function ($http, $location, Config) {
+    .controller('AdminWriteJakduScheduleController', ['$http', '$location', '$q', '$state', '$window', 'Config', function ($http, $location, $q, $state, $window, Config) {
+      var self = this;
 
+      self.mytime = new Date();
+      self.format = 'yyyy/MM/dd';
+      self.status = {
+        opened: false
+      };
+      self.hstep = 1;
+      self.mstep = 15;
+
+      self.open = function () {
+        self.status.opened = true;
+      };
+
+      $q.all([
+        $http.get(Config.apiServerUrl + '/admin/origin/football/clubs'),
+        $http.get(Config.apiServerUrl + '/admin/competitions')
+      ]).then(function (responses) {
+        self.footballClubs = responses[0].data.originFCs;
+        self.competitions = responses[1].data.competitions;
+        if (self.footballClubs && self.footballClubs[0]) {
+          self.home = self.footballClubs[0].id;
+          self.away = self.footballClubs[0].id;
+        }
+        if (self.competitions && self.competitions[0]) {
+          self.competition = self.competitions[0].id;
+        }
+      }).then(function () {
+        if ($state.params.id) {
+          $http.get(Config.apiServerUrl + '/admin/jakdu/schedule/' + $state.params.id).then(function (response) {
+            var schedule = response.data;
+            if (schedule) {
+              self.schedule = schedule;
+              self.mytime = schedule.date;
+              self.home = schedule.home;
+              self.away = schedule.away;
+              self.homeFullTime = schedule.homeFullTime;
+              self.awayFullTime = schedule.awayFullTime;
+              self.homeOverTime = schedule.homeOverTime;
+              self.awayOverTime = schedule.awayOverTime;
+              self.homePenaltyShootout = schedule.homePenaltyShootout;
+              self.awayPenaltyShootout = schedule.awayPenaltyShootout;
+              self.competition = schedule.competition;
+              self.timeUp = schedule.timeUp;
+              self.groupSeq = schedule.groupSeq;
+            }
+          });
+        }
+      });
+
+      self.submit = function () {
+        var data = {
+          date: self.mytime,
+          home: self.home,
+          away: self.away,
+          homeFullTime: self.homeFullTime,
+          awayFullTime: self.awayFullTime,
+          homeOverTime: self.homeOverTime,
+          awayOverTime: self.awayOverTime,
+          homePenaltyShootout: self.homePenaltyShootout,
+          awayPenaltyShootout: self.awayPenaltyShootout,
+          competition: self.competition,
+          timeUp: self.timeUp,
+        };
+
+        var promise;
+        if ($state.params.id) {
+          promise = $http.put(Config.apiServerUrl + '/admin/jakdu/schedule/' + $state.params.id, data);
+        } else {
+          promise = $http.post(Config.apiServerUrl + '/admin/jakdu/schedule', data);
+        }
+        promise.then(function () {
+          $location.url('/admin/jakduSchedule');
+        });
+      };
+
+      self.confirmDelete = function () {
+        if ($window.confirm('delete?')) {
+          $http.delete(Config.apiServerUrl + '/admin/jakdu/schedule/' + $state.params.id).then(function () {
+            $location.url('/admin/jakduSchedule');
+          });
+        }
+      };
     }])
-    .controller('AdminWriteJakduScheduleGroupController', ['$http', '$location', 'Config', function ($http, $location, Config) {
+    .controller('AdminWriteJakduScheduleGroupController', ['$http', '$location', '$state', '$window', 'Config', function ($http, $location, $state, $window, Config) {
+      var self = this;
 
+      self.openDate = new Date();
+      self.openDate.setSeconds(0);
+
+      self.format = 'yyyy/MM/dd';
+      self.status = {
+        opened: false
+      };
+
+      self.hstep = 1;
+      self.mstep = 15;
+      self.state = 'SCHEDULE';
+
+      self.open = function () {
+        self.status.opened = true;
+      };
+
+      if ($state.params.id) {
+        $http.get(Config.apiServerUrl + '/admin/jakdu/schedule/group/' + $state.params.id).then(function (response) {
+          var scheduleGroup = response.data;
+          if (scheduleGroup) {
+            self.scheduleGroup = scheduleGroup;
+            self.seq = scheduleGroup.seq;
+            self.nextSeq = scheduleGroup.nextSeq;
+            self.openDate = scheduleGroup.openDate;
+            self.state = scheduleGroup.state;
+          }
+        });
+      }
+
+      self.submit = function () {
+        var data = {
+          nextSeq: self.nextSeq,
+          openDate: self.openDate,
+          state: self.state
+        };
+
+        var promise;
+        if ($state.params.id) {
+          promise = $http.put(Config.apiServerUrl + '/admin/jakdu/schedule/group/' + $state.params.id, data);
+        } else {
+          promise = $http.post(Config.apiServerUrl + '/admin/jakdu/schedule/group', data);
+        }
+        promise.then(function () {
+          $location.url('/admin/jakduScheduleGroup');
+        });
+      };
+
+      self.confirmDelete = function () {
+        if ($window.confirm('delete?')) {
+          $http.delete(Config.apiServerUrl + '/admin/jakdu/schedule/group/' + $state.params.id).then(function () {
+            $location.url('/admin/jakduScheduleGroup');
+          });
+        }
+      };
     }])
     .controller('AdminWriteCompetitionController', ['$http', '$location', '$state', '$window', 'Config', function ($http, $location, $state, $window, Config) {
       var self = this;
