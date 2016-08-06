@@ -43,11 +43,12 @@
           <select name="footballClub" class="form-control" ng-model="footballClub">
             <option value="">{{TRANSLATION "common.none"}}</option>
             {{#each footballClubs as |club|}}
-              {{#each club.names}}
-                <option value="{{club.id}}" {{#if (EQ fullName ../../userProfile.footballClubName)}}selected{{/if}}>
-                  {{fullName}}
-                </option>
-              {{/each}}
+              <option value="{{club.id}}"
+                {{#if (EQ club.names.[0].fullName ../userProfile.footballClubName.fullName)}}
+                  ng-init="footballClub = '{{club.id}}'"
+                {{/if}}>
+                {{club.names.[0].fullName}}
+              </option>
             {{/each}}
           </select>
         </div>
