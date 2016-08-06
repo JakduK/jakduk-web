@@ -18,6 +18,7 @@
     "hbs": "^4.0.0",
     "hbs-utils": "0.0.3",
     "html-parser-lite": "^0.2.0",
+    "http-proxy-middleware": "^0.17.0",
     "i18n": "^0.8.3",
     "lodash": "^4.13.1",
     "moment": "^2.14.1",
@@ -27,8 +28,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-sass": "^2.3.2",
-    "http-proxy-middleware": "^0.17.0"
+    "gulp-sass": "^2.3.2"
   },
   "engines": {
     "node": ">=6"
