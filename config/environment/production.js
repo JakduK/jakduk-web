@@ -3,7 +3,7 @@ module.exports = {
     origin: process.env.ORIGIN || 'https://staging.jakduk.com',
     apiServerUrl: process.env.API_SERVER || 'https://staging.jakduk.com/api',
     internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'https://staging.jakduk.com/api',
-    thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'https://staging.jakduk.com'
+    thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'https://staging.jakduk.com:8080'
   },
   prod: {
     origin: process.env.ORIGIN || 'https://jakduk.com',
