@@ -5,7 +5,7 @@
   <!--=== Breadcrumbs ===-->
   <div class="breadcrumbs">
     <div class="container">
-      <h1 class="pull-left"><a href="/stats/supporters/refresh">{{TRANSLATION "stats.supporters"}}</a></h1>
+      <h1 class="pull-left"><a href="/stats/supporters">{{TRANSLATION "stats.supporters"}}</a></h1>
     </div><!--/container-->
   </div><!--/breadcrumbs-->
   <!--=== End Breadcrumbs ===-->
@@ -58,7 +58,9 @@
     ], function (angular, Kakao, Jakduk) {
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-      ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+      ]).controller('statsCtrl', [
+        '$scope', '$http', '$window',
+      function ($scope, $http, $window) {
         var chartType = '{{chartType}}';
 
         if (chartType !== "pie") {
@@ -124,7 +126,7 @@
             $scope.chartConfig.loading = true;
             $scope.supportersConn = "loading";
 
-            $http.get('{{apiServerUrl}}/stats/supporters').then(function (response) {
+            $http.get('{{apiServerUrl}}/stats/supporters?lang={{locale}}').then(function (response) {
               var data = response.data;
 
               $scope.chartConfig.loading = false;
@@ -151,7 +153,8 @@
         };
 
         $scope.btnUrlCopy = function () {
-          var url = Jakduk.origin + '/stats/supporters?chartType=' + $scope.chartConfig.options.chart.type;
+          var url = Jakduk.origin + '/stats/supporters?lang={{locale}}&chartType=' + $scope.chartConfig.options.chart
+              .type;
 
           if ($window.clipboardData) {
             // IE처리
