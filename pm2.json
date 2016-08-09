@@ -3,15 +3,20 @@
     "name": "jakduk-web",
     "script": "bin/www",
     "max_memory_restart": "100M",
-    "env": {
-      "NODE_ENV": "development",
-    },
-    "env_production" : {
-      "NODE_ENV": "production"
-    },
     "exec_mode"  : "cluster",
     "instances"  : 2,
     "error_file": ".logs/err.log",
-    "out_file": ".logs/out.log"
+    "out_file": ".logs/out.log",
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "env_staging" : {
+      "ENV": "staging",
+      "NODE_ENV": "production"
+    },
+    "env_production" : {
+      "ENV": "prod",
+      "NODE_ENV": "production"
+    }
   }]
 }

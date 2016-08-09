@@ -1,13 +1,6 @@
 module.exports = {
-  internalApiServerUrl: 'https://staging.jakduk.com:8080/api',
-  apiServerUrl: 'https://staging.jakduk.com/api',
-  thumbnailServerUrl: 'https://staging.jakduk.com:8080',
-  origin: 'https://staging.jakduk.com',
-  facebook: {
-    callbackURL:  'https://staging.jakduk.com/auth/facebook/callback'
-  },
-  daum: {
-    callbackURL:  'https://staging.jakduk.com/auth/daum/callback'
-  },
-  gaAccount: ''
+  origin: process.env.ORIGIN || 'http://localhost:3000',
+  apiServerUrl: process.env.API_SERVER || 'http://localhost:3000/api',
+  internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'http://localhost:8080/api',
+  thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'http://localhost:8080'
 };

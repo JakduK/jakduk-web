@@ -33,13 +33,7 @@
             <tr>
               <td class="text-overflow max-width-240">
                 <a ng-href="/board/free/{{seq}}?page={{../number}}&category={{../category}}">
-                  <strong>
-                    {{#if status.delete}}
-                      {{TRANSLATION "board.msg.deleted"}}
-                    {{else}}
-                      {{subject}}
-                    {{/if}}
-                  </strong>
+                  <strong>{{TERNARY status.delete (TRANSLATION "board.msg.deleted") subject}}</strong>
                 </a>
               </td>
               <td>
@@ -105,9 +99,9 @@
         {{#if (NOT_EQ category 'ALL')}}
           <li><a href="?category=ALL">{{TRANSLATION "board.category.all"}}</a></li>
         {{/if}}
-        {{#each categories as |category|}}
-          {{#if (NOT_EQ category.code ../category)}}
-            <li><a href="?category={{category.code}}">{{CATEGORY_NAME category ../locale}}</a></li>
+        {{#each categories}}
+          {{#if (NOT_EQ this.code ../category)}}
+            <li><a href="?category={{this.code}}">{{CATEGORY_NAME this ../locale}}</a></li>
           {{/if}}
         {{/each}}
         </ul>
@@ -145,18 +139,12 @@
                 <i aria-hidden="true" class="icon-directions visible-xs-inline"></i> {{TRANSLATION "board.notice"}}
               </div>
               <div class="col-sm-4">
-                {{#if (EQ status.device 'MOBILE')}}<i aria-hidden="true" class="icon-screen-smartphone"></i>{{/if}}
-                {{#if (EQ status.device 'TABLET')}}<i aria-hidden="true" class=" icon-screen-tablet"></i>{{/if}}
-                {{#if (OPR '>' galleries.length 0)}}<i aria-hidden="true" class="icon-picture"></i>{{/if}}
-                <a href="/board/free/{{seq}}?page={{../number}}&category={{category}}">
-                  {{#if status.delete}}
-                    <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
-                  {{else}}
-                    <strong>{{subject}}</strong>
-                  {{/if}}
-                  {{#if commentCount}}
-                    <span class="text-success">[{{commentCount}}]</span>
-                  {{/if}}
+                <a href="/board/free/{{seq}}?page={{../number}}&category={{../category}}">
+                  <strong>{{TERNARY status.delete (TRANSLATION "board.msg.deleted") subject}}</strong>
+                  {{#if (EQ status.device 'MOBILE')}}<i aria-hidden="true" class="icon-screen-smartphone"></i>{{/if}}
+                  {{#if (EQ status.device 'TABLET')}}<i aria-hidden="true" class=" icon-screen-tablet"></i>{{/if}}
+                  {{#if (OPR '>' galleries.length 0)}}<i aria-hidden="true" class="icon-picture"></i>{{/if}}
+                  {{#if commentCount}}&nbsp;<strong>[{{commentCount}}]</strong>{{/if}}
                 </a>
               </div>
               <div class="col-sm-3">
@@ -190,12 +178,8 @@
               {{/if}}
               </div>
               <div class="col-sm-4">
-                <a href="/board/free/{{seq}}?page={{../number}}&category={{category}}">
-                {{#if status.delete}}
-                  <strong>{{TRANSLATION "board.msg.deleted"}}</strong>
-                {{else}}
-                  <strong>{{subject}}</strong>
-                {{/if}}
+                <a href="/board/free/{{seq}}?page={{../number}}&category={{../category}}">
+                  <strong>{{TERNARY status.delete (TRANSLATION "board.msg.deleted") subject}}</strong>
                 {{#if (EQ status.device 'MOBILE')}}&nbsp;<i aria-hidden="true" class="icon-screen-smartphone"></i>{{/if}}
                 {{#if (EQ status.device 'TABLET')}}&nbsp;<i aria-hidden="true" class="icon-screen-tablet"></i>{{/if}}
                 {{#if (OPR '>' galleries.length 0)}}&nbsp;<i aria-hidden="true" class="icon-picture text-info"></i>{{/if}}
@@ -244,7 +228,7 @@
     require([
       'angular',
       'jakduk'
-    ], function (angular, Jakduk) {
+    ], function (angular) {
       angular.module("jakdukApp", [
         "ngAnimate",
         "ui.bootstrap",
