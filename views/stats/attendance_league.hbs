@@ -221,7 +221,7 @@
             $scope.chartConfig.loading = true;
             $scope.attendancesConn = "loading";
 
-            $http.get('{{apiServerUrl}}/stats/league/attendances?competitionCode=' + $scope.leagueId).then(function (response) {
+            $http.get('{{apiServerUrl}}/stats/league/attendances?lang={{locale}}&competitionCode=' + $scope.leagueId).then(function (response) {
               $scope.attendances[$scope.leagueId] = response.data;
               $scope.chartConfig.loading = false;
               $scope.attendancesConn = "none";
