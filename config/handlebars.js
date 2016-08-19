@@ -90,7 +90,7 @@ hbs.registerHelper('ARRAY_SIZE', function(val) {
 });
 
 hbs.registerHelper('CONCAT', function() {
-  return Array.prototype.join.call(arguments, '');
+  return Array.prototype.slice.call(arguments, 0, arguments.length - 1).join('');
 });
 
 hbs.registerHelper('CATEGORY_NAME', function(category, locale) {

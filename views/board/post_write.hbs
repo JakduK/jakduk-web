@@ -160,6 +160,8 @@
         $scope.storedImages = [];
 
         images.forEach(function (entry) {
+          entry._id = entry.id;
+          entry._url = '{{thumbnailServerUrl}}/gallery/' + entry.id;
           $scope.storedImages.push(entry);
         });
 

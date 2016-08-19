@@ -1,6 +1,6 @@
 {
   "name": "jakduk-web",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "homepage": "https://github.com/Pyohwan/JakduK",
   "authors": [
     "Pyohwan <phjang1983@gmail.com>",
@@ -39,5 +39,9 @@
     "angular-i18n": "^1.5.6",
     "jquery": "^1.12.4",
     "requirejs": "^2.2.0"
+  },
+  "resolutions": {
+    "angular": "~1.5.8",
+    "slick-carousel": "~1.6.0"
   }
 }
