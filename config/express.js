@@ -26,10 +26,10 @@ function setup(app) {
   require('./handlebars')(app);
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
-  app.use(cookieParser());
-  app.use(apiProxy());
   app.use(compression());
   app.use(express.static(path.join(__dirname, '..', 'static')));
+  app.use(cookieParser());
+  app.use(apiProxy());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
 
