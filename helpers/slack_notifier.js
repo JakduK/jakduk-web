@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require('debug')('slack');
+var debug = require('debug')('jakduk:slack');
 var restler = require('restler');
 
 module.exports = function(options, env) {

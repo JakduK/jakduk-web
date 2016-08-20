@@ -17,7 +17,7 @@ module.exports = {
           }
         },
         characters: function (text) {
-          var partial = text.trim();
+          var partial = text.trim().replace(/&[^;]+;/g, ' ').replace(/&/g, '');
           if (partial) {
             description.push(partial);
           }
@@ -41,7 +41,9 @@ module.exports = {
            return false;
          }
       });
-      og.description = og.description.slice(0, limit - 3) + '...';
+      if (og.description.length === limit) {
+        og.description = og.description.slice(0, limit - 3) + '...';
+      }
     }
 
     return og;
