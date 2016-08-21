@@ -2,8 +2,9 @@
 
 var debug = require('debug')('jakduk:slack');
 var restler = require('restler');
+var clor = require('clor');
 
-module.exports = function(options, env) {
+module.exports = function(options) {
   return function (message) {
     restler.post(options.webhook, {
       headers: {
@@ -23,8 +24,8 @@ module.exports = function(options, env) {
           ]
         }]
       })
-    }).on('complete', function (data) {
-      debug(data, env);
+    }).on('complete', function (data, response) {
+      debug('%o', data, clor.yellow(response.statusCode).toString(), clor.red(message.link).toString());
     });
   };
 };

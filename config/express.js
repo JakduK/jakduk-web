@@ -11,6 +11,8 @@ var compression = require('compression');
 
 var apiProxy = require('../middlewares/api_proxy');
 var config = require('../config/environment');
+var i18n = require('../middlewares/i18n');
+var defaultContext = require('../middlewares/default_context');
 
 function setup(app) {
   app.set('env', config.env);
@@ -26,18 +28,14 @@ function setup(app) {
   require('./handlebars')(app);
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
-  app.use(cookieParser());
-  app.use(apiProxy());
   app.use(compression());
   app.use(express.static(path.join(__dirname, '..', 'static')));
+  app.use(cookieParser());
+  app.use(apiProxy());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
-
-  // essential
-  require('../middlewares/default_context')(app);
-
-  // i18n setup
-  require('../middlewares/i18n')(app);
+  app.use(i18n());
+  app.use(defaultContext());
 
   // register routes
   require('../routes')(app);

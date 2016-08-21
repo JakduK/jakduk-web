@@ -6,7 +6,7 @@ var bodyParser = require('body-parser').json();
 var config = require('../config/environment');
 var TagUtil = require('../helpers/tag_util');
 var ApiClient = require('../helpers/jakduk_api_client');
-var slack = require('../helpers/slack_notifier')(config.slack, config.env);
+var slack = require('../helpers/slack_notifier')(config.slack);
 
 module.exports = function () {
   return proxy('/api', {
