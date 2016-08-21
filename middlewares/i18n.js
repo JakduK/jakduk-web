@@ -15,8 +15,8 @@ i18n.configure({
   updateFiles: false
 });
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
+module.exports = function () {
+  return function i18nInit(req, res, next) {
     var userLocale = req.query.lang || req.cookies.lang || req.acceptsLanguages(locale.list);
 
     if (!locale.alias[userLocale]) {
@@ -31,5 +31,5 @@ module.exports = function (app) {
     res.cookie('lang', userLocale);
 
     next();
-  });
+  }
 };

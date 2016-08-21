@@ -6,8 +6,8 @@ var config = require('../config/environment');
 var _ = require('lodash');
 var i18n = require('i18n');
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
+module.exports = function () {
+  return function defaultContext(req, res, next) {
     var credentials = {};
     credentials[config.tokenHeader] = req.cookies[config.tokenCookieName] || '';
     req.api = new ApiClient(credentials, req.headers.cookie || '', config.internalApiServerUrl);
@@ -53,5 +53,5 @@ module.exports = function (app) {
     }).catch(function (err) {
       next(err);
     });
-  });
+  };
 };
