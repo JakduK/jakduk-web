@@ -2,6 +2,7 @@
 
 var express = require('express');
 var i18n = require('i18n');
+var Util = require('../../helpers/jakduk_util');
 
 function index(req, res, next) {
   req.api.getUserProfile().then(function (response) {
@@ -49,7 +50,7 @@ module.exports.setup = function (app) {
 
   router.use(function(req, res, next) {
     if (!req.isAuthenticated) {
-      res.redirect('/login');
+      Util.redirect('/login', req.originalUrl, res);
       return;
     }
     next();

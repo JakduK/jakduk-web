@@ -98,7 +98,7 @@ define(['angular', 'common'], function (angular) {
     },
     needLogin: function (message) {
       if (window.confirm(message)) {
-        window.location.href = '/board/free/write';
+        window.location = '/board/free/write';
       }
     }
   };

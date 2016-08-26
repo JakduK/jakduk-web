@@ -1,6 +1,6 @@
 'use strict';
 
-var SessionUtil = require('../helpers/jakduk_session_util');
+var Util = require('../helpers/jakduk_util');
 var ApiClient = require('../helpers/jakduk_api_client');
 var config = require('../config/environment');
 var _ = require('lodash');
@@ -17,7 +17,7 @@ module.exports = function () {
       if (response.statusCode === 200) {
         req.userInfo = response.data;
       } else if (req.cookies[config.tokenCookieName]) {
-        SessionUtil.clearSession(res);
+        Util.clearSession(res);
       }
 
       req.isAuthenticated = !!req.userInfo;

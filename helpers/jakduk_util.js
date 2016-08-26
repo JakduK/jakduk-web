@@ -1,3 +1,6 @@
+'use strict';
+
+var querystring = require('querystring');
 var config = require('../config/environment');
 
 module.exports = {
@@ -10,5 +13,8 @@ module.exports = {
   },
   clearSession: function(res) {
     res.clearCookie(config.tokenCookieName);
+  },
+  redirect: function (target, callbackUrl, res) {
+    res.redirect(target + '?redir=' + querystring.escape(callbackUrl));
   }
 };

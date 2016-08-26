@@ -42,6 +42,7 @@ var defaultConfig = {
   },
 
   noRedirectPaths: [
+    '/admin',
     '/login',
     '/logout',
     '/join',
