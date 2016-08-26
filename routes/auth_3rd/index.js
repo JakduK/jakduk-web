@@ -5,7 +5,7 @@ var querystring = require('querystring');
 var _ = require('lodash');
 var config = require('../../config/environment');
 var oauthClient = require('../../helpers/oauth');
-var SessionUtil = require('../../helpers/jakduk_session_util');
+var Util = require('../../helpers/jakduk_util');
 
 function oauth2(providers) {
   var router = express.Router();
@@ -19,7 +19,7 @@ function oauth2(providers) {
 }
 
 function login(provider, req, res) {
-  res.redirect(oauthClient[provider].getLoginUrl() + '&state=' + querystring.escape('redir=' + req.headers.referer));
+  res.redirect(oauthClient[provider].getLoginUrl() + '&state=' + querystring.escape('redir=' + (req.query.redir || '')));
 }
 
 function callback(provider, req, res) {
@@ -28,14 +28,15 @@ function callback(provider, req, res) {
       return req.api.loginWith(provider, response.data.access_token);
     }
   }).then(function (response) {
+    var extra = querystring.parse(req.query.state);
     var status = response.statusCode;
+
     if (status === 200) {
-      var extra = querystring.parse(querystring.decode(req.query.state));
-      SessionUtil.saveSession(res, response.headers[config.tokenHeader]);
+      Util.saveSession(res, response.headers[config.tokenHeader]);
       res.redirect(extra.redir || '/');
     } else if (status === 404) {
-      SessionUtil.saveSession(res, response.headers[config.tempTokenHeader] || '');
-      res.redirect('/join/oauth');
+      Util.saveSession(res, response.headers[config.tempTokenHeader] || '');
+      Util.redirect('/join/oauth', extra.redir, res);
     } else {
       return Promise.reject();
     }

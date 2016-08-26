@@ -5,6 +5,7 @@ var _ = require('lodash');
 var moment = require('moment');
 var i18n = require('i18n');
 var TagUtil = require('../../helpers/tag_util');
+var Util = require('../../helpers/jakduk_util');
 
 function postList(req, res, next) {
   var category = _.toUpper(!req.query.category || req.query.category === 'none' ? 'all' : req.query.category);
@@ -103,7 +104,7 @@ function viewPost(req, res, next) {
 
 function writePost(req, res, next) {
   if (!req.isAuthenticated) {
-    res.redirect('/login');
+    Util.redirect('/login', req.originalUrl, res);
     return;
   }
 
@@ -122,7 +123,7 @@ function writePost(req, res, next) {
 
 function editPost(req, res, next) {
   if (!req.isAuthenticated) {
-    res.redirect('/login');
+    Util.redirect('/login', req.originalUrl, res);
     return;
   }
 

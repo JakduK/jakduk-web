@@ -20,14 +20,12 @@
     <div class="row">
       <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
         <div class="reg-page">
-          <form action="/login" name="loginForm" method="POST" ng-submit="onSubmit($event)">
+          <form action="/login{{#if redir}}?redir={{{redir}}}{{/if}}" name="loginForm" method="POST" ng-submit="onSubmit($event)">
             <!-- CSRF 방어 비활성화
             <input type="hidden"
                  name="${_csrf.parameterName}"
                  value="${_csrf.token}"/>
             -->
-
-            {{#if redir}}<input type="hidden" name="redir" value="{{{redir}}}">{{/if}}
 
             <div class="reg-header">
               <h2>{{TRANSLATION "user.sign.in.header"}}</h2>
@@ -86,11 +84,11 @@
 
           <hr class="padding-10"/>
 
-          <button class="btn btn-facebook btn-block" onclick="javascript:window.location = '/auth/facebook'">
+          <button class="btn btn-facebook btn-block" onclick="javascript:window.location = '/auth/facebook{{#if redir}}?redir={{{redir}}}{{/if}}'">
             <i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
           </button>
 
-          <button class="btn btn-dropbox btn-block" onclick="javascript:window.location = '/auth/daum'">
+          <button class="btn btn-dropbox btn-block" onclick="javascript:window.location = '/auth/daum{{#if redir}}?redir={{{redir}}}{{/if}}'">
             {{TRANSLATION "common.button.connect.with.daum"}} <i class="fa fa-angle-right"></i>
           </button>
 

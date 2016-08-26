@@ -1,9 +1,10 @@
 'use strict';
 
+var querystring = require('querystring');
 var express = require('express');
 var i18n = require('i18n');
 var config = require('../../config/environment');
-var SessionUtil = require('../../helpers/jakduk_session_util');
+var Util = require('../../helpers/jakduk_util');
 
 function index(req, res, next) {
   req.api.footballClubs(req.locale).then(function (response) {
@@ -14,7 +15,7 @@ function index(req, res, next) {
         i18n.__('common.jakduk')
       ],
       footballClubs: footballClubs,
-      redir: req.headers.referer,
+      redir: querystring.escape(req.query.redir || ''),
       bySocialAccount: false
     });
   }).catch(function (err) {
@@ -33,8 +34,8 @@ function submit(req, res, next) {
     about: body.about
   }).then(function (response) {
     if (response.statusCode === 200) {
-      SessionUtil.saveSession(res, response.headers[config.tokenHeader]);
-      res.redirect(body.redir || '/');
+      Util.saveSession(res, response.headers[config.tokenHeader]);
+      res.redirect(req.query.redir || '/');
     } else {
       res.render('login/join', {
         title: [
@@ -67,7 +68,7 @@ function indexOAuth(req, res, next) {
         i18n.__('common.jakduk')
       ],
       footballClubs: footballClubs,
-      redir: req.headers.referer,
+      redir: querystring.escape(req.query.redir || ''),
       bySocialAccount: true,
       snsProfile: snsProfile,
       tempToken: tempToken
@@ -86,8 +87,8 @@ function submitOAuth(req, res, next) {
     about: body.about
   }).then(function (response) {
     if (response.statusCode === 200) {
-      SessionUtil.saveSession(res, response.headers[config.tokenHeader]);
-      res.redirect(body.redir || '/');
+      Util.saveSession(res, response.headers[config.tokenHeader]);
+      res.redirect(req.query.redir || '/');
     } else {
       res.redirect('/login');
     }

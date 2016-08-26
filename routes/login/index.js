@@ -1,9 +1,10 @@
 'use strict';
 
+var querystring = require('querystring');
 var express = require('express');
 var _ = require('lodash');
 var i18n = require('i18n');
-var SessionUtil = require('../../helpers/jakduk_session_util');
+var Util = require('../../helpers/jakduk_util');
 var config = require('../../config/environment');
 
 function index(req, res) {
@@ -12,7 +13,7 @@ function index(req, res) {
       i18n.__('user.sign.in'),
       i18n.__('common.jakduk')
     ],
-    redir: req.headers.referer
+    redir: querystring.escape(req.query.redir || '')
   });
 }
 
@@ -26,8 +27,8 @@ function submit(req, res, next) {
     var message;
 
     if (status === 200) {
-      SessionUtil.saveSession(res, response.headers[config.tokenHeader], req.body.remember === 'on');
-      redir = req.body.redir || '/';
+      Util.saveSession(res, response.headers[config.tokenHeader], req.body.remember === 'on');
+      redir = req.query.redir || '/';
       redir = _.some(req.noRedirectPaths, function (value) {
         return redir.endsWith(value);
       }) ? '/' : redir;
