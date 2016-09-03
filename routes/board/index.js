@@ -157,8 +157,6 @@ module.exports.setup = function (app) {
 
   router.get('/free', postList);
 
-  router.get('/free/posts', postList);
-
   router.get('/free/comments', commentList);
 
   router.get('/free/write', writePost);
