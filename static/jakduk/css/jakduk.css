@@ -271,3 +271,12 @@ td a {
 .show-inline {
   display: inline-block !important;
 }
+
+.old-browser {
+  padding: 20px;
+  background: #252525;
+  border-bottom: 5px solid #555;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+}

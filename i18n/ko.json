@@ -302,5 +302,6 @@
 	"Size.userWrite.email": "이메일 주소의 길이는 6 ~ 30자 입니다.",
 	"Size.userWrite.username": "별명의 길이는 최소 2 ~ 20자 입니다.",
 	"Size.userWrite.password": "비밀번호의 길이는 4 ~ 20자 입니다.",
-	"msg.comingsoon": "준비중입니다."
+	"msg.comingsoon": "준비중입니다.",
+	"msg.recommend.browser": "K리그 작두왕은 Internet Explorer9 최신 버전 이상 및 구글 크롬/파이어폭스 브라우저에 최적화 되어 있습니다."
 }
