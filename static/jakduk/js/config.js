@@ -2,7 +2,7 @@
 
 require.config({
   paths: {
-    kakao: '/kakao/js/kakao.min',
+    kakao: '//developers.kakao.com/sdk/js/kakao.min',
     ladda: '/unify/assets/plugins/ladda-buttons/js/ladda.min',
     spin: '/unify/assets/plugins/ladda-buttons/js/spin.min',
     jquery: '/bower_components/jquery/dist/jquery.min',

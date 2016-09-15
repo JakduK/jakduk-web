@@ -135,14 +135,13 @@
             </button>
           </div>
           <div class="col-xs-6 text-right">
-            <button class="btn btn-u-sm rounded btn-android" type="button" ng-click="btnUrlCopy()"
+            <button class="btn btn-default rounded" type="button" ng-click="btnUrlCopy()"
               tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.copy.to.clipboard"}}">
               <i class="icon-link"></i>
             </button>
-            <a id="kakao-link-btn" href="javascript:void(0);"
-              tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.send.to.kakao"}}">
+            <button class="btn btn-link" id="kakao-link-btn" type="button" tooltip-popup-close-delay='300' uib-tooltip="{{TRANSLATION "common.msg.send.to.kakao"}}">
               <img src="/kakao/icon/kakaolink_btn_small.png">
-            </a>
+            </button>
           </div>
         </div>
       </div>
