@@ -45,33 +45,23 @@ define(['angular', 'common'], function (angular) {
         $window.location = '/search?q=' + $scope.searchOnHeader.trim() + '&w=PO;CO;GA;';
       };
 
-      $scope.btnSearchOnHeader = function () {
-        $scope.searchFocusOnHeader = true;
+      $scope.toggleSearchOnHeader = function () {
+        $scope.searchFocusOnHeader = !$scope.searchFocusOnHeader;
       };
     }])
-    .directive('focus', ['$timeout', function ($timeout) {
-      /**
-       * focus directive
-       * http://fiddle.jshell.net/ubenzer/9FSL4/8/
-       */
+    .directive('focusy', [function () {
       return {
+        require: 'ngModel',
         restrict: 'A',
-        link: function (scope, element, attrs) {
-          scope.$watch(attrs.focus, function (newValue, oldValue) {
+        scope: {
+          focusy: '='
+        },
+        link: function (scope, element) {
+          scope.$watch('focusy', function (newValue) {
             if (newValue) {
-              element[0].focus();
+              element.focus();  
             }
           });
-          element.bind("blur", function (e) {
-            $timeout(function () {
-              scope.$apply(attrs.focus + "=false");
-            }, 0);
-          });
-          element.bind("focus", function (e) {
-            $timeout(function () {
-              scope.$apply(attrs.focus + "=true");
-            }, 0);
-          })
         }
       }
     }]);

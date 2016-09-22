@@ -82,10 +82,11 @@
 
         <!-- Search Block -->
         <li>
-          <i class="search fa fa-search search-btn" ng-click="btnSearchOnHeader()"></i>
+          <i class="search fa fa-search search-btn" ng-click="toggleSearchOnHeader()"></i>
           <div class="search-open">
             <div class="input-group animated fadeInDown">
-              <input class="form-control" type="text" ng-model="searchOnHeader" ng-init="searchOnHeader=''" ng-focus="searchFocusOnHeader"
+              <input class="form-control" type="text" ng-model="searchOnHeader" ng-init="searchOnHeader=''"
+                focusy="searchFocusOnHeader"
                 ng-keypress="($event.which === 13)?btnEnterOnHeaderSearch():return"
                 placeholder="{{TRANSLATION "search.placeholder.words"}}">
               <span class="input-group-btn">
