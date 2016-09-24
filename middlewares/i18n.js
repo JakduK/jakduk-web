@@ -23,13 +23,21 @@ module.exports = function () {
       userLocale = locale.alias[userLocale.replace('_', '-').split('-')[0] + '-*'] || userLocale.default;
     }
 
-    i18n.setLocale(userLocale);
-    moment.locale(userLocale);
-
     req.locale = userLocale;
     res.locals.locale = userLocale;
     res.cookie('lang', userLocale);
 
+    bindRenderProxy(req, res);
+
     next();
   }
 };
+
+function bindRenderProxy (req, res) {
+  var orgRender = res.render;
+  res.render = function () {
+    i18n.setLocale(req.locale);
+    moment.locale(req.locale);
+    orgRender.apply(this, arguments);
+  }.bind(res)
+}
