@@ -50,7 +50,7 @@
       <div ng-repeat="hit in posts.hits.hits">
         <div class="inner-results">
           <h3 ng-if="hit.highlight.subject.length">
-            <a href='/board/free/{%hit._source.seq%}"' ng-bind-html="hit.highlight.subject[0]"></a>
+            <a href="/board/free/{%hit._source.seq%}" ng-bind-html="hit.highlight.subject[0]"></a>
           </h3>
           <h3 ng-if="!hit.highlight.subject.length">
             <a href="/board/free/{%hit._source.seq%}" ng-bind="hit._source.subject"></a></h3>
@@ -335,10 +335,10 @@
 
             $http.get('{{apiServerUrl}}/search?q=' + encodeURIComponent($scope.searchWords.trim()) + '&w=' + where + '&from=' + from + '&size=' + size).then(function (response) {
               var data = response.data;
-              $scope.posts = angular.fromJson(data.posts || '{}');
-              $scope.comments = angular.fromJson(data.comments || '{}');
-              $scope.postsHavingComments = data.postsHavingComments || {};
-              $scope.galleries = angular.fromJson(data.galleries || '{}');
+              $scope.posts = data.posts;
+              $scope.comments = data.comments;
+              $scope.postsHavingComments = data.postsHavingComments;
+              $scope.galleries = data.galleries;
               $scope.resultsConn = "none";
               $scope.btnSearch = false;
             }, function () {
