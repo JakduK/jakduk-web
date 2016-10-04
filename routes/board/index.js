@@ -4,7 +4,6 @@ var express = require('express');
 var _ = require('lodash');
 var moment = require('moment');
 var i18n = require('i18n');
-var TagUtil = require('../../helpers/tag_util');
 var Util = require('../../helpers/jakduk_util');
 
 function postList(req, res, next) {
@@ -61,24 +60,17 @@ function commentList(req, res, next) {
 }
 
 function viewPost(req, res, next) {
-  req.api.getPost(req.params.id).then(function (response) {
+  req.api.getPost(req.params.id).then(response => {
     if (response.statusCode !== 200) {
       next();
       return;
     }
 
-    var context = res.locals;
     var postData = response.data;
-    var metaContent;
 
     if (!postData.post.status.delete) {
-      metaContent = TagUtil.ogFrom(postData.post.content, 120);
-      _.merge(context.meta, {
-        og: {
-          image: metaContent.image || context.meta.og.image,
-          description: metaContent.description || postData.post.subject,
-          type: 'article'
-        }
+      _.merge(res.locals.meta, {
+        og: Util.ogFromPost(postData.post, 120)
       });
     }
 
@@ -97,9 +89,7 @@ function viewPost(req, res, next) {
         galleries: postData.post.galleries || []
       })
     });
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(err => next(err));
 }
 
 function writePost(req, res, next) {

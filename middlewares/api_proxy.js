@@ -3,7 +3,7 @@
 var proxy = require('express-http-proxy');
 
 var config = require('../config/environment');
-var TagUtil = require('../helpers/tag_util');
+var Util = require('../helpers/jakduk_util');
 var slack = require('../helpers/slack_notifier')(config.slack);
 
 module.exports = function (path) {
@@ -20,15 +20,15 @@ module.exports = function (path) {
     },
     intercept (proxyRes, data, req, res, callback) {
       if (proxyRes.statusCode === 200 && req.method && req.path === '/board/free') {
-        const body = JSON.parse(data);
+        const body = JSON.parse(data.toString('utf8'));
         req.api.getPost(body.seq).then(function (response) {
-          var postSummary = TagUtil.ogFrom(response.data.post.content, 200);
+          let og = Util.ogFromPost(response.data.post, 200);
           slack({
-            author: response.data.post.writer.username,
-            subject: response.data.post.subject,
-            link: config.origin + '/board/free/' + response.data.post.seq,
-            text: postSummary.description,
-            image: postSummary.image
+            author: og.author,
+            subject: og.title,
+            link: og.link,
+            text: og.description,
+            image: og.image
           });
         });
       }
