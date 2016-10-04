@@ -1,19 +1,13 @@
 'use strict';
 
 var Util = require('../helpers/jakduk_util');
-var ApiClient = require('../helpers/jakduk_api_client');
 var config = require('../config/environment');
 var _ = require('lodash');
 var i18n = require('i18n');
 
 module.exports = function () {
   return function defaultContext(req, res, next) {
-    var credentials = {};
-    credentials[config.tokenHeader] = req.cookies[config.tokenCookieName] || '';
-    req.api = new ApiClient(credentials, req.headers.cookie || '', config.internalApiServerUrl);
-    req.noRedirectPaths = config.noRedirectPaths;
-
-    req.api.getUserInfo().then(function (response) {
+    req.api.getUserInfo().then(response => {
       if (response.statusCode === 200) {
         req.userInfo = response.data;
       } else if (req.cookies[config.tokenCookieName]) {
@@ -22,9 +16,7 @@ module.exports = function () {
 
       req.isAuthenticated = !!req.userInfo;
       if (req.isAuthenticated) {
-        res.locals.isAdmin = req.userInfo.roles.some(function (role) {
-          return role === 'ROLE_ROOT';
-        });
+        res.locals.isAdmin = req.userInfo.roles.some(role => role === 'ROLE_ROOT');
         req.isAdmin = res.locals.isAdmin;
       }
 
@@ -50,8 +42,6 @@ module.exports = function () {
       });
 
       next();
-    }).catch(function (err) {
-      next(err);
-    });
+    }).catch(err => next(err));
   };
 };

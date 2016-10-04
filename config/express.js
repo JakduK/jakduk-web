@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compression = require('compression');
 
+var apiClient = require('../middlewares/api_client');
 var apiProxy = require('../middlewares/api_proxy');
 var config = require('../config/environment');
 var i18n = require('../middlewares/i18n');
@@ -22,6 +23,7 @@ function setup(app) {
   app.locals.kakaoClientID = config.kakao.clientID;
   app.locals.apiServerUrl = config.apiServerUrl;
   app.locals.thumbnailServerUrl = config.thumbnailServerUrl;
+  app.locals.noRedirectPaths = config.noRedirectPaths;
 
   // view engine setup
   app.set('views', path.join(__dirname, '..', 'views'));
@@ -29,9 +31,10 @@ function setup(app) {
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(compression());
-  app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(cookieParser());
-  app.use(apiProxy());
+  app.use(apiClient());
+  app.use('/api', apiProxy('/api'));
+  app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(i18n());
