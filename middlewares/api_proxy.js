@@ -19,19 +19,36 @@ module.exports = function (path) {
       }
     },
     intercept (proxyRes, data, req, res, callback) {
-      if (proxyRes.statusCode === 200 && req.method && req.path === '/board/free') {
-        const body = JSON.parse(data.toString('utf8'));
-        req.api.getPost(body.seq).then(function (response) {
-          let og = Util.ogFromPost(response.data.post, 200);
-          slack({
-            author: og.author,
-            subject: og.title,
-            link: og.link,
-            text: og.description,
-            image: og.image
+      if (proxyRes.statusCode === 200 && req.method === 'POST') {
+        if (req.path === '/board/free') {
+          const body = JSON.parse(data.toString('utf8'));
+          req.api.getPost(body.seq).then(function (response) {
+            let og = Util.ogFromPost(response.data.post, 200);
+            slack({
+              author: og.author,
+              subject: og.title,
+              link: og.link,
+              text: og.description,
+              image: og.image,
+              isPost: true
+            });
           });
-        });
+        } else if (req.path === '/board/free/comment') {
+          const body = JSON.parse(data.toString('utf8'));
+          req.api.getPost(body.boardItem.seq).then(function (response) {
+            let post = Util.ogFromPost(response.data.post, 200);
+            let comment = Util.ogFromPost(body, 200);
+            slack({
+              author: comment.author,
+              subject: post.title,
+              link: post.link,
+              text: comment.description,
+              isPost: false
+            });
+          });
+        }
       }
+
       callback(null, data);
     }
   });

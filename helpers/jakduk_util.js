@@ -1,7 +1,6 @@
 'use strict';
 
 var querystring = require('querystring');
-var _ = require('lodash');
 var _s = require('underscore.string');
 
 var config = require('../config/environment');
