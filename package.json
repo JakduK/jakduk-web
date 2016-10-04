@@ -15,17 +15,17 @@
     "cookie-parser": "^1.4.3",
     "debug": "^2.2.0",
     "express": "^4.14.0",
+    "express-http-proxy": "^0.10.0",
     "filesize": "^3.3.0",
     "hbs": "^4.0.0",
     "hbs-utils": "0.0.3",
-    "html-parser-lite": "^0.2.0",
-    "http-proxy-middleware": "^0.17.1",
     "i18n": "^0.8.3",
     "lodash": "^4.15.0",
     "moment": "^2.14.1",
     "morgan": "^1.7.0",
     "pmx": "^0.6.3",
-    "restler": "^3.4.0"
+    "restler": "^3.4.0",
+    "underscore.string": "^3.3.4"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

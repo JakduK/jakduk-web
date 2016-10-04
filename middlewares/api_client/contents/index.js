@@ -64,6 +64,12 @@ module.exports = function(ApiClient, internalFn) {
     }.bind(this));
   };
 
+  ApiClient.prototype.getComment = function(seq) {
+    return new Promise(function(resolve) {
+      rest.json(this.serverUrl + '/board/free/comments/' + seq).on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
+
   ApiClient.prototype.getBoardCategories = function(lang) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/board/free/categories', null, {

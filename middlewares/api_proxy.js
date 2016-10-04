@@ -1,45 +1,55 @@
 'use strict';
 
-var proxy = require('http-proxy-middleware');
-var bodyParser = require('body-parser').json();
+var proxy = require('express-http-proxy');
 
 var config = require('../config/environment');
-var TagUtil = require('../helpers/tag_util');
-var ApiClient = require('../helpers/jakduk_api_client');
+var Util = require('../helpers/jakduk_util');
 var slack = require('../helpers/slack_notifier')(config.slack);
 
-module.exports = function () {
-  return proxy('/api', {
-    logLevel: config.env === 'production' ? 'info' : 'debug',
-    pathRewrite: {'^/api': ''},
-    changeOrigin: true,
-    target: config.internalApiServerUrl,
-    onProxyReq: function (proxyReq, req) {
+module.exports = function (path) {
+  return proxy(config.internalApiServerUrl, {
+    reqBodyEncoding: null,
+    reqAsBuffer: true,
+    forwardPath (req) {
+      return path + '/' + req.url;
+    },
+    decorateRequest (proxyReqOpt, req) {
       if (req.cookies[config.tokenCookieName]) {
-        proxyReq.setHeader(config.tokenHeader, req.cookies[config.tokenCookieName]);
+        proxyReqOpt.headers[config.tokenHeader] = req.cookies[config.tokenCookieName];
       }
     },
-    onProxyRes: function (proxyRes, req, res) {
-      if (proxyRes.statusCode === 200 && req.method && req.path === '/board/free') {
-        var credentials = {};
-        credentials[config.tokenHeader] = req.cookies[config.tokenCookieName] || '';
-        bodyParser(proxyRes, res, function () {
-          new ApiClient(
-            credentials,
-            req.headers.cookie,
-            config.internalApiServerUrl
-          ).getPost(proxyRes.body.seq).then(function (response) {
-            var postSummary = TagUtil.ogFrom(response.data.post.content, 200);
+    intercept (proxyRes, data, req, res, callback) {
+      if (proxyRes.statusCode === 200 && req.method === 'POST') {
+        if (req.path === '/board/free') {
+          const body = JSON.parse(data.toString('utf8'));
+          req.api.getPost(body.seq).then(function (response) {
+            let og = Util.ogFromPost(response.data.post, 200);
             slack({
-              author: response.data.post.writer.username,
-              subject: response.data.post.subject,
-              link: config.origin + '/board/free/' + response.data.post.seq,
-              text: postSummary.description,
-              image: postSummary.image
+              author: og.author,
+              subject: og.title,
+              link: og.link,
+              text: og.description,
+              image: og.image,
+              isPost: true
             });
           });
-        });
+        } else if (req.path === '/board/free/comment') {
+          const body = JSON.parse(data.toString('utf8'));
+          req.api.getPost(body.boardItem.seq).then(function (response) {
+            let post = Util.ogFromPost(response.data.post, 200);
+            let comment = Util.ogFromPost(body, 200);
+            slack({
+              author: comment.author,
+              subject: post.title,
+              link: post.link,
+              text: comment.description,
+              isPost: false
+            });
+          });
+        }
       }
+
+      callback(null, data);
     }
   });
 };
