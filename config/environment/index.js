@@ -51,6 +51,8 @@ var defaultConfig = {
     '/password/find'
   ],
 
+  viewAbusePreventCookie: 'FREE_BOARD_<%= seq %>=r',
+
   uploadMaxFileSize: Math.pow(1024, 2) * 8, // '8MB'
 
   facebook: {

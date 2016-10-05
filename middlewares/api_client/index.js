@@ -20,7 +20,9 @@ require('./auth')(ApiClient, internalFn);
 require('./contents')(ApiClient, internalFn);
 require('./user')(ApiClient, internalFn);
 
-module.exports = function () {
+module.exports.ApiClient = ApiClient;
+
+module.exports.middleware = function () {
   return function (req, res, next) {
     let credentials = {
       [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''

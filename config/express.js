@@ -32,7 +32,7 @@ function setup(app) {
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(compression());
   app.use(cookieParser());
-  app.use(apiClient());
+  app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api'));
   app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());
