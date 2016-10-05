@@ -308,7 +308,12 @@
               $image.addClass("img-responsive");
             });
           } else {
-            console.error(data.message);
+            fileItem.remove();
+            if (status === 413) {
+              window.alert('{{TRANSLATION "msg.imagefile.size.limited" size="8 MB"}}');
+            } else {
+              window.alert('{{TRANSLATION "common.msg.error.network.unstable"}}');
+            }
           }
         };
 

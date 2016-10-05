@@ -51,6 +51,8 @@ var defaultConfig = {
     '/password/find'
   ],
 
+  uploadMaxFileSize: Math.pow(1024, 2) * 8, // '8MB'
+
   facebook: {
     clientID: process.env.FACEBOOK_ID || '',
     clientSecret: process.env.FACEBOOK_SECRET || '',

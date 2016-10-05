@@ -10,6 +10,7 @@ module.exports = function (path) {
   return proxy(config.internalApiServerUrl, {
     reqBodyEncoding: null,
     reqAsBuffer: true,
+    limit: config.uploadMaxFileSize,
     forwardPath (req) {
       return path + '/' + req.url;
     },
