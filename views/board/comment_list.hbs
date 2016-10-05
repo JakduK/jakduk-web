@@ -207,7 +207,7 @@
           var conn = $scope.commentFeelingConn[commentId];
           if (conn !== 'loading') {
             $scope.commentFeelingConn[commentId] = "loading";
-            $http.post('{{apiServerUrl}}/board/comment/' + commentId + '/' + status).then(function (response) {
+            $http.post('{{apiServerUrl}}/board/free/comment/' + commentId + '/' + status, null).then(function (response) {
               var data = response.data;
               if (data.feeling === 'LIKE') {
                 $scope.numberOfCommentLike[commentId] = data.numberOfLike;
@@ -215,10 +215,10 @@
                 $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
               }
               $scope.commentFeelingAlert[commentId] = '';
-              $scope.commentFeelingConn[commentId] = "ok";
+              $scope.commentFeelingConn[commentId] = 'ok';
             }, function (response) {
               var data = response.data;
-              $scope.commentFeelingConn[commentId] = "none";
+              $scope.commentFeelingConn[commentId] = '';
               $scope.commentFeelingAlert[commentId] = data.message;
             });
           }
