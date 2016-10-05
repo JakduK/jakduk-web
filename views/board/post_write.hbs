@@ -60,7 +60,7 @@
       <!-- sotred Images -->
       <div class="media" ng-repeat="item in storedImages">
         <div class="media-left media-middle">
-          <img class="media-object" ng-src="{{thumbnailServerUrl}}/gallery/{%item.id%}" style="width: 50px;">
+          <img class="media-object" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%item.id%}" style="width: 50px;">
         </div>
         <div class="media-body">
           <h5 class="media-heading">
@@ -81,7 +81,7 @@
       <!-- queue Images -->
       <div class="media" ng-repeat="item in uploader.queue">
         <div class="media-left media-middle">
-          <img class="media-object" ng-src="{%item._url%}" style="width: 50px;">
+          <img class="media-object" ng-src="{%item._thumbnailUrl%}" style="width: 50px;">
         </div>
         <div class="media-body">
           <h5 class="media-heading">
@@ -293,6 +293,7 @@
         $scope.uploader.onCompleteItem = function (fileItem, data, status) {
           if (status === 200) {
             fileItem._id = data.id;
+            fileItem._thumbnailUrl = '{{thumbnailServerUrl}}/gallery/thumbnail/' + data.id;
             fileItem._url = data.imageUrl;
 
             var imageInfo = {
