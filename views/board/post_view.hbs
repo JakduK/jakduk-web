@@ -607,7 +607,7 @@
           },
           {{#if post.galleries}}
             image: {
-              src: Jakduk.origin + '/gallery/{{post.galleries.[0].id}}',
+              src: '{{thumbnailServerUrl}}/gallery/{{post.galleries.[0].id}}',
               width: '300',
               height: '200'
             }
