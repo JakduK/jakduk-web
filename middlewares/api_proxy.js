@@ -35,7 +35,7 @@ var apiHooks = {
       config.internalApiServerUrl
     ).getPost(resData.boardItem.seq).then(response => {
       let post = Util.ogFromPost(response.data.post, 200);
-      let comment = Util.ogFromPost(body, 200);
+      let comment = Util.ogFromPost(resData, 200);
       slack({
         author: comment.author,
         subject: post.title,
