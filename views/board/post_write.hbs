@@ -70,7 +70,7 @@
             <button type="button" class="btn btn-danger btn-xs" ng-click="removeStoredItem(item)">
               <span class="glyphicon glyphicon-remove-circle"></span>
             </button>
-            <small>{%item.size/1024|number:1%} KB</small>
+            <small>{%item.fileSize|filesize%}</small>
           </h5>
           <div class="form-group has-feedback" ng-class="{'has-success': item.name.length >= 2, 'has-warning': item.name.length < 2 || item.name == null}">
             <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.name" ng-blur="onGalleryItem(item, 'stored')">
@@ -91,9 +91,7 @@
             <button type="button" class="btn btn-danger btn-xs" ng-click="removeQueueItem(item)">
               <span class="glyphicon glyphicon-remove-circle"></span>
             </button>
-            <small>{%item.file.size/1024|number:1%} KB
-              <code>{%item.progress%}%</code>
-            </small>
+            <small>{%item.file.size|filesize%} <code>{%item.progress%}%</code></small>
           </h5>
           <div class="form-group has-feedback" ng-class="{'has-success': item.newName.length >= 2, 'has-warning': item.newName.length < 2 || item.newName == null}">
             <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.newName" ng-blur="onGalleryItem(item, 'queue')">

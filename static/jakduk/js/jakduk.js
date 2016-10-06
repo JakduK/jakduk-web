@@ -25,6 +25,21 @@ define(['angular', 'common'], function (angular) {
         return Math.floor(date.getTime() / 1000).toString(16) + "0000000000000000";
       }
     })
+    .filter('filesize', function() {
+      return function(bytes, precision) {
+        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+          return '-';
+        }
+        if (typeof precision === 'undefined') {
+          precision = 1;
+        }
+
+        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+          number = Math.floor(Math.log(bytes) / Math.log(1024));
+
+        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+      }
+    })
     .controller("headerCtrl", ['$scope', '$location', '$window', function ($scope, $location, $window) {
 
       var port = $location.port();
@@ -59,7 +74,7 @@ define(['angular', 'common'], function (angular) {
         link: function (scope, element) {
           scope.$watch('focusy', function (newValue) {
             if (newValue) {
-              element.focus();  
+              element.focus();
             }
           });
         }
