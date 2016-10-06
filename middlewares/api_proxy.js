@@ -23,6 +23,8 @@ var apiHooks = {
         link: og.link,
         text: og.description,
         image: og.image,
+        video: og.video,
+        videoProvider: og.videoProvider,
         isPost: true
       });
     });
