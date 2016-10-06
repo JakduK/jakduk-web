@@ -280,7 +280,11 @@
               }
 
             }, function (response) {
-              console.error(response.data.message);
+              if (response.data && response.data.message) {
+                window.alert(response.data.message);
+              } else {
+                window.alert('{{TRANSLATION "common.msg.error.network.unstable"}}');
+              }
             });
           } else {
             fileItem.remove();
@@ -310,6 +314,8 @@
             fileItem.remove();
             if (status === 413) {
               window.alert('{{TRANSLATION "msg.imagefile.size.limited" size="8 MB"}}');
+            } else if (data && data.message) {
+              window.alert(data.message);
             } else {
               window.alert('{{TRANSLATION "common.msg.error.network.unstable"}}');
             }
