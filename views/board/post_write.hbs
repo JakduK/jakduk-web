@@ -70,7 +70,7 @@
             <button type="button" class="btn btn-danger btn-xs" ng-click="removeStoredItem(item)">
               <span class="glyphicon glyphicon-remove-circle"></span>
             </button>
-            <small>{%item.fileSize|filesize%}</small>
+            <small>{%item.size|filesize%}</small>
           </h5>
           <div class="form-group has-feedback" ng-class="{'has-success': item.name.length >= 2, 'has-warning': item.name.length < 2 || item.name == null}">
             <input type="text" class="form-control input-sm col-md-2 has-error" placeholder='{{TRANSLATION "gallery.placeholder.name"}}' ng-model="item.name" ng-blur="onGalleryItem(item, 'stored')">
