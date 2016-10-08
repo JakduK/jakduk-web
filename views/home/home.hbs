@@ -152,11 +152,13 @@
         <a class="owl-btn next-v2" id="slickNext"><i class="fa fa-angle-right"></i></a>
       </div>
       <slick settings="slickConfig" ng-if="dataLoaded">
-        <div ng-repeat="image in galleriesLatest">
+        <div ng-repeat="image in galleriesLatest" class="thumbnail" style="max-width: 260px;">
           <a ng-href="/gallery/{%image.id%}">
-            <img class="img-thumbnail img-home-carousel" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
+            <img class="img-home-carousel" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
+            <h5 class="text-center text-overflow">
+              <span ng-bind="image.name"></span>
+            </h5>
           </a>
-          <h5 class="text-center" ng-bind="image.name"></h5>
         </div>
       </slick>
     </div>

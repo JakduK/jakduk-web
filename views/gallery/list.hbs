@@ -32,7 +32,9 @@
           <div class="thumbnail">
             <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%gallery.id%}" alt="{%gallery.name%}" ng-click="openLightboxModal($index)">
             <div class="caption">
-              <h5 class="text-center"><a ng-href="/gallery/{%gallery.id%}" class="text-overflow text-center" ng-bind="gallery.name"></a></h5>
+              <h5 class="text-center text-overflow">
+                <a ng-href="/gallery/{%gallery.id%}" class="text-overflow text-center" ng-bind="gallery.name"></a>
+              </h5>
             </div>
           </div>
         </li>
