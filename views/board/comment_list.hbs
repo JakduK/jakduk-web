@@ -126,7 +126,7 @@
           </p>
           <p class="board-comment">
             <a href="/board/free/{{boardItem.seq}}">
-              {{TRANSLATION "board.subject"}} : {{boardItem.subject}}
+              {{TRANSLATION "board.subject"}} : {{TERNARY boardItem.status.delete (TRANSLATION "board.msg.deleted") boardItem.subject}}
             </a>
           </p>
 
