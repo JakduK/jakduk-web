@@ -356,7 +356,7 @@
           $scope.focus = function (e) {
             {{#if (NOT isAuthenticated)}}
               if (confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
-                location.href = '/login';
+                location.href = '/login{{{redir}}}';
               }
             {{/if}}
           };
@@ -416,19 +416,21 @@
               reqPromise.then(function (response) {
                 var data = response.data;
 
-                $scope.commentCount = data.count;
+                if (data.jakduSchedule) {
+                  $scope.commentCount = data.count;
 
-                if (data.comments.length < 1) { // 댓글이 하나도 없을때
-                  if (type == "init") {
-                  } else {
-                    $scope.commentAlert.msg = '{{TRANSLATION "board.msg.there.is.no.new.comment"}}';
-                    $scope.commentAlert.classType = "bg-warning";
-                  }
-                } else {	// 댓글을 1개 이상 가져왔을 때
-                  if (type == "init" || type == "btnRefreshComment") {
-                    $scope.comments = data.comments;
-                  } else if (type == "btnMoreComment" || type == "btnWriteComment") {
-                    $scope.comments = $scope.comments.concat(data.comments);
+                  if (data.comments.length < 1) { // 댓글이 하나도 없을때
+                    if (type == "init") {
+                    } else {
+                      $scope.commentAlert.msg = '{{TRANSLATION "board.msg.there.is.no.new.comment"}}';
+                      $scope.commentAlert.classType = "bg-warning";
+                    }
+                  } else {	// 댓글을 1개 이상 가져왔을 때
+                    if (type == "init" || type == "btnRefreshComment") {
+                      $scope.comments = data.comments;
+                    } else if (type == "btnMoreComment" || type == "btnWriteComment") {
+                      $scope.comments = $scope.comments.concat(data.comments);
+                    }
                   }
                 }
 
@@ -485,7 +487,7 @@
 
           $scope.needLogin = function () {
             if (confirm('{{TRANSLATION "jakdu.msg.need.login.to.go.jakdu"}}')) {
-              location.href = '/login';
+              window.location = '/login{{{redir}}}';
             }
           }
         });

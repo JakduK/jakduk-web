@@ -13,7 +13,7 @@ function index(req, res) {
       i18n.__('user.sign.in'),
       i18n.__('common.jakduk')
     ],
-    redir: querystring.escape(req.query.redir || '')
+    redir: '?redir=' + querystring.escape(req.query.redir || '')
   });
 }
 

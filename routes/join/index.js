@@ -15,7 +15,7 @@ function index(req, res, next) {
         i18n.__('common.jakduk')
       ],
       footballClubs: footballClubs,
-      redir: querystring.escape(req.query.redir || ''),
+      redir: '?redir=' + querystring.escape(req.query.redir || ''),
       bySocialAccount: false
     });
   }).catch(function (err) {
@@ -68,7 +68,7 @@ function indexOAuth(req, res, next) {
         i18n.__('common.jakduk')
       ],
       footballClubs: footballClubs,
-      redir: querystring.escape(req.query.redir || ''),
+      redir: '?redir=' + querystring.escape(req.query.redir || ''),
       bySocialAccount: true,
       snsProfile: snsProfile,
       tempToken: tempToken

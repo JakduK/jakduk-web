@@ -16,7 +16,7 @@
       <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 
         <!-- Reg-Form -->
-        <form name="userWrite" action="/join{{#if bySocialAccount}}/oauth{{/if}}{{#if redir}}?redir={{{redir}}}{{/if}}" method="POST" class="reg-page" ng-submit="onSubmit($event)">
+        <form name="userWrite" action="/join{{#if bySocialAccount}}/oauth{{/if}}{{{redir}}}" method="POST" class="reg-page" ng-submit="onSubmit($event)">
           {{#if bySocialAccount}}<input type="hidden" name="tempToken" value="{{tempToken}}">{{/if}}
 
           <div class="reg-header">

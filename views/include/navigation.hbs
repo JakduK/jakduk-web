@@ -24,7 +24,7 @@
         </li>
         <li class="topbar-devider"></li>
         {{#unless isAuthenticated}}
-          <li><a href="/login{{redir}}">{{TRANSLATION "common.login"}}</a></li>
+          <li><a href="/login{{{redir}}}">{{TRANSLATION "common.login"}}</a></li>
         {{/unless}}
 
         {{#if isAuthenticated}}

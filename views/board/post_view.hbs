@@ -470,7 +470,7 @@
         $scope.focus = function () {
           {{#if (NOT isAuthenticated)}}
             if ($window.confirm('{{TRANSLATION "board.msg.need.login.for.write"}}')) {
-              $window.location = '/login?redir=' + encodeURIComponent('/board/free/{{post.seq}}' + window.location.search);
+              $window.location = '/login{{{redir}}}'
             }
           {{/if}}
         };
