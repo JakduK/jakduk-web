@@ -79,6 +79,16 @@ define(['angular', 'common'], function (angular) {
           });
         }
       }
+    }])
+    .directive('autofillFixer', [function () {
+      return {
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ngModel) {
+          if (elem.val()) {
+            ngModel.$setViewValue(elem.val());
+          }
+        }
+      };
     }]);
 
   return window.Jakduk = {
