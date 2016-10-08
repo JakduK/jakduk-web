@@ -1,5 +1,6 @@
 'use strict';
 
+var querystring = require('querystring');
 var Util = require('../helpers/jakduk_util');
 var config = require('../config/environment');
 var _ = require('lodash');
@@ -21,6 +22,7 @@ module.exports = function () {
       }
 
       _.merge(res.locals, {
+        redir: '?redir=' + querystring.escape(req.url),
         layout: 'layout',
         bodyClass: 'header-fixed',
         userInfo: req.userInfo,
