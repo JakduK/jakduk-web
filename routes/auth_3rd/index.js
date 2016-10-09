@@ -32,7 +32,7 @@ function callback(provider, req, res) {
     var status = response.statusCode;
 
     if (status === 200) {
-      Util.saveSession(res, response.headers[config.tokenHeader]);
+      Util.saveSession(res, response.headers[config.tokenHeader], true);
       res.redirect(extra.redir || '/');
     } else if (status === 404) {
       Util.saveSession(res, response.headers[config.tempTokenHeader] || '');

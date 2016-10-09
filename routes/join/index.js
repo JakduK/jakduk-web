@@ -87,7 +87,7 @@ function submitOAuth(req, res, next) {
     about: body.about
   }).then(function (response) {
     if (response.statusCode === 200) {
-      Util.saveSession(res, response.headers[config.tokenHeader]);
+      Util.saveSession(res, response.headers[config.tokenHeader], true);
       res.redirect(req.query.redir || '/');
     } else {
       res.redirect('/login');
