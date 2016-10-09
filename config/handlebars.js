@@ -1,5 +1,6 @@
 var path = require('path');
 var hbs = require('hbs');
+var handlebars = hbs.handlebars;
 var hbsUtils = require('hbs-utils')(hbs);
 var i18n = require('i18n');
 var filesize = require('filesize');
@@ -15,7 +16,7 @@ hbs.registerHelper('TITLE', function(val) {
 });
 
 hbs.registerHelper('TRANSLATION', function(key, options) {
-  return i18n.__(key, options.hash);
+  return new handlebars.SafeString(i18n.__(key, options.hash));
 });
 
 hbs.registerHelper('EQ', function(val1, val2) {

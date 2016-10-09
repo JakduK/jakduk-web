@@ -44,7 +44,7 @@
   <div class="container s-results">
     <!-- search results of post -->
     <div class="margin-bottom-10" ng-show="posts.hits">
-      <span class="results-number">{{{TRANSLATION "search.post.results" n="<span ng-bind=\"posts.hits.total\"></span>"}}}</span>
+      <span class="results-number">{{TRANSLATION "search.post.results" n="<span ng-bind=\"posts.hits.total\"></span>"}}</span>
 
       <!-- Begin Inner Results -->
       <div ng-repeat="hit in posts.hits.hits">
@@ -83,7 +83,7 @@
 
     <!-- search results of post -->
     <div class="margin-bottom-10" ng-show="comments.hits">
-      <span class="results-number">{{{TRANSLATION "search.comment.results" n="<span ng-bind=\"comments.hits.total\"></span>"}}}</span>
+      <span class="results-number">{{TRANSLATION "search.comment.results" n="<span ng-bind=\"comments.hits.total\"></span>"}}</span>
 
       <div ng-repeat="hit in comments.hits.hits">
         <div class="inner-results">
@@ -124,7 +124,7 @@
 
     <!-- search results of gallery -->
     <div ng-show="galleries.hits">
-      <span class="results-number">{{{TRANSLATION "search.gallery.results" n="<span ng-bind=\"galleries.hits.total\"></span>"}}}</span>
+      <span class="results-number">{{TRANSLATION "search.gallery.results" n="<span ng-bind=\"galleries.hits.total\"></span>"}}</span>
 
       <div class="row">
         <!-- Begin Easy Block v2 -->

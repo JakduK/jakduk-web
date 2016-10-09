@@ -45,10 +45,10 @@
 
     <div class="tag-box tag-box-v4 margin-bottom-20">
       <h2 ng-bind="chartConfig.title.text"></h2>
-      <p>{{{TRANSLATION "stats.msg.total.number.of.clubs" n="<strong ng-bind=\"chartConfig.series[0].data.length | number:0\"></strong>"}}}</p>
-      <p>{{{TRANSLATION "stats.msg.total.number.of.attendance.matches" n="<strong ng-bind=\"gamesSum | number:0\"></strong>"}}}</p>
-      <p>{{{TRANSLATION "stats.msg.total.number.of.attendance.total" n="<strong ng-bind=\"totalSum | number:0\"></strong>"}}}</p>
-      <p>{{{TRANSLATION "stats.msg.total.number.of.attendance.average" n="<strong ng-bind=\"average | number:0\"></strong>"}}}</p>
+      <p>{{TRANSLATION "stats.msg.total.number.of.clubs" n="<strong ng-bind=\"chartConfig.series[0].data.length | number:0\"></strong>"}}</p>
+      <p>{{TRANSLATION "stats.msg.total.number.of.attendance.matches" n="<strong ng-bind=\"gamesSum | number:0\"></strong>"}}</p>
+      <p>{{TRANSLATION "stats.msg.total.number.of.attendance.total" n="<strong ng-bind=\"totalSum | number:0\"></strong>"}}</p>
+      <p>{{TRANSLATION "stats.msg.total.number.of.attendance.average" n="<strong ng-bind=\"average | number:0\"></strong>"}}</p>
     </div>
 
     <div class="text-right">

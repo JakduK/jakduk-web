@@ -134,7 +134,7 @@
         <h2 class="heading-sm text-primary">
           <i class="fa fa-comments"></i>
           <span infinite-scroll="initComment()" infinite-scroll-disabled="infiniteDisabled">
-            {{{TRANSLATION "board.msg.comment.count" n="<span ng-bind=\" commentCount\"></span>"}}}
+            {{TRANSLATION "board.msg.comment.count" n="<span ng-bind=\" commentCount\"></span>"}}
           </span>
           <button type="button" class="btn btn-link" ng-click="btnRefreshComment()"
             tooltip-popup-close-delay='300' uib-tooltip='{{TRANSLATION "common.button.refresh.comments"}}'>
