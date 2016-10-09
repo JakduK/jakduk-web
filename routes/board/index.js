@@ -62,7 +62,7 @@ function commentList(req, res, next) {
 function viewPost(req, res, next) {
   req.api.getPost(req.params.id).then(response => {
     if (response.statusCode !== 200) {
-      next();
+      next(Util.makeError(response));
       return;
     }
 
