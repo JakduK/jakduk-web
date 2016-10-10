@@ -304,5 +304,6 @@
 	"Size.userWrite.password": "비밀번호의 길이는 4 ~ 20자 입니다.",
 	"msg.comingsoon": "준비중입니다.",
 	"msg.recommend.browser": "K리그 작두왕은 Internet Explorer9 최신 버전 이상 및 구글 크롬/파이어폭스 브라우저에 최적화 되어 있습니다.",
-	"msg.imagefile.size.limited": "이미지 파일 크기는 {{size}}로 제한하고 있습니다."
+	"msg.imagefile.size.limited": "이미지 파일 크기는 {{size}}로 제한하고 있습니다.",
+	"latest.articles.author": "작성자의 최근 게시물"
 }

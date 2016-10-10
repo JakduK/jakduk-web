@@ -68,7 +68,7 @@ function viewPost(req, res, next) {
 
     var postData = response.data;
 
-    if (!postData.post.status.delete) {
+    if (!postData.post.status || !postData.post.status.delete) {
       _.merge(res.locals.meta, {
         og: Util.ogFromPost(postData.post, 120)
       });
@@ -79,7 +79,7 @@ function viewPost(req, res, next) {
     }
     res.render('board/post_view', {
       title: [
-        postData.post.status.delete ? i18n.__('board.msg.deleted') : postData.post.subject,
+        (!postData.post.status || postData.post.status.delete) ? i18n.__('board.msg.deleted') : postData.post.subject,
         i18n.__('board.name.free'),
         i18n.__('common.jakduk')
       ],
@@ -87,7 +87,8 @@ function viewPost(req, res, next) {
       prevPost: postData.prevPost,
       post: _.extend(postData.post, {
         galleries: postData.post.galleries || []
-      })
+      }),
+      latestPostsByWriter: postData.latestPostsByWriter
     });
   }).catch(err => next(err));
 }
