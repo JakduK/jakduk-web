@@ -1,6 +1,7 @@
 'use strict';
 
 var i18n = require('i18n');
+var config = require('../../config/environment');
 
 module.exports.setup = function (app) {
   app.use(function notFound(req, res, next) {
@@ -10,7 +11,6 @@ module.exports.setup = function (app) {
     next(err);
   });
 
-  var isProd = app.get('env') === 'production';
   app.use(function (err, req, res, next) {
     const statusCode = err.status || 500;
     res.status(statusCode);
@@ -20,7 +20,7 @@ module.exports.setup = function (app) {
         i18n.__('common.jakduk')
       ],
       message: err.statusMessage,
-      error: isProd ? '' : err.stack,
+      error: config.debug ? err.stack : '',
       code: statusCode,
       req: req,
       now: Date.now()
