@@ -128,6 +128,12 @@ function editPost(req, res, next) {
 
     var postData = responses[0].data;
     var categories = responses[1].data.categories;
+
+    if (req.userInfo.id !== postData.post.writer.userId) {
+      next(Util.makeForbidden());
+      return;
+    }
+
     res.render('board/post_write', {
       title: [
         i18n.__(postData.post.subject),

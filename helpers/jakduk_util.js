@@ -2,7 +2,7 @@
 
 var querystring = require('querystring');
 var _s = require('underscore.string');
-
+var i18n = require('i18n');
 var config = require('../config/environment');
 
 const ytRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
@@ -62,6 +62,12 @@ module.exports = {
     }, null, 2));
     err.status = response.statusCode;
     err.statusMessage = response.statusMessage;
+    return err;
+  },
+  makeForbidden() {
+    let err = new Error(i18n.__('common.msg.error.401'));
+    err.status = 401;
+    err.statusMessage = 'Unauthorized';
     return err;
   }
 };
