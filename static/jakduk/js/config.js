@@ -22,7 +22,7 @@ require.config({
     'angular-ui-bootstrap': '/bower_components/angular-bootstrap/ui-bootstrap-tpls.min',
     'angular-ui-router': '/bower_components/angular-ui-router/release/angular-ui-router.min',
     'angular-summernote': '/bower_components/angular-summernote/dist/angular-summernote.min',
-    'angular-infinite-scroll': '/bower_components/ng-infinite-scroller-origin/build/ng-infinite-scroll.min',
+    'angular-infinite-scroll': '/bower_components/ng-infinite-scroller-origin/src/infinite-scroll',
     'angular-ladda': '/bower_components/angular-ladda/dist/angular-ladda.min',
     'angular-file-upload': '/bower_components/angular-file-upload/dist/angular-file-upload.min',
     'angular-lazy-img': '/bower_components/angular-lazy-img/release/angular-lazy-img.min',
