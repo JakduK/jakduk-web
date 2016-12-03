@@ -189,20 +189,18 @@
           if ($scope.userWrite.email.$valid) {
             if ($scope.emailConn == "none") {
               $scope.emailConn = "connecting";
-              $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email)).then(function (response) {
-                var data = response.data;
-                $scope.emailStatus = data ? 'INVALID' : 'OK';
+              $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email)).then(function () {
+                $scope.emailStatus = 'OK';
                 $scope.emailAlert = {
-                  classType: data ? "text-danger" : "text-success",
-                  msg: data ? '{{TRANSLATION "user.msg.already.email"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                  classType: "text-success",
+                  msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
                 $scope.emailConn = "none";
-              }, function (response) {
-                var data = response.data;
+              }, function () {
                 $scope.emailStatus = 'INVALID';
                 $scope.emailAlert = {
                   classType: "text-danger",
-                  msg: data.message
+                  msg: '{{TRANSLATION "user.msg.already.email"}}'
                 };
                 $scope.emailConn = "none";
               });
@@ -217,20 +215,18 @@
           if ($scope.userWrite.username.$valid) {
             if ($scope.usernameConn == "none") {
               $scope.usernameConn = "connecting";
-              $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function (response) {
-                var data = response.data;
-                $scope.usernameStatus = data ? 'INVALID' : 'OK';
+              $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function () {
+                $scope.usernameStatus = 'OK';
                 $scope.usernameAlert = {
-                  classType: data ? "text-danger" : "text-success",
-                  msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                  classType: "text-success",
+                  msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
                 $scope.usernameConn = "none";
-              }, function (response) {
-                var data = response.data;
+              }, function () {
                 $scope.usernameStatus = 'INVALID';
                 $scope.usernameAlert = {
                   classType: "text-danger",
-                  msg: data.message
+                  msg: '{{TRANSLATION "user.msg.already.username"}}'
                 };
                 $scope.usernameConn = "none";
               });

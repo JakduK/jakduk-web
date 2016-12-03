@@ -148,19 +148,17 @@
           if ($scope.userProfileForm.username.$valid) {
             if ($scope.usernameConn === "none") {
               $scope.usernameConn = "connecting";
-              $http.get('{{apiServerUrl}}/user/exist/username/edit?username=' + encodeURIComponent($scope.username)).then(function (response) {
-                var data = response.data;
-                $scope.usernameStatus = data ? 'INVALID' : 'OK';
+              $http.get('{{apiServerUrl}}/user/exist/username/edit?username=' + encodeURIComponent($scope.username)).then(function () {
+                $scope.usernameStatus = 'OK';
                 $scope.usernameAlert = {
-                  classType: data ? "text-danger" : "text-success",
-                  msg: data ? '{{TRANSLATION "user.msg.already.username"}}' : '{{TRANSLATION "user.msg.available.data"}}'
+                  classType: "text-success",
+                  msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
-              }, function (response) {
-                var data = response.data;
+              }, function () {
                 $scope.usernameStatus = 'INVALID';
                 $scope.usernameAlert = {
                   classType: "text-danger",
-                  msg: data.message
+                  msg: '{{TRANSLATION "user.msg.already.username"}}'
                 };
               }).then(function () {
                 $scope.usernameConn = "none";
