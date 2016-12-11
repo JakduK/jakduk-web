@@ -43,22 +43,22 @@
   <!--=== Content Part ===-->
   <div class="container s-results">
     <!-- search results of post -->
-    <div class="margin-bottom-10" ng-show="posts.hits">
-      <span class="results-number">{{TRANSLATION "search.post.results" n="<span ng-bind=\"posts.hits.total\"></span>"}}</span>
+    <div class="margin-bottom-10" ng-show="postResult">
+      <span class="results-number">{{TRANSLATION "search.post.results" n="<span ng-bind=\"postResult.totalCount\"></span>"}}</span>
 
       <!-- Begin Inner Results -->
-      <div ng-repeat="hit in posts.hits.hits">
+      <div ng-repeat="post in postResult.posts">
         <div class="inner-results">
-          <h3 ng-if="hit.highlight.subject.length">
-            <a href="/board/free/{%hit._source.seq%}" ng-bind-html="hit.highlight.subject[0]"></a>
+          <h3 ng-if="post.highlight.subject.length">
+            <a href="/board/free/{%post.seq%}" ng-bind-html="post.highlight.subject[0]"></a>
           </h3>
-          <h3 ng-if="!hit.highlight.subject.length">
-            <a href="/board/free/{%hit._source.seq%}" ng-bind="hit._source.subject"></a></h3>
-          <p ng-if="hit.highlight.content.length" ng-bind-html="hit.highlight.content[0]"></p>
-          <p ng-if="!hit.highlight.content.length">{%hit.fields.content_preview[0]%}</p>
+          <h3 ng-if="!post.highlight.subject.length">
+            <a href="/board/free/{%post.seq%}" ng-bind="post.subject"></a></h3>
+          <p ng-if="post.highlight.content.length" ng-bind-html="post.highlight.content[0]"></p>
+          <p ng-if="!post.highlight.content.length">{%post.content_preview%}</p>
           <ul class="list-inline down-ul">
-            <li><i aria-hidden="true" class="icon-user"></i> <span ng-bind="hit._source.writer.username"></span></li>
-            <li ng-bind="hit._id | dateFromObjectId | date:'medium'"></li>
+            <li><i aria-hidden="true" class="icon-user"></i> <span ng-bind="post.writer.username"></span></li>
+            <li ng-bind="post.id | dateFromObjectId | date:'medium'"></li>
             <li></li>
           </ul>
         </div>
@@ -66,8 +66,8 @@
       </div>
     </div>
 
-    <div class="text-left" ng-show="posts.hits.total">
-      <uib-pagination ng-model="currentPage" total-items="posts.hits.total" max-size="10" items-per-page="itemsPerPage"
+    <div class="text-left" ng-show="postResult.totalCount">
+      <uib-pagination ng-model="currentPage" total-items="postResult.totalCount" max-size="10" items-per-page="itemsPerPage"
         previous-text="&lsaquo;" next-text="&rsaquo;" ng-change="pageChanged()" ng-show="whereSize ===
         1"></uib-pagination>
 
@@ -82,22 +82,22 @@
     </div>
 
     <!-- search results of post -->
-    <div class="margin-bottom-10" ng-show="comments.hits">
-      <span class="results-number">{{TRANSLATION "search.comment.results" n="<span ng-bind=\"comments.hits.total\"></span>"}}</span>
+    <div class="margin-bottom-10" ng-show="commentResult">
+      <span class="results-number">{{TRANSLATION "search.comment.results" n="<span ng-bind=\"commentResult.totalCount\"></span>"}}</span>
 
-      <div ng-repeat="hit in comments.hits.hits">
+      <div ng-repeat="comment in commentResult.comments">
         <div class="inner-results">
           <ul class="list-inline up-ul">
-            <li><i aria-hidden="true" class="icon-user"></i> <span ng-bind="hit._source.writer.username"></span></li>
-            <li ng-bind="hit._id| dateFromObjectId | date:'medium'"></li>
+            <li><i aria-hidden="true" class="icon-user"></i> <span ng-bind="comment.writer.username"></span></li>
+            <li ng-bind="comment.id| dateFromObjectId | date:'medium'"></li>
           </ul>
           <p>
-            <a href="/board/free/{%hit._source.boardItem.seq%}" ng-bind-html="hit.highlight.content[0]"></a>
+            <a href="/board/free/{%comment.parentBoard.seq%}" ng-bind-html="comment.highlight.content[0]"></a>
           </p>
           <ul class="list-inline up-ul text-overflow">
             <li>
-              <a href="/board/free/{%hit._source.boardItem.seq%}">
-                {{TRANSLATION "board.subject"}} : <span ng-bind="postsHavingComments[hit._source.boardItem.id].subject"></span>
+              <a href="/board/free/{%comment.parentBoard.seq%}">
+                {{TRANSLATION "board.subject"}} : <span ng-bind="comment.parentBoard.subject"></span>
               </a>
             </li>
           </ul>
@@ -107,8 +107,8 @@
       </div>
     </div>
 
-    <div class="text-left" ng-show="comments.hits.total">
-      <uib-pagination ng-model="currentPage" total-items="comments.hits.total" max-size="10" items-per-page="itemsPerPage"
+    <div class="text-left" ng-show="commentResult.totalCount">
+      <uib-pagination ng-model="currentPage" total-items="commentResult.totalCount" max-size="10" items-per-page="itemsPerPage"
         previous-text="&lsaquo;" next-text="&rsaquo;" ng-change="pageChanged()" ng-show="whereSize === 1"></uib-pagination>
 
       <div class="text-right col-md-12 margin-bottom-10" ng-show="whereSize > 1">
@@ -123,17 +123,17 @@
     </div>
 
     <!-- search results of gallery -->
-    <div ng-show="galleries.hits">
-      <span class="results-number">{{TRANSLATION "search.gallery.results" n="<span ng-bind=\"galleries.hits.total\"></span>"}}</span>
+    <div ng-show="galleryResult">
+      <span class="results-number">{{TRANSLATION "search.gallery.results" n="<span ng-bind=\"galleryResult.totalCount\"></span>"}}</span>
 
       <div class="row">
         <!-- Begin Easy Block v2 -->
-        <div class="col-md-3 col-sm-4 col-xs-6 md-margin-bottom-10" ng-repeat="hit in galleries.hits.hits">
+        <div class="col-md-3 col-sm-4 col-xs-6 md-margin-bottom-10" ng-repeat="gallery in galleryResult.galleries">
           <div class="thumbnail">
-            <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%hit._id%}"
-              alt="{%hit._source.name%}" ng-click="openLightboxModal($index)">
+            <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%gallery.id%}"
+              alt="{%gallery.name%}" ng-click="openLightboxModal($index)">
             <div class="caption text-center">
-              <a ng-href="/gallery/{%hit._id%}" ng-bind-html="hit.highlight.name[0]"></a>
+              <a ng-href="/gallery/{%gallery.id%}" ng-bind-html="gallery.highlight.name[0]"></a>
             </div>
           </div>
         </div>
@@ -141,8 +141,8 @@
       </div>
     </div>
 
-    <div class="text-left" ng-show="galleries.hits.total">
-      <uib-pagination ng-model="currentPage" total-items="galleries.hits.total" max-size="10" items-per-page="itemsPerPageGallery"
+    <div class="text-left" ng-show="galleryResult.totalCount">
+      <uib-pagination ng-model="currentPage" total-items="galleryResult.totalCount" max-size="10" items-per-page="itemsPerPageGallery"
         previous-text="&lsaquo;" next-text="&rsaquo;" ng-change="pageChanged()" ng-show="whereSize == 1"></uib-pagination>
 
       <div class="text-right col-md-12 margin-bottom-10" ng-show="whereSize > 1">
@@ -175,11 +175,11 @@
         LightboxProvider.templateUrl = "/jakduk/template/lightbox-search.html";
 
         LightboxProvider.getImageUrl = function (image) {
-          return '{{thumbnailServerUrl}}/gallery/' + image._id;
+          return '{{thumbnailServerUrl}}/gallery/' + image.id;
         };
 
         LightboxProvider.getImageCaption = function (image) {
-          return image._source.name;
+          return image.name;
         };
 
         LightboxProvider.calculateImageDimensionLimits = function (dimensions) {
@@ -230,10 +230,9 @@
         $scope.galleriesConn = "none";
         $scope.where = {};
         $scope.whereSize = 0;
-        $scope.posts = {};
-        $scope.comments = {};
-        $scope.postsHavingComments = {};
-        $scope.galleries = {};
+        $scope.postResult = {};
+        $scope.commentResult = {};
+        $scope.galleryResult = {};
         $scope.itemsPerPage = Jakduk.ItemsPerPageOnSearch;
         $scope.itemsPerPageGallery = Jakduk.ItemsPerPageOnSearchGallery;
         $scope.isGalleryOnly = false;
@@ -260,7 +259,7 @@
             }
           }
         } else {
-          $scope.where = {posts: false, comments: false, galleries: false};
+          $scope.where = {postResult: false, commentResult: false, galleryResult: false};
         }
 
         if ($scope.where.galleries == true && $scope.where.posts == null && $scope.where.comments == null) {
@@ -335,10 +334,9 @@
 
             $http.get('{{apiServerUrl}}/search?q=' + encodeURIComponent($scope.searchWords.trim()) + '&w=' + where + '&from=' + from + '&size=' + size).then(function (response) {
               var data = response.data;
-              $scope.posts = data.posts;
-              $scope.comments = data.comments;
-              $scope.postsHavingComments = data.postsHavingComments;
-              $scope.galleries = data.galleries;
+              $scope.postResult = data.postResult;
+              $scope.commentResult = data.commentResult;
+              $scope.galleryResult = data.galleryResult;
               $scope.resultsConn = "none";
               $scope.btnSearch = false;
             }, function () {
@@ -366,7 +364,7 @@
         };
 
         $scope.openLightboxModal = function (index) {
-          Lightbox.openModal($scope.galleries.hits.hits, index);
+          Lightbox.openModal($scope.galleryResult.galleries, index);
         };
 
         $scope.getResults(where, from, size);
