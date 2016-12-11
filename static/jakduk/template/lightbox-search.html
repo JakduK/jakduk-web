@@ -14,9 +14,9 @@
 		<strong>{%Lightbox.imageCaption%}</strong>
 </div>
 <div>		
-		<span aria-hidden="true" class="icon-user"></span> {%Lightbox.images[Lightbox.index]._source.writer.username%}
+		<span aria-hidden="true" class="icon-user"></span> {%Lightbox.images[Lightbox.index].writer.username%}
 		&nbsp;
-		{%dateFromObjectId(Lightbox.images[Lightbox.index]._id) | date:dateTimeFormat.dateTime%}
+		{%dateFromObjectId(Lightbox.images[Lightbox.index].id) | date:dateTimeFormat.dateTime%}
 	</div>
 
   <div class="lightbox-image-container">
