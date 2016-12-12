@@ -13,5 +13,6 @@ module.exports = function (app) {
   require('./stats').setup(app);
   require('./search').setup(app);
   require('./admin').setup(app);
+  require('./rss').setup(app);
   require('./error').setup(app);
 };
