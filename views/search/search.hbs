@@ -52,10 +52,7 @@
           <h3 ng-if="post.highlight.subject.length">
             <a href="/board/free/{%post.seq%}" ng-bind-html="post.highlight.subject[0]"></a>
           </h3>
-          <h3 ng-if="!post.highlight.subject.length">
-            <a href="/board/free/{%post.seq%}" ng-bind="post.subject"></a></h3>
           <p ng-if="post.highlight.content.length" ng-bind-html="post.highlight.content[0]"></p>
-          <p ng-if="!post.highlight.content.length">{%post.content_preview%}</p>
           <ul class="list-inline down-ul">
             <li><i aria-hidden="true" class="icon-user"></i> <span ng-bind="post.writer.username"></span></li>
             <li ng-bind="post.id | dateFromObjectId | date:'medium'"></li>
