@@ -68,17 +68,16 @@
     ], function (angular, Kakao, Jakduk) {
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-      ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+      ]).controller('statsCtrl', ['$scope', '$http', '$window', '$q', function ($scope, $http, $window, $q) {
         $scope.footballClubsConn = "none";
         $scope.attendancesConn = "none";
         $scope.attendances = {};
         $scope.footballClubs = [];
         $scope.alert = {};
-        $scope.clubOrigin = "";
         $scope.totalSum = 0;
         $scope.gamesSum = 0;
         $scope.average = 0;
-        $scope.clubOrigin = "{{clubOrigin}}";
+        $scope.clubOrigin = Jakduk.queryObject().clubOrigin;
 
         Highcharts.setOptions({
           lang: {
@@ -190,13 +189,15 @@
           credits: {enabled: true}
         };
 
-        $scope.getFootballClubs = function (cb) {
+        $scope.getFootballClubs = function () {
+          var promise;
+
           if ($scope.footballClubsConn === "none") {
 
             $scope.chartConfig.loading = true;
             $scope.footballClubsConn = "loading";
 
-            $http.get('{{apiServerUrl}}/football/clubs?lang={{locale}}').then(function (response) {
+            promise = $http.get('{{apiServerUrl}}/football/clubs?lang={{locale}}').then(function (response) {
               $scope.footballClubsConn = "none";
               $scope.footballClubs = $scope.footballClubs.concat(response.data);
               $scope.footballClubs.forEach(function (value, index) {
@@ -210,6 +211,8 @@
               $scope.error = '{{TRANSLATION "common.msg.error.network.unstable"}}';
             });
           }
+
+          return promise || $q.resolve();
         };
 
         $scope.changeFootballClub = function () {
@@ -313,11 +316,11 @@
           });
         };
 
-        $scope.getFootballClubs();
-
-        if ($scope.clubOrigin) {
-          $scope.getAttendance();
-        }
+        $scope.getFootballClubs().then(function () {
+          if ($scope.clubOrigin) {
+            $scope.getAttendance();
+          }
+        });
       }]);
 
       angular.bootstrap(document, ['jakdukApp']);
