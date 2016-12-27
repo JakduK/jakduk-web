@@ -76,16 +76,12 @@
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
       ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
-        var KLId = 'KL';
-        var KLCLId = 'KLCL';
-        var KLCHId = 'KLCH';
         var KLname = '{{TRANSLATION "stats.attendance.filter.league"}}';
         var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
         var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
-        var season = Number("{{season}}");
-        var league = "{{league}}";
-        var leagueKeys = [];
+        var season = parseInt(Jakduk.queryObject().season) || 2014;
 
+        $scope.leagueId = Jakduk.queryObject().league || 'KL';
         $scope.leagues = {
           2012: {
             'KL': {name: KLname},
@@ -105,26 +101,6 @@
         $scope.totalSum = 0;
         $scope.gamesSum = 0;
         $scope.average = 0;
-
-        if ($scope.seasons.indexOf(season) >= 0) {
-          $scope.season = season;
-        } else {
-          $scope.season = 2014;
-        }
-
-        for (var key1 in $scope.leagues[$scope.season]) {
-          var key2 = $scope.leagues[$scope.season][key1];
-
-          if (key2.disable != true) {
-            leagueKeys.push(key1);
-          }
-        }
-
-        if (leagueKeys.indexOf(league) >= 0) {
-          $scope.leagueId = league;
-        } else {
-          $scope.leagueId = KLId;
-        }
 
         Highcharts.setOptions({
           lang: {
@@ -223,7 +199,7 @@
             $scope.chartConfig.loading = true;
             $scope.attendancesConn = "loading";
 
-            $http.get('{{apiServerUrl}}/stats/attendance/season/' + $scope.season + '?league=' + KLId).then(function (response) {
+            $http.get('{{apiServerUrl}}/stats/attendance/season/' + $scope.season + '?league=' + $scope.leagueId).then(function (response) {
               $scope.attendances[$scope.season] = response.data;
               $scope.attendancesConn = "none";
               $scope.chartConfig.loading = false;
@@ -238,10 +214,6 @@
         };
 
         $scope.refreshData = function () {
-          if (!$scope.leagueId) {
-            return;
-          }
-
           $scope.chartConfig.series.forEach(function (series) {
             series.data = [];
           });
@@ -251,7 +223,7 @@
           var gamesSum = 0;
 
           attendances.forEach(function (attendance) {
-            if ($scope.leagueId == KLId || $scope.leagueId == attendance.league) {
+            if ($scope.leagueId === attendance.league) {
               var clubName = 'Unknown';
               $scope.footballClubs.some(function (club) {
                 if (club.origin.id === (attendance.club && attendance.club.id)) {
@@ -291,7 +263,7 @@
         };
 
         $scope.changeLeague = function () {
-          if ($scope.leagueId != null) {
+          if ($scope.leagueId) {
             $scope.refreshData();
           }
         };
