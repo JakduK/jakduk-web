@@ -19,7 +19,7 @@
           <!--  최근 글 -->
           <div class="col-sm-6 sm-margin-bottom-30">
             <div class="headline">
-              <h2>{{TRANSLATION "home.posts.latest"}}</h2>
+              <h4>{{TRANSLATION "home.posts.latest"}}</h4>
               <a class="btn-u btn-u-xs btn-u-default rounded pull-right" style="margin: 5px;" href="/board/free">
                 {{TRANSLATION "common.button.more"}}
               </a>
@@ -29,9 +29,9 @@
             <ul class="list-unstyled blog-trending">
             {{#each data.posts}}
               <li>
-                <h3>
+                <h4>
                   <a href="/board/free/{{seq}}">{{TERNARY status.delete (TRANSLATION "board.msg.deleted") subject}}</a>
-                </h3>
+                </h4>
                 <small>
                   <span aria-hidden="true" class="icon-user"></span> {{writer.username}}
                   &nbsp;
@@ -48,7 +48,7 @@
           <!-- 최근 댓글  -->
           <div class="col-sm-6 sm-margin-bottom-30">
             <div class="headline">
-              <h2 class>{{TRANSLATION "home.comments.latest"}}</h2>
+              <h4 class>{{TRANSLATION "home.comments.latest"}}</h4>
               <a class="btn-u btn-u-xs btn-u-default rounded pull-right" style="margin: 5px;" href="/board/free/comments">
                 {{TRANSLATION "common.button.more"}}
               </a>
@@ -78,7 +78,7 @@
 
           <!-- 최근 가입 회원 -->
           <div class="margin-bottom-30 col-md-12 col-sm-6">
-            <div class="headline"><h2>{{TRANSLATION "home.members.registered.latest"}}</h2></div>
+            <div class="headline"><h4>{{TRANSLATION "home.members.registered.latest"}}</h4></div>
 
             <div class="carousel slide testimonials testimonials-v2" id="testimonials-1">
               <div class="carousel-inner">
@@ -112,11 +112,12 @@
 
           <!--  백과사전  -->
           <div class="shadow-wrapper col-md-12 col-sm-6">
+            <h4>백과사전</h4>
             <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-              <h2>
+              <h4>
                 <span ng-bind="encyclopedia.subject"></span>
                 <span class="label rounded label-orange" ng-bind="encyclopedia.kind"></span>
-              </h2>
+              </h4>
               <p ng-bind="encyclopedia.content"></p>
               <!--
               <button class="btn-u btn-brd btn-brd-hover rounded btn-u-sea" type="button" ng-click="refreshEncyclopedia()">
@@ -126,12 +127,23 @@
             </div>
           </div>
 
-          <!-- 명언 -->
+          <!-- 인기 검색어 -->
           <div class="col-sm-12">
-            <blockquote class="hero">
-              <p><em>"인간의 도덕과 의무에 대해 내가 알고 있는 것은 모두 축구에서 배웠다."</em></p>
-              <small><em>알베르 카뮈 , 노벨문학상 수상자</em></small>
-            </blockquote>
+            <div class="headline"><h4>{{TRANSLATION 'popular.search.words'}}</h4></div>
+            <table class="table table-striped">
+              <tbody>
+              {{#each data.popularSearchWords}}
+                <tr>
+                  <td>
+                    <strong>
+                      <span>{{ADD @index 1}}</span>.
+                    </strong>&nbsp;
+                    <a ng-href="/search?q={{key}}&w=PO;CO;GA;">{{key}}</a>
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -141,7 +153,7 @@
 
     <!-- 최근 사진 -->
     <div class="headline">
-      <h2>{{TRANSLATION "home.pictures.latest"}}</h2>
+      <h4>{{TRANSLATION "home.pictures.latest"}}</h4>
       <a class="btn-u btn-u-xs btn-u-default rounded pull-right" style="margin: 5px;" href="/gallery">
         {{TRANSLATION "common.button.more"}}
       </a>
@@ -179,14 +191,12 @@
   <script>
     require([
       'angular', 'jakduk', 'slick', 'angular-slick'
-    ], function(angular, Jakduk) {
+    ], function(angular) {
       angular.module('jakdukApp', [
         'ngSanitize',
         'slickCarousel',
         'jakdukCommon'
-      ]).controller("homeCtrl", ['$scope', '$http', function ($scope, $http) {
-        $scope.refreshEncyclopedia = refreshEncyclopedia;
-
+      ]).controller("homeCtrl", ['$scope', function ($scope) {
         $scope.dataLoaded = true;
         $scope.encyclopediaConn = 'none';
         $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
@@ -209,31 +219,6 @@
             }
           }
         };
-
-        function refreshEncyclopedia() {
-          if ($scope.encyclopediaConn === "none") {
-            $scope.encyclopediaConn = "loading";
-
-            $http.get('{{apiServerUrl}}/home/encyclopedia?lang={{locale}}').then(function(response) {
-              var data = response.data;
-
-              if (!Jakduk.isEmpty(data)) {
-                if (data.kind === "player") {
-                  $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.best.player"}}';
-                } else if (data.encyclopedia.kind === "book") {
-                  $scope.encyclopedia.kind = '{{TRANSLATION "home.kind.recommend.book"}}';
-                }
-
-                $scope.encyclopedia.subject = data.subject;
-                $scope.encyclopedia.content = data.content;
-              }
-
-              $scope.encyclopediaConn = "none";
-            }, function () {
-              $scope.encyclopediaConn = "none";
-            });
-          }
-        }
       }]);
 
       angular.bootstrap(document, ['jakdukApp']);

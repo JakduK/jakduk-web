@@ -1,7 +1,7 @@
 'use strict';
 
-var moment = require('moment');
-var i18n = require('i18n');
+const moment = require('moment');
+const i18n = require('i18n');
 
 module.exports.setup = function (app) {
   app.get('/', function (req, res) {
@@ -11,8 +11,9 @@ module.exports.setup = function (app) {
   app.get('/home', function (req, res, next) {
     Promise.all([
       req.api.latest(),
-      req.api.encyclopedia(res.locals.locale)
-    ]).then(function (responses) {
+      req.api.encyclopedia(res.locals.locale),
+      req.api.getPopularSearchWords()
+    ]).then(responses => {
       res.render('home/home', {
         title: [
           i18n.__('common.home'),
@@ -25,11 +26,10 @@ module.exports.setup = function (app) {
           comments: responses[0].data.comments || [],
           galleries: responses[0].data.galleries || [],
           homeDescription: responses[0].data.homeDescription || {},
-          encyclopedia: responses[1].data || {}
+          encyclopedia: responses[1].data || {},
+          popularSearchWords: responses[2].data.popularSearchWords || {},
         }
       });
-    }).catch(function (err) {
-      next(err);
-    });
+    }).catch(next);
   });
 };

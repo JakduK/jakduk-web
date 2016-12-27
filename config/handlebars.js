@@ -19,6 +19,12 @@ hbs.registerHelper('TRANSLATION', function(key, options) {
   return new handlebars.SafeString(i18n.__(key, options.hash));
 });
 
+hbs.registerHelper('ADD', function() {
+  return _(arguments).slice(0, arguments.length - 1).reduce(function (prev, curr) {
+    return prev + curr;
+  });
+});
+
 hbs.registerHelper('EQ', function(val1, val2) {
   return val1 === val2;
 });
