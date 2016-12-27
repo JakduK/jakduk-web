@@ -598,7 +598,7 @@
               $scope.commentFeelingConn[commentId] = 'ok';
             }, function (response) {
               var data = response.data;
-              $scope.commentFeelingConn[commentId] = '';
+              $scope.commentFeelingConn[commentId] = 'none';
               $scope.commentFeelingAlert[commentId] = data.message;
             });
           }
