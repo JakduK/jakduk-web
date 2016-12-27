@@ -17,8 +17,7 @@ module.exports.setup = function (app) {
         i18n.__('stats.supporters'),
         i18n.__('stats'),
         i18n.__('common.jakduk')
-      ],
-      chartType: req.query.chartType
+      ]
     });
   });
 

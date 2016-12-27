@@ -60,7 +60,7 @@
       ]).controller('statsCtrl', [
         '$scope', '$http', '$window',
       function ($scope, $http, $window) {
-        var chartType = '{{chartType}}';
+        var chartType = Jakduk.queryObject().chartType;
 
         if (chartType !== "pie") {
           chartType = "bar";

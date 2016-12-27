@@ -69,7 +69,7 @@
         var KLCHId = 'KLCH';
         var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
         var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
-        var league = "{{league}}";
+        var league = Jakduk.queryObject().league;
 
         $scope.leagues = {'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}};
         if (Object.keys($scope.leagues).indexOf(league) >= 0) {
