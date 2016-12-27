@@ -26,7 +26,7 @@
         </div>
         <span class="text-danger" ng-show="whereAlert" ng-bind="whereAlert"></span>
       </div>
-      <div class="col-md-6 col-md-offset-3">
+      <div class="col-md-6 col-md-offset-3 margin-bottom-10">
         <div class="input-group">
           <input type="text" class="form-control" ng-model="searchWords" ng-keypress="($event.which === 13)?btnEnter():return" placeholder='{{TRANSLATION "search.placeholder.words"}}'>
           <span class="input-group-btn">
@@ -37,6 +37,21 @@
         </div>
         <span class="text-danger" ng-show="enterAlert" ng-bind="enterAlert"></span>
       </div>
+      {{#if popularSearchWords}}
+        <div class="col-md-6 col-md-offset-3">
+          <div class="clearfix well">
+            <div class="pull-left" style="padding-right: 19px;">
+              <strong>{{TRANSLATION 'popular.search.words'}}</strong>
+            </div>
+            <div class="pull-left">
+              {{#each popularSearchWords}}
+                <a href="/search?q={{key}}&w=PO;CO;GA;"><button class="btn btn-primary btn-sm">{{key}}</button></a>&nbsp;
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      {{/if}}
+
     </div>
   </div>
 

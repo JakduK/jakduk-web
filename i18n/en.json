@@ -305,5 +305,6 @@
   "msg.comingsoon": "Coming soon.",
   "msg.recommend.browser": "You might be using an old version of Internet Explorer.<br>We suggest to upgrade your browser such as newer Internet Expolrer, Chrome, Firefox, Opera, etc.",
   "msg.imagefile.size.limited": "The limit for an image is {{size}}.",
-  "latest.articles.author": "Latest articles by author"
+  "latest.articles.author": "Latest articles by author",
+  "popular.search.words": "Popular searches"
 }

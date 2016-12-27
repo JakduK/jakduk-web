@@ -25,7 +25,7 @@ define(['angular', 'common'], function (angular) {
         return Math.floor(date.getTime() / 1000).toString(16) + "0000000000000000";
       }
     })
-    .filter('filesize', function() {
+    .filter('filesize', function () {
       return function(bytes, precision) {
         if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
           return '-';

@@ -98,6 +98,12 @@ module.exports = function(ApiClient, internalFn) {
     }.bind(this));
   };
 
+  ApiClient.prototype.getPopularSearchWords = function () {
+    return new Promise(resolve => {
+      rest.json(`${this.serverUrl}/search/popular/words`).on('complete', callback.bind(null, resolve));
+    });
+  };
+
   ApiClient.prototype.rss = function() {
     return new Promise(function(resolve) {
       rest.get(this.serverUrl.replace(/\/api$/, '/rss')).on('complete', callback.bind(null, resolve));
