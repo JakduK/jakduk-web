@@ -1,13 +1,14 @@
 'use strict';
 
-var express = require('express');
-var _ = require('lodash');
-var moment = require('moment');
-var i18n = require('i18n');
-var Util = require('../../helpers/jakduk_util');
+const express = require('express');
+const _ = require('lodash');
+const moment = require('moment');
+const i18n = require('i18n');
+const Util = require('../../helpers/jakduk_util');
 
 function postList(req, res, next) {
-  var category = _.toUpper(!req.query.category || req.query.category === 'none' ? 'all' : req.query.category);
+  const category = _.toUpper(!req.query.category || req.query.category === 'none' ? 'all' : req.query.category);
+
   Promise.all([
     req.api.getTopPosts(),
     req.api.getPosts({
@@ -17,9 +18,7 @@ function postList(req, res, next) {
     }),
     req.api.getBoardCategories(req.locale)
   ]).then(function (responses) {
-    responses.forEach(function (response) {
-      _.extend(res.locals, response.data);
-    });
+    responses.forEach(response => _.extend(res.locals, response.data));
     res.render('board/post_list', {
       title: [
         i18n.__('board.free.breadcrumbs.posts'),
@@ -30,9 +29,7 @@ function postList(req, res, next) {
       category: category,
       number: res.locals.number + 1
     })
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 function commentList(req, res, next) {
@@ -42,10 +39,8 @@ function commentList(req, res, next) {
       size: req.query.size
     }),
     req.api.getTopPosts()
-  ]).then(function (responses) {
-    responses.forEach(function (response) {
-      _.extend(res.locals, response.data);
-    });
+  ]).then(responses => {
+    responses.forEach(response => _.extend(res.locals, response.data));
     res.render('board/comment_list', {
       title: [
         i18n.__('board.free.breadcrumbs.comments'),
@@ -54,9 +49,7 @@ function commentList(req, res, next) {
       ],
       number: res.locals.number + 1
     });
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 function viewPost(req, res, next) {
@@ -66,7 +59,7 @@ function viewPost(req, res, next) {
       return;
     }
 
-    var postData = response.data;
+    const postData = response.data;
 
     if (!postData.post.status || !postData.post.status.delete) {
       _.merge(res.locals.meta, {
@@ -77,6 +70,7 @@ function viewPost(req, res, next) {
     if (response.headers['set-cookie']) {
       res.append('Set-Cookie', response.headers['set-cookie']);
     }
+
     res.render('board/post_view', {
       title: [
         (!postData.post.status || postData.post.status.delete) ? i18n.__('board.msg.deleted') : postData.post.subject,
@@ -90,7 +84,7 @@ function viewPost(req, res, next) {
       }),
       latestPostsByWriter: postData.latestPostsByWriter
     });
-  }).catch(err => next(err));
+  }).catch(next);
 }
 
 function writePost(req, res, next) {
@@ -99,7 +93,7 @@ function writePost(req, res, next) {
     return;
   }
 
-  req.api.getBoardCategories(req.locale).then(function (response) {
+  req.api.getBoardCategories(req.locale).then(response => {
     res.render('board/post_write', {
       title: [
         i18n.__('board.write'),
@@ -107,9 +101,7 @@ function writePost(req, res, next) {
       ],
       categories: response.data.categories
     });
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 function editPost(req, res, next) {
@@ -121,14 +113,14 @@ function editPost(req, res, next) {
   Promise.all([
     req.api.getPost(req.params.id),
     req.api.getBoardCategories(req.locale)
-  ]).then(function (responses) {
+  ]).then(responses => {
     if (responses[0].statusCode !== 200) {
       next();
       return;
     }
 
-    var postData = responses[0].data;
-    var categories = responses[1].data.categories;
+    const postData = responses[0].data;
+    const categories = responses[1].data.categories;
 
     if (req.userInfo.id !== postData.post.writer.userId) {
       next(Util.makeForbidden());
@@ -144,13 +136,11 @@ function editPost(req, res, next) {
       categories: categories,
       post: postData.post
     });
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 module.exports.setup = function (app) {
-  var router = express.Router();
+  const router = express.Router();
 
   router.get('/free', postList);
 
