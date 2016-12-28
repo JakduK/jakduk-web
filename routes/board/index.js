@@ -73,7 +73,7 @@ function viewPost(req, res, next) {
 
     res.render('board/post_view', {
       title: [
-        (!postData.post.status || postData.post.status.delete) ? i18n.__('board.msg.deleted') : postData.post.subject,
+        (postData.post.status && postData.post.status.delete) ? i18n.__('board.msg.deleted') : postData.post.subject,
         i18n.__('board.name.free'),
         i18n.__('common.jakduk')
       ],
