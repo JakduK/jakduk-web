@@ -1,11 +1,10 @@
 'use strict';
 
-var i18n = require('i18n');
-var config = require('../../config/environment');
+const i18n = require('i18n');
 
 module.exports.setup = function (app) {
   app.use(function notFound(req, res, next) {
-    var err = new Error('Not Found');
+    const err = new Error('Not Found');
     err.status = 404;
     err.statusMessage = 'Not Found';
     next(err);
@@ -20,7 +19,7 @@ module.exports.setup = function (app) {
         i18n.__('common.jakduk')
       ],
       message: err.statusMessage,
-      error: config.debug ? err.stack : '',
+      error: err.stack,
       code: statusCode,
       req: req,
       now: Date.now()
