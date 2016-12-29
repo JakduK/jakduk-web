@@ -12,7 +12,9 @@ module.exports.setup = function (app) {
     Promise.all([
       req.api.latest(),
       req.api.encyclopedia(res.locals.locale),
-      req.api.getPopularSearchWords()
+      req.api.getPopularSearchWords({
+        size: 20
+      })
     ]).then(responses => {
       res.render('home/home', {
         title: [

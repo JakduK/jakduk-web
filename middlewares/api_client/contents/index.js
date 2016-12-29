@@ -98,9 +98,11 @@ module.exports = function(ApiClient, internalFn) {
     }.bind(this));
   };
 
-  ApiClient.prototype.getPopularSearchWords = function () {
+  ApiClient.prototype.getPopularSearchWords = function (query) {
     return new Promise(resolve => {
-      rest.json(`${this.serverUrl}/search/popular/words`).on('complete', callback.bind(null, resolve));
+      rest.json(`${this.serverUrl}/search/popular/words`, null, {
+        query: query
+      }).on('complete', callback.bind(null, resolve));
     });
   };
 
