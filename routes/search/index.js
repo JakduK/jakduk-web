@@ -4,7 +4,9 @@ var i18n = require('i18n');
 
 module.exports.setup = function (app) {
   app.get('/search', function (req, res, next) {
-    req.api.getPopularSearchWords().then(response => {
+    req.api.getPopularSearchWords({
+      size: 20
+    }).then(response => {
       res.render('search/search', {
         title: [
           i18n.__('search'),
