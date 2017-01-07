@@ -724,7 +724,10 @@ define([
             var leagueAttendance = response.data.leagueAttendance;
             if (leagueAttendance) {
               self.leagueAttendance = leagueAttendance;
-              self.competition = leagueAttendance.competition.id;
+
+              if (leagueAttendance.competition)
+                self.competition = leagueAttendance.competition.id;
+
               self.origin = leagueAttendance.origin;
               self.season = leagueAttendance.season;
               self.games = leagueAttendance.games;
@@ -883,7 +886,7 @@ define([
           homePenaltyShootout: self.homePenaltyShootout,
           awayPenaltyShootout: self.awayPenaltyShootout,
           competition: self.competition,
-          timeUp: self.timeUp,
+          timeUp: self.timeUp
         };
 
         var promise;

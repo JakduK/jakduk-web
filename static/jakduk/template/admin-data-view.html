@@ -70,7 +70,7 @@
 </div>
 
 <div ng-show="ctrl.leagueAttendances.length">
-  <h4>Attendance League</h4>
+  <h4>대회별 관중수 목록</h4>
   <div class="form-group">
     <div class="btn-group">
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -89,10 +89,11 @@
   </div>
   <table class="table">
     <tr>
-      <th>Season</th><th>Games</th><th>Total</th><th>Average</th><th>Number Of Clubs</th>
+      <th>Season</th><th>League</th><th>Games</th><th>Total</th><th>Average</th><th>Number Of Clubs</th>
     </tr>
     <tr ng-repeat="attendanceLeague in ctrl.leagueAttendances">
       <td><a ng-href="admin/attendanceLeague/write/{%attendanceLeague.id%}" ng-bind="attendanceLeague.season"></a></td>
+      <td ng-bind="attendanceLeague.competition.code"></td>
       <td ng-bind="attendanceLeague.games"></td>
       <td ng-bind="attendanceLeague.total"></td>
       <td ng-bind="attendanceLeague.average"></td>
