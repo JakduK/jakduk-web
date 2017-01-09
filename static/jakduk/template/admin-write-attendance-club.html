@@ -6,7 +6,7 @@
 		<div class="form-group">
 			<label for="origin" class="control-label">ORIGIN CLUB</label>
 			<select id="origin" name="origin" class="form-control" ng-model="ctrl.origin">
-				<option value="{%club.id%}" label="{%club.name%}" ng-repeat="club in ctrl.footballClubs"></option>
+				<option value="{%club.id%}" ng-bind="club.name" ng-repeat="club in ctrl.footballClubs"></option>
 			</select>
 		</div>
 
