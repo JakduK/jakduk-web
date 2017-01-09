@@ -786,7 +786,9 @@ define([
       }).then(function () {
         if ($state.params.id) {
           $http.get(Config.apiServerUrl + '/admin/club/attendance/' + $state.params.id).then(function (response) {
-            var attendanceClub = response.data.attendanceLeagueWrite;
+
+            var attendanceClub = response.data.attendanceClubWrite;
+
             if (attendanceClub) {
               self.attendanceClub = attendanceClub;
               self.origin = attendanceClub.origin;
