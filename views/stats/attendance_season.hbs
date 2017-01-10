@@ -225,7 +225,7 @@
           var gamesSum = 0;
 
           attendances.forEach(function (attendance) {
-            if ($scope.leagueId === attendance.league) {
+            if ($scope.leagueId === 'KL' || $scope.leagueId === attendance.league) {
               var clubName = 'Unknown';
               $scope.footballClubs.some(function (club) {
                 if (club.origin.id === (attendance.club && attendance.club.id)) {
@@ -234,6 +234,7 @@
                 }
                 return false;
               });
+
               var itemTotal = [clubName, attendance.total];
               var itemAverage = [clubName, attendance.average];
               totalSum += attendance.total;
