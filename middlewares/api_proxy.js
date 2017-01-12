@@ -13,7 +13,7 @@ const apiHooks = {
     new ApiClient({
         [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''
       },
-      (req.headers.cookie || '') + '; ' + _.template(config.viewAbusePreventCookie)({seq: resData.seq}),
+      `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.seq})}`,
       config.internalApiServerUrl
     ).getPost(resData.seq).then(response => {
       const og = Util.ogFromPost(response.data.post, 200);
@@ -33,7 +33,7 @@ const apiHooks = {
     new ApiClient({
         [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''
       },
-      (req.headers.cookie || '') + '; ' + _.template(config.viewAbusePreventCookie)({seq: resData.boardItem.seq}),
+      `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.boardItem.seq})}`,
       config.internalApiServerUrl
     ).getPost(resData.boardItem.seq).then(response => {
       const post = Util.ogFromPost(response.data.post, 200);
