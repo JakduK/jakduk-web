@@ -1,14 +1,14 @@
 'use strict';
 
-var proxy = require('express-http-proxy');
-var _ = require('lodash');
+const hpm = require('http-proxy-middleware');
+const _ = require('lodash');
 
-var ApiClient = require('../middlewares/api_client').ApiClient;
-var config = require('../config/environment');
-var Util = require('../helpers/jakduk_util');
-var slack = require('../helpers/slack_notifier')(config.slack);
+const ApiClient = require('../middlewares/api_client').ApiClient;
+const config = require('../config/environment');
+const Util = require('../helpers/jakduk_util');
+const slack = require('../helpers/slack_notifier')(config.slack);
 
-var apiHooks = {
+const apiHooks = {
   '/board/free' (resData, req) {
     new ApiClient({
         [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''
@@ -16,7 +16,7 @@ var apiHooks = {
       (req.headers.cookie || '') + '; ' + _.template(config.viewAbusePreventCookie)({seq: resData.seq}),
       config.internalApiServerUrl
     ).getPost(resData.seq).then(response => {
-      let og = Util.ogFromPost(response.data.post, 200);
+      const og = Util.ogFromPost(response.data.post, 200);
       slack({
         author: og.author,
         subject: og.title,
@@ -36,8 +36,8 @@ var apiHooks = {
       (req.headers.cookie || '') + '; ' + _.template(config.viewAbusePreventCookie)({seq: resData.boardItem.seq}),
       config.internalApiServerUrl
     ).getPost(resData.boardItem.seq).then(response => {
-      let post = Util.ogFromPost(response.data.post, 200);
-      let comment = Util.ogFromPost(resData, 200);
+      const post = Util.ogFromPost(response.data.post, 200);
+      const comment = Util.ogFromPost(resData, 200);
       slack({
         author: comment.author,
         subject: post.title,
@@ -49,25 +49,29 @@ var apiHooks = {
   }
 };
 
-module.exports = function (path) {
-  return proxy(config.internalApiServerUrl, {
-    reqBodyEncoding: null,
-    reqAsBuffer: true,
-    limit: config.uploadMaxFileSize,
-    forwardPath (req) {
-      return path + '/' + req.url;
+module.exports = function (path, dest) {
+  return hpm(path, {
+    target: dest,
+    changeOrigin: true,
+    pathRewrite: {
+      [`^${path}`]: ''
     },
-    decorateRequest (proxyReqOpt, req) {
+    onProxyReq (proxyReq, req) {
       if (req.cookies[config.tokenCookieName]) {
-        proxyReqOpt.headers[config.tokenHeader] = req.cookies[config.tokenCookieName];
+        proxyReq.setHeader(config.tokenHeader, req.cookies[config.tokenCookieName]);
       }
     },
-    intercept (proxyRes, data, req, res, callback) {
+    onProxyRes (proxyRes, req) {
       if (apiHooks[req.path] && proxyRes.statusCode === 200 && req.method === 'POST') {
-        apiHooks[req.path](JSON.parse(data.toString('utf8')), req);
+        const chunks = [];
+        proxyRes.on('data', chunk => {
+          chunks.push(chunk)
+        });
+        proxyRes.on('end', () => {
+          const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => {return len + chunk.length}, 0));
+          apiHooks[req.path](JSON.parse(payload.toString('utf8')), req);
+        });
       }
-
-      callback(null, data);
     }
   });
 };

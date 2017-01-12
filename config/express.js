@@ -33,7 +33,7 @@ function setup(app) {
   app.use(compression());
   app.use(cookieParser());
   app.use(apiClient.middleware());
-  app.use('/api', apiProxy('/api'));
+  app.use('/api', apiProxy('/api', config.internalApiServerUrl));
   app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
