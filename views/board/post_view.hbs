@@ -334,6 +334,25 @@
         'ui.bootstrap',
         'jakdukCommon'
       ]).controller("boardFreeCtrl", ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
+        var kakaoLinkContent = {
+          container: '#kakao-link-btn',
+          label: '{{post.subject}}\r{{TRANSLATION "board.name.free"}} · {{TRANSLATION "common.jakduk"}}',
+          webLink: {
+            text: $location.absUrl(),
+            url: $location.absUrl()
+          },
+          {{#if post.galleries}}
+            image: {
+              src: '{{thumbnailServerUrl}}/gallery/{{post.galleries.[0].id}}',
+              width: '300',
+              height: '200'
+            }
+          {{/if}}
+        };
+
+        Kakao.init('{{kakaoClientID}}');
+        Kakao.Link.createTalkLinkButton(kakaoLinkContent);
+
         $scope.alert = {};
         $scope.likeConn = "none";
         $scope.dislikeConn = "none";
@@ -607,26 +626,6 @@
 
       angular.bootstrap(document, ['jakdukApp']);
 
-      $(function () {
-        var kakaoLinkContent = {
-          container: '#kakao-link-btn',
-          label: '{{post.subject}}\r{{TRANSLATION "board.name.free"}} · {{TRANSLATION "common.jakduk"}}',
-          webLink: {
-            text: Jakduk.origin + '/board/free/{{post.seq}}',
-            url: Jakduk.origin + '/board/free/{{post.seq}}'
-          },
-          {{#if post.galleries}}
-            image: {
-              src: '{{thumbnailServerUrl}}/gallery/{{post.galleries.[0].id}}',
-              width: '300',
-              height: '200'
-            }
-          {{/if}}
-        };
-
-        Kakao.init('{{kakaoClientID}}');
-        Kakao.Link.createTalkLinkButton(kakaoLinkContent);
-      });
     });
   </script>
 {{/CHUNK}}
