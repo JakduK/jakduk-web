@@ -55,12 +55,9 @@
     require([
       'angular', 'kakao', 'jakduk', 'angular-highcharts'
     ], function (angular, Kakao, Jakduk) {
-      angular.module("jakdukApp", [
-        "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-      ]).controller('statsCtrl', [
-        '$scope', '$http', '$window',
-      function ($scope, $http, $window) {
-        var chartType = Jakduk.queryObject().chartType;
+      angular.module("jakdukApp", ["highcharts-ng", "ui.bootstrap", 'jakdukCommon'])
+        .controller('statsCtrl', ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
+        var chartType = $location.search().chartType;
 
         if (chartType !== "pie") {
           chartType = "bar";
@@ -149,11 +146,13 @@
 
         $scope.changeChartType = function (chartName) {
           $scope.chartConfig.options.chart.type = chartName;
+          $location.search({
+            chartType: chartName
+          });
         };
 
         $scope.btnUrlCopy = function () {
-          var url = Jakduk.origin + '/stats/supporters?lang={{locale}}&chartType=' + $scope.chartConfig.options.chart
-              .type;
+          var url = $location.absUrl();
 
           if ($window.clipboardData) {
             // IE처리
@@ -173,7 +172,7 @@
 
         $scope.sendLink = function () {
           var label = '{{TRANSLATION "stats.supporters.title"}}\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
-          var url = Jakduk.origin + "/stats/data/supporters?chartType=" + $scope.chartConfig.options.chart.type;
+          var url = $location.absUrl();
 
           Kakao.Link.sendTalkLink({
             label: label,

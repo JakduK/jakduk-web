@@ -115,16 +115,6 @@ define(['angular', 'common'], function (angular) {
       if (window.confirm(message)) {
         window.location = '/board/free/write';
       }
-    },
-    queryObject: function () {
-      var obj = {};
-      window.location.search.replace('?', '').split('&').forEach(function (param) {
-        var pair = param.split('=');
-        if (typeof pair[1] !== 'undefined') {
-          obj[pair[0]] = pair[1];
-        }
-      });
-      return obj;
     }
   };
 });

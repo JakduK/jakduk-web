@@ -64,12 +64,12 @@
     ], function (angular, Kakao, Jakduk) {
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-      ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+      ]).controller('statsCtrl', ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
         var KLCLId = 'KLCL';
         var KLCHId = 'KLCH';
         var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
         var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
-        var league = Jakduk.queryObject().league;
+        var league = $location.search().league;
 
         $scope.leagues = {'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}};
         if (Object.keys($scope.leagues).indexOf(league) >= 0) {
@@ -283,10 +283,14 @@
               $scope.refreshData();
             }
           }
+
+          $location.search({
+            league: $scope.leagueId
+          });
         };
 
         $scope.btnUrlCopy = function () {
-          var url = Jakduk.origin + '/stats/attendance/league?league=' + $scope.leagueId;
+          var url = $location.absUrl();
 
           if ($window.clipboardData) {
             // IE처리
@@ -306,7 +310,7 @@
 
         $scope.sendLink = function () {
           var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
-          var url = Jakduk.origin + 'jakduk.com/stats/attendance/league?league=' + $scope.leagueId;
+          var url = $location.absUrl();
 
           Kakao.Link.sendTalkLink({
             label: label,
