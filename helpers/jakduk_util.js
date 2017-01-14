@@ -56,8 +56,8 @@ module.exports = {
   },
   makeError (response) {
     let err = new Error(JSON.stringify({
-      type: 'api error',
-      api: response.req.agent.protocol + '//' + response.req._headers.host + response.req.path,
+      type: response.req ? 'api error' : 'server unavailable',
+      api: response.req ? `${response.req.agent.protocol}${response.req._headers.host}${response.req.path}` : '',
       data: response.data
     }, null, 2));
     err.status = response.statusCode;
