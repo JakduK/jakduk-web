@@ -147,12 +147,11 @@
       'angular-slick',
       'angular-infinite-scroll'
     ], function (angular, Kakao) {
+      Kakao.init('{{kakaoClientID}}');
+
       angular.module("jakdukApp", [
         "angular-ladda", 'jakdukCommon'
       ]).controller("galleryController", ['$scope', '$http', '$location', function ($scope, $http, $location) {
-        App.init();
-
-        Kakao.init('{{kakaoClientID}}');
         Kakao.Link.createTalkLinkButton({
           container: '#kakao-link-btn',
           label: '{{gallery.name}}\r{{TRANSLATION "gallery"}} · {{TRANSLATION "common.jakduk"}}',

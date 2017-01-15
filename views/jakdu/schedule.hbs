@@ -27,7 +27,7 @@
     </div>
     <!-- End Top Buttons -->
 
-    <div class="panel panel-default" ng-repeat="schedule in schedules">
+    <div id="schedules" style="display: none;" class="panel panel-default" ng-repeat="schedule in schedules">
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-8">
@@ -77,9 +77,12 @@
 {{#CHUNK 'js'}}
   <script type="text/javascript">
     require(['angular', 'jakduk'], function (angular) {
-      var jakdukApp = angular.module("jakdukApp", ["ui.bootstrap", 'jakdukCommon']);
-
-      jakdukApp.controller('jakduCtrl', function ($scope, $http) {
+      angular.module("jakdukApp", [
+        'ui.bootstrap',
+        'jakdukCommon'
+      ]).run(function () {
+        angular.element('#schedules').css('display', '');
+      }).controller('jakduCtrl', function ($scope, $http) {
         var page = 1;
         var size = 20;
 
@@ -120,10 +123,6 @@
         };
 
         $scope.getDataSchedulesList(page, size);
-      });
-
-      $(function () {
-        App.init();
       });
 
       angular.bootstrap(document, ['jakdukApp']);
