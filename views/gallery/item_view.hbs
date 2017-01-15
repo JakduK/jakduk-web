@@ -135,7 +135,6 @@
 
 </div><!-- /.container -->
 {{#CHUNK 'css'}}
-  <link rel="stylesheet" href="/bower_components/angular-bootstrap-lightbox/dist/angular-bootstrap-lightbox.css">
   <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css">
   <link rel="stylesheet" href="/unify/assets/css/pages/blog.css">
 {{/CHUNK}}
@@ -146,9 +145,8 @@
       'kakao',
       'jakduk',
       'angular-slick',
-      'angular-infinite-scroll',
-      'angular-bootstrap-lightbox'
-    ], function (angular, Kakao, Jakduk) {
+      'angular-infinite-scroll'
+    ], function (angular, Kakao) {
       angular.module("jakdukApp", [
         "angular-ladda", 'jakdukCommon'
       ]).controller("galleryController", ['$scope', '$http', '$location', function ($scope, $http, $location) {
