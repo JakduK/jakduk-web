@@ -1,5 +1,5 @@
 <uib-accordion>
-  <uib-accordion-group is-open="ctrl.isOpened.init">
+  <div uib-accordion-group is-open="ctrl.isOpened.init">
     <uib-accordion-heading>
       Init Data <i class="fa fa-fw fa-caret-down"></i>
     </uib-accordion-heading>
@@ -9,9 +9,9 @@
       <a class="list-group-item" ng-class="{active: ctrl.currentMenu === MENU_ID_MAP.INIT.SEARCH_TYPE.ID}" href="admin/search/type/init">Init Search Type</a>
       <a class="list-group-item" ng-class="{active: ctrl.currentMenu === MENU_ID_MAP.INIT.SEARCH_DATA.ID}" href="admin/search/data/init">Init Search Data</a>
     </div>
-  </uib-accordion-group>
+  </div>
 
-  <uib-accordion-group is-open="ctrl.isOpened.write">
+  <div uib-accordion-group is-open="ctrl.isOpened.write">
     <uib-accordion-heading>
       Write Data <i class="fa fa-fw fa-caret-down"></i>
     </uib-accordion-heading>
@@ -28,9 +28,9 @@
       <a class="list-group-item" href="admin/jakduScheduleGroup/write" ng-class="{active: ctrl.currentMenu === MENU_ID_MAP.WRITE.JAKDU_SCHEDULE_GROUP.ID}">Jakdu Schedule Group Write</a>
       <a class="list-group-item" href="admin/competition/write" ng-class="{active: ctrl.currentMenu === MENU_ID_MAP.WRITE.COMPETITION.ID}">Competition Write</a>
     </div>
-  </uib-accordion-group>
+  </div>
 
-  <uib-accordion-group is-open="ctrl.isOpened.get">
+  <div uib-accordion-group is-open="ctrl.isOpened.get">
     <uib-accordion-heading>
       Get Data <i class="fa fa-fw fa-caret-down"></i>
     </uib-accordion-heading>
@@ -46,5 +46,5 @@
       <a class="list-group-item" ng-class="{active: ctrl.currentMenu === MENU_ID_MAP.GET.JAKDU_SCHEDULE_GROUP.ID}" href="admin/jakduScheduleGroup">Get Jakdu Schedule Group</a>
       <a class="list-group-item" ng-class="{active: ctrl.currentMenu === MENU_ID_MAP.GET.COMPETITION.ID}" href="admin/competition">Get Competition</a>
     </div>
-  </uib-accordion-group>
+  </div>
 </uib-accordion>
