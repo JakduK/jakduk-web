@@ -80,7 +80,7 @@
         var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
         var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
 
-        $scope.season = $location.search().season || 2014;
+        $scope.season = $location.search().season || 2016;
         $scope.leagueId = $location.search().league || 'KL';
         $scope.leagues = {
           2012: {
@@ -89,9 +89,11 @@
             'KLCH': {name: KLCHname, disable: true}
           },
           2013: {'KL': {name: KLname}, 'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}},
-          2014: {'KL': {name: KLname}, 'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}}
+          2014: {'KL': {name: KLname}, 'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}},
+          2015: {'KL': {name: KLname}, 'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}},
+          2016: {'KL': {name: KLname}, 'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}}
         };
-        $scope.seasons = [2012, 2013, 2014];
+        $scope.seasons = [2012, 2013, 2014, 2015, 2016];
 
         $scope.attendancesConn = "none";
         $scope.footballClubs = angular.fromJson('{{{DEFAULT_VALUE (JSON_STRINGIFY footballClubs) '{}'}}}');
@@ -223,7 +225,7 @@
           var gamesSum = 0;
 
           attendances.forEach(function (attendance) {
-            if ($scope.leagueId === attendance.league) {
+            if ($scope.leagueId === 'KL' || $scope.leagueId === attendance.league) {
               var clubName = 'Unknown';
               $scope.footballClubs.some(function (club) {
                 if (club.origin.id === (attendance.club && attendance.club.id)) {
@@ -232,6 +234,7 @@
                 }
                 return false;
               });
+
               var itemTotal = [clubName, attendance.total];
               var itemAverage = [clubName, attendance.average];
               totalSum += attendance.total;

@@ -724,7 +724,10 @@ define([
             var leagueAttendance = response.data.leagueAttendance;
             if (leagueAttendance) {
               self.leagueAttendance = leagueAttendance;
-              self.competition = leagueAttendance.competition.id;
+
+              if (leagueAttendance.competition)
+                self.competition = leagueAttendance.competition.id;
+
               self.origin = leagueAttendance.origin;
               self.season = leagueAttendance.season;
               self.games = leagueAttendance.games;
@@ -783,7 +786,9 @@ define([
       }).then(function () {
         if ($state.params.id) {
           $http.get(Config.apiServerUrl + '/admin/club/attendance/' + $state.params.id).then(function (response) {
-            var attendanceClub = response.data.attendanceLeagueWrite;
+
+            var attendanceClub = response.data.attendanceClubWrite;
+
             if (attendanceClub) {
               self.attendanceClub = attendanceClub;
               self.origin = attendanceClub.origin;
@@ -883,7 +888,7 @@ define([
           homePenaltyShootout: self.homePenaltyShootout,
           awayPenaltyShootout: self.awayPenaltyShootout,
           competition: self.competition,
-          timeUp: self.timeUp,
+          timeUp: self.timeUp
         };
 
         var promise;
