@@ -1,19 +1,19 @@
 'use strict';
 
-var path = require('path');
-var url = require('url');
+const path = require('path');
+const url = require('url');
 
-var express = require('express');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var compression = require('compression');
+const express = require('express');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const compression = require('compression');
 
-var apiClient = require('../middlewares/api_client');
-var apiProxy = require('../middlewares/api_proxy');
-var config = require('../config/environment');
-var i18n = require('../middlewares/i18n');
-var defaultContext = require('../middlewares/default_context');
+const apiClient = require('../middlewares/api_client');
+const apiProxy = require('../middlewares/api_proxy');
+const config = require('../config/environment');
+const i18n = require('../middlewares/i18n');
+const defaultContext = require('../middlewares/default_context');
 
 function setup(app) {
   app.set('env', config.env);
@@ -33,7 +33,7 @@ function setup(app) {
   app.use(compression());
   app.use(cookieParser());
   app.use(apiClient.middleware());
-  app.use('/api', apiProxy('/api'));
+  app.use('/api', apiProxy('/api', config.internalApiServerUrl));
   app.use(express.static(path.join(__dirname, '..', 'static')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));

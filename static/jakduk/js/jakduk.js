@@ -6,7 +6,6 @@ define(['angular', 'common'], function (angular) {
       $interpolateProvider.startSymbol('{%');
       $interpolateProvider.endSymbol('%}');
       $httpProvider.defaults.withCredentials = true;
-      $httpProvider.useLegacyPromiseExtensions(false);
     }])
     // mongodb id의 앞 8자리(16진수)로 Date 객체 생성.
     .filter('dateFromObjectId', function () {
@@ -106,25 +105,13 @@ define(['angular', 'common'], function (angular) {
     ItemsPerPageOnSearchGallery: 12, 	// 찾기에서 사진첩의 페이지 당 아이템 수
     ItemsPerPageOnGallery: 24,  		// 사진첩에서 한번 로딩할때 가져오는 그림의 수
     ItemsPerPageOnBoardComments: 10,
-    origin: window.location.origin || (window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '')),
     isEmpty: function (str) {
-      var obj = String(str);
-      return !!(obj === null || obj === undefined || obj === 'null' || obj === 'undefined' || obj === '');
+      return !str;
     },
     needLogin: function (message) {
       if (window.confirm(message)) {
         window.location = '/board/free/write';
       }
-    },
-    queryObject: function () {
-      var obj = {};
-      window.location.search.replace('?', '').split('&').forEach(function (param) {
-        var pair = param.split('=');
-        if (typeof pair[1] !== 'undefined') {
-          obj[pair[0]] = pair[1];
-        }
-      });
-      return obj;
     }
   };
 });

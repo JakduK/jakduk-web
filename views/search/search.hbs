@@ -56,7 +56,7 @@
   </div>
 
   <!--=== Content Part ===-->
-  <div class="container s-results">
+  <div id="result" style="display: none;" class="container s-results">
     <!-- search results of post -->
     <div class="margin-bottom-10" ng-show="postResult">
       <span class="results-number">{{TRANSLATION "search.post.results" n="<span ng-bind=\"postResult.totalCount\"></span>"}}</span>
@@ -142,8 +142,9 @@
         <!-- Begin Easy Block v2 -->
         <div class="col-md-3 col-sm-4 col-xs-6 md-margin-bottom-10" ng-repeat="gallery in galleryResult.galleries">
           <div class="thumbnail">
-            <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%gallery.id%}"
-              alt="{%gallery.name%}" ng-click="openLightboxModal($index)">
+            <a ng-href="{{thumbnailServerUrl}}/gallery/{%gallery.id%}" data-lightbox="roundtrip" data-title="{%gallery.name%}">
+              <img class="cursor-pointer" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%gallery.id%}" alt="{%gallery.name%}">
+            </a>
             <div class="caption text-center">
               <a ng-href="/gallery/{%gallery.id%}" ng-bind-html="gallery.highlight.name[0]"></a>
             </div>
@@ -174,65 +175,32 @@
   {{> footer}}
 
 </div><!-- /.container -->
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/bower_components/lightbox2/dist/css/lightbox.css">
+{{/CHUNK}}
 {{#CHUNK 'js'}}
   <script type="text/javascript">
     require([
       'angular',
       'jakduk',
-      'angular-bootstrap-lightbox'
-    ], function (angular, Jakduk) {
+      'lightbox2'
+    ], function (angular, Jakduk, lightbox) {
+      lightbox.option({
+        imageFadeDuration: 400,
+        fadeDuration: 400,
+        resizeDuration: 400
+      });
+
       angular.module("jakdukApp", [
-        "ngSanitize", "ui.bootstrap", "bootstrapLightbox", "angular-ladda", 'jakdukCommon'
-      ]).config(['LightboxProvider', function (LightboxProvider) {
-        LightboxProvider.templateUrl = "/jakduk/template/lightbox-search.html";
-
-        LightboxProvider.getImageUrl = function (image) {
-          return '{{thumbnailServerUrl}}/gallery/' + image.id;
-        };
-
-        LightboxProvider.getImageCaption = function (image) {
-          return image.name;
-        };
-
-        LightboxProvider.calculateImageDimensionLimits = function (dimensions) {
-          if (dimensions.windowWidth >= 768) {
-            return {
-              // 92px = 2 * (30px margin of .modal-dialog
-              //             + 1px border of .modal-content
-              //             + 15px padding of .modal-body)
-              // with the goal of 30px side margins; however, the actual side margins
-              // will be slightly less (at 22.5px) due to the vertical scrollbar
-              'maxWidth': dimensions.windowWidth - 92,
-              'maxHeight': dimensions.windowHeight - 180
-            };
-          } else {
-            return {
-              // 52px = 2 * (10px margin of .modal-dialog
-              //             + 1px border of .modal-content
-              //             + 15px padding of .modal-body)
-              'maxWidth': dimensions.windowWidth - 52,
-              'maxHeight': dimensions.windowHeight - 130
-            };
-          }
-        };
-
-        // the modal height calculation has to be changed since our custom template is
-        // taller than the default template
-        LightboxProvider.calculateModalDimensions = function (dimensions) {
-          var width = Math.max(400, dimensions.imageDisplayWidth + 32);
-
-          if (width >= dimensions.windowWidth - 20 || dimensions.windowWidth < 768) {
-            width = 'auto';
-          }
-
-          return {
-            'width': width,                             // default
-            'height': 'auto'                            // custom
-          };
-        };
-      }]).controller("searchCtrl", [
-        '$scope', '$http', '$location', '$window', 'Lightbox',
-      function ($scope, $http, $location,$window, Lightbox) {
+        'ngSanitize',
+        'ui.bootstrap',
+        'angular-ladda',
+        'jakdukCommon'
+      ]).run(function () {
+        angular.element('#result').css('display', '');
+      }).controller("searchCtrl", [
+        '$scope', '$http', '$location', '$window',
+      function ($scope, $http, $location,$window) {
         var from = parseInt('{{from}}' || 0);
         var where = "{{w}}";
         var size = $scope.itemsPerPage;
@@ -271,15 +239,19 @@
             }
           }
         } else {
-          $scope.where = {postResult: false, commentResult: false, galleryResult: false};
+          $scope.where = {
+            postResult: false,
+            commentResult: false,
+            galleryResult: false
+          };
         }
 
-        if ($scope.where.galleries == true && $scope.where.posts == null && $scope.where.comments == null) {
+        if ($scope.where.galleries && !$scope.where.posts && !$scope.where.comments) {
           $scope.isGalleryOnly = true;
         }
 
         if (from > 0) {
-          if ($scope.isGalleryOnly == true) {
+          if ($scope.isGalleryOnly) {
             $scope.currentPage = (from + $scope.itemsPerPageGallery) / $scope.itemsPerPageGallery;
           } else {
             $scope.currentPage = (from + $scope.itemsPerPage) / $scope.itemsPerPage;
@@ -289,7 +261,7 @@
         }
 
         if ($scope.whereSize == 1) {
-          if ($scope.isGalleryOnly == true) {
+          if ($scope.isGalleryOnly) {
             size = $scope.itemsPerPageGallery;
           } else {
             size = $scope.itemsPerPage;
@@ -303,7 +275,7 @@
         $scope.btnEnter = function () {
           var isValid = true;
 
-          if ($scope.where.posts != true && $scope.where.comments != true && $scope.where.galleries != true) {
+          if (!$scope.where.posts && !$scope.where.comments && !$scope.where.galleries) {
             $scope.whereAlert = '{{TRANSLATION "search.msg.you.should.select.at.least.one"}}';
             isValid = false;
           }
@@ -316,13 +288,13 @@
           if (isValid) {
             var where = "";
 
-            if ($scope.where.posts == true) {
+            if ($scope.where.posts) {
               where += "PO;";
             }
-            if ($scope.where.comments == true) {
+            if ($scope.where.comments) {
               where += "CO;";
             }
-            if ($scope.where.galleries == true) {
+            if ($scope.where.galleries) {
               where += "GA;";
             }
 
@@ -333,7 +305,7 @@
         $scope.getResults = function (where, from, size) {
 
           if ($scope.searchWords.trim() < 1 ||
-            ($scope.where.posts != true && $scope.where.comments != true && $scope.where.galleries != true)) {
+            (!$scope.where.posts && !$scope.where.comments && !$scope.where.galleries)) {
             return;
           } else {
             $scope.whereAlert = "";
@@ -375,15 +347,7 @@
           $window.location = '/search?q=' + $scope.searchWords.trim() + '&w=' + '{{w}}' + '&from=' + from;
         };
 
-        $scope.openLightboxModal = function (index) {
-          Lightbox.openModal($scope.galleryResult.galleries, index);
-        };
-
         $scope.getResults(where, from, size);
-      }]).controller("LightboxCtrl", ['$scope', '$window', 'Lightbox', function ($scope, $window, Lightbox) {
-        $scope.openNewTab = function () {
-          $window.open(Lightbox.imageUrl);
-        };
       }]);
 
       angular.bootstrap(document, ['jakdukApp']);

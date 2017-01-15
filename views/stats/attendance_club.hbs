@@ -68,7 +68,7 @@
     ], function (angular, Kakao, Jakduk) {
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-      ]).controller('statsCtrl', ['$scope', '$http', '$window', '$q', function ($scope, $http, $window, $q) {
+      ]).controller('statsCtrl', ['$scope', '$http', '$window', '$q', '$location', function ($scope, $http, $window, $q, $location) {
         $scope.footballClubsConn = "none";
         $scope.attendancesConn = "none";
         $scope.attendances = {};
@@ -77,7 +77,7 @@
         $scope.totalSum = 0;
         $scope.gamesSum = 0;
         $scope.average = 0;
-        $scope.clubOrigin = Jakduk.queryObject().clubOrigin;
+        $scope.clubOrigin = $location.search().clubOrigin;
 
         Highcharts.setOptions({
           lang: {
@@ -228,6 +228,10 @@
           } else {
             $scope.refreshData();
           }
+
+          $location.search({
+            clubOrigin: $scope.clubOrigin
+          });
         };
 
         $scope.getAttendance = function () {
@@ -286,7 +290,7 @@
         };
 
         $scope.btnUrlCopy = function () {
-          var url = Jakduk.origin + '/stats/attendance/club?clubOrigin=' + $scope.clubOrigin;
+          var url = $location.absUrl();
 
           if ($window.clipboardData) {
             // IE처리
@@ -306,7 +310,7 @@
 
         $scope.sendLink = function () {
           var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
-          var url = Jakduk.origin + '/stats/attendance/club?clubOrigin=' + $scope.clubOrigin;
+          var url = $location.absUrl();
 
           Kakao.Link.sendTalkLink({
             label: label,

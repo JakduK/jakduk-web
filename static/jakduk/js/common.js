@@ -5,7 +5,6 @@ define([
   'jquery',
   'bootstrap',
   'mCustomScrollbar',
-  'smoothScroll',
   'angular',
   'angular-cookies',
   'angular-locale',

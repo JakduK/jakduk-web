@@ -75,13 +75,13 @@
     ], function (angular, Kakao, Jakduk) {
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
-      ]).controller('statsCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
+      ]).controller('statsCtrl', ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
         var KLname = '{{TRANSLATION "stats.attendance.filter.league"}}';
         var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
         var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
-        var season = parseInt(Jakduk.queryObject().season) || 2016;
 
-        $scope.leagueId = Jakduk.queryObject().league || 'KL';
+        $scope.season = $location.search().season || 2016;
+        $scope.leagueId = $location.search().league || 'KL';
         $scope.leagues = {
           2012: {
             'KL': {name: KLname},
@@ -124,7 +124,7 @@
             text: '{{TRANSLATION "stats.attendance"}}'
           },
           subtitle: {
-            text: 'Source: ' + Jakduk.origin
+            text: 'Source: ' + $location.absUrl()
           },
           xAxis: {
             type: 'category',
@@ -263,16 +263,26 @@
               $scope.refreshData();
             }
           }
+
+          $location.search({
+            season: $scope.season,
+            league: $scope.leagueId
+          });
         };
 
         $scope.changeLeague = function () {
           if ($scope.leagueId) {
             $scope.refreshData();
           }
+
+          $location.search({
+            season: $scope.season,
+            league: $scope.leagueId
+          });
         };
 
         $scope.btnUrlCopy = function () {
-          var url = Jakduk.origin + '/stats/attendance/season?season=' + $scope.season + '&league=' + $scope.leagueId;
+          var url = $location.absUrl();
 
           if ($window.clipboardData) {
             // IE처리
@@ -292,7 +302,7 @@
 
         $scope.sendLink = function () {
           var label = $scope.chartConfig.title.text + '\r{{TRANSLATION "stats"}} · {{TRANSLATION "common.jakduk"}}';
-          var url = Jakduk.origin + '/stats/attendance/season?season=' + $scope.season + '&league=' + $scope.leagueId;
+          var url = $location.absUrl();
 
           Kakao.Link.sendTalkLink({
             label: label,
