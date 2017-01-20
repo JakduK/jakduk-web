@@ -208,10 +208,13 @@
       </ul>
     </div>
 
-    {{> write_button}}
-
-    <div class="text-left" ng-show="totalItems > 0">
-      <uib-pagination ng-model="currentPage" total-items="totalItems" max-size="10" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" ng-change="pageChanged()"></uib-pagination>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="text-center">
+          <ul uib-pagination ng-model="currentPage" total-items="totalItems" max-size="10" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" ng-change="pageChanged()"></ul>
+        </div>
+        <div class="text-center">{{> write_button}}</div>
+      </div>
     </div>
 
     <!--=== End Content Part ===-->
@@ -234,17 +237,9 @@
         "ui.bootstrap",
         'jakdukCommon'
       ]).controller("boardCtrl", ['$scope', '$window', function ($scope, $window) {
-        var page = parseInt('{{number}}');
-        var size = parseInt('{{size}}');
-        var total = parseInt('{{totalElements}}');
-
-        if (page > 0) {
-          $scope.currentPage = page;
-        } else {
-          $scope.currentPage = 1;
-        }
-        $scope.totalItems = total;
-        $scope.itemsPerPage = size;
+        $scope.currentPage = {{#if (OPR '>' number 0)}}0{{else}}1{{/if}}{{number}};
+        $scope.totalItems = {{totalElements}};
+        $scope.itemsPerPage = {{size}};
 
         $scope.btnEnter = function () {
           var isValid = true;
