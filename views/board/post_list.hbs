@@ -237,7 +237,7 @@
         "ui.bootstrap",
         'jakdukCommon'
       ]).controller("boardCtrl", ['$scope', '$window', function ($scope, $window) {
-        $scope.currentPage = {{#if (OPR '>' number 0)}}0{{else}}1{{/if}}{{number}};
+        $scope.currentPage = {{#if (OPR '>' number 0)}}{{number}}{{else}}1{{/if}};
         $scope.totalItems = {{totalElements}};
         $scope.itemsPerPage = {{size}};
 
