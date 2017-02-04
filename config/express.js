@@ -34,7 +34,9 @@ function setup(app) {
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));
-  app.use(express.static(path.join(__dirname, '..', 'static')));
+  app.use(express.static(path.join(__dirname, '..', 'static'), {
+    maxage: '7d'
+  }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(i18n());
