@@ -1,42 +1,13 @@
-<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
-<link rel="stylesheet" href="/bower_components/angular-bootstrap/ui-bootstrap-csp.css">
-<link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css">
-<link rel="stylesheet" href="/unify/assets/plugins/animate.css">
-<link rel="stylesheet" href="/unify/assets/plugins/line-icons/line-icons.css">
-<link rel="stylesheet" href="/unify/assets/plugins/line-icons-pro/styles.css">
-<link rel="stylesheet" href="/unify/assets/plugins/brand-buttons/css/brand-buttons.min.css">
-<link rel="stylesheet" href="/unify/assets/plugins/ladda-buttons/css/custom-lada-btn.css">
-<link rel="stylesheet" href="/unify/assets/css/headers/header-default.css">
-<link rel="stylesheet" href="/unify/assets/css/footers/footer-v3.css">
-<link rel="stylesheet" href="/unify/assets/css/style.css">
-<link rel="stylesheet" href="/unify/assets/css/theme-colors/blue.css">
-<link rel="stylesheet" href="/jakduk/css/jakduk.css">
-
-<!--[if lt IE 9]>
-<script src="/unify/assets/plugins/respond.js"></script>
-<script src="/unify/assets/plugins/html5shiv.js"></script>
-<script src="/unify/assets/plugins/placeholder-IE-fixes.js"></script>
-<![endif]-->
-
-<script type="text/javascript">
-  var require = {
-    paths: {
-      {{#if (SUMMERNOTE_LOCALE locale)}}
-        'summernote-{{SUMMERNOTE_LOCALE locale}}': '/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}',
-      {{/if}}
-      'angular-locale': '/bower_components/angular-i18n/angular-locale_{{locale}}'
-    },
-    shim: {
-      {{#if (SUMMERNOTE_LOCALE locale)}}
-        'summernote-{{SUMMERNOTE_LOCALE locale}}': {
-          deps: ['jquery', 'summernote']
-        },
-      {{/if}}
-      'angular-locale': {
-        deps: ['jquery', 'angular']
-      }
-    }
-  };
-</script>
-<script src="/bower_components/requirejs/require.js"></script>
-<script src="/jakduk/js/config.js"></script>
+<link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.css">
+<link rel="stylesheet" href="/static/bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+<link rel="stylesheet" href="/static/bower_components/font-awesome/css/font-awesome.css">
+<link rel="stylesheet" href="/static/unify/assets/plugins/animate.css">
+<link rel="stylesheet" href="/static/unify/assets/plugins/line-icons/line-icons.css">
+<link rel="stylesheet" href="/static/unify/assets/plugins/line-icons-pro/styles.css">
+<link rel="stylesheet" href="/static/unify/assets/plugins/brand-buttons/css/brand-buttons.min.css">
+<link rel="stylesheet" href="/static/unify/assets/plugins/ladda-buttons/css/custom-lada-btn.css">
+<link rel="stylesheet" href="/static/unify/assets/css/headers/header-default.css">
+<link rel="stylesheet" href="/static/unify/assets/css/footers/footer-v3.css">
+<link rel="stylesheet" href="/static/unify/assets/css/style.css">
+<link rel="stylesheet" href="/static/unify/assets/css/theme-colors/blue.css">
+<link rel="stylesheet" href="/static/jakduk/css/jakduk.css">

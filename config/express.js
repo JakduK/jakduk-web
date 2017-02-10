@@ -16,27 +16,34 @@ const i18n = require('../middlewares/i18n');
 const defaultContext = require('../middlewares/default_context');
 
 function setup(app) {
-  app.set('env', config.env);
-  app.set('port', config.port);
-  app.set('trust proxy', true);
+  const staticDir = path.join(__dirname, '..', 'static');
+
   app.locals.gaAccount = config.gaAccount;
   app.locals.kakaoClientID = config.kakao.clientID;
   app.locals.apiServerUrl = config.apiServerUrl;
   app.locals.thumbnailServerUrl = config.thumbnailServerUrl;
   app.locals.noRedirectPaths = config.noRedirectPaths;
 
-  // view engine setup
+  app.set('env', config.env);
+  app.set('port', config.port);
+  app.set('trust proxy', true);
   app.set('views', path.join(__dirname, '..', 'views'));
+
+  // view engine setup
   require('./handlebars')(app);
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(compression());
+  if (config.env !== 'production') {
+    app.use('/static', express.static(path.join(__dirname, '..')));
+  }
+  app.use('/static', express.static(staticDir, {
+    maxage: config.env === 'production' ? '7d' : '0'
+  }));
+  app.get('/\*.html', express.static(staticDir));
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));
-  app.use(express.static(path.join(__dirname, '..', 'static'), {
-    maxage: '7d'
-  }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(i18n());
