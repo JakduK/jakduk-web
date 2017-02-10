@@ -1,226 +1,585 @@
-<div class="wrapper" ng-controller="homeCtrl">
+{{#PARTIAL 'css'}}
+  <link rel="stylesheet" href="/static/semantic/dist/semantic.css">
+  <style type="text/css">
+    #main {
+      padding-top: 70px;
+    }
+    #navbar .fixed {
+      z-index: 801;
+      box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12), 0 2px 10px 0 rgba(34, 36, 38, 0.15);
+    }
+    #navbar > div {
+      padding: 0;
+    }
+    #navbar .mobile .menu {
+      height: 54px;
+    }
+    #navbar .popup .item {
+      color: black;
+    }
+    #phoneSidenav {
+      z-index: 802;
+    }
+    .ui.footer.segment {
+      padding: 1em 0 3em 0;
+    }
+  </style>
+{{/PARTIAL}}
+{{#PARTIAL 'js'}}
+  <script src="/static/jakduk/js/home.js"></script>
+{{/PARTIAL}}
 
-  {{> navigation}}
-
-  <div class="image-block">
-    <div class="container mCustomScrollbar" data-mcs-theme="minimal-dark">
-      <div class="company-description">{{{data.homeDescription.desc}}}</div>
+<div id="navbar" class="ui padded grid">
+  <!-- phone navbar -->
+  <div class="mobile tablet only row">
+    <div class="column">
+      <div class="ui borderless inverted blue fixed menu">
+        <div class="ui container">
+          <button id="btnSidebar" class="ui icon blue button">
+            <i class="content icon"></i>
+          </button>
+          <a href="/" class="item">KLEAGUE JAKDU KING</a>
+          <div class="right menu">
+            <a class="icon item" href="/login">
+              <i class="sign in icon"></i>
+            </a>
+            <a class="logon item">
+              <img class="ui avatar image" src="http://semantic-ui.com/images/wireframe/square-image.png">
+            </a>
+            <div class="ui popup">
+              <div class="ui grid">
+                <div class="column">
+                  <h4 class="ui header">eunsangleeeunsagle</h4>
+                  <a href="/user/profile" class="ui fluid small basic button">
+                    <i class="user icon"></i>
+                    My account
+                  </a>
+                  <div class="ui grey segment">
+                    <div class="ui relaxed divided list">
+                      <div class="item">
+                        <div class="content">
+                          <div class="header">Snickerdoodle</div>
+                          An excellent companion
+                        </div>
+                      </div>
+                      <div class="item">
+                        <div class="content">
+                          <div class="header">Poodle</div>
+                          A poodle, its pretty basic
+                        </div>
+                      </div>
+                      <div class="item">
+                        <div class="content">
+                          <div class="header">Paulo</div>
+                          He's also a dog
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="/logout" class="ui fluid basic button">
+                    <i class="sign out icon"></i>
+                    Logout
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!--=== Content Part ===-->
-  <div class="container content">
-
-    <!-- 인기 검색어 -->
-    <div class="row margin-bottom-25">
-      <div class="col-sm-12">
-        <div class="headline">
-          <h4>{{TRANSLATION 'popular.search.words'}}</h4>
-        </div>
-        {{#each data.popularSearchWords}}
-          <a href="/search?q={{key}}&w=PO;CO;GA;" style="margin-bottom:5px;" class="btn btn-default btn-sm">
-            <strong>
-              <span>{{ADD @index 1}}</span>.
-            </strong>
-            &nbsp;{{key}}
-          </a>
-        {{/each}}
-      </div>
-    </div>
-
-    <div class="row">
-
-      <div class="col-md-9">
-        <div class="row ">
-
-          <!--  최근 글 -->
-          <div class="col-sm-6 sm-margin-bottom-30">
-            <div class="headline">
-              <h4>{{TRANSLATION "home.posts.latest"}}</h4>
-              <a class="btn-u btn-u-xs btn-u-default rounded pull-right" style="margin: 5px;" href="/board/free">
-                {{TRANSLATION "common.button.more"}}
-              </a>
-            </div>
-
-          {{#if data.posts.length}}
-            <ul class="list-unstyled blog-trending">
-            {{#each data.posts}}
-              <li>
-                <h5 style="font-weight: 500;">
-                  <a href="/board/free/{{seq}}">{{TERNARY status.delete (TRANSLATION "board.msg.deleted") subject}}</a>
-                  <br>
-                  <small>
-                    <span aria-hidden="true" class="icon-user"></span> {{writer.username}}
-                    &middot;
-                    {{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LT')}}
-                    &middot;
-                    <span aria-hidden="true" class="icon-eye"></span> {{views}}
-                  </small>
-                </h5>
-              </li>
-            {{/each}}
-            </ul>
-          {{/if}}
+  <!-- desktop navbar -->
+  <div class="computer only row">
+    <div class="column">
+      <div class="ui borderless inverted blue fixed menu">
+        <div class="ui container">
+          <div class="header item">
+            KLEAGUE JAKDU KING
           </div>
-
-          <!-- 최근 댓글  -->
-          <div class="col-sm-6 sm-margin-bottom-30">
-            <div class="headline">
-              <h4 class>{{TRANSLATION "home.comments.latest"}}</h4>
-              <a class="btn-u btn-u-xs btn-u-default rounded pull-right" style="margin: 5px;" href="/board/free/comments">
-                {{TRANSLATION "common.button.more"}}
-              </a>
-            </div>
-
-          {{#if data.comments.length}}
-            <div class="blog-twitter">
-            {{#each data.comments}}
-              <div class="blog-twitter-inner">
-                <strong><i aria-hidden="true" class="icon-user"></i> {{writer.username}}</strong> &middot;
-                <a href="/board/free/{{boardItem.seq}}">{{content}}</a>
-                <span class="twitter-time" >{{DATE_FORMAT (DATE_BY_ID id) (TERNARY (OPR '>' ../todayDate (DATE_BY_ID id)) 'LL' 'LT')}}</span>
-              </div>
-            {{/each}}
-            </div>
-          {{/if}}
-
-          </div>
-        </div>
-      </div>
-      <!-- End Left Sidebar -->
-
-      <!-- Right Sidebar -->
-      <div class="col-md-3">
-
-        <div class="row">
-
-          <!-- 최근 가입 회원 -->
-          <div class="margin-bottom-30 col-md-12 col-sm-6">
-            <div class="headline"><h4>{{TRANSLATION "home.members.registered.latest"}}</h4></div>
-
-            <div class="carousel slide testimonials testimonials-v2" id="testimonials-1">
-              <div class="carousel-inner">
-                <div class="item" ng-repeat="user in usersLatest" ng-class="{'active':$index == 0}">
-                  <p ng-bind="user.about"></p>
-                  <div class="testimonial-info">
-                    <span class="testimonial-author">
-                      <i aria-hidden="true" class="icon-user-follow"></i>
-                      <span class="latest-user-name" ng-bind="user.username"></span>
-                      <em class="latest-user-club">
-                        <i class="fa fa-futbol-o"></i>
-                        <span ng-bind="user.supportFC.names[0].fullName"></span>
-                      </em>
-                    </span>
+          <div class="right menu">
+            <a class="logon item">
+              <img class="ui avatar image" src="http://semantic-ui.com/images/wireframe/square-image.png">
+            </a>
+            <div class="ui popup">
+              <div class="ui grid">
+                <div class="column">
+                  <h4 class="ui header">eunsangleeeunsagle</h4>
+                  <a href="/user/profile" class="ui fluid small basic button">
+                    <i class="user icon"></i>
+                    My account
+                  </a>
+                  <div class="ui grey segment">
+                    <div class="ui relaxed divided list">
+                      <div class="item">
+                        <div class="content">
+                          <div class="header">Snickerdoodle</div>
+                          An excellent companion
+                        </div>
+                      </div>
+                      <div class="item">
+                        <div class="content">
+                          <div class="header">Poodle</div>
+                          A poodle, its pretty basic
+                        </div>
+                      </div>
+                      <div class="item">
+                        <div class="content">
+                          <div class="header">Paulo</div>
+                          He's also a dog
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  <a href="/logout" class="ui fluid basic button">
+                    <i class="sign out icon"></i>
+                    Logout
+                  </a>
                 </div>
               </div>
-
-              <div class="carousel-arrow">
-                <a data-slide="prev" href="#testimonials-1" class="left carousel-control">
-                  <i class="fa fa-angle-left"></i>
-                </a>
-                <a data-slide="next" href="#testimonials-1" class="right carousel-control">
-                  <i class="fa fa-angle-right"></i>
-                </a>
+            </div>
+            <a href="/login" class="item">
+              로그인
+            </a>
+            <div class="ui simple dropdown item">
+              <i class="globe icon"></i> {{TRANSLATION "common.language"}}
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <a class="item"><i class="kr flag"></i> {{TRANSLATION "common.language.korean"}}</a>
+                <a class="item"><i class="us flag"></i> {{TRANSLATION "common.language.english"}}</a>
               </div>
             </div>
-
+            <div class="ui category search item">
+              <div class="ui icon input">
+                <input type="text" placeholder="Search anything" autocomplete="off">
+                <i class="search link icon"></i>
+              </div>
+              <div class="results"></div>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- phone sidenav-->
+<div id="phoneSidenav" class="ui left inverted blue vertical accordion menu sidebar">
+  <div class="ui search item">
+    <div class="ui icon input">
+      <input type="text" placeholder="Search anything" autocomplete="off">
+      <i class="search link icon"></i>
+    </div>
+    <div class="results"></div>
+  </div>
+  <a href="/" class="active item">
+    홈
+  </a>
+  <a class="item">
+    게시판
+  </a>
+  <a class="item">
+    사진첩
+  </a>
+  <a class="item">
+    통계
+  </a>
+  <a class="item">
+    작두타기
+  </a>
+  <div class="item">
+    <h5 class="ui inverted top header">
+      인기 검색어
+    </h5>
+    <div class="ui segment">
+      <a class="ui label">New</a>
+      <a class="ui red label">Upcoming</a>
+      <a class="ui teal label">Featured</a>
+    </div>
+  </div>
+  <div class="item">
+    <h5 class="ui inverted top header">
+      새로운 회원
+    </h5>
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="header">
+          PicPic
+        </div>
+        <div class="description">
+          Animals
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    <h5 class="ui inverted top header">
+      백과사전
+    </h5>
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="header">
+          백종철
+        </div>
+        <div class="description">
+          85년 축구대제전 슈퍼리그 MVP는 럭키
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    <a class="title">
+      <i class="dropdown icon"></i>
+      <i class="globe icon"></i> {{TRANSLATION "common.language"}}
+    </a>
+    <div class="content">
+      <a class="item"><i class="kr flag"></i> {{TRANSLATION "common.language.korean"}}</a>
+      <a class="item"><i class="us flag"></i> {{TRANSLATION "common.language.english"}}</a>
+    </div>
+  </div>
+</div>
 
-          <!--  백과사전  -->
-          <div class="shadow-wrapper col-md-12 col-sm-6">
-            <h4>백과사전</h4>
-            <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-              <h4>
-                <span ng-bind="encyclopedia.subject"></span>
-                <span class="label rounded label-orange" ng-bind="encyclopedia.kind"></span>
-              </h4>
-              <p ng-bind="encyclopedia.content"></p>
-              <!--
-              <button class="btn-u btn-brd btn-brd-hover rounded btn-u-sea" type="button" ng-click="refreshEncyclopedia()">
-                <i class="fa fa-refresh"></i>
-              </button>
-              -->
+<!-- main -->
+<div id="main" class="dimmed pusher">
+  <div class="ui container">
+    <div class="ui grid">
+
+      <!-- desktop sidenav -->
+      <div class="three wide computer only column">
+        <div id="stickyVerticalMenu" class="ui sticky grid vertical fluid blue inverted menu">
+          <a href="/" class="active item computer only row">
+            홈
+          </a>
+          <a href="/board/free" class="item computer only row">
+            게시판
+          </a>
+          <a href="/gallery" class="item computer only row">
+            사진첩
+          </a>
+          <a class="item computer only row">
+            통계
+          </a>
+          <a class="item computer only row">
+            작두타기
+          </a>
+          <div class="item">
+            <h5 class="ui inverted top header">
+              인기 검색어
+            </h5>
+            <div class="ui segment">
+              <a class="ui label">New</a>
+              <a class="ui red label">Upcoming</a>
+              <a class="ui teal label">Featured</a>
+            </div>
+          </div>
+          <div class="item">
+            <h5 class="ui inverted top header">
+              새로운 회원
+            </h5>
+            <div class="ui fluid card">
+              <div class="content">
+                <div class="header">
+                  PicPic
+                </div>
+                <div class="description">
+                  Animals
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <h5 class="ui inverted top header">
+              백과사전
+            </h5>
+            <div class="ui fluid card">
+              <div class="content">
+                <div class="header">
+                  백종철
+                </div>
+                <div class="description">
+                  85년 축구대제전 슈퍼리그 MVP는 럭키
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
       </div>
-      <!-- End Right Sidebar -->
-    </div>
 
-    <!-- 최근 사진 -->
-    <div class="headline">
-      <h4>{{TRANSLATION "home.pictures.latest"}}</h4>
-      <a class="btn-u btn-u-xs btn-u-default rounded pull-right" style="margin: 5px;" href="/gallery">
-        {{TRANSLATION "common.button.more"}}
-      </a>
-    </div>
-    <div class="container-fluid">
-      <div class="customNavigation text-center margin-bottom-10">
-        <a class="owl-btn prev-v2" id="slickPrev"><i class="fa fa-angle-left"></i></a>
-        <a class="owl-btn next-v2" id="slickNext"><i class="fa fa-angle-right"></i></a>
+
+      <div class="sixteen wide mobile ten wide tablet ten wide computer column">
+
+        <!-- 공지 -->
+        <div class="ui blue segment">
+          <div class="ui items link">
+            <div class="item">
+              <a href="">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다! &middot; 2017.1.24 13:19</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 최신글 -->
+        <div class="ui blue segment">
+          <div class="ui items link divided">
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="ui tiny image">
+                <img src="/static/jakduk/img/logo_256.png">
+              </div>
+              <div class="content">
+                <a class="header">OSS 더비기닝리그 유소년 엘리트축구대회를 소개합니다!</a>
+                <div class="description">
+                  <p>대한민국의 미래, 전국 유소년 클럽 선수들에게 다양한 경험과 즐거운 추억을 선사하고자
+
+                    전국 4개 도시(부산, 수원, 대전, 서울)에서 2017 OSS 더 비기닝 리그를 각각 개최합니다. (엘리트 축구대회)</p>
+                </div>
+                <div class="extra">
+                  생글이_진주FC &middot; 2017.1.24 13:19
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <slick settings="slickConfig" ng-if="dataLoaded">
-        <div ng-repeat="image in galleriesLatest" class="thumbnail" style="max-width: 260px;">
-          <a ng-href="/gallery/{%image.id%}">
-            <img class="img-home-carousel" ng-src="{{thumbnailServerUrl}}/gallery/thumbnail/{%image.id%}">
-            <h5 class="text-center text-overflow">
-              <span ng-bind="image.name"></span>
-            </h5>
+
+      <div class="sixteen wide mobile six wide tablet three wide computer column">
+        <!-- 최신 사진 -->
+        <div class="ui top attached blue segment header">
+          최신 사진
+        </div>
+        <div class="ui attached segment card">
+          <a class="image">
+            <img src="/static/jakduk/img/logo_256.png">
+          </a>
+          <a class="content">
+            <div class="description">
+              PicPic
+            </div>
+            <div class="meta">
+              <span class="category">Animals</span>
+            </div>
           </a>
         </div>
-      </slick>
+        <div class="ui attached segment card">
+          <div class="image">
+            <img src="/static/jakduk/img/logo_256.png">
+          </div>
+          <div class="content">
+            <div class="description">
+              PicPic
+            </div>
+            <div class="meta">
+              <span class="category">Animals</span>
+            </div>
+          </div>
+        </div>
+        <div class="ui attached segment card">
+          <div class="image">
+            <img src="/static/jakduk/img/logo_256.png">
+          </div>
+          <div class="content">
+            <div class="description">
+              PicPic
+            </div>
+            <div class="meta">
+              <span class="category">Animals</span>
+            </div>
+          </div>
+        </div>
+        <div class="ui attached segment card">
+          <div class="image">
+            <img src="/static/jakduk/img/logo_256.png">
+          </div>
+          <div class="content">
+            <div class="description">
+              PicPic
+            </div>
+            <div class="meta">
+              <span class="category">Animals</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-  </div><!--/container-->
-  <!--=== End Content Part ===-->
-
-  {{> footer}}
-
-</div><!-- /.container -->
-{{#CHUNK 'css'}}
-  <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick.css">
-  <link rel="stylesheet" href="bower_components/slick-carousel/slick/slick-theme.css">
-  <link rel="stylesheet" href="unify/assets/css/pages/page_job_inner.css">
-  <link rel="stylesheet" href="unify/assets/css/pages/profile.css">
-{{/CHUNK}}
-{{#CHUNK 'js'}}
-  <script>
-    require([
-      'angular', 'jakduk', 'slick', 'angular-slick'
-    ], function(angular) {
-      angular.module('jakdukApp', [
-        'ngSanitize',
-        'slickCarousel',
-        'jakdukCommon'
-      ]).controller("homeCtrl", ['$scope', function ($scope) {
-        $scope.dataLoaded = true;
-        $scope.encyclopediaConn = 'none';
-        $scope.usersLatest = angular.fromJson('{{{JSON_STRINGIFY data.users}}}');
-        $scope.galleriesLatest = angular.fromJson('{{{JSON_STRINGIFY data.galleries}}}');
-        $scope.encyclopedia = angular.fromJson('{{{JSON_STRINGIFY data.encyclopedia}}}');
-        $scope.slickConfig = {
-          infinite: false,
-          autoplay: true,
-          draggable: true,
-          autoplaySpeed: 3000,
-          prevArrow: '#slickPrev',
-          nextArrow: '#slickNext',
-          variableWidth: true,
-          lazyLoad: 'ondemand',
-          method: {},
-          event: {
-            beforeChange: function (event, slick, currentSlide, nextSlide) {
-            },
-            afterChange: function (event, slick, currentSlide, nextSlide) {
-            }
-          }
-        };
-      }]);
-
-      angular.bootstrap(document, ['jakdukApp']);
-    });
-  </script>
-{{/CHUNK}}
+    <!-- footer -->
+    <div class="ui vertical footer segment">
+      <div class="ui section divider"></div>
+      <div class="ui center aligned container">
+        <div class="ui stackable divided grid">
+          <div class="four wide column">
+            <h4 class="ui  header">{{TRANSLATION "about"}}</h4>
+            <div class="ui link list">
+              <a href="#" class="item">Link One</a>
+              <a href="#" class="item">Link Two</a>
+              <a href="#" class="item">Link Three</a>
+            </div>
+          </div>
+          <div class="four wide column">
+            <h4 class="ui header">{{TRANSLATION "board"}}</h4>
+            <div class="ui link list">
+              <a href="#" class="item">Link One</a>
+              <a href="#" class="item">Link Two</a>
+              <a href="#" class="item">Link Three</a>
+            </div>
+          </div>
+          <div class="four wide column">
+            <h4 class="ui header">{{TRANSLATION "stats"}}</h4>
+            <div class="ui link list">
+              <a href="#" class="item">Link One</a>
+              <a href="#" class="item">Link Two</a>
+              <a href="#" class="item">Link Three</a>
+            </div>
+          </div>
+          <div class="four wide column">
+            <div class="ui link list">
+              <a class="item"><i class="github alternate big icon"></i></a>
+              <a class="item"><i class="comments outline big icon"></i></a>
+              <a class="item"><i class="mail big icon"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="ui section divider"></div>
+        <img src="/static/jakduk/img/logo_128.png" class="ui centered mini image">
+        <div class="ui horizontal small divided link list">
+          <a class="item" href="/rss">RSS</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@
 
 #Prerequisite
 ```
-npm install -g bower
+npm install -g bower gulp
 ```
 
 #Install

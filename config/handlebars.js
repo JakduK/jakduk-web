@@ -120,7 +120,7 @@ hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
   return locale.startsWith('ko') ? 'ko-KR' : '';
 });
 
-hbs.registerHelper('CHUNK', function(name, options) {
+hbs.registerHelper('PARTIAL', function(name, options) {
   if (!this.$INJECT) {
     this.$INJECT = {};
   }
@@ -130,6 +130,8 @@ hbs.registerHelper('CHUNK', function(name, options) {
   this.$INJECT[name].push(options.fn(this));
   return null;
 });
+
+hbs.registerHelper('CHUNK', hbs.handlebars.helpers.PARTIAL);
 
 hbs.registerHelper('INJECT', function(name) {
   return this.$INJECT && this.$INJECT[name] && this.$INJECT[name].join('');

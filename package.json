@@ -5,31 +5,35 @@
   "main": "app.js",
   "scripts": {
     "preinstall": "bower install",
+    "postinstall": "cd static/semantic && gulp build",
     "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "clor": "^4.2.1",
+    "clor": "^5.0.1",
     "compression": "^1.6.2",
     "cookie": "^0.3.1",
     "cookie-parser": "^1.4.3",
     "debug": "^2.6.0",
     "express": "^4.14.0",
-    "filesize": "^3.3.0",
+    "filesize": "^3.5.4",
     "hbs": "^4.0.0",
     "hbs-utils": "^0.0.4",
     "http-proxy-middleware": "^0.17.3",
     "i18n": "^0.8.3",
     "lodash": "^4.17.4",
     "moment": "^2.14.1",
-    "morgan": "^1.7.0",
-    "pmx": "^0.6.3",
+    "morgan": "^1.8.0",
+    "pmx": "^1.0.1",
     "restler": "^3.4.0",
     "underscore.string": "^3.3.4"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-sass": "^3.1.0"
+    "gulp-sass": "^3.1.0",
+    "jquery": "^3.1.1",
+    "semantic-ui": "^2.2.7",
+    "vue": "^2.1.10"
   },
   "engines": {
     "node": ">=6"
