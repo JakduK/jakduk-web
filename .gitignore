@@ -1,9 +1,11 @@
 .idea
 .tmp
 .logs
+
 build
 node_modules
-bower_components
-static/semantic
+client/bower_components
+client/semantic
 local.js
 robots.txt
+*.log

@@ -4,8 +4,6 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "preinstall": "bower install",
-    "postinstall": "cd static/semantic && gulp build",
     "start": "node ./bin/www"
   },
   "dependencies": {

@@ -13,7 +13,9 @@ npm install -g bower gulp
 
 #Install
 ```
+bower install
 npm install
+cd client/semantic && gulp build
 ```
 
 #Run

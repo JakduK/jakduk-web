@@ -16,8 +16,6 @@ const i18n = require('../middlewares/i18n');
 const defaultContext = require('../middlewares/default_context');
 
 function setup(app) {
-  const staticDir = path.join(__dirname, '..', 'static');
-
   app.locals.gaAccount = config.gaAccount;
   app.locals.kakaoClientID = config.kakao.clientID;
   app.locals.apiServerUrl = config.apiServerUrl;
@@ -35,12 +33,10 @@ function setup(app) {
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(compression());
   if (config.env !== 'production') {
-    app.use('/static', express.static(path.join(__dirname, '..')));
+    app.use('/static', express.static(path.join(__dirname, '..', '..')));
+    app.use('/static', express.static(path.join(__dirname, '..', '..', 'client')));
   }
-  app.use('/static', express.static(staticDir, {
-    maxage: config.env === 'production' ? '7d' : '0'
-  }));
-  app.get('/\*.html', express.static(staticDir));
+  app.get('/\*.html', express.static(path.join(__dirname, '..', '..', 'client', 'static')));
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));

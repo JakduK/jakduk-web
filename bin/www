@@ -8,7 +8,7 @@ require('pmx').init({
   http : true
 });
 
-var app = require('../app');
+var app = require('../server/app');
 var debug = require('debug')('jakduk-web:server');
 var http = require('http');
 var port = app.get('port');

@@ -1,15 +1,13 @@
-'use strict';
-
-var path = require('path');
-var config = require('../config/environment');
-var locale = config.locale;
-var i18n = require('i18n');
-var moment = require('moment');
+const path = require('path');
+const config = require('../config/environment');
+const locale = config.locale;
+const i18n = require('i18n');
+const moment = require('moment');
 
 i18n.configure({
   defaultLocale: locale.default,
   locales: locale.list,
-  directory: path.join(__dirname, '..', 'i18n'),
+  directory: path.join(__dirname, '..', '..', 'i18n'),
   extension: '.json',
   autoReload: true,
   updateFiles: false
