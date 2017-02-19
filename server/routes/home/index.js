@@ -21,7 +21,6 @@ module.exports.setup = function (app) {
           i18n.__('common.home'),
           i18n.__('common.jakduk')
         ],
-        isNewDesign: true,
         todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),
         data: {
           posts: responses[0].data.posts || [],

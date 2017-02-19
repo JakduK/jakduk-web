@@ -73,7 +73,7 @@ hbs.registerHelper('OPR', function(operator, v1, v2) {
 });
 
 hbs.registerHelper('JSON_STRINGIFY', function(val) {
-  return val ? JSON.stringify(val).replace(/\\/g, '\\\\') : '';
+  return new hbs.SafeString(JSON.stringify(val));
 });
 
 hbs.registerHelper('GET_PROP', function(obj, key) {

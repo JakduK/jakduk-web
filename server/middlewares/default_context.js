@@ -24,7 +24,6 @@ module.exports = function () {
       _.merge(res.locals, {
         redir: '?redir=' + querystring.escape(req.url),
         layout: 'layout',
-        bodyClass: 'header-fixed',
         userInfo: req.userInfo,
         isAuthenticated: req.isAuthenticated,
         meta: {

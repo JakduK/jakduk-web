@@ -1,0 +1,7 @@
+<div>
+  <form class="ui icon input" v-on:submit.prevent="search()">
+    <input type="text" v-model="keyword" v-bind:placeholder="$t('search.placeholder.words')" autocomplete="off">
+    <i class="search link icon"></i>
+  </form>
+  <div class="results"></div>
+</div>

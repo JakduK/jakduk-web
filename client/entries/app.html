@@ -1,0 +1,66 @@
+<div id="root" class="dimmed pusher">
+
+  <!-- navbar -->
+  <navbar id="navbar" ></navbar>
+
+  <router-view></router-view>
+
+  <!-- footer -->
+  <div class="ui container">
+    <div class="ui vertical footer segment">
+      <div class="ui section divider"></div>
+      <div class="ui center aligned container">
+        <div class="ui stackable divided grid">
+          <div class="four wide column">
+            <h4 class="ui header">{{$t('about')}}</h4>
+            <div class="ui link list">
+              <a href="/about" class="item">{{$t('about.site')}}</a>
+              <a href="/board/free/98" class="item">{{$t('about.site.use.guide')}}</a>
+            </div>
+          </div>
+          <div class="four wide column">
+            <h4 class="ui header">{{$t('board')}}</h4>
+            <div class="ui link list">
+              <a href="/board/free?category=FREE" class="item">{{$t('board.name.free')}}</a>
+              <a href="/board/free?category=FOOTBALL" class="item">{{$t('board.category.football')}}</a>
+              <a href="/rss" class="item">RSS</a>
+            </div>
+          </div>
+          <div class="four wide column">
+            <h4 class="ui header">{{$t('stats')}}</h4>
+            <div class="ui link list">
+              <a href="/stats/supporters" class="item">{{$t('stats.supporters')}}</a>
+              <a href="/stats/attendance/league" class="item">{{$t('stats.attendance')}}</a>
+            </div>
+          </div>
+          <div class="four wide column">
+            <div class="ui center aligned container">
+              <div class="ui link list">
+                <div class="item">
+                  <a href="https://github.com/JakduK" target="_blank">
+                    <i class="github alternate big icon"></i> Github
+                  </a>
+                </div>
+                <div class="item">
+                  <a href="https://gitter.im/JakduK/Lobby" target="_blank">
+                    <i class="comments outline big icon"></i> Gitter
+                  </a>
+                </div>
+                <div class="item">
+                  <a href="mailto:phjang1983@daum.net">
+                    <i class="mail big icon"></i> email
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ui section divider"></div>
+        <img src="/static/jakduk/img/logo_128.png" class="ui centered mini image">
+        <div class="ui horizontal small divided link list">
+          {{$t('common.jakduk.description')}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

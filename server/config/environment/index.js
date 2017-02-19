@@ -12,12 +12,14 @@ if (env === 'production') {
 }
 
 try {
-  _.merge(envConfig, require('./local'));
+  _.merge(envConfig, require('../../../local'));
 } catch (e) {
 }
 
 // All configurations will extend these options
 var defaultConfig = {
+  revision: '',
+
   env: env,
 
   port: process.env.PORT || 3000,

@@ -306,5 +306,6 @@
   "msg.recommend.browser": "You might be using an old version of Internet Explorer.<br>We suggest to upgrade your browser such as newer Internet Explorer, Chrome, Firefox, Opera, etc.",
   "msg.imagefile.size.limited": "The limit for an image is {{size}}.",
   "latest.articles.author": "Latest articles by author",
-  "popular.search.words": "Popular searches"
+  "popular.search.words": "Popular searches",
+  "common.view.my.profile": "View my profile"
 }
