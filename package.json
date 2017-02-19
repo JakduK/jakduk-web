@@ -39,6 +39,7 @@
     "run-sequence": "^1.2.2",
     "semantic-ui": "^2.2.7",
     "style-loader": "^0.13.1",
+    "swiper": "^3.4.1",
     "vue": "^2.1.10",
     "vue-i18n": "^5.0.0",
     "vue-loader": "^10.3.0",
