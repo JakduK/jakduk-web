@@ -14,13 +14,13 @@
           <div class="item" v-for="post in posts">
             <div class="content">
               <a v-bind:href="'/board/free/' + post.seq" class="header">{{post.subject}}</a>
-              <div class="extra">{{post.writer.username}} &middot; {{post.id | postRegDate('LL')}}</div>
+              <div class="extra" v-if="post.writer">{{post.writer.username}} &middot; {{post.id | postRegDate('LL')}}</div>
             </div>
           </div>
           <div class="item" v-for="comment in comments">
             <div class="content">
               <a v-bind:href="'/board/free/' + comment.boardItem.seq" class="header">{{comment.content}}</a>
-              <div class="extra">{{comment.writer.username}} &middot; {{comment.id | postRegDate('LL')}}</div>
+              <div class="extra" v-if="comment.writer">{{comment.writer.username}} &middot; {{comment.id | postRegDate('LL')}}</div>
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@
                 <div class="ui fluid rounded image">
                   <img class="swiper-lazy" v-bind:data-src="image.thumbnailUrl">
                 </div>
-                <h5>{{image.writer.username}} &middot; <i class="eye icon"></i> {{image.views}}</h5>
+                <h5 v-if="image.writer">{{image.writer.username}} &middot; <i class="eye icon"></i> {{image.views}}</h5>
               </a>
             </div>
           </div>
