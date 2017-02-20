@@ -9,7 +9,12 @@ Vue.component('phone-sidenav', {
   },
   methods: {
     changeLocale (locale) {
-      return window.location.href.replace(/lang=(.[^&]+?)/g, () => `lang=${locale}`);
+      const langQueryRegexp = /lang=(.[^&]+)/g;
+      if (window.location.href.match(langQueryRegexp)) {
+        return window.location.href.replace(langQueryRegexp, () => `lang=${locale}`);
+      } else {
+        return `${window.location.href}?lang=${locale}`
+      }
     }
   }
 });
