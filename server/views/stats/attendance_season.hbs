@@ -128,7 +128,7 @@
         }
 
         $scope.attendancesConn = "none";
-        $scope.footballClubs = angular.fromJson('{{{DEFAULT_VALUE (JSON_STRINGIFY footballClubs) '{}'}}}');
+        $scope.footballClubs = {{JSON_STRINGIFY footballClubs}} || {};
         $scope.attendances = {};
         $scope.alert = {};
         $scope.totalSum = 0;

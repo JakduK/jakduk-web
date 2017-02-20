@@ -142,7 +142,7 @@
       ]).controller('FreeWriteCtrl', [
         '$scope', '$http', '$window', 'FileUploader',
       function ($scope, $http, $window, FileUploader) {
-        var images = angular.fromJson('{{{DEFAULT_VALUE (JSON_STRINGIFY post.galleries) '[]'}}}');
+        var images = {{JSON_STRINGIFY post.galleries}} || [];
 
         $scope.onSubmit = onSubmit;
         $scope.onDiscard = onDiscard;
