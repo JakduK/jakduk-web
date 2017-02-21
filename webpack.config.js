@@ -51,7 +51,7 @@ module.exports = {
       'vue-i18n': 'vue-i18n/dist/vue-i18n.common.js',
       'vuex': 'vuex/dist/vuex.js',
       moment: 'moment/min/moment.min.js',
-      semantic: path.resolve(__dirname, './client/semantic/dist/semantic.js')
+      semantic: 'semantic-ui/dist/semantic.js'
     }
   },
   plugins: [

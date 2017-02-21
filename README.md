@@ -19,7 +19,6 @@ npm install -g bower gulp webpack
 bower install
 npm install
 webpack
-cd client/semantic && gulp build
 ```
 
 #Run

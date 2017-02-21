@@ -4,7 +4,6 @@
 dist/
 build/
 node_modules/
-client/bower_components/
-client/semantic/
+bower_components/
 local.js
 robots.txt
