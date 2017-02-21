@@ -19,16 +19,17 @@ gulp.task('webpack', () => {
 });
 
 gulp.task('i18nJson2Js', (callback) => {
+  const i18nDir = 'dist/i18n';
   const names = fs.readdirSync('i18n');
   _.forEach(names, (name) => {
     const json = fs.readFileSync(`i18n/${name}`, 'utf-8');
     const js = `window.ENV.i18n=${json};`;
     try {
-      fs.statSync('dist/i18n');
+      fs.statSync(i18nDir);
     } catch (e) {
-      fs.mkdirSync('dist/i18n');
+      fs.mkdirSync(i18nDir);
     }
-    fs.writeFileSync(`dist/i18n/${name.replace('.json', '.js')}`, js);
+    fs.writeFileSync(`${i18nDir}/${name.replace('.json', '.js')}`, js);
   });
   callback();
 });

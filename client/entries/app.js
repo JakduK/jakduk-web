@@ -47,7 +47,7 @@ const routes = [{
     component (resolve) {
       require.ensure(['../entries/home/home'], () => {
         resolve(require('../entries/home/home'));
-      });
+      }, 'home');
     }
   }, {
     path: 'board'
