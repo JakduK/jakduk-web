@@ -5,30 +5,30 @@ import '../search_input/search_input';
 
 Vue.component('navbar', {
   template: require('./navbar.html'),
-  mounted () {
+  mounted() {
     const $el = $(this.$el);
 
     $el.find('.logon.item').each((index, item) => {
       $(item).popup({
         popup: $(item).find('.popup'),
-        position : 'bottom right',
-        on: 'click',
+        position: 'bottom right',
+        on: 'click'
       });
     });
 
     $el.find('#btnSidebarToggle').click(() => {
       $('.ui.sidebar').sidebar('setting', {
-        transition:'overlay'
+        transition: 'overlay'
       }).sidebar('toggle');
     });
   },
   methods: {
-    changeLocale (locale) {
+    changeLocale(locale) {
       const langQueryRegexp = /lang=(.[^&]+)/g;
       if (window.location.href.match(langQueryRegexp)) {
         return window.location.href.replace(langQueryRegexp, () => `lang=${locale}`);
       } else {
-        return `${window.location.href}?lang=${locale}`
+        return `${window.location.href}?lang=${locale}`;
       }
     }
   },

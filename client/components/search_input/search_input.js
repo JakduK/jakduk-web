@@ -2,13 +2,13 @@ import Vue from 'vue';
 
 Vue.component('search-input', {
   template: require('./search_input.html'),
-  data () {
+  data() {
     return {
       keyword: ''
     };
   },
   methods: {
-    search () {
+    search() {
       window.location = `/search?w=PO;CO;GA&q=${encodeURIComponent(this.keyword)}`;
     }
   }

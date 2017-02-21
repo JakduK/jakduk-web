@@ -1,5 +1,5 @@
 export default {
-  bind (el, binding) {
+  bind(el, binding) {
     $(el).popup();
   }
 };

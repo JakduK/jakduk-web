@@ -44,7 +44,7 @@ const routes = [{
   },
   children: [{
     path: 'home',
-    component (resolve) {
+    component(resolve) {
       require.ensure(['../entries/home/home'], () => {
         resolve(require('../entries/home/home'));
       }, 'home');
@@ -59,6 +59,7 @@ const router = new VueRouter({
   routes
 });
 
+/* eslint-disable no-new */
 new Vue({
   el: '#root',
   template: require('./app.html'),

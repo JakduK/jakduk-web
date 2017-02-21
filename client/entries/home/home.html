@@ -13,7 +13,7 @@
         <div class="ui link divided items">
           <div class="item" v-for="post in posts">
             <div class="content">
-              <a v-bind:href="'/board/free/' + post.seq" class="header">
+              <a v-bind:href="'/board/free/' + post.seq" class="header" v-bind:class="{'ui disabled': post.status.delete}">
                 {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
               </a>
               <div class="extra" v-if="post.writer">
