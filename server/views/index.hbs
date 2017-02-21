@@ -10,8 +10,8 @@
     <link rel="shortcut icon" href="/static/jakduk/img/logo_32.png" sizes="32x32">
     <link rel="shortcut icon" href="/static/jakduk/img/logo_196.png" sizes="196x196">
 
-    <link rel="stylesheet" href="/static/semantic/dist/semantic.css">
-    {{#if @root.isIE}}<script src="/static/babel-polyfill/dist/polyfill.js"></script>{{/if}}
+    <link rel="stylesheet" href="/static{{@root.revision}}/semantic/dist/semantic.css">
+    {{#if @root.isIE}}<script src="/static{{@root.revision}}/babel-polyfill/dist/polyfill.js"></script>{{/if}}
 
     <script>
       window.ENV = {

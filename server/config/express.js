@@ -34,7 +34,7 @@ function setup(app) {
 
   app.use(logger(config.env === 'production'  ? 'combined' : 'dev'));
   app.use(compression());
-  app.use('/static', express.static(path.join(__dirname, '..', '..', 'client')));
+  app.use(`/static${config.revision}`, express.static(path.join(__dirname, '..', '..', 'client')));
   app.use(`/static${config.revision}`, [
     express.static(path.join(__dirname, '..', '..', 'node_modules')),
     express.static(path.join(__dirname, '..', '..', 'dist'))
