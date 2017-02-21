@@ -10,7 +10,7 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/static/',
     filename: '[name].js',
-    chunkFilename: '[name]_[chunkhash].js'
+    chunkFilename: '[name].js'
   },
   module: {
     rules: [{
@@ -63,7 +63,8 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery'
-    })
+    }),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ]
   // devServer: {
   //   historyApiFallback: true,
