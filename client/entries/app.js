@@ -64,5 +64,10 @@ new Vue({
   el: '#root',
   template: require('./app.html'),
   store,
-  router
+  router,
+  computed: {
+    revision() {
+      return window.ENV.revision;
+    }
+  }
 });

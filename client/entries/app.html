@@ -56,10 +56,8 @@
           </div>
         </div>
         <div class="ui section divider"></div>
-        <img src="/static/jakduk/img/logo_128.png" class="ui centered mini image">
-        <div class="ui horizontal small divided link list">
-          {{$t('common.jakduk.description')}}
-        </div>
+        <img v-bind:src.once="'/static/jakduk/img/logo_128.png?' + $root.revision" class="ui centered mini image">
+        <div class="ui horizontal small divided link list">{{$t('common.jakduk.description')}}</div>
       </div>
     </div>
   </div>

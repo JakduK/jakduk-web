@@ -42,7 +42,7 @@ module.exports = Vue.component('home', {
   },
   watch: {
     galleries() {
-      Vue.nextTick(() => {
+      this.$nextTick(() => {
         const $swiperContainer = $('.swiper-container');
 
         /* eslint-disable no-new */
@@ -58,7 +58,7 @@ module.exports = Vue.component('home', {
       });
     },
     posts() {
-      Vue.nextTick(() => $('.ui.sticky').sticky('refresh', true));
+      this.$nextTick(() => $('.ui.sticky').sticky('refresh', true));
     }
   },
   methods: {

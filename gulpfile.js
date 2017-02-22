@@ -14,7 +14,6 @@ gulp.task('clean', () => {
 
 gulp.task('webpack', () => {
   const webpackConfig = require('./webpack.config');
-  webpackConfig.output.publicPath += `${revision}/`;
   return gulp.src('client/entries/app.js').pipe(webpackStream(webpackConfig, webpack)).pipe(gulp.dest('dist/'));
 });
 
