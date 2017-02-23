@@ -28,7 +28,7 @@ function postList(req, res, next) {
       todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),
       category: category,
       number: res.locals.number + 1
-    })
+    });
   }).catch(next);
 }
 
@@ -126,6 +126,8 @@ function editPost(req, res, next) {
       next(Util.makeForbidden());
       return;
     }
+
+    postData.post.content = postData.post.content.replace(/'/g, '\\\'');
 
     res.render('board/post_write', {
       title: [
