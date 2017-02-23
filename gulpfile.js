@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const path = require('path');
 const del = require('del');
 const fs = require('fs');
 const runSequence = require('run-sequence');
@@ -19,9 +20,9 @@ gulp.task('webpack', () => {
 
 gulp.task('i18nJson2Js', (callback) => {
   const i18nDir = 'dist/i18n';
-  const names = fs.readdirSync('i18n');
+  const names = fs.readdirSync(path.resolve('assets/i18n'));
   _.forEach(names, (name) => {
-    const json = fs.readFileSync(`i18n/${name}`, 'utf-8');
+    const json = fs.readFileSync(path.resolve(`assets/i18n/${name}`), 'utf-8');
     const js = `window.ENV.i18n=${json};`;
     try {
       fs.statSync(i18nDir);
@@ -42,7 +43,7 @@ gulp.task('local', (callback) => {
     local = fs.readFileSync('local.js', 'utf-8');
   }
   fs.writeFileSync('local.js', local.replace(/(=\s*\{)[.\s]*(revision:.[^,]+)?/, (matched, $1, $2) => {
-    let newRevision = `={revision:'/${revision}'`;
+    let newRevision = `={revision:'${revision}'`;
     if (!$2) {
       newRevision += ',';
     }

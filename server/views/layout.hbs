@@ -9,26 +9,26 @@
 
     {{> meta}}
 
-    <link rel="shortcut icon" href="/static/jakduk/img/logo_16.png" sizes="16x16">
-    <link rel="shortcut icon" href="/static/jakduk/img/logo_32.png" sizes="32x32">
-    <link rel="shortcut icon" href="/static/jakduk/img/logo_196.png" sizes="196x196">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_16.png" sizes="16x16">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_32.png" sizes="32x32">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_196.png" sizes="196x196">
 
     {{> css}}
     {{{INJECT 'css'}}}
 
     <!--[if lt IE 9]>
-    <script src="/static/unify/assets/plugins/respond.js"></script>
-    <script src="/static/unify/assets/plugins/html5shiv.js"></script>
-    <script src="/static/unify/assets/plugins/placeholder-IE-fixes.js"></script>
+    <script src="/assets/unify/assets/plugins/respond.js"></script>
+    <script src="/assets/unify/assets/plugins/html5shiv.js"></script>
+    <script src="/assets/unify/assets/plugins/placeholder-IE-fixes.js"></script>
     <![endif]-->
 
     <script type="text/javascript">
       var require = {
         paths: {
           {{#if (SUMMERNOTE_LOCALE locale)}}
-            'summernote-{{SUMMERNOTE_LOCALE locale}}': '/static/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}',
+            'summernote-{{SUMMERNOTE_LOCALE locale}}': '/assets/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}',
           {{/if}}
-          'angular-locale': '/static/bower_components/angular-i18n/angular-locale_{{locale}}'
+          'angular-locale': '/assets/bower_components/angular-i18n/angular-locale_{{locale}}'
         },
         shim: {
           {{#if (SUMMERNOTE_LOCALE locale)}}
@@ -42,8 +42,8 @@
         }
       };
     </script>
-    <script src="/static/bower_components/requirejs/require.js"></script>
-    <script src="/static/jakduk/js/config.js"></script>
+    <script src="/assets/bower_components/requirejs/require.js"></script>
+    <script src="/assets/jakduk/js/config.js"></script>
   </head>
   <body class="{{bodyClass}}">
     <!--[if lt ie 10]>

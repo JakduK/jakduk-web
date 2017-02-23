@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 
 const express = require('express');
@@ -33,12 +31,13 @@ function setup(app) {
 
   app.use(logger(config.env === 'production' ? 'combined' : 'dev'));
   app.use(compression());
-  app.use('/static', express.static(path.join(__dirname, '..', '..', 'client')));
-  app.use('/static', [
-    express.static(path.join(__dirname, '..', '..', 'node_modules')),
-    express.static(path.join(__dirname, '..', '..', 'dist'))
+  app.use('/assets', [
+    express.static(path.join(__dirname, '..', '..', 'dist')),
+    express.static(path.join(__dirname, '..', '..', 'assets')),
+    express.static(path.join(__dirname, '..', '..', 'client')),
+    express.static(path.join(__dirname, '..', '..', 'node_modules'))
   ]);
-  app.get(/\*.html/, express.static(path.join(__dirname, '..', 'static')));
+  app.get(/\*.html/, express.static(path.join(__dirname, '..', 'assets', 'html')));
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));

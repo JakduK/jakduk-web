@@ -9,31 +9,31 @@ define([
         ID: 'admin',
         URL: '/admin',
         CONTROLLER: 'AdminController',
-        TEMPLATE: '/static/jakduk/template/admin.html'
+        TEMPLATE: '/assets/jakduk/template/admin.html'
       },
       INIT: {
         BOARD_CATEGORY: {
           ID: 'admin.initBoardCategory',
           URL: '/board/category/init',
-          TEMPLATE: '/static/jakduk/template/admin-board-category-init.html',
+          TEMPLATE: '/assets/jakduk/template/admin-board-category-init.html',
           CONTROLLER: 'AdminBoardCategoryInitController'
         },
         SEARCH_INDEX: {
           ID: 'admin.initSearchIndex',
           URL: '/search/index/init',
-          TEMPLATE: '/static/jakduk/template/admin-search-index-init.html',
+          TEMPLATE: '/assets/jakduk/template/admin-search-index-init.html',
           CONTROLLER: 'AdminSearchIndexInitController'
         },
         SEARCH_TYPE: {
           ID: 'admin.initSearchType',
           URL: '/search/type/init',
-          TEMPLATE: '/static/jakduk/template/admin-search-type-init.html',
+          TEMPLATE: '/assets/jakduk/template/admin-search-type-init.html',
           CONTROLLER: 'AdminSearchTypeInitController'
         },
         SEARCH_DATA: {
           ID: 'admin.initSearchData',
           URL: '/search/data/init',
-          TEMPLATE: '/static/jakduk/template/admin-search-data-init.html',
+          TEMPLATE: '/assets/jakduk/template/admin-search-data-init.html',
           CONTROLLER: 'AdminSearchDataInitController'
         }
       },
@@ -41,67 +41,67 @@ define([
         ENCYCLOPEDIA: {
           ID: 'admin.writeEncyclopedia',
           URL: '/encyclopedia/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-encyclopedia.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-encyclopedia.html',
           CONTROLLER: 'AdminWriteEncyclopediaController'
         },
         FC_ORIGIN: {
           ID: 'admin.writefcOrigin',
           URL: '/fcOrigin/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-fc-origin.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-fc-origin.html',
           CONTROLLER: 'AdminWriteFootballClubOriginController'
         },
         FC: {
           ID: 'admin.writefc',
           URL: '/fc/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-fc.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-fc.html',
           CONTROLLER: 'AdminWriteFootballClubController'
         },
         BOARD_CATEGORY: {
           ID: 'admin.writeBoardCategory',
           URL: '/boardCategory/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-board-category.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-board-category.html',
           CONTROLLER: 'AdminWriteBoardCategoryController'
         },
         THUMBNAIL_SIZE: {
           ID: 'admin.writeThumbnailSize',
           URL: '/thumbnail/size/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-thumbnail-size.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-thumbnail-size.html',
           CONTROLLER: 'AdminWriteThumbnailSizeController'
         },
         HOME_DESCRIPTION: {
           ID: 'admin.writeHomeDescription',
           URL: '/homeDescription/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-home-description.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-home-description.html',
           CONTROLLER: 'AdminWriteHomeDescriptionController'
         },
         ATTENDANCE_LEAGUE: {
           ID: 'admin.writeAttendanceLeague',
           URL: '/attendanceLeague/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-attendance-league.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-attendance-league.html',
           CONTROLLER: 'AdminWriteAttendanceLeagueController'
         },
         ATTENDANCE_CLUB: {
           ID: 'admin.writeAttendanceClub',
           URL: '/attendanceClub/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-attendance-club.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-attendance-club.html',
           CONTROLLER: 'AdminWriteAttendanceClubController'
         },
         JAKDU_SCHEDULE: {
           ID: 'admin.writeJakduSchedule',
           URL: '/jakduSchedule/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-jakdu-schedule.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-jakdu-schedule.html',
           CONTROLLER: 'AdminWriteJakduScheduleController'
         },
         JAKDU_SCHEDULE_GROUP: {
           ID: 'admin.writeJakduScheduleGroup',
           URL: '/jakduScheduleGroup/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-jakdu-schedule-group.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-jakdu-schedule-group.html',
           CONTROLLER: 'AdminWriteJakduScheduleGroupController'
         },
         COMPETITION: {
           ID: 'admin.writeCompetition',
           URL: '/competition/write/:id',
-          TEMPLATE: '/static/jakduk/template/admin-write-competition.html',
+          TEMPLATE: '/assets/jakduk/template/admin-write-competition.html',
           CONTROLLER: 'AdminWriteCompetitionController'
         }
       },
@@ -110,61 +110,61 @@ define([
           ID: 'admin.getEncyclopedia',
           URL: '/encyclopedia',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         FC_ORIGIN: {
           ID: 'admin.getFcOrigin',
           URL: '/fcOrigin',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         FC: {
           ID: 'admin.getFc',
           URL: '/fc',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         BOARD_CATEGORY: {
           ID: 'admin.getBoardCategory',
           URL: '/boardCategory',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         HOME_DESCRIPTION: {
           ID: 'admin.getHomeDescription',
           URL: '/homeDescription',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         ATTENDANCE_LEAGUE: {
           ID: 'admin.getAttendanceLeague',
           URL: '/attendanceLeague?competitionCode',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         ATTENDANCE_CLUB: {
           ID: 'admin.getAttendanceClub',
           URL: '/attendanceClub',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         JAKDU_SCHEDULE: {
           ID: 'admin.getJakduSchedule',
           URL: '/jakduSchedule',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         JAKDU_SCHEDULE_GROUP: {
           ID: 'admin.getJakduScheduleGroup',
           URL: '/jakduScheduleGroup',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         },
         COMPETITION: {
           ID: 'admin.getCompetition',
           URL: '/competition',
           CONTROLLER: 'AdminGetController',
-          TEMPLATE: '/static/jakduk/template/admin-data-view.html'
+          TEMPLATE: '/assets/jakduk/template/admin-data-view.html'
         }
       }
     })

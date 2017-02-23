@@ -8,7 +8,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/static/',
+    publicPath: '/assets/',
     filename: '[name].js',
     chunkFilename: '[name].js'
   },

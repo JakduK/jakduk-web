@@ -17,6 +17,7 @@ npm install -g bower gulp webpack
 #Install
 ```
 bower install
+# skip to build semantic-ui
 npm install
 webpack
 ```

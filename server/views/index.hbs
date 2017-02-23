@@ -6,12 +6,12 @@
   <head>
     <title>{{{TITLE @root.title}}}</title>
     {{> meta}}
-    <link rel="shortcut icon" href="/static/jakduk/img/logo_16.png" sizes="16x16">
-    <link rel="shortcut icon" href="/static/jakduk/img/logo_32.png" sizes="32x32">
-    <link rel="shortcut icon" href="/static/jakduk/img/logo_196.png" sizes="196x196">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_16.png" sizes="16x16">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_32.png" sizes="32x32">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_196.png" sizes="196x196">
 
-    <link rel="stylesheet" href="/static/semantic-ui/dist/semantic.css?{{@root.revision}}">
-    {{#if @root.isIE}}<script src="/static/babel-polyfill/dist/polyfill.js?{{@root.revision}}"></script>{{/if}}
+    <link rel="stylesheet" href="/assets/semantic-ui/dist/semantic.css?{{@root.revision}}">
+    {{#if @root.isIE}}<script src="/assets/babel-polyfill/dist/polyfill.js?{{@root.revision}}"></script>{{/if}}
 
     <script>
       window.ENV = {
@@ -22,7 +22,7 @@
         locale: '{{@root.locale}}'
       };
     </script>
-    <script src="/static/i18n/{{@root.locale}}.js?{{@root.revision}}"></script>
+    <script src="/assets/i18n/{{@root.locale}}.js?{{@root.revision}}"></script>
   </head>
   <body class="{{@root.bodyClass}}">
     <!--[if lt ie 10]>
@@ -31,10 +31,10 @@
 
     <div id="root"></div>
 
-    <script src="/static/vendor.js?{{@root.revision}}"></script>
-    <script src="/static/app.js?{{@root.revision}}"></script>
+    <script src="/assets/vendor.js?{{@root.revision}}"></script>
+    <script src="/assets/app.js?{{@root.revision}}"></script>
     {{#if (NOT_EQ @root.locale 'en')}}
-      <script src="/static/moment/locale/{{@root.locale}}.js?{{@root.revision}}"></script>
+      <script src="/assets/moment/locale/{{@root.locale}}.js?{{@root.revision}}"></script>
     {{/if}}
 
     {{#if @root.gaAccount}}

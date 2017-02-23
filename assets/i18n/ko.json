@@ -307,5 +307,6 @@
 	"msg.imagefile.size.limited": "이미지 파일 크기는 {{size}}로 제한하고 있습니다.",
 	"latest.articles.author": "작성자의 최근 게시물",
 	"popular.search.words": "인기 검색어",
-	"common.view.my.profile": "내 정보 보기"
+	"common.view.my.profile": "내 정보 보기",
+	"failed.loading": "불러오기 실패"
 }

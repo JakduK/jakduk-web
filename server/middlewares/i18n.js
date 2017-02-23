@@ -8,7 +8,7 @@ const _ = require('lodash');
 i18n.configure({
   defaultLocale: locale.default,
   locales: locale.list,
-  directory: path.join(__dirname, '..', '..', 'i18n'),
+  directory: path.join(__dirname, '..', '..', 'assets', 'i18n'),
   extension: '.json',
   autoReload: true,
   updateFiles: false
@@ -29,14 +29,14 @@ module.exports = function () {
     bindRenderProxy(req, res);
 
     next();
-  }
+  };
 };
 
-function bindRenderProxy (req, res) {
+function bindRenderProxy(req, res) {
   const orgRender = res.render;
   res.render = function () {
     i18n.setLocale(req.locale);
     moment.locale(req.locale);
     orgRender.apply(this, arguments);
-  }.bind(res)
+  }.bind(res);
 }
