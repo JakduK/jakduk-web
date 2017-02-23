@@ -7,6 +7,7 @@ import jQuery from 'jquery';
 import postRegdate from '../filters/post_regdate';
 import encode from '../filters/encode';
 import tooltip from '../directives/tooltip';
+import app from '../components/app/app';
 import '../components/navbar/navbar';
 import '../components/sidenav/sidenav';
 import '../components/phone_sidenav/phone_sidenav';
@@ -28,46 +29,46 @@ Vue.locale(window.ENV.locale, window.ENV.i18n);
 
 const store = new Vuex.Store({
   state: {
+    revision: window.ENV.revision,
     isAuthenticated: !!window.ENV.profile,
     profile: window.ENV.profile,
     notification: {
       list: []
+    },
+    loading: {overflow: 'hidden', height: '100%'}
+  },
+  mutations: {
+    loaded(state) {
+      state.loading = undefined;
     }
   }
 });
 
-const routes = [{
-  path: '/',
-  redirect: 'home',
-  component: {
-    template: require('./with_sidenav.html')
-  },
-  children: [{
-    path: 'home',
-    component(resolve) {
-      require.ensure(['../entries/home/home'], () => {
-        resolve(require('../entries/home/home'));
-      }, 'home');
-    }
-  }, {
-    path: 'board'
-  }]
-}];
-
 const router = new VueRouter({
   mode: 'history',
-  routes
+  routes: [{
+    path: '/',
+    redirect: 'home',
+    component: {
+      template: require('./with_sidenav.html')
+    },
+    children: [{
+      path: 'home',
+      component(resolve) {
+        require.ensure(['../entries/home/home'], () => {
+          resolve(require('../entries/home/home'));
+        }, 'home');
+      }
+    }, {
+      path: 'board'
+    }]
+  }]
 });
 
 /* eslint-disable no-new */
 new Vue({
   el: '#root',
-  template: require('./app.html'),
   store,
   router,
-  computed: {
-    revision() {
-      return window.ENV.revision;
-    }
-  }
+  render: h => h(app)
 });

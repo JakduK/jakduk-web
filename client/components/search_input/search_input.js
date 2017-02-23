@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-Vue.component('search-input', {
+export default Vue.component('search-input', {
   template: require('./search_input.html'),
   data() {
     return {

@@ -3,7 +3,7 @@ import {mapState} from 'vuex';
 import './profile_menu';
 import '../search_input/search_input';
 
-Vue.component('navbar', {
+export default Vue.component('navbar', {
   template: require('./navbar.html'),
   mounted() {
     const $el = $(this.$el);

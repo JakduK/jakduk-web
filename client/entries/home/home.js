@@ -22,21 +22,27 @@ module.exports = Vue.component('home', {
       encyclopedia: {}
     };
   },
-  beforeRouteEnter(to, from, next) {
+  created() {
     $.when(
-      $.ajax('/api/home/latest'),
-      $.ajax('/api/search/popular/words?size=10'),
-      $.ajax('/api/home/encyclopedia')
-    ).done((latest, popularSearchWords, encyclopedia) => {
-      latest[0].homeDescription.desc = reduce($(latest[0].homeDescription.desc).find('a'), (list, elem) => {
-        list.push(elem.outerHTML);
-        return list;
-      }, []);
+      $.ajax('/api/home/latest').then(data => data, (jXhr, result) => result),
+      $.ajax('/api/search/popular/words?size=10').then(data => data, (jXhr, result) => result),
+      $.ajax('/api/home/encyclopedia').then(data => data, (jXhr, result) => result)
+    ).always((latest, popularSearchWords, encyclopedia) => {
+      if (latest === 'error') {
+        this.homeDescription = {desc: [this.$t('failed.loading')]};
+      } else {
+        latest.homeDescription.desc = reduce($(latest.homeDescription.desc).find('a'), (list, elem) => {
+          list.push(elem.outerHTML);
+          return list;
+        }, []);
+        $.extend(this, latest);
+      }
 
-      next(vm => {
-        $.extend(vm, latest[0]);
-        vm.popularSearchWords = popularSearchWords[0].popularSearchWords;
-        vm.encyclopedia = encyclopedia[0];
+      this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
+      this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
+
+      this.$nextTick(() => {
+        this.$store.commit('loaded');
       });
     });
   },

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-Vue.component('sidenav', {
+export default Vue.component('sidenav', {
   template: require('./sidenav.html'),
   props: {
     popularSearchWords: Array,
