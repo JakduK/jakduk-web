@@ -5,10 +5,10 @@
  */
 
 require('pmx').init({
-  http : true
+  http: true
 });
 
-var app = require('../server/app');
+var app = require('../server/express');
 var debug = require('debug')('jakduk-web:server');
 var http = require('http');
 var port = app.get('port');

@@ -1,17 +1,19 @@
 const path = require('path');
 
-const express = require('express');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const i18n = require('i18n');
+const apiClient = require('./middlewares/api_client');
+const apiProxy = require('./middlewares/api_proxy');
+const config = require('./config/environment');
+const i18nMdw = require('./middlewares/i18n');
+const defaultContext = require('./middlewares/default_context');
 
-const apiClient = require('../middlewares/api_client');
-const apiProxy = require('../middlewares/api_proxy');
-const config = require('../config/environment');
-const i18nMdw = require('../middlewares/i18n');
-const defaultContext = require('../middlewares/default_context');
+const express = require('express');
+
+module.exports = setup(express());
 
 function setup(app) {
   app.locals.revision = config.revision;
@@ -24,20 +26,20 @@ function setup(app) {
   app.set('env', config.env);
   app.set('port', config.port);
   app.set('trust proxy', true);
-  app.set('views', path.join(__dirname, '..', 'views'));
+  app.set('views', path.resolve(__dirname, 'views'));
 
   // view engine setup
-  require('./handlebars')(app);
+  require('./config/handlebars')(app);
 
   app.use(logger(config.env === 'production' ? 'combined' : 'dev'));
   app.use(compression());
   app.use('/assets', [
-    express.static(path.join(__dirname, '..', '..', 'dist')),
-    express.static(path.join(__dirname, '..', '..', 'assets')),
-    express.static(path.join(__dirname, '..', '..', 'client')),
-    express.static(path.join(__dirname, '..', '..', 'node_modules'))
+    express.static(path.resolve(__dirname, '../dist')),
+    express.static(path.resolve(__dirname, '../assets')),
+    express.static(path.resolve(__dirname, '../client')),
+    express.static(path.resolve(__dirname, '../node_modules'))
   ]);
-  app.get(/\*.html/, express.static(path.join(__dirname, '..', 'assets', 'html')));
+  app.get(/\*.html/, express.static(path.resolve(__dirname, '../assets/html')));
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));
@@ -62,7 +64,7 @@ function setup(app) {
   });
 
   // register routes
-  require('../routes')(app);
-}
+  require('./routes')(app);
 
-module.exports = setup;
+  return app;
+}
