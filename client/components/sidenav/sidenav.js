@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {mapState} from 'vuex';
 
 export default Vue.component('sidenav', {
   template: require('./sidenav.html'),
@@ -11,5 +12,6 @@ export default Vue.component('sidenav', {
     $('.ui.sticky').sticky({
       offset: 70
     });
-  }
+  },
+  computed: mapState(['sidenav'])
 });

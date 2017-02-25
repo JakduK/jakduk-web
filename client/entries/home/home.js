@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Swiper from 'swiper';
-import './home.css';
 import '../../components/sidenav/sidenav';
+import truncate from 'lodash/fp/truncate';
 
 const COLORS = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'purple', 'violet', 'pink', 'brown', 'grey'];
 
@@ -9,7 +9,50 @@ function reduce() {
   return Array.prototype.reduce.call(arguments[0], arguments[1], arguments[2]);
 }
 
-module.exports = Vue.component('home', {
+function fetch() {
+  const promises = $.when(
+    $.ajax('/api/home/latest').then(data => data, (jXhr, result) => result),
+    $.ajax('/api/search/popular/words?size=10').then(data => data, (jXhr, result) => result),
+    $.ajax('/api/home/encyclopedia').then(data => data, (jXhr, result) => result)
+  );
+
+  promises.always((latest, popularSearchWords, encyclopedia) => {
+    if (latest === 'error') {
+      this.homeDescription = {desc: [this.$t('failed.loading')]};
+    } else {
+      latest.homeDescription.desc = reduce($(latest.homeDescription.desc).find('a'), (list, elem) => {
+        list.push(elem.outerHTML);
+        return list;
+      }, []);
+      $.extend(this, latest);
+    }
+
+    this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
+    this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
+    this.isReady = true;
+
+    this.$nextTick(() => {
+      const $swiperContainer = $('.swiper-container');
+
+      /* eslint-disable no-new */
+      new Swiper($swiperContainer[0], {
+        autoplay: true,
+        autoplayDisableOnInteraction: false,
+        loop: true,
+        setWrapperSize: true,
+        preloadImages: false,
+        lazyLoading: true,
+        lazyLoadingInPrevNext: true
+      });
+
+      $('.ui.sticky').sticky('refresh', true);
+
+      this.$store.commit('loaded');
+    });
+  });
+}
+
+export default Vue.component('home', {
   template: require('./home.html'),
   data() {
     return {
@@ -19,66 +62,26 @@ module.exports = Vue.component('home', {
       users: [],
       homeDescription: {},
       popularSearchWords: [],
-      encyclopedia: {}
+      encyclopedia: {},
+      isReady: false
     };
   },
-  created() {
-    $.when(
-      $.ajax('/api/home/latest').then(data => data, (jXhr, result) => result),
-      $.ajax('/api/search/popular/words?size=10').then(data => data, (jXhr, result) => result),
-      $.ajax('/api/home/encyclopedia').then(data => data, (jXhr, result) => result)
-    ).always((latest, popularSearchWords, encyclopedia) => {
-      if (latest === 'error') {
-        this.homeDescription = {desc: [this.$t('failed.loading')]};
-      } else {
-        latest.homeDescription.desc = reduce($(latest.homeDescription.desc).find('a'), (list, elem) => {
-          list.push(elem.outerHTML);
-          return list;
-        }, []);
-        $.extend(this, latest);
-      }
-
-      this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
-      this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
-
-      this.$nextTick(() => {
-        this.$store.commit('loaded');
-      });
+  beforeRouteEnter(to, from, next) {
+    next(_this => {
+      fetch.call(_this);
     });
-  },
-  watch: {
-    galleries() {
-      this.$nextTick(() => {
-        const $swiperContainer = $('.swiper-container');
-
-        /* eslint-disable no-new */
-        new Swiper($swiperContainer[0], {
-          autoplay: true,
-          autoplayDisableOnInteraction: false,
-          loop: true,
-          setWrapperSize: true,
-          preloadImages: false,
-          lazyLoading: true,
-          lazyLoadingInPrevNext: true
-        });
-      });
-    },
-    posts() {
-      this.$nextTick(() => $('.ui.sticky').sticky('refresh', true));
-    }
   },
   methods: {
     indexedColor(index) {
       return `${COLORS[index % COLORS.length]}`;
     },
-    search(val) {
+    searchQuery(val) {
       return `/search?w=PO;CO;GA&q=${encodeURIComponent(val)}`;
     }
   },
   computed: {
-    encyclopediaContent() {
-      const content = this.encyclopedia.content || '';
-      return `${content.slice(0, 50)}...`;
+    encyclopediaSummary() {
+      return `${truncate(50)(this.encyclopedia.content)}`;
     }
   }
 });

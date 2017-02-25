@@ -27,7 +27,8 @@ module.exports = {
       loader: 'babel-loader',
       exclude: /(node_modules|bower_components)/,
       query: {
-        presets: ['es2015']
+        presets: ['es2015'],
+        plugins: ['add-module-exports']
       }
     }
     // , {
@@ -52,6 +53,7 @@ module.exports = {
       'vue-i18n': 'vue-i18n/dist/vue-i18n.common.js',
       'vuex': 'vuex/dist/vuex.js',
       moment: 'moment/min/moment.min.js',
+      '../moment': 'moment/min/moment.min.js',
       semantic: 'semantic-ui/dist/semantic.js'
     }
   },

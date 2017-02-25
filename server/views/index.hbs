@@ -22,7 +22,6 @@
         locale: '{{@root.locale}}'
       };
     </script>
-    <script src="/assets/i18n/{{@root.locale}}.js?{{@root.revision}}"></script>
   </head>
   <body class="{{@root.bodyClass}}">
     <!--[if lt ie 10]>
@@ -33,9 +32,6 @@
 
     <script src="/assets/vendor.js?{{@root.revision}}"></script>
     <script src="/assets/app.js?{{@root.revision}}"></script>
-    {{#if (NOT_EQ @root.locale 'en')}}
-      <script src="/assets/moment/locale/{{@root.locale}}.js?{{@root.revision}}"></script>
-    {{/if}}
 
     {{#if @root.gaAccount}}
       <script type="text/javascript">

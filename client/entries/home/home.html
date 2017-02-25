@@ -1,5 +1,11 @@
 <div>
-  <div class="ui grid">
+  <div class="sixteen wide column" v-if="!isReady">
+    <div class="full-loader">
+      <div class="ui active loader massive text">{{$t('common.now.loading')}}</div>
+    </div>
+  </div>
+
+  <div class="ui grid" v-else>
     <div class="sixteen wide mobile ten wide tablet eleven wide computer column">
       <!-- 공지 -->
       <div id="notice" class="ui blue segment">
@@ -13,7 +19,7 @@
         <div class="ui link divided items">
           <div class="item" v-for="post in posts">
             <div class="content">
-              <a v-bind:href="'/board/free/' + post.seq" class="header" v-bind:class="{'ui disabled': post.status.delete}">
+              <a v-bind:href="'/board/free/' + post.seq" v-bind:class="{'ui disabled': post.status.delete}" class="header">
                 {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
               </a>
               <div class="extra" v-if="post.writer">
@@ -21,6 +27,7 @@
               </div>
             </div>
           </div>
+
           <div class="item" v-for="comment in comments">
             <div class="content">
               <a v-bind:href="'/board/free/' + comment.boardItem.seq" class="header">{{comment.content}}</a>
@@ -42,7 +49,7 @@
             <div class="swiper-slide" v-for="image in galleries" style="float: left;" data-swiper-autoplay="3000">
               <a v-bind:href="'/gallery/' + image.id">
                 <div class="ui fluid rounded image">
-                  <img class="swiper-lazy" v-bind:data-src="image.thumbnailUrl">
+                  <img v-bind:data-src="image.thumbnailUrl" class="swiper-lazy">
                 </div>
                 <h5 v-if="image.writer">{{image.writer.username}} &middot; <i class="eye icon"></i> {{image.views}}</h5>
               </a>
@@ -53,9 +60,10 @@
 
       <div class="ui blue segment">
         <h4 class="ui dividing header">{{$t('popular.search.words')}}</h4>
-        <a v-if="popularSearchWords" v-bind:class="'ui ' + indexedColor(index) + ' label'" v-bind:href="search(word.key)" v-for="(word, index) in popularSearchWords" v-bind:key="word.key">{{word.key}}</a>
+        <a v-if="popularSearchWords" v-bind:class="'ui ' + indexedColor(index) + ' label'" v-bind:href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" v-bind:key="word.key">{{word.key}}</a>
         <p v-else>{{$t('failed.loading')}}</p>
       </div>
+
       <div class="ui blue segment">
         <h4 class="ui dividing header">{{$t('home.members.registered.latest')}}</h4>
         <div class="ui middle aligned list">
@@ -77,7 +85,7 @@
         <h4 class="ui dividing header">{{$t('home.encyclopedia')}}</h4>
         <div v-if="encyclopedia" v-tooltip v-bind:data-content="encyclopedia.content">
           <strong>{{encyclopedia.subject}}</strong>
-          <p v-if="encyclopedia.content">{{encyclopediaContent}}</p>
+          <p v-if="encyclopedia.content">{{encyclopediaSummary}}</p>
         </div>
         <p v-else>{{$t('failed.loading')}}</p>
       </div>

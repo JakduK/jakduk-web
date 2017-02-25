@@ -1,0 +1,38 @@
+#main {
+  padding-top: 70px;
+}
+
+#navbar .fixed {
+  z-index: 802;
+  box-shadow: 0 2px 4px 0 rgba(34, 36, 38, 0.12), 0 2px 10px 0 rgba(34, 36, 38, 0.15);
+}
+
+#navbar > div {
+  padding: 0;
+}
+
+#navbar .mobile .menu {
+  height: 54px;
+}
+
+#navbar .popup .item {
+  color: black;
+}
+
+#phoneSidenav {
+  z-index: 802;
+}
+
+.ui.footer.segment {
+  padding: 1em 0 3em 0;
+}
+
+.full-loader {
+  z-index: 801;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+}

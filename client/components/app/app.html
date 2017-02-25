@@ -1,4 +1,4 @@
-<div id="root" class="dimmed pusher" v-bind:style="loading">
+<div v-bind:style="loading" id="root" class="dimmed pusher">
 
   <!-- navbar -->
   <navbar id="navbar" ></navbar>
@@ -56,13 +56,13 @@
           </div>
         </div>
         <div class="ui section divider"></div>
-        <img v-once v-bind:src="'/assets/jakduk/img/logo_128.png?' + $root.revision" class="ui centered mini image">
+        <img v-once v-bind:src="src('/assets/jakduk/img/logo_128.png')" class="ui centered mini image">
         <div class="ui horizontal small divided link list">{{$t('common.jakduk.description')}}</div>
       </div>
     </div>
   </div>
 
-  <div class="ui segment" style="position: absolute;top:0;bottom:0;left:0;right:0;background-color:white;" v-if="loading">
-    <div class="ui active loader massive text">{{$t('common.now.loading')}}</div>
+  <div v-if="loading" class="full-loader">
+    <div class="ui active loader massive text">{{$t('msg.comingsoon')}}</div>
   </div>
 </div>
