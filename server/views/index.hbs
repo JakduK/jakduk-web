@@ -6,9 +6,9 @@
   <head>
     <title>{{{TITLE @root.title}}}</title>
     {{> meta}}
-    <link rel="shortcut icon" href="/assets/jakduk/img/logo_16.png" sizes="16x16">
-    <link rel="shortcut icon" href="/assets/jakduk/img/logo_32.png" sizes="32x32">
-    <link rel="shortcut icon" href="/assets/jakduk/img/logo_196.png" sizes="196x196">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_16.png?{{@root.revision}}" sizes="16x16">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_32.png?{{@root.revision}}" sizes="32x32">
+    <link rel="shortcut icon" href="/assets/jakduk/img/logo_196.png?{{@root.revision}}" sizes="196x196">
 
     <link rel="stylesheet" href="/assets/semantic-ui/dist/semantic.css?{{@root.revision}}">
     {{#if @root.isIE}}<script src="/assets/babel-polyfill/dist/polyfill.js?{{@root.revision}}"></script>{{/if}}

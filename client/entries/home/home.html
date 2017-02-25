@@ -1,7 +1,7 @@
 <div>
-  <div class="sixteen wide column" v-if="!isReady">
+  <div class="sixteen wide column" v-if="loading">
     <div class="full-loader">
-      <div class="ui active loader massive text">{{$t('common.now.loading')}}</div>
+      <div class="ui active loader massive indeterminate"></div>
     </div>
   </div>
 

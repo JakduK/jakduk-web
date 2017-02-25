@@ -1,7 +1,8 @@
 import Vue from 'vue';
+import {mapState} from 'vuex';
 import Swiper from 'swiper';
+import Truncate from 'lodash/fp/truncate';
 import '../../components/sidenav/sidenav';
-import truncate from 'lodash/fp/truncate';
 
 const COLORS = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'purple', 'violet', 'pink', 'brown', 'grey'];
 
@@ -29,7 +30,7 @@ function fetch() {
 
     this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
     this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
-    this.isReady = true;
+    this.$store.commit('load', false);
 
     this.$nextTick(() => {
       const $swiperContainer = $('.swiper-container');
@@ -46,8 +47,6 @@ function fetch() {
       });
 
       $('.ui.sticky').sticky('refresh', true);
-
-      this.$store.commit('loaded');
     });
   });
 }
@@ -71,6 +70,9 @@ export default Vue.component('home', {
       fetch.call(_this);
     });
   },
+  created() {
+    this.$store.commit('load', true);
+  },
   methods: {
     indexedColor(index) {
       return `${COLORS[index % COLORS.length]}`;
@@ -81,7 +83,10 @@ export default Vue.component('home', {
   },
   computed: {
     encyclopediaSummary() {
-      return `${truncate(50)(this.encyclopedia.content)}`;
-    }
+      return `${Truncate(50)(this.encyclopedia.content)}`;
+    },
+    ...mapState({
+      loading: 'loading'
+    })
   }
 });

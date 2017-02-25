@@ -1,11 +1,11 @@
 const Home = resolve => {
-  require.ensure([], () => {
+  require.ensure([], (require) => {
     resolve(require('../entries/home/home'));
   }, 'home');
 };
 
 const Board = resolve => {
-  require.ensure([], () => {
+  require.ensure([], (require) => {
     resolve(require('../entries/board/board'));
   }, 'board');
 };

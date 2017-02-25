@@ -45,11 +45,11 @@ function init() {
         notification: {
           list: []
         },
-        loading: {overflow: 'hidden', height: '100%'}
+        loading: true
       },
       mutations: {
-        loaded(state) {
-          state.loading = false;
+        load(state, b) {
+          state.loading = b;
         }
       }
     });
@@ -69,7 +69,7 @@ function init() {
 
 function loadI18nBundle(locale) {
   const deferred = $.Deferred();
-  require('bundle-loader!../../assets/i18n/' + locale + '.json')(bundle => {
+  require(`bundle-loader!../../assets/i18n/${locale}.json`)(bundle => {
     deferred.resolve(bundle);
   });
   return deferred;
@@ -80,7 +80,7 @@ function loadMomentLocale(locale) {
   if (locale === 'en') {
     deferred.resolve();
   } else {
-    require('bundle-loader!../../node_modules/moment/locale/' + locale + '.js')(() => {
+    require(`bundle-loader!../../node_modules/moment/locale/${locale}.js`)(() => {
       deferred.resolve();
     });
   }

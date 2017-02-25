@@ -1,4 +1,4 @@
-<div v-bind:style="loading" id="root" class="dimmed pusher">
+<div v-bind:style="[loading ? {overflow: 'hidden', height: '100%'} : {}]" id="root" class="dimmed pusher">
 
   <!-- navbar -->
   <navbar id="navbar" ></navbar>
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <div v-if="loading" class="full-loader">
-    <div class="ui active loader massive text">{{$t('msg.comingsoon')}}</div>
+  <div v-if="!appLoaded && loading" class="full-loader">
+    <div class="ui active loader massive indeterminate"></div>
   </div>
 </div>

@@ -4,6 +4,18 @@ import './app.css';
 import '../search_input/search_input';
 
 export default Vue.component('app', {
+  data() {
+    return {
+      appLoaded: false
+    };
+  },
   template: require('./app.html'),
-  computed: mapState(['loading'])
+  computed: mapState({
+    loading(state) {
+      if (!this.appLoaded && !state.loading) {
+        this.appLoaded = true;
+      }
+      return state.loading;
+    }
+  })
 });
