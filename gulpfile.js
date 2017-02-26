@@ -4,6 +4,7 @@ const fs = require('fs');
 const runSequence = require('run-sequence');
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
+const buildSemanticUI = require('./client/semantic/tasks/build');
 
 const revision = Date.now();
 
@@ -34,6 +35,8 @@ gulp.task('local', (callback) => {
   callback();
 });
 
+gulp.task('semantic-ui', buildSemanticUI);
+
 gulp.task('build', (callback) => {
-  return runSequence('clean', 'webpack', 'local', callback);
+  return runSequence('clean', 'semantic-ui', 'webpack', 'local', callback);
 });

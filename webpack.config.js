@@ -54,7 +54,7 @@ module.exports = {
       'vuex': 'vuex/dist/vuex.js',
       moment: 'moment/min/moment.min.js',
       '../moment': 'moment/min/moment.min.js',
-      semantic: 'semantic-ui/dist/semantic.js'
+      semantic: path.join(__dirname, 'dist/semantic/semantic.js')
     }
   },
   plugins: [
@@ -62,9 +62,7 @@ module.exports = {
       name: ['app', 'vendor']
     }),
     new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
+      jQuery: 'jquery'
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
   ]

@@ -8,15 +8,16 @@
       "themes": "src/themes/"
     },
     "output": {
-      "packaged": "dist/",
-      "uncompressed": "dist/components/",
-      "compressed": "dist/components/",
-      "themes": "dist/themes/"
+      "packaged": "../../dist/semantic/",
+      "uncompressed": "../../dist/semantic/components/",
+      "compressed": "../../dist/semantic/components/",
+      "themes": "../../dist/semantic/themes/"
     },
-    "clean": "dist/"
+    "clean": "../../dist/semantic"
   },
+  "admin": false,
   "permission": false,
-  "autoInstall": false,
+  "autoInstall": true,
   "rtl": "both",
   "components": [
     "reset",
@@ -69,5 +70,5 @@
     "state",
     "visibility"
   ],
-  "version": "2.2.7"
+  "version": "2.2.9"
 }
