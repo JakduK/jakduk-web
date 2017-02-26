@@ -1,89 +1,98 @@
-<div>
-  <div class="sixteen wide column" v-if="loading">
-    <div class="full-loader">
-      <div class="ui active loader massive indeterminate"></div>
+<div class="ui grid">
+  <div class="sixteen wide mobile ten wide tablet twelve wide computer column">
+    <!-- 공지 -->
+    <div class="ui segments">
+      <h5 class="ui segment"><i class="announcement blue icon"></i> {{$t('common.news')}}</h5>
+      <div class="ui blue segment">
+        <div v-if="latest" class="ui selection small list">
+          <div v-for="desc in latest.homeDescription.desc" v-html="desc" class="item"></div>
+        </div>
+        <p v-else>{{$t('failed.loading')}}</p>
+      </div>
+    </div>
+
+    <!-- 최신글 -->
+    <div v-if="latest" class="ui segments">
+      <h5 class="ui segment"><i class="lightning red icon"></i> {{$t('home.posts.latest')}}</h5>
+      <div class="ui blue segment">
+        <div class="ui selection list">
+          <a :href="'/board/free/' + post.seq" v-for="post in latest.posts" class="item">
+            <div class="content">
+              <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
+                {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
+              </div>
+              <strong><small v-if="post.writer">{{post.writer.username}} &middot; {{post.id | postRegDate('LL')}}</small></strong>
+            </div>
+          </a>
+          <a :href="'/board/free/' + comment.boardItem.seq" v-for="comment in latest.comments" class="item">
+            <div class="content">
+              <div class="header">{{comment.content}}</div>
+              <strong><small v-if="comment.writer">{{comment.writer.username}} &middot; {{comment.id | postRegDate('LL')}}</small></strong>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="ui grid" v-else>
-    <div class="sixteen wide mobile ten wide tablet eleven wide computer column">
-      <!-- 공지 -->
-      <div id="notice" class="ui blue segment">
-        <div class="ui items link">
-          <div class="item" v-for="desc in homeDescription.desc" v-html="desc"></div>
-        </div>
-      </div>
-
-      <!-- 최신글 -->
-      <div id="latest_posts" class="ui blue segment">
-        <div class="ui link divided items">
-          <div class="item" v-for="post in posts">
-            <div class="content">
-              <a v-bind:href="'/board/free/' + post.seq" v-bind:class="{'ui disabled': post.status.delete}" class="header">
-                {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
+  <div class="sixteen wide mobile six wide tablet four wide computer column">
+    <!-- 최신 사진 -->
+    <div class="ui segments">
+      <h5 class="ui segment">
+        <a href="/gallery">
+          <i class="image icon"></i> {{$t('home.pictures.latest')}} <i class="angle right icon"></i>
+        </a>
+      </h5>
+      <div class="ui blue segment">
+        <div v-if="latest" style="overflow: hidden;" class="swiper-container">
+          <div class="swiper-wrapper">
+            <div v-for="image in latest.galleries" style="float: left;" data-swiper-autoplay="3000" class="swiper-slide">
+              <a :href="'/gallery/' + image.id" class="ui fluid rounded bordered image">
+                <img :data-src="image.thumbnailUrl" class="swiper-lazy">
+                <div class="ui divider"></div>
+                <div v-if="image.writer" class="">{{image.writer.username}} &middot; <i class="eye icon"></i>{{image.views}}</div>
               </a>
-              <div class="extra" v-if="post.writer">
-                {{post.writer.username}} &middot; {{post.id | postRegDate('LL')}}
-              </div>
-            </div>
-          </div>
-
-          <div class="item" v-for="comment in comments">
-            <div class="content">
-              <a v-bind:href="'/board/free/' + comment.boardItem.seq" class="header">{{comment.content}}</a>
-              <div class="extra" v-if="comment.writer">{{comment.writer.username}} &middot; {{comment.id | postRegDate('LL')}}</div>
             </div>
           </div>
         </div>
+        <p v-else>{{$t('failed.loading')}}</p>
       </div>
     </div>
 
-    <div class="sixteen wide mobile six wide tablet five wide computer column">
-      <div id="latestGallery" class="ui blue segment">
-        <!-- 최신 사진 -->
-        <h4 class="ui dividing header">
-          <a href="/gallery">{{$t('home.pictures.latest')}}</a>
-        </h4>
-        <div class="swiper-container" style="overflow: hidden;">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="image in galleries" style="float: left;" data-swiper-autoplay="3000">
-              <a v-bind:href="'/gallery/' + image.id">
-                <div class="ui fluid rounded image">
-                  <img v-bind:data-src="image.thumbnailUrl" class="swiper-lazy">
-                </div>
-                <h5 v-if="image.writer">{{image.writer.username}} &middot; <i class="eye icon"></i> {{image.views}}</h5>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <!--인기 검색어-->
+    <div class="ui segments">
+      <h5 class="ui segment"><i class="search icon"></i> {{$t('popular.search.words')}}</h5>
       <div class="ui blue segment">
-        <h4 class="ui dividing header">{{$t('popular.search.words')}}</h4>
-        <a v-if="popularSearchWords" v-bind:class="'ui ' + indexedColor(index) + ' label'" v-bind:href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" v-bind:key="word.key">{{word.key}}</a>
+        <div v-if="popularSearchWords">
+          <a :class="indexedColor(index, true)" :href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" :key="word.key" class="ui label">{{word.key}}</a>
+        </div>
         <p v-else>{{$t('failed.loading')}}</p>
       </div>
+    </div>
 
+    <!--최근 가입 회원-->
+    <div class="ui segments">
+      <h5 class="ui segment"><i class="birthday icon"></i> {{$t('home.members.registered.latest')}}</h5>
       <div class="ui blue segment">
-        <h4 class="ui dividing header">{{$t('home.members.registered.latest')}}</h4>
-        <div class="ui middle aligned list">
-          <div class="item" v-for="(user, index) in users">
-            <i v-bind:class="'user big ' + indexedColor(index) + ' icon'"></i>
+        <div v-if="latest" class="ui middle aligned small list">
+          <div v-for="(user, index) in latest.users" class="item">
+            <i :class="indexedColor(index, false)" class="user big fitted icon"></i>
+            <i v-if="user.about" :class="indexedColor(index, false)" class="talk small fitted icon"></i>
             <div class="content">
-              <div class="header">
-                <strong>{{user.username}}</strong>
-              </div>
-              <div class="description">
-                <p>{{user.about}}</p>
-              </div>
+              <div class="header">{{user.username}}</div>
+              <div class="description">{{user.about}}</div>
             </div>
           </div>
         </div>
+        <p v-else>{{$t('failed.loading')}}</p>
       </div>
+    </div>
 
-      <div id="encyclopedia" class="ui blue segment">
-        <h4 class="ui dividing header">{{$t('home.encyclopedia')}}</h4>
-        <div v-if="encyclopedia" v-tooltip v-bind:data-content="encyclopedia.content">
+    <!--백과사전-->
+    <div class="ui segments">
+      <h5 class="ui segment"><i class="quote right icon"></i> {{$t('home.encyclopedia')}}</h5>
+      <div class="ui blue segment">
+        <div v-if="encyclopedia" v-tooltip :data-content="encyclopedia.content">
           <strong>{{encyclopedia.subject}}</strong>
           <p v-if="encyclopedia.content">{{encyclopediaSummary}}</p>
         </div>

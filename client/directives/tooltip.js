@@ -1,5 +1,7 @@
+import $ from 'jquery';
+
 export default {
-  bind(el, binding) {
+  bind(el) {
     $(el).popup();
   }
 };

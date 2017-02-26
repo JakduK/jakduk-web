@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import $ from 'jquery';
 import {mapState} from 'vuex';
 import './profile_menu';
 import '../search_input/search_input';

@@ -1,4 +1,4 @@
-<div v-bind:style="[loading ? {overflow: 'hidden', height: '100%'} : {}]" id="root" class="dimmed pusher">
+<div :style="[loading ? {overflow: 'hidden', height: '100%'} : {}]" id="root" class="dimmed pusher">
 
   <!-- navbar -->
   <navbar id="navbar" ></navbar>
@@ -56,7 +56,7 @@
           </div>
         </div>
         <div class="ui section divider"></div>
-        <img v-once v-bind:src="src('/assets/jakduk/img/logo_128.png')" class="ui centered mini image">
+        <img v-once :src="src('/assets/jakduk/img/logo_128.png')" class="ui centered mini image">
         <div class="ui horizontal small divided link list">{{$t('common.jakduk.description')}}</div>
       </div>
     </div>

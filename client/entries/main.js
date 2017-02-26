@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueI18n from 'vue-i18n';
 import Vuex from 'vuex';
+import $ from 'jquery';
 import PostRegdate from '../filters/post_regdate';
 import Encode from '../filters/encode';
 import Tooltip from '../directives/tooltip';

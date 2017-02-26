@@ -7,7 +7,7 @@
           <button id="btnSidebarToggle" class="ui icon blue button">
             <i class="content icon"></i>
           </button>
-          <a href="/" class="item">KLEAGUE JAKDU KING</a>
+          <router-link to="home" class="item">{{$t('common.jakduk')}}</router-link>
           <div class="right menu">
             <a class="logon icon item" v-if="isAuthenticated">
               <i class="user icon"></i>
@@ -27,14 +27,14 @@
     <div class="column">
       <div class="ui borderless inverted blue fixed menu">
         <div class="ui container">
-          <a href="/" class="header item">KLEAGUE JAKDU KING</a>
+          <router-link to="home" class="header item">{{$t('common.jakduk')}}</router-link>
           <div class="right menu">
             <div class="ui simple dropdown item">
               <i class="globe icon"></i> {{$t('common.language')}}
               <i class="dropdown icon"></i>
               <div class="menu">
-                <a v-bind:href="changeLocale('ko')" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
-                <a v-bind:href="changeLocale('en')" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
+                <a :href="changeLocale('ko')" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
+                <a :href="changeLocale('en')" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
               </div>
             </div>
             <a class="logon icon item" v-if="isAuthenticated">

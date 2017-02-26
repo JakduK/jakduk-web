@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import $ from 'jquery';
 import '../search_input/search_input';
 
 export default Vue.component('phone-sidenav', {
@@ -15,6 +16,9 @@ export default Vue.component('phone-sidenav', {
       } else {
         return `${window.location.href}?lang=${locale}`;
       }
+    },
+    close() {
+      $(this.$el).sidebar('toggle');
     }
   }
 });

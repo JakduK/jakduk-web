@@ -308,5 +308,6 @@
   "latest.articles.author": "Latest articles by author",
   "popular.search.words": "Popular searches",
   "common.view.my.profile": "View my profile",
-  "failed.loading": "Failed to load"
+  "failed.loading": "Failed to load",
+  "common.news": "News"
 }

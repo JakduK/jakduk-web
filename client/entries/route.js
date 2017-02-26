@@ -12,12 +12,16 @@ const Board = resolve => {
 
 export default {
   mode: 'history',
-  linkActiveClass: 'active',
   routes: [{
     path: '/',
     redirect: 'home',
     component: {
-      template: require('./with_sidenav.html')
+      template: require('./with_sidenav.html'),
+      computed: {
+        loading() {
+          return this.$store.state.loading;
+        }
+      }
     },
     children: [{
       path: 'home',

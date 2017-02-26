@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import {mapState} from 'vuex';
+import $ from 'jquery';
 import Swiper from 'swiper';
 import Truncate from 'lodash/fp/truncate';
 import '../../components/sidenav/sidenav';
@@ -12,38 +12,37 @@ function reduce() {
 
 function fetch() {
   const promises = $.when(
-    $.ajax('/api/home/latest').then(data => data, (jXhr, result) => result),
-    $.ajax('/api/search/popular/words?size=10').then(data => data, (jXhr, result) => result),
-    $.ajax('/api/home/encyclopedia').then(data => data, (jXhr, result) => result)
+    $.getJSON('/api/home/latest').then(data => data, (jXhr, result) => result),
+    $.getJSON('/api/search/popular/words?size=10').then(data => data, (jXhr, result) => result),
+    $.getJSON('/api/home/encyclopedia').then(data => data, (jXhr, result) => result)
   );
 
   promises.always((latest, popularSearchWords, encyclopedia) => {
-    if (latest === 'error') {
-      this.homeDescription = {desc: [this.$t('failed.loading')]};
-    } else {
-      latest.homeDescription.desc = reduce($(latest.homeDescription.desc).find('a'), (list, elem) => {
-        list.push(elem.outerHTML);
+    if (latest !== 'error') {
+      let $news = $(`<div>${latest.homeDescription.desc}</div>`).find('>ul').children();
+      latest.homeDescription.desc = reduce($news, (list, elem) => {
+        list.push(elem.innerHTML);
         return list;
       }, []);
-      $.extend(this, latest);
     }
 
+    this.latest = latest === 'error' ? undefined : latest;
     this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
     this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
     this.$store.commit('load', false);
 
     this.$nextTick(() => {
-      const $swiperContainer = $('.swiper-container');
-
-      /* eslint-disable no-new */
-      new Swiper($swiperContainer[0], {
-        autoplay: true,
-        autoplayDisableOnInteraction: false,
-        loop: true,
-        setWrapperSize: true,
-        preloadImages: false,
-        lazyLoading: true,
-        lazyLoadingInPrevNext: true
+      $('.swiper-container').each((index, element) => {
+        /* eslint-disable no-new */
+        new Swiper(element, {
+          autoplay: true,
+          autoplayDisableOnInteraction: false,
+          loop: true,
+          setWrapperSize: true,
+          preloadImages: false,
+          lazyLoading: true,
+          lazyLoadingInPrevNext: true
+        });
       });
 
       $('.ui.sticky').sticky('refresh', true);
@@ -55,11 +54,13 @@ export default Vue.component('home', {
   template: require('./home.html'),
   data() {
     return {
-      posts: [],
-      galleries: [],
-      comments: [],
-      users: [],
-      homeDescription: {},
+      latest: {
+        posts: [],
+        comments: [],
+        galleries: [],
+        users: [],
+        homeDescription: {}
+      },
       popularSearchWords: [],
       encyclopedia: {},
       isReady: false
@@ -74,8 +75,8 @@ export default Vue.component('home', {
     this.$store.commit('load', true);
   },
   methods: {
-    indexedColor(index) {
-      return `${COLORS[index % COLORS.length]}`;
+    indexedColor(index, random) {
+      return `${COLORS[(random ? (Math.random() * 10).toFixed() % COLORS.length : index) % COLORS.length]}`;
     },
     searchQuery(val) {
       return `/search?w=PO;CO;GA&q=${encodeURIComponent(val)}`;
@@ -84,9 +85,6 @@ export default Vue.component('home', {
   computed: {
     encyclopediaSummary() {
       return `${Truncate(50)(this.encyclopedia.content)}`;
-    },
-    ...mapState({
-      loading: 'loading'
-    })
+    }
   }
 });

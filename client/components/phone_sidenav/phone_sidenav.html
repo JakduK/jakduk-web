@@ -1,18 +1,18 @@
 <div class="ui left inverted blue vertical accordion menu sidebar">
   <search-input class="ui search item"></search-input>
-  <a href="/" class="active item">{{$t('common.home')}}</a>
-  <a class="item">{{$t('board')}}</a>
-  <a class="item">{{$t('gallery')}}</a>
-  <a class="item">{{$t('stats')}}</a>
-  <a class="item">{{$t('jakdu.write')}}</a>
+  <router-link active-class="active" to="home" class="item" @click.native="close">{{$t('common.home')}}</router-link>
+  <router-link active-class="active" to="board" class="item" @click.native="close">{{$t('board')}}</router-link>
+  <a active-class="active" @click="close" class="item">{{$t('gallery')}}</a>
+  <a active-class="active" @click="close" class="item">{{$t('stats')}}</a>
+  <a active-class="active" @click="close" class="item">{{$t('jakdu.write')}}</a>
   <div class="item">
     <a class="title">
       <i class="dropdown icon"></i>
       <i class="globe icon"></i> {{$t('common.language')}}
     </a>
     <div class="content">
-      <a v-bind:href="changeLocale('ko')" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
-      <a v-bind:href="changeLocale('en')" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
+      <a :href="changeLocale('ko')" @click="close" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
+      <a :href="changeLocale('en')" @click="close" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
     </div>
   </div>
 </div>

@@ -2,14 +2,17 @@
   <!-- phone sidenav-->
   <phone-sidenav id="phoneSidenav"></phone-sidenav>
 
-  <!-- desktop sidenav -->
   <div class="ui grid">
-
     <!-- desktop sidenav -->
     <sidenav class="three wide computer only column"></sidenav>
 
-    <router-view class="sixteen wide mobile sixteen wide tablet thirteen wide computer column"></router-view>
+    <div class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
+      <router-view></router-view>
 
+      <div class="full-loader" v-if="loading">
+        <div class="ui active loader massive indeterminate"></div>
+      </div>
+    </div>
   </div>
 
 </div>

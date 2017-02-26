@@ -308,5 +308,6 @@
   "latest.articles.author": "작성자의 최근 게시물",
   "popular.search.words": "인기 검색어",
   "common.view.my.profile": "내 정보 보기",
-  "failed.loading": "불러오기 실패"
+  "failed.loading": "불러오기 실패",
+  "common.news": "새소식"
 }
