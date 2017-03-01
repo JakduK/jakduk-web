@@ -1,84 +1,83 @@
 <div class="ui grid">
-  <div class="sixteen wide mobile ten wide tablet twelve wide computer column">
-    <div class="ui grid">
-      <div class="two column row">
-        <div class="left floated column">
-          <button class="ui labeled icon tiny button"><i class="left chevron icon"></i>{{$t('common.button.previous.page')}}</button>
-        </div>
-        <div class="right aligned floated column">
-          <button class="ui right labeled icon tiny button">{{$t('common.button.more')}}<i class="right chevron icon"></i></button>
-        </div>
-      </div>
-    </div>
+  <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
+    <!--top네이게이션-->
+    <pagination :pagination="pagination" @change="onChangePage"></pagination>
 
     <!-- 게시글 -->
-    <div class="ui segments">
+    <div class="ui small segments">
+      <!--분류-->
       <div class="ui segment">
-        <div class="ui selection relaxed small list">
+        <button class="ui small button">{{$t('board.category.all')}}</button>
+        <button :class="categoryLabelColor('FREE')" class="ui small button">{{$t('board.category.free')}}</button>
+        <button :class="categoryLabelColor('FOOTBALL')" class="ui small button">{{$t('board.category.football')}}</button>
+        <button v-tooltip :data-content="$t('board.write')" class="ui grey right floated small icon button"><i class="write icon"></i></button>
+      </div>
+
+      <div class="ui blue segment">
+        <!--공지-->
+        <div class="ui selection relaxed list">
           <a :href="'/board/free/' + notice.seq" v-for="notice in board.notices" class="item">
-            <!--<div class="ui image category-label-wrapper">-->
-              <!--<span class="ui small basic label category-label">{{$t('board.notice')}}</span>-->
-            <!--</div>-->
-            <i class="feed pink icon"></i>
+            <div class="ui image category-label-wrapper">
+              <span class="ui basic label category-label"><i class="red announcement icon"></i>{{$t('board.notice')}}</span>
+            </div>
             <div class="middle aligned content">
-              <div :class="{'ui disabled': notice.status.delete}" class="header">
-                {{notice.status.delete ? $t('board.msg.deleted') : notice.subject}}
+              <div class="header">{{notice.status.delete ? $t('board.msg.deleted') : notice.subject}}</div>
+            </div>
+          </a>
+        </div>
+        <!-- 게시글 -->
+        <div class="ui selection relaxed list">
+          <a :href="'/board/free/' + post.seq" v-for="post in board.posts" class="item">
+            <div v-if="!post.status.delete" class="ui image category-label-wrapper">
+              <span :class="categoryLabelColor(post.category)" class="ui small label category-label">{{$t(categoryText(post.category))}}<br>{{post.seq}}</span>
+            </div>
+            <div class="middle aligned content" style="width: 100%;">
+              <div :class="{'ui tiny disabled': post.status.delete}" class="header">{{post.status.delete ? $t('board.msg.deleted') : post.subject}}</div>
+              <div v-if="post.writer" class="list-item-meta">
+                <strong>{{post.writer.username}}</strong> &middot; {{post.id | postRegDate('LL')}}
+                <span style="float: right;">
+                  <i class="eye icon"></i>{{post.views}} &middot;
+                  <i class="thumbs outline up icon"></i>{{post.likingCount}} &middot;
+                  <i class="thumbs outline down icon"></i>{{post.dislikingCount}}
+                </span>
               </div>
             </div>
           </a>
         </div>
       </div>
-      <div class="ui segment">
-        <button class="ui button"></button>
-      </div>
-      <div class="ui segment">
-        <div class="ui selection relaxed list">
-          <a :href="'/board/free/' + post.seq" v-for="post in board.posts" class="item">
-            <div class="ui image category-label-wrapper">
-            <span v-if="!post.status.delete" :class="categoryLabelColor(post.category)" class="ui small label category-label">
-              {{$t(categoryText(post.category))}}<br>{{post.seq}}
-            </span>
-            </div>
-            <div class="middle aligned content">
-              <div :class="{'ui tiny disabled': post.status.delete}" class="header">{{post.status.delete ? $t('board.msg.deleted') : post.subject}}</div>
-              <strong v-if="post.writer"><small>{{post.writer.username}} &middot; {{post.id | postRegDate('LL')}} &middot; <i class="eye icon"></i>{{post.views}}</small></strong>
-            </div>
-          </a>
-        </div>
-      </div>
 
     </div>
 
-    <div class="ui pagination tiny menu">
-      <router-link :to="{ path: 'board', query: { page: 2}}" class="item">1</router-link>
-      <div class="disabled item">...</div>
-      <a class="item">10</a>
-      <a class="item">11</a>
-      <a class="item">12</a>
-    </div>
+    <!--bottom네비게이션-->
+    <pagination :pagination="pagination" @change="onChangePage"></pagination>
   </div>
 
-  <div class="sixteen wide mobile six wide tablet four wide computer column">
-    <div class="ui segments">
-      <h5 class="ui segment"><i class="thumbs outline up red icon"></i> {{$t('board.top.likes')}}</h5>
+  <div class="sixteen wide mobile five wide tablet four wide computer column">
+    <!---->
+    <div class="ui small segments">
+      <h5 class="ui segment"><i class="thumbs outline up teal icon"></i> {{$t('board.top.likes')}}</h5>
       <div class="ui blue segment">
-        <div v-if="top" class="ui middle aligned selection small list">
+        <div v-if="top" class="ui middle aligned selection relaxed list">
           <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topLikes" v-tooltip :data-content="post.subject" class="item">
             <div class="header" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{post.subject}}</div>
-            <strong><small><i class="thumbs outline up icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}</small></strong>
+            <div class="list-item-meta">
+              <i class="thumbs outline up icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
+            </div>
           </a>
         </div>
         <p v-else>{{$t('failed.loading')}}</p>
       </div>
     </div>
 
-    <div class="ui segments">
+    <div class="ui small segments">
       <h5 class="ui segment"><i class="talk flipped horizontally green icon"></i> {{$t('board.top.comments')}}</h5>
       <div class="ui blue segment">
-        <div v-if="top" class="ui middle aligned selection small list">
+        <div v-if="top" class="ui middle aligned selection relaxed list">
           <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topComments" v-tooltip :data-content="post.subject" class="item">
             <div class="header" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{post.subject}}</div>
-            <strong><small><i class="talk flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}</small></strong>
+            <div class="list-item-meta">
+              <i class="talk flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
+            </div>
           </a>
         </div>
         <p v-else>{{$t('failed.loading')}}</p>
