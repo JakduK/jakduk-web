@@ -46,3 +46,8 @@
 .category-label {
   text-align: center; width: 100%;
 }
+
+.list-item-meta {
+  margin-top: 3px;
+  font-size: 90%;
+}

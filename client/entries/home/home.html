@@ -1,10 +1,10 @@
 <div class="ui grid">
   <div class="sixteen wide mobile ten wide tablet twelve wide computer column">
     <!-- 공지 -->
-    <div class="ui segments">
-      <h5 class="ui segment"><i class="announcement blue icon"></i> {{$t('common.news')}}</h5>
+    <div class="ui small segments">
+      <h5 class="ui segment"><i class="announcement red icon"></i> {{$t('common.news')}}</h5>
       <div class="ui blue segment">
-        <div v-if="latest" class="ui selection small list">
+        <div v-if="latest" class="ui selection list">
           <div v-for="desc in latest.homeDescription.desc" v-html="desc" class="item"></div>
         </div>
         <p v-else>{{$t('failed.loading')}}</p>
@@ -12,8 +12,8 @@
     </div>
 
     <!-- 최신글 -->
-    <div v-if="latest" class="ui segments">
-      <h5 class="ui segment"><i class="lightning red icon"></i> {{$t('home.posts.latest')}}</h5>
+    <div v-if="latest" class="ui small segments">
+      <h5 class="ui segment"><i class="lightning green icon"></i> {{$t('home.posts.latest')}}</h5>
       <div class="ui blue segment">
         <div class="ui selection list">
           <a :href="'/board/free/' + post.seq" v-for="post in latest.posts" class="item">
@@ -21,13 +21,17 @@
               <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
                 {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
               </div>
-              <strong><small v-if="post.writer">{{post.writer.username}} &middot; {{post.id | postRegDate('LL')}}</small></strong>
+              <div v-if="post.writer" class="list-item-meta">
+                <strong>{{post.writer.username}}</strong> &middot; {{post.id | postRegDate('LL')}}
+              </div>
             </div>
           </a>
           <a :href="'/board/free/' + comment.boardItem.seq" v-for="comment in latest.comments" class="item">
             <div class="content">
               <div class="header">{{comment.content}}</div>
-              <strong><small v-if="comment.writer">{{comment.writer.username}} &middot; {{comment.id | postRegDate('LL')}}</small></strong>
+              <div v-if="comment.writer" class="list-item-meta">
+                <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | postRegDate('LL')}}
+              </div>
             </div>
           </a>
         </div>
@@ -37,10 +41,10 @@
 
   <div class="sixteen wide mobile six wide tablet four wide computer column">
     <!-- 최신 사진 -->
-    <div class="ui segments">
+    <div class="ui small segments">
       <h5 class="ui segment">
         <a href="/gallery">
-          <i class="image icon"></i> {{$t('home.pictures.latest')}} <i class="angle right icon"></i>
+          <i class="image blue icon"></i> {{$t('home.pictures.latest')}} <i class="chevron right blue icon"></i>
         </a>
       </h5>
       <div class="ui blue segment">
@@ -50,7 +54,9 @@
               <a :href="'/gallery/' + image.id" class="ui fluid rounded bordered image">
                 <img :data-src="image.thumbnailUrl" class="swiper-lazy">
                 <div class="ui divider"></div>
-                <div v-if="image.writer" class="">{{image.writer.username}} &middot; <i class="eye icon"></i>{{image.views}}</div>
+                <div v-if="image.writer" class="">{{image.writer.username}}
+                  <span style="white-space: nowrap;">&middot; <i class="eye icon"></i>{{image.views}}</span>
+                </div>
               </a>
             </div>
           </div>
@@ -60,8 +66,8 @@
     </div>
 
     <!--인기 검색어-->
-    <div class="ui segments">
-      <h5 class="ui segment"><i class="search icon"></i> {{$t('popular.search.words')}}</h5>
+    <div class="ui small segments">
+      <h5 class="ui segment"><i class="search teal icon"></i> {{$t('popular.search.words')}}</h5>
       <div class="ui blue segment">
         <div v-if="popularSearchWords">
           <a :class="indexedColor(index, true)" :href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" :key="word.key" class="ui label">{{word.key}}</a>
@@ -71,16 +77,16 @@
     </div>
 
     <!--최근 가입 회원-->
-    <div class="ui segments">
-      <h5 class="ui segment"><i class="birthday icon"></i> {{$t('home.members.registered.latest')}}</h5>
+    <div class="ui small segments">
+      <h5 class="ui segment"><i class="birthday pink icon"></i> {{$t('home.members.registered.latest')}}</h5>
       <div class="ui blue segment">
-        <div v-if="latest" class="ui middle aligned small list">
+        <div v-if="latest" class="ui middle aligned list">
           <div v-for="(user, index) in latest.users" class="item">
             <i :class="indexedColor(index, false)" class="user big fitted icon"></i>
             <i v-if="user.about" :class="indexedColor(index, false)" class="talk small fitted icon"></i>
             <div class="content">
               <div class="header">{{user.username}}</div>
-              <div class="description">{{user.about}}</div>
+              <div class="description list-item-meta">{{user.about}}</div>
             </div>
           </div>
         </div>
@@ -89,8 +95,8 @@
     </div>
 
     <!--백과사전-->
-    <div class="ui segments">
-      <h5 class="ui segment"><i class="quote right icon"></i> {{$t('home.encyclopedia')}}</h5>
+    <div class="ui small segments">
+      <h5 class="ui segment"><i class="quote right olive icon"></i> {{$t('home.encyclopedia')}}</h5>
       <div class="ui blue segment">
         <div v-if="encyclopedia" v-tooltip :data-content="encyclopedia.content">
           <strong>{{encyclopedia.subject}}</strong>
