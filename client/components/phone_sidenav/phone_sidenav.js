@@ -16,9 +16,6 @@ export default Vue.component('phone-sidenav', {
       } else {
         return `${window.location.href}?lang=${locale}`;
       }
-    },
-    close() {
-      $(this.$el).sidebar('toggle');
     }
   }
 });

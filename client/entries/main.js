@@ -12,25 +12,25 @@ import '../components/sidenav/sidenav';
 import '../components/phone_sidenav/phone_sidenav';
 import routeConfig from './route';
 
-init();
+Vue.directive('tooltip', Tooltip);
+Vue.filter('postRegDate', PostRegdate);
+Vue.filter('encode', Encode);
 
-function init() {
-  Vue.directive('tooltip', Tooltip);
-  Vue.filter('postRegDate', PostRegdate);
-  Vue.filter('encode', Encode);
+Vue.use(VueRouter);
+Vue.use(VueI18n);
+Vue.use(Vuex);
 
-  Vue.use(VueRouter);
-  Vue.use(VueI18n);
-  Vue.use(Vuex);
-
-  Vue.mixin({
-    methods: {
-      src(src) {
-        return `${src}?${window.ENV.revision}`;
-      }
+Vue.mixin({
+  methods: {
+    src(src) {
+      return `${src}?${window.ENV.revision}`;
     }
-  });
+  }
+});
 
+loadApp();
+
+function loadApp() {
   $.when(
     loadI18nBundle(window.ENV.locale),
     loadMomentLocale(window.ENV.locale)

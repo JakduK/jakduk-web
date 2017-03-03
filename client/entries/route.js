@@ -16,12 +16,7 @@ export default {
     path: '/',
     redirect: 'home',
     component: {
-      template: require('./with_sidenav.html'),
-      computed: {
-        loading() {
-          return this.$store.state.loading;
-        }
-      }
+      template: '<router-view></router-view>'
     },
     children: [{
       path: 'home',

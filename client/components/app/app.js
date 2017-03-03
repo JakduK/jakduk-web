@@ -2,6 +2,7 @@ import Vue from 'vue';
 import {mapState} from 'vuex';
 import './app.css';
 import '../search_input/search_input';
+import '../site_footer/site_footer';
 
 export default Vue.component('app', {
   data() {

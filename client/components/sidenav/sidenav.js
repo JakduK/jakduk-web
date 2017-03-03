@@ -6,7 +6,7 @@ export default Vue.component('sidenav', {
   template: require('./sidenav.html'),
   mounted: () => {
     $('.ui.sticky').sticky({
-      offset: 80
+      offset: 70
     });
   },
   computed: mapState(['sidenav'])
