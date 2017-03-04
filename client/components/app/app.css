@@ -36,15 +36,40 @@
   background-color: white;
 }
 
-.category-label-wrapper {
-  min-width: 86px;
+.ui.label.category-label {
+  padding: 0.2em 0.4em;
 }
 
-.category-label {
-  text-align: center; width: 100%;
+.image.list-item-thumbnail {
+  width: 54px;
+}
+
+.image.notice-list-item-thumbnail {
+  width: 120px;
 }
 
 .list-item-meta {
-  margin-top: 3px;
+  margin-top: 0.2em;
   font-size: 90%;
+}
+
+.list-item-meta-summary {
+  margin-bottom: 0.2em;
+}
+
+.pagination.deco .item.active {
+  font-weight: bold;
+}
+
+.ui.list.notice {
+  margin-bottom: 0.35em;
+}
+
+.ui.list.notice + .ui.list {
+  margin-top: 0;
+}
+
+.ui.list.notice .item {
+  padding-top: 0.3em !important;
+  padding-bottom: 0.3em !important;
 }

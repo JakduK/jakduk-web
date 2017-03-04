@@ -7,19 +7,19 @@ export default Vue.component('pagination', {
   template: require('./pagination.html'),
   methods: {
     next() {
-      this.$emit('change', this.pagination.current + 1);
+      this.$emit('change', 'next');
     },
     prev() {
-      this.$emit('change', this.pagination.current - 1);
+      this.$emit('change', 'prev');
     },
-    change(index) {
-      this.$emit('change', index);
+    change(number) {
+      this.$emit('change', number);
     },
     shift() {
-
+      this.$emit('change', 'shift');
     },
     unshift() {
-
+      this.$emit('change', 'unshift');
     }
   }
 });

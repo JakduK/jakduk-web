@@ -1,84 +1,102 @@
 <div class="ui grid">
   <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
     <!--top네이게이션-->
-    <pagination :pagination="pagination" @change="onChangePage"></pagination>
-
+    <pagination :pagination="pagination" @change="onPageChange"></pagination>
     <!-- 게시글 -->
-    <div class="ui small segments">
+    <div v-if="board" class="ui segments">
       <!--분류-->
       <div class="ui segment">
-        <button class="ui tiny button">{{$t('board.category.all')}}</button>
-        <button :class="categoryLabelColor('FREE')" class="ui tiny button">{{$t('board.category.free')}}</button>
-        <button :class="categoryLabelColor('FOOTBALL')" class="ui tiny button">{{$t('board.category.football')}}</button>
-        <button v-tooltip :data-content="$t('board.write')" class="ui grey right floated tiny icon button"><i class="write icon"></i></button>
+        <select id="categories" class="ui dropdown">
+          <option v-for="id in categories" :value="id">
+            <i :class="[categoryColor(id), categoryIcon(id)]" class="icon"></i> {{$t(categoryLabel(id))}}
+          </option>
+        </select>
+        <a v-tooltip :data-content="$t('board.write')" href="/board/free/write" class="ui right floated icon button"><i class="write icon"></i></a>
       </div>
 
       <div class="ui blue segment">
         <!--공지-->
-        <div class="ui selection relaxed list">
-          <a :href="'/board/free/' + notice.seq" v-for="notice in board.notices" class="item">
-            <div class="ui image category-label-wrapper">
-              <span class="ui basic label category-label"><i class="red announcement icon"></i>{{$t('board.notice')}}</span>
+        <div class="ui selection relaxed small list notice">
+          <a :href="'/board/free/' + notice.seq" v-for="notice in board.notices" :key="notice.seq" class="item">
+            <div class="ui image">
+              <span class="ui basic small label"><i class="announcement blue icon"></i>{{$t('board.notice')}}</span>
             </div>
             <div class="middle aligned content">
-              <div class="header">{{notice.status.delete ? $t('board.msg.deleted') : notice.subject}}</div>
+              <div class="header">{{(notice.status && notice.status.delete) ? $t('board.msg.deleted') : notice.subject}}</div>
             </div>
           </a>
         </div>
+
         <!-- 게시글 -->
-        <div class="ui selection relaxed list">
-          <a :href="'/board/free/' + post.seq" v-for="post in board.posts" class="item">
-            <div v-if="!post.status.delete" class="ui image category-label-wrapper">
-              <span :class="categoryLabelColor(post.category)" class="ui small label category-label">{{$t(categoryText(post.category))}}<br>{{post.seq}}</span>
+        <div class="ui selection divided list">
+          <a :href="'/board/free/' + post.seq" v-for="post in board.posts" :key="post.seq" class="item">
+            <div class="right floated content">
+              <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image list-item-thumbnail">
+                <img :src="post.galleries[0].thumbnailUrl">
+              </div>
             </div>
-            <div class="middle aligned content" style="width: 100%;">
-              <div :class="{'ui tiny disabled': post.status.delete}" class="header">{{post.status.delete ? $t('board.msg.deleted') : post.subject}}</div>
-              <div v-if="post.writer" class="list-item-meta">
-                <strong>{{post.writer.username}}</strong> &middot; {{post.id | postRegDate('LL')}}
+            <div class="content">
+              <div :class="{'ui tiny disabled': post.status && post.status.delete}" class="header">
+                {{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}
+                <span v-if="!post.status || !post.status.delete" :class="categoryColor(post.category)" class="ui tiny basic label category-label">
+                  {{$t(categoryLabel(post.category))}}
+                </span>
+              </div>
+              <div class="list-item-meta">
+                {{post.seq}} &middot;
+                <span v-if="post.writer"><strong>{{post.writer.username}}</strong> &middot;</span>
+                {{post.id | postRegDate('LL')}} &middot;
+                <i class="talk outline icon"></i>{{post.commentCount}}
                 <span style="float: right;">
                   <i class="eye icon"></i>{{post.views}} &middot;
-                  <i class="thumbs outline up icon"></i>{{post.likingCount}} &middot;
-                  <i class="thumbs outline down icon"></i>{{post.dislikingCount}}
+                  <i class="smile icon"></i>{{post.likingCount}} &middot;
+                  <i class="frown icon"></i>{{post.dislikingCount}}
                 </span>
               </div>
             </div>
           </a>
         </div>
       </div>
-
     </div>
+    <div v-else class="ui segment">{{$t('failed.loading')}}</div>
 
     <!--bottom네비게이션-->
-    <pagination :pagination="pagination" @change="onChangePage"></pagination>
+    <pagination :pagination="pagination" @change="onPageChange"></pagination>
   </div>
 
   <div class="sixteen wide mobile five wide tablet four wide computer column">
     <!---->
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment"><i class="thumbs outline up teal icon"></i> {{$t('board.top.likes')}}</h5>
       <div class="ui blue segment">
-        <div v-if="top" class="ui middle aligned selection relaxed list">
-          <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topLikes" v-tooltip :data-content="post.subject" class="item">
+        <div v-if="top" class="ui middle aligned selection relaxed small list">
+          <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
             <div class="header" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{post.subject}}</div>
             <div class="list-item-meta">
               <i class="thumbs outline up icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
             </div>
           </a>
+          <p v-if="!top.topLikes.length">
+            <i class="warning red icon"></i>{{$t('there.is.no.activity')}}
+          </p>
         </div>
         <p v-else>{{$t('failed.loading')}}</p>
       </div>
     </div>
 
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment"><i class="talk flipped horizontally green icon"></i> {{$t('board.top.comments')}}</h5>
       <div class="ui blue segment">
-        <div v-if="top" class="ui middle aligned selection relaxed list">
-          <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topComments" v-tooltip :data-content="post.subject" class="item">
+        <div v-if="top" class="ui middle aligned selection relaxed small list">
+          <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
             <div class="header" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{post.subject}}</div>
             <div class="list-item-meta">
               <i class="talk flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
             </div>
           </a>
+          <p v-if="!top.topComments.length">
+            <i class="warning red icon"></i>{{$t('there.is.no.activity')}}
+          </p>
         </div>
         <p v-else>{{$t('failed.loading')}}</p>
       </div>

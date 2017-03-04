@@ -1,7 +1,7 @@
 <div class="ui grid">
   <div class="sixteen wide mobile ten wide tablet twelve wide computer column">
     <!-- 공지 -->
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment"><i class="announcement red icon"></i> {{$t('common.news')}}</h5>
       <div class="ui blue segment">
         <div v-if="latest" class="ui selection list">
@@ -12,21 +12,27 @@
     </div>
 
     <!-- 최신글 -->
-    <div v-if="latest" class="ui small segments">
+    <div v-if="latest" class="ui segments">
       <h5 class="ui segment"><i class="lightning green icon"></i> {{$t('home.posts.latest')}}</h5>
       <div class="ui blue segment">
-        <div class="ui selection list">
-          <a :href="'/board/free/' + post.seq" v-for="post in latest.posts" class="item">
+        <div class="ui selection divided list">
+          <a :href="'/board/free/' + post.seq" v-for="post in latest.posts" :key="post.seq" class="item">
+            <div class="right floated content">
+              <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image notice-list-item-thumbnail">
+                <img :src="post.galleries[0].thumbnailUrl">
+              </div>
+            </div>
             <div class="content">
               <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
                 {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
               </div>
               <div v-if="post.writer" class="list-item-meta">
+                <div class="list-item-meta-summary">{{post.shortContent}}</div>
                 <strong>{{post.writer.username}}</strong> &middot; {{post.id | postRegDate('LL')}}
               </div>
             </div>
           </a>
-          <a :href="'/board/free/' + comment.boardItem.seq" v-for="comment in latest.comments" class="item">
+          <a :href="'/board/free/' + comment.boardItem.seq" v-for="comment in latest.comments" :key="comment.id" class="item">
             <div class="content">
               <div class="header">{{comment.content}}</div>
               <div v-if="comment.writer" class="list-item-meta">
@@ -41,7 +47,7 @@
 
   <div class="sixteen wide mobile six wide tablet four wide computer column">
     <!-- 최신 사진 -->
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment">
         <a href="/gallery">
           <i class="image blue icon"></i> {{$t('home.pictures.latest')}} <i class="chevron right blue icon"></i>
@@ -50,7 +56,7 @@
       <div class="ui blue segment">
         <div v-if="latest" style="overflow: hidden;" class="swiper-container">
           <div class="swiper-wrapper">
-            <div v-for="image in latest.galleries" style="float: left;" data-swiper-autoplay="3000" class="swiper-slide">
+            <div v-for="image in latest.galleries" style="float: left;" :key="image.id" data-swiper-autoplay="3000" class="swiper-slide">
               <a :href="'/gallery/' + image.id" class="ui fluid rounded bordered image">
                 <img :data-src="image.thumbnailUrl" class="swiper-lazy">
                 <div class="ui divider"></div>
@@ -66,7 +72,7 @@
     </div>
 
     <!--인기 검색어-->
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment"><i class="search teal icon"></i> {{$t('popular.search.words')}}</h5>
       <div class="ui blue segment">
         <div v-if="popularSearchWords">
@@ -77,11 +83,11 @@
     </div>
 
     <!--최근 가입 회원-->
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment"><i class="birthday pink icon"></i> {{$t('home.members.registered.latest')}}</h5>
       <div class="ui blue segment">
-        <div v-if="latest" class="ui middle aligned list">
-          <div v-for="(user, index) in latest.users" class="item">
+        <div v-if="latest" class="ui middle aligned small list">
+          <div v-for="(user, index) in latest.users" :key="user.id" class="item">
             <i :class="indexedColor(index, false)" class="user big fitted icon"></i>
             <i v-if="user.about" :class="indexedColor(index, false)" class="talk small fitted icon"></i>
             <div class="content">
@@ -95,7 +101,7 @@
     </div>
 
     <!--백과사전-->
-    <div class="ui small segments">
+    <div class="ui segments">
       <h5 class="ui segment"><i class="quote right olive icon"></i> {{$t('home.encyclopedia')}}</h5>
       <div class="ui blue segment">
         <div v-if="encyclopedia" v-tooltip :data-content="encyclopedia.content">
