@@ -6,6 +6,11 @@ import '../search_input/search_input';
 
 export default Vue.component('navbar', {
   template: require('./navbar.html'),
+  data() {
+    return {
+      path: window.location.pathname
+    };
+  },
   mounted() {
     const $el = $(this.$el);
 
@@ -28,13 +33,13 @@ export default Vue.component('navbar', {
         .sidebar('toggle');
     });
   },
-  methods: {
-    changeLocale(locale) {
+  watch: {
+    $route(to, from) {
       const langQueryRegexp = /lang=(.[^&]+)/g;
-      if (window.location.href.match(langQueryRegexp)) {
-        return window.location.href.replace(langQueryRegexp, () => `lang=${locale}`);
+      if (to.fullPath.match(langQueryRegexp)) {
+        this.path = to.fullPath.replace(langQueryRegexp, () => '');
       } else {
-        return `${window.location.href}?lang=${locale}`;
+        this.path = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}`;
       }
     }
   },

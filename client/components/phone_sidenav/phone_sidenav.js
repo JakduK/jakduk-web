@@ -4,9 +4,24 @@ import '../search_input/search_input';
 
 export default Vue.component('phone-sidenav', {
   template: require('./phone_sidenav.html'),
+  data() {
+    return {
+      path: window.location.pathname
+    };
+  },
   mounted() {
     const $el = $(this.$el);
     $el.accordion();
+  },
+  watch: {
+    $route(to, from) {
+      const langQueryRegexp = /lang=(.[^&]+)/g;
+      if (to.fullPath.match(langQueryRegexp)) {
+        this.path = to.fullPath.replace(langQueryRegexp, () => '');
+      } else {
+        this.path = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}`;
+      }
+    }
   },
   methods: {
     changeLocale(locale) {

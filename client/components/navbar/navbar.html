@@ -29,8 +29,8 @@
               <i class="globe icon"></i> {{$t('common.language')}}
               <i class="dropdown icon"></i>
               <div class="menu">
-                <a :href="changeLocale('ko')" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
-                <a :href="changeLocale('en')" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
+                <a :href="path + 'lang=ko'" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
+                <a :href="path + 'lang=en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
               </div>
             </div>
             <a v-if="isAuthenticated" class="logon icon item">
