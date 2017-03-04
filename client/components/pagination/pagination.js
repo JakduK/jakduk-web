@@ -1,10 +1,10 @@
 import Vue from 'vue';
 
 export default Vue.component('pagination', {
+  template: require('./pagination.html'),
   props: {
     pagination: Object
   },
-  template: require('./pagination.html'),
   methods: {
     next() {
       this.$emit('change', 'next');

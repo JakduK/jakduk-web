@@ -1,8 +1,11 @@
 <div class="ui grid">
   <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
     <!--top네이게이션-->
-    <pagination :pagination="pagination" @change="onPageChange"></pagination>
-    <!-- 게시글 -->
+    <div class="ui grid">
+      <pagination :pagination="pagination" @change="onPageChange" class="sixteen wide mobile twelve wide tablet twelve wide computer column"></pagination>
+      <pager :is-first="pagination.first" :is-last="pagination.last" @on-prev="onPageChange" @on-next="onPageChange" class="four wide tablet only four wide computer only right aligned column"></pager>
+    </div>
+
     <div v-if="board" class="ui segments">
       <!--분류-->
       <div class="ui segment">
@@ -19,7 +22,7 @@
         <div class="ui selection relaxed small list notice">
           <a :href="'/board/free/' + notice.seq" v-for="notice in board.notices" :key="notice.seq" class="item">
             <div class="ui image">
-              <span class="ui basic small label"><i class="announcement blue icon"></i>{{$t('board.notice')}}</span>
+              <span class="ui basic small label nowrap"><i class="announcement blue icon"></i>{{$t('board.notice')}}</span>
             </div>
             <div class="middle aligned content">
               <div class="header">{{(notice.status && notice.status.delete) ? $t('board.msg.deleted') : notice.subject}}</div>
@@ -61,11 +64,14 @@
     <div v-else class="ui segment">{{$t('failed.loading')}}</div>
 
     <!--bottom네비게이션-->
-    <pagination :pagination="pagination" @change="onPageChange"></pagination>
+    <div class="ui grid">
+      <pagination :pagination="pagination" @change="onPageChange" class="eleven wide tablet computer only column"></pagination>
+      <pager :is-first="pagination.first" :is-last="pagination.last" @on-prev="onPageChange" @on-next="onPageChange" class="sixteen wide mobile five wide tablet five wide computer right aligned column"></pager>
+    </div>
   </div>
 
   <div class="sixteen wide mobile five wide tablet four wide computer column">
-    <!---->
+    <!--주간 좋아요 선두-->
     <div class="ui segments">
       <h5 class="ui segment"><i class="thumbs outline up teal icon"></i> {{$t('board.top.likes')}}</h5>
       <div class="ui blue segment">
@@ -84,6 +90,7 @@
       </div>
     </div>
 
+    <!--주간 댓글 선두-->
     <div class="ui segments">
       <h5 class="ui segment"><i class="talk flipped horizontally green icon"></i> {{$t('board.top.comments')}}</h5>
       <div class="ui blue segment">

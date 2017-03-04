@@ -1,17 +1,7 @@
-<div class="ui stackable grid">
-  <div class="eleven wide column">
-    <div class="ui pagination icon borderless tiny menu deco">
-      <a @click="unshift()" class="item"><i class="left angle double icon"></i></a>
-      <a v-for="item in pagination.items" :class="{active: item.page === pagination.current, disabled: item.page === undefined}" @click="change(item.page)" class="item">{{item.label}}</a>
-      <a @click="shift()" class="item"><i class="right angle double icon"></i></a>
-    </div>
-  </div>
-  <div class="five wide right aligned column">
-    <button :class="{disabled: pagination.first}" @click="prev" class="ui icon tiny button">
-      <i class="left chevron icon"></i>
-    </button>
-    <button :class="{disabled: pagination.last}" @click="next" class="ui right icon tiny button">
-      <i class="right chevron icon"></i>
-    </button>
+<div>
+  <div class="ui pagination icon borderless tiny menu deco">
+    <a @click="unshift()" class="item"><i class="left angle double icon"></i></a>
+    <a v-for="item in pagination.items" :class="{active: item.page === pagination.current, disabled: item.page === undefined}" @click="change(item.page)" class="item">{{item.label}}</a>
+    <a @click="shift()" class="item"><i class="right angle double icon"></i></a>
   </div>
 </div>

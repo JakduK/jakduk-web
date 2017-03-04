@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import $ from 'jquery';
 import '../../components/pagination/pagination';
+import '../../components/pager/pager';
 
 const PAGE_SIZE = 10;
 const PAGINATION_SHIFT_SIZE = 5;
@@ -58,8 +59,8 @@ export default Vue.component('board', {
       categories: [],
       board: {
         categories: {},
-        first: true,
-        last: true,
+        first: undefined,
+        last: undefined,
         notices: [],
         number: 0,
         numberOfElements: 0,
