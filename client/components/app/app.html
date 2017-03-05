@@ -9,9 +9,6 @@
   <div id="main" class="pusher">
     <div class="ui container">
       <div class="ui grid">
-        <!-- desktop sidenav -->
-        <sidenav class="three wide computer only column"></sidenav>
-
         <div class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
           <router-view></router-view>
 
@@ -19,6 +16,9 @@
             <div class="ui active loader massive indeterminate"></div>
           </div>
         </div>
+
+        <!-- desktop sidenav -->
+        <sidenav class="three wide computer only column"></sidenav>
       </div>
     </div>
 
