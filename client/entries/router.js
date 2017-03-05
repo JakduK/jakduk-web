@@ -1,3 +1,8 @@
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
+Vue.use(VueRouter);
+
 const Home = resolve => {
   require.ensure([], (require) => {
     resolve(require('../entries/home/home'));
@@ -10,20 +15,16 @@ const Board = resolve => {
   }, 'board');
 };
 
-export default {
+export default new VueRouter({
   mode: 'history',
   routes: [{
     path: '/',
-    redirect: 'home',
-    component: {
-      template: '<router-view></router-view>'
-    },
-    children: [{
-      path: 'home',
-      component: Home
-    }, {
-      path: 'board',
-      component: Board
-    }]
+    redirect: 'home'
+  }, {
+    path: '/home',
+    component: Home
+  }, {
+    path: '/board',
+    component: Board
   }]
-};
+});
