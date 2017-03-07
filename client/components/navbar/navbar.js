@@ -23,14 +23,7 @@ export default Vue.component('navbar', {
     });
 
     $el.find('#btnSidebarToggle').click(() => {
-      $('#phoneSidenav')
-        .sidebar({
-          context: $('#root'),
-          scrollLock: true
-        })
-        .sidebar('setting', 'transition', 'overlay')
-        .sidebar('attach events', '#phoneSidenav a.item')
-        .sidebar('toggle');
+      $('#phoneSidenav').sidebar('toggle');
     });
   },
   watch: {

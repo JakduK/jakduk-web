@@ -12,6 +12,8 @@ export default Vue.component('phone-sidenav', {
   mounted() {
     const $el = $(this.$el);
     $el.accordion();
+
+    $el.sidebar('setting', 'transition', 'overlay').sidebar('attach events', '#phoneSidenav a.item');
   },
   watch: {
     $route(to, from) {

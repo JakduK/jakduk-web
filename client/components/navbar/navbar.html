@@ -1,12 +1,12 @@
-<div>
+<div id="navbar" class="ui fixed inverted blue menu">
   <!-- phone navbar -->
   <div class="ui grid container">
     <div class="mobile tablet only row">
       <div class="ui borderless inverted fluid blue menu">
-        <button id="btnSidebarToggle" class="ui icon blue button">
+        <button id="btnSidebarToggle" class="ui icon blue item button">
           <i class="content icon"></i>
         </button>
-        <router-link to="home" class="item">{{$t('common.jakduk')}}</router-link>
+        <router-link to="/home" class="item">{{$t('common.jakduk')}}</router-link>
         <div class="right menu">
           <a v-if="isAuthenticated" class="logon icon item">
             <i class="user icon"></i>
@@ -23,7 +23,7 @@
     <div class="computer only row">
       <div class="ui container">
         <div class="ui borderless inverted fluid blue menu">
-          <router-link to="home" class="header item">{{$t('common.jakduk')}}</router-link>
+          <router-link to="/home" class="header item">{{$t('common.jakduk')}}</router-link>
           <div class="right menu">
             <div class="ui simple dropdown item">
               <i class="globe icon"></i> {{$t('common.language')}}

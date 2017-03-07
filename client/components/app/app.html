@@ -1,32 +1,26 @@
-<div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" id="root">
-
-  <!-- phone sidenav-->
-  <phone-sidenav id="phoneSidenav" class="ui left inverted blue vertical accordion menu sidebar"></phone-sidenav>
-
-  <!-- navbar -->
-  <navbar id="navbar" class="ui fixed inverted blue menu"></navbar>
-
-  <div id="main" class="pusher">
-    <div class="ui container">
-      <div class="ui grid">
-        <div class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
-          <router-view></router-view>
-
-          <div v-if="loading" class="full-loader">
-            <div class="ui active loader massive indeterminate"></div>
+<div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" id="main" class="pusher">
+  <div class="ui container">
+    <div class="ui grid">
+      <div class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
+        <router-view></router-view>
+        <div v-if="loading" class="full-loader">
+          <div class="ui active medium indeterminate text loader">
+            {{$t('common.msg.be.communicating.server')}}
           </div>
         </div>
-
-        <!-- desktop sidenav -->
-        <sidenav class="three wide computer only column"></sidenav>
       </div>
-    </div>
 
-    <!-- footer -->
-    <site-footer class="ui container"></site-footer>
+      <!-- desktop sidenav -->
+      <sidenav class="three wide computer only column"></sidenav>
+    </div>
   </div>
 
+  <!-- footer -->
+  <site-footer class="ui container"></site-footer>
+
   <div v-if="!appLoaded && loading" class="full-loader">
-    <div class="ui active loader massive indeterminate"></div>
+    <div class="ui active large indeterminate text loader">
+      {{$t('common.msg.be.communicating.server')}}
+    </div>
   </div>
 </div>
