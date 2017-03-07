@@ -310,5 +310,6 @@
   "common.view.my.profile": "내 정보 보기",
   "failed.loading": "불러오기 실패",
   "common.news": "새소식",
-  "there.is.no.activity": "활동이 없습니다. 도움!"
+  "there.is.no.activity": "활동이 없습니다. 도움!",
+  "common.loading": "잠시만 기다려 주세요"
 }

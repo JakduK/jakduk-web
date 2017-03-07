@@ -4,8 +4,8 @@
       <div class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
         <router-view></router-view>
         <div v-if="loading" class="full-loader">
-          <div class="ui active medium indeterminate text loader">
-            {{$t('common.msg.be.communicating.server')}}
+          <div class="ui active large indeterminate text loader">
+            {{$t('common.loading')}}
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
 
   <div v-if="!appLoaded && loading" class="full-loader">
     <div class="ui active large indeterminate text loader">
-      {{$t('common.msg.be.communicating.server')}}
+      {{$t('common.loading')}}
     </div>
   </div>
 </div>

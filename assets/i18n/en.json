@@ -310,5 +310,6 @@
   "common.view.my.profile": "View my profile",
   "failed.loading": "Failed to load",
   "common.news": "News",
-  "there.is.no.activity": "There is no activity."
+  "there.is.no.activity": "There is no activity.",
+  "common.loading": "Loading"
 }
