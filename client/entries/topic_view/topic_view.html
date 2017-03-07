@@ -1,0 +1,16 @@
+<div class="topic-view">
+  <button class="ui icon button"><i class="list icon"></i></button>
+  <button class="ui icon button"><i class="left chevron icon"></i></button>
+  <button class="ui icon button"><i class="right chevron icon"></i></button>
+  <button class="ui icon button"><i class="write icon"></i></button>
+  <div class="ui container segments">
+    <div class="ui segment">
+      <h2><span :class="categoryColor(post.category.code)" class="ui label"> {{$t(categoryLabel(post.category.code))}}</span>{{post.subject}}</h2>
+    </div>
+    <div class="ui segment">
+      {{post.writer.username}}
+      <div class="pull-right"><i class="eye icon"></i>{{post.views}} &middot; {{post.id | postRegDate('LL')}}</div>
+    </div>
+    <div class="ui blue segment" v-html="post.content"></div>
+  </div>
+</div>

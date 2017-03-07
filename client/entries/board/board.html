@@ -14,25 +14,25 @@
             <i :class="[categoryColor(id), categoryIcon(id)]" class="icon"></i> {{$t(categoryLabel(id))}}
           </option>
         </select>
-        <a v-tooltip :data-content="$t('board.write')" href="/board/free/write" class="ui right floated icon button"><i class="write icon"></i></a>
+        <button v-tooltip :data-content="$t('board.write')" @click="compose" class="ui right floated icon button"><i class="write icon"></i></button>
       </div>
 
       <div class="ui blue segment">
         <!--공지-->
         <div class="ui selection relaxed small list notice">
-          <a :href="'/board/free/' + notice.seq" v-for="notice in board.notices" :key="notice.seq" class="item">
+          <router-link :to="{path: '/board/topic/' + notice.seq, query: $route.query}" v-for="notice in board.notices" :key="notice.seq" class="item">
             <div class="ui image">
               <span class="ui basic small label nowrap"><i class="announcement blue icon"></i>{{$t('board.notice')}}</span>
             </div>
             <div class="middle aligned content">
               <div class="header">{{(notice.status && notice.status.delete) ? $t('board.msg.deleted') : notice.subject}}</div>
             </div>
-          </a>
+          </router-link>
         </div>
 
         <!-- 게시글 -->
         <div class="ui selection divided list">
-          <a :href="'/board/free/' + post.seq" v-for="post in board.posts" :key="post.seq" class="item">
+          <router-link :to="{path: '/board/topic/' + post.seq, query: $route.query}" v-for="post in board.posts" :key="post.seq" class="item">
             <div class="right floated content">
               <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image list-item-thumbnail">
                 <img :src="post.galleries[0].thumbnailUrl">
@@ -45,19 +45,19 @@
                   {{$t(categoryLabel(post.category))}}
                 </span>
               </div>
-              <div class="list-item-meta">
+              <div class="list-item-extra">
                 {{post.seq}} &middot;
                 <span v-if="post.writer"><strong>{{post.writer.username}}</strong> &middot;</span>
                 {{post.id | postRegDate('LL')}} &middot;
-                <i class="talk outline icon"></i>{{post.commentCount}}
-                <span style="float: right;">
+                <i class="talk outline flipped horizontally icon"></i>{{post.commentCount}}
+                <span class="pull-right">
                   <i class="eye icon"></i>{{post.views}} &middot;
-                  <i class="smile icon"></i>{{post.likingCount}} &middot;
-                  <i class="frown icon"></i>{{post.dislikingCount}}
+                  <i class="smile blue icon"></i>{{post.likingCount}} &middot;
+                  <i class="frown pink icon"></i>{{post.dislikingCount}}
                 </span>
               </div>
             </div>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
@@ -76,12 +76,12 @@
       <h5 class="ui segment"><i class="thumbs outline up teal icon"></i> {{$t('board.top.likes')}}</h5>
       <div class="ui blue segment">
         <div v-if="top" class="ui middle aligned selection relaxed small list">
-          <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
-            <div class="header" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{post.subject}}</div>
-            <div class="list-item-meta">
-              <i class="thumbs outline up icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
+          <router-link :to="{path: '/board/topic/' + post.seq, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
+            <div class="header text-overflow">{{post.subject}}</div>
+            <div class="list-item-extra">
+              <i class="smile icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
             </div>
-          </a>
+          </router-link>
           <p v-if="!top.topLikes.length">
             <i class="warning red icon"></i>{{$t('there.is.no.activity')}}
           </p>
@@ -95,12 +95,12 @@
       <h5 class="ui segment"><i class="talk flipped horizontally green icon"></i> {{$t('board.top.comments')}}</h5>
       <div class="ui blue segment">
         <div v-if="top" class="ui middle aligned selection relaxed small list">
-          <a :href="'/board/free/' + post.seq" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
-            <div class="header" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{post.subject}}</div>
-            <div class="list-item-meta">
-              <i class="talk flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
+          <router-link :to="{path: '/board/topic/' + post.seq, query: $route.query}" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
+            <div class="header text-overflow">{{post.subject}}</div>
+            <div class="list-item-extra">
+              <i class="talk outline flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
             </div>
-          </a>
+          </router-link>
           <p v-if="!top.topComments.length">
             <i class="warning red icon"></i>{{$t('there.is.no.activity')}}
           </p>

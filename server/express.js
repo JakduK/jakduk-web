@@ -48,12 +48,7 @@ function setup(app) {
   app.use(i18nMdw());
   app.use(defaultContext());
 
-  app.get(['/', '/home', '/board'], (req, res) => {
-    if (req.url === '/') {
-      res.redirect('/home');
-      return;
-    }
-
+  app.get(['/', '/home', '/board', '/board/topic/:seq'], (req, res) => {
     res.render('index', {
       layout: false,
       title: [

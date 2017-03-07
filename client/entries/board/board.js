@@ -2,6 +2,10 @@ import Vue from 'vue';
 import $ from 'jquery';
 import '../../components/pagination/pagination';
 import '../../components/pager/pager';
+import PostRegdate from '../../filters/post_regdate';
+import CategoryColor from '../../filters/category_color';
+import CategoryIcon from '../../filters/category_icon';
+import CategoryLabel from '../../filters/category_label';
 
 const PAGE_SIZE = 10;
 const PAGINATION_SHIFT_SIZE = 5;
@@ -54,6 +58,9 @@ function fetch(options) {
 
 export default Vue.component('board', {
   template: require('./board.html'),
+  filters: {
+    postRegDate: PostRegdate
+  },
   data() {
     return {
       categories: [],
@@ -97,7 +104,7 @@ export default Vue.component('board', {
         $(_this.$el).find('#categories').dropdown({
           onChange(category) {
             _this.$router.push({
-              path: 'board',
+              path: '/board',
               query: {
                 category: category
               }
@@ -121,36 +128,9 @@ export default Vue.component('board', {
     }
   },
   methods: {
-    categoryLabel(category) {
-      switch (category) {
-        case 'FREE':
-          return 'board.category.free';
-        case 'FOOTBALL':
-          return 'board.category.football';
-        default:
-          return 'board.category.all';
-      }
-    },
-    categoryColor(category) {
-      switch (category) {
-        case 'FREE':
-          return 'green';
-        case 'FOOTBALL':
-          return 'orange';
-        default:
-          return 'grey';
-      }
-    },
-    categoryIcon(category) {
-      switch (category) {
-        case 'FREE':
-          return 'newspaper';
-        case 'FOOTBALL':
-          return 'soccer';
-        default:
-          return 'unordered list';
-      }
-    },
+    categoryColor: CategoryColor,
+    categoryLabel: CategoryLabel,
+    categoryIcon: CategoryIcon,
     onPageChange(what) {
       let pageNumber = Math.max(1, parseInt(this.$route.query.page) || 1);
 
@@ -175,11 +155,17 @@ export default Vue.component('board', {
       pageNumber = Math.max(1, Math.min(pageNumber, this.board.totalPages));
 
       this.$router.push({
-        path: 'board',
+        path: '/board',
         query: {
           page: pageNumber,
           category: this.$route.query.category
         }
+      });
+    },
+    compose() {
+      this.$router.push({
+        path: '/board/topic/write',
+        query: this.$route.query
       });
     }
   }

@@ -15,16 +15,30 @@ const Board = resolve => {
   }, 'board');
 };
 
+const TopicView = resolve => {
+  require.ensure([], (require) => {
+    resolve(require('../entries/topic_view/topic_view'));
+  }, 'topic_view');
+};
+
 export default new VueRouter({
   mode: 'history',
   routes: [{
     path: '/',
-    redirect: 'home'
+    redirect: '/home'
   }, {
     path: '/home',
     component: Home
   }, {
     path: '/board',
     component: Board
+  }, {
+    path: '/board/topic/write',
+    component: {
+      template: '<p>{{$route}}</p>'
+    }
+  }, {
+    path: '/board/topic/:seq',
+    component: TopicView
   }]
 });

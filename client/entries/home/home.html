@@ -16,7 +16,7 @@
       <h5 class="ui segment"><i class="lightning green icon"></i> {{$t('home.posts.latest')}}</h5>
       <div class="ui blue segment">
         <div class="ui selection divided list">
-          <a :href="'/board/free/' + post.seq" v-for="post in latest.posts" :key="post.seq" class="item">
+          <router-link :to="'/board/topic/' + post.seq" v-for="post in latest.posts" :key="post.seq" class="item">
             <div class="right floated content">
               <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image notice-list-item-thumbnail">
                 <img :src="post.galleries[0].thumbnailUrl">
@@ -26,20 +26,20 @@
               <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
                 {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
               </div>
-              <div v-if="post.writer" class="list-item-meta">
-                <div class="list-item-meta-summary">{{post.shortContent}}</div>
+              <div v-if="post.writer" class="list-item-extra">
+                <div class="list-item-extra-summary">{{post.shortContent}}</div>
                 <strong>{{post.writer.username}}</strong> &middot; {{post.id | postRegDate('LL')}}
               </div>
             </div>
-          </a>
-          <a :href="'/board/free/' + comment.boardItem.seq" v-for="comment in latest.comments" :key="comment.id" class="item">
+          </router-link>
+          <router-link :to="'/board/topic/' + comment.boardItem.seq" v-for="comment in latest.comments" :key="comment.id" class="item">
             <div class="content">
               <div class="header">{{comment.content}}</div>
-              <div v-if="comment.writer" class="list-item-meta">
+              <div v-if="comment.writer" class="list-item-extra">
                 <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | postRegDate('LL')}}
               </div>
             </div>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
@@ -54,14 +54,14 @@
         </a>
       </h5>
       <div class="ui blue segment">
-        <div v-if="latest" style="overflow: hidden;" class="swiper-container">
+        <div v-if="latest" class="swiper-container text-overflow">
           <div class="swiper-wrapper">
-            <div v-for="image in latest.galleries" style="float: left;" :key="image.id" data-swiper-autoplay="3000" class="swiper-slide">
+            <div v-for="image in latest.galleries" :key="image.id" data-swiper-autoplay="3000" class="swiper-slide pull-left">
               <a :href="'/gallery/' + image.id" class="ui fluid rounded bordered image">
                 <img :data-src="image.thumbnailUrl" class="swiper-lazy">
                 <div class="ui divider"></div>
                 <div v-if="image.writer" class="">{{image.writer.username}}
-                  <span style="white-space: nowrap;">&middot; <i class="eye icon"></i>{{image.views}}</span>
+                  <span class="nowrap">&middot; <i class="eye icon"></i>{{image.views}}</span>
                 </div>
               </a>
             </div>
@@ -90,7 +90,7 @@
             <i v-if="user.about" :class="indexedColor(index, false)" class="talk small fitted icon"></i>
             <div class="content">
               <div class="header">{{user.username}}</div>
-              <div class="description list-item-meta">{{user.about}}</div>
+              <div class="description list-item-extra">{{user.about}}</div>
             </div>
           </div>
         </div>

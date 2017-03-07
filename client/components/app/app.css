@@ -52,12 +52,12 @@
   width: 120px;
 }
 
-.list-item-meta {
+.list-item-extra {
   margin-top: 0.2em;
   font-size: 90%;
 }
 
-.list-item-meta-summary {
+.list-item-extra-summary {
   margin-bottom: 0.2em;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .ui.list.notice {
-  margin-bottom: 0.35em;
+  margin-bottom: 0.45em;
 }
 
 .ui.list.notice + .ui.list {
@@ -84,4 +84,25 @@
 
 .ui.label.search-keyword {
   margin: 0.1em;
+}
+
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.topic-view img {
+  height: 400px;
+  display: block;
+  margin: auto;
+  border-radius: 0.28571429rem;
 }

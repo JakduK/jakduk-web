@@ -3,6 +3,7 @@ import $ from 'jquery';
 import Swiper from 'swiper';
 import Truncate from 'lodash/fp/truncate';
 import '../../components/sidenav/sidenav';
+import PostRegdate from '../../filters/post_regdate';
 
 const COLORS = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'purple', 'violet', 'pink', 'brown', 'grey'];
 
@@ -52,6 +53,9 @@ function fetch() {
 
 export default Vue.component('home', {
   template: require('./home.html'),
+  filters: {
+    postRegDate: PostRegdate
+  },
   data() {
     return {
       latest: {

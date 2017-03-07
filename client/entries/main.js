@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import PostRegdate from '../filters/post_regdate';
 import Encode from '../filters/encode';
 import Tooltip from '../directives/tooltip';
 import '../components/sidenav/sidenav';
@@ -11,7 +10,6 @@ import Navbar from '../components/navbar/navbar';
 import PhoneSidenav from '../components/phone_sidenav/phone_sidenav';
 
 Vue.directive('tooltip', Tooltip);
-Vue.filter('postRegDate', PostRegdate);
 Vue.filter('encode', Encode);
 
 Vue.mixin({
