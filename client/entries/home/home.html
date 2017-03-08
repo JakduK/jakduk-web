@@ -74,12 +74,10 @@
     <!--인기 검색어-->
     <div class="ui segments">
       <h5 class="ui segment"><i class="search teal icon"></i> {{$t('popular.search.words')}}</h5>
-      <div class="ui blue segment">
-        <div v-if="popularSearchWords">
-          <a :class="indexedColor(index, true)" :href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" :key="word.key" class="ui label">{{word.key}}</a>
-        </div>
-        <p v-else>{{$t('failed.loading')}}</p>
+      <div v-if="popularSearchWords" class="ui blue segment">
+        <a :class="indexedColor(index, true)" :href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" :key="word.key" class="ui label search-keyword">{{word.key}}</a>
       </div>
+      <div v-else class="ui blue segment">{{$t('failed.loading')}}</div>
     </div>
 
     <!--최근 가입 회원-->

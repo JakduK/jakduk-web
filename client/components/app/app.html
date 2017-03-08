@@ -1,12 +1,10 @@
-<div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" id="main" class="pusher">
+<div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" :class="{'is-loading': loading}" id="main" class="pusher">
   <div class="ui container">
     <div class="ui grid">
-      <div class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
+      <div id="content" class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
         <router-view></router-view>
-        <div v-if="loading" class="full-loader">
-          <div class="ui active large indeterminate text loader">
-            {{$t('common.loading')}}
-          </div>
+        <div v-if="loading" class="full-fill-loader">
+          <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
         </div>
       </div>
 
@@ -18,9 +16,7 @@
   <!-- footer -->
   <site-footer class="ui container"></site-footer>
 
-  <div v-if="!appLoaded && loading" class="full-loader">
-    <div class="ui active large indeterminate text loader">
-      {{$t('common.loading')}}
-    </div>
+  <div v-if="!appLoaded && loading" class="full-fill-loader">
+    <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
   </div>
 </div>
