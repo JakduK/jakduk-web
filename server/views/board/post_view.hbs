@@ -556,7 +556,7 @@
           if ($scope.loadCommentConn == "none") {
             $scope.loadCommentConn = "connecting";
 
-            $http.get('{{apiServerUrl}}/board/free/comments/{{post.seq}}?commentId=' + commentId).then(function (response) {
+            $http.get('{{apiServerUrl}}/board/free/{{post.seq}}/comments?commentId=' + commentId).then(function (response) {
               var data = response.data;
 
               $scope.commentCount = data.count;
