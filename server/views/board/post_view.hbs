@@ -209,7 +209,7 @@
               </button>
             </div>
 
-            <div class="alert alert-info" ng-show="commentFeelingConn[comment.id]">
+            <div class="alert alert-info" ng-show="commentFeelingAlert[comment.id]">
               <p ng-bind="commentFeelingAlert[comment.id]"></p>
             </div>
 
@@ -388,20 +388,20 @@
                 $scope.numberOfLike = data.numberOfLike;
                 $scope.numberOfDislike = data.numberOfDislike;
 
-                var message = "";
+                var message = null;
 
-                if (data.feeling === 'LIKE') {
+                if (data.myFeeling === 'LIKE') {
                   message = '{{TRANSLATION "board.msg.select.like"}}';
-                  $scope.likeConn = "done";
-                  $scope.btnLike = false;
-                } else if (data.feeling === 'DISLIKE') {
+                } else if (data.myFeeling === 'DISLIKE') {
                   message = "{{TRANSLATION 'board.msg.select.dislike'}}";
-                  $scope.dislikeConn = "done";
-                  $scope.btnDislike = false;
                 }
 
+                $scope.btnDislike = false;
+                $scope.btnLike = false;
                 $scope.alert.msg = message;
                 $scope.alert.classType = "alert-info";
+                $scope.likeConn = 'none';
+                $scope.dislikeConn = 'none';
               }, function (response) {
                 var data = response.data;
 
@@ -607,14 +607,16 @@
 
             $http.post('{{apiServerUrl}}/board/free/comment/' + commentId + '/' + type, null).then(function (response) {
               var data = response.data;
-              if (data.feeling == 'LIKE') {
-                $scope.numberOfCommentLike[commentId] = data.numberOfLike;
+              if (data.myFeeling == 'LIKE') {
                 $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.like"}}';
-              } else if (data.feeling == 'DISLIKE') {
-                $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
+              } else if (data.myFeeling == 'DISLIKE') {
                 $scope.commentFeelingAlert[commentId] = '{{TRANSLATION "board.msg.select.dislike"}}';
+              } else {
+                $scope.commentFeelingAlert[commentId] = null;
               }
-              $scope.commentFeelingConn[commentId] = 'ok';
+              $scope.numberOfCommentLike[commentId] = data.numberOfLike;
+              $scope.numberOfCommentDislike[commentId] = data.numberOfDislike;
+              $scope.commentFeelingConn[commentId] = 'none';
             }, function (response) {
               var data = response.data;
               $scope.commentFeelingConn[commentId] = 'none';
