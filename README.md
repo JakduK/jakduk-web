@@ -1,10 +1,12 @@
 #jakduk-web
+Single page application
 
 ##Server
 * Node.js 6.9.1+
-* npm 3.10.8+
-* Default PORT : 3000
-* Default NODE_ENV : development
+* Express
+* Environment variables
+  * PORT (Default: 3000)
+  * NODE_ENV (Default : development)
 ##Client
 * Vue.js
 * semantic-ui
@@ -17,7 +19,6 @@ npm install -g bower gulp webpack
 #Install
 ```
 bower install
-# skip to build semantic-ui
 npm install
 webpack
 ```
