@@ -13,7 +13,15 @@ export default Vue.component('phone-sidenav', {
     const $el = $(this.$el);
     $el.accordion();
 
-    $el.sidebar('setting', 'transition', 'overlay').sidebar('attach events', '#phoneSidenav a.item');
+    $el.sidebar({
+      onHide() {
+        $('html').removeClass('ios');
+      },
+      onVisible() {
+        $('html').addClass('ios');
+      }
+    }).sidebar('setting', 'transition', 'overlay')
+      .sidebar('attach events', '#phoneSidenav a.item');
   },
   watch: {
     $route(to, from) {
