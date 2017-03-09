@@ -28,7 +28,7 @@
               </div>
               <div v-if="post.writer" class="list-item-extra">
                 <div class="list-item-extra-summary">{{post.shortContent}}</div>
-                <strong>{{post.writer.username}}</strong> &middot; {{post.id | postRegDate('LL')}}
+                <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
               </div>
             </div>
           </router-link>
@@ -36,7 +36,7 @@
             <div class="content">
               <div class="header">{{comment.content}}</div>
               <div v-if="comment.writer" class="list-item-extra">
-                <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | postRegDate('LL')}}
+                <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | IdToRegDate('LL')}}
               </div>
             </div>
           </router-link>

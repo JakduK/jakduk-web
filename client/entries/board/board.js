@@ -2,7 +2,7 @@ import Vue from 'vue';
 import $ from 'jquery';
 import '../../components/pagination/pagination';
 import '../../components/pager/pager';
-import PostRegdate from '../../filters/post_regdate';
+import IdToRegDate from '../../filters/id_to_regdate';
 import CategoryColor from '../../filters/category_color';
 import CategoryIcon from '../../filters/category_icon';
 import CategoryLabel from '../../filters/category_label';
@@ -49,17 +49,13 @@ function fetch(options) {
     }
 
     this.$store.commit('load', false);
-
-    this.$nextTick(() => {
-      $('.ui.sticky').sticky('refresh', true);
-    });
   });
 }
 
 export default Vue.component('board', {
   template: require('./board.html'),
   filters: {
-    postRegDate: PostRegdate
+    IdToRegDate: IdToRegDate
   },
   data() {
     return {
@@ -90,6 +86,9 @@ export default Vue.component('board', {
   created() {
     this.$store.commit('load', true);
   },
+  updated() {
+    $('.ui.sticky').sticky('refresh', true);
+  },
   beforeRouteEnter(to, from, next) {
     next(_this => {
       const category = (to.query.category || 'ALL').toUpperCase();
@@ -114,18 +113,18 @@ export default Vue.component('board', {
       });
     });
   },
-  watch: {
-    $route(to, from) {
-      const category = (to.query.category || 'ALL').toUpperCase();
+  beforeRouteUpdate(to, from, next) {
+    const category = (to.query.category || 'ALL').toUpperCase();
 
-      this.category = category;
+    this.category = category;
 
-      fetch.call(this, {
-        page: Math.max(1, parseInt(to.query.page) || 1),
-        size: PAGE_SIZE,
-        category: category
-      });
-    }
+    fetch.call(this, {
+      page: Math.max(1, parseInt(to.query.page) || 1),
+      size: PAGE_SIZE,
+      category: category
+    }).then(() => {
+      next();
+    });
   },
   methods: {
     categoryColor: CategoryColor,

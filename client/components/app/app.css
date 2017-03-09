@@ -1,3 +1,8 @@
+button {
+  border: none;
+  background: none;
+}
+
 #main {
   display: flex;
   flex-direction: column;
@@ -101,8 +106,16 @@
 }
 
 .topic-view img {
-  height: 400px;
   display: block;
   margin: auto;
   border-radius: 0.28571429rem;
+}
+
+.topic-view .ui.comments {
+  max-width: inherit;
+}
+
+.topic-view .img-responsive {
+  max-width: 100%;
+  height: auto;
 }

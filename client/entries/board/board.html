@@ -48,7 +48,7 @@
               <div class="list-item-extra">
                 {{post.seq}} &middot;
                 <span v-if="post.writer"><strong>{{post.writer.username}}</strong> &middot;</span>
-                {{post.id | postRegDate('LL')}} &middot;
+                {{post.id | IdToRegDate('LL')}} &middot;
                 <i class="talk outline flipped horizontally icon"></i>{{post.commentCount}}
                 <span class="pull-right">
                   <i class="eye icon"></i>{{post.views}} &middot;

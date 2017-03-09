@@ -1,16 +1,88 @@
 <div class="topic-view">
-  <button class="ui icon button"><i class="list icon"></i></button>
-  <button class="ui icon button"><i class="left chevron icon"></i></button>
-  <button class="ui icon button"><i class="right chevron icon"></i></button>
-  <button class="ui icon button"><i class="write icon"></i></button>
-  <div class="ui container segments">
+  <router-link :to="{path: '/board', query: $route.query}" class="ui icon button"><i class="list icon"></i></router-link>
+  <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : '')}" :class="{disabled: !prevPost}" class="ui icon button"><i class="left chevron icon"></i></router-link>
+  <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : '')}" :class="{disabled: !nextPost}" class="ui icon button"><i class="right chevron icon"></i></router-link>
+  <a href="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></a>
+  <div class="ui segments">
     <div class="ui segment">
-      <h2><span :class="categoryColor(post.category.code)" class="ui label"> {{$t(categoryLabel(post.category.code))}}</span>{{post.subject}}</h2>
-    </div>
-    <div class="ui segment">
-      {{post.writer.username}}
-      <div class="pull-right"><i class="eye icon"></i>{{post.views}} &middot; {{post.id | postRegDate('LL')}}</div>
+      <h2>{{post.subject}}</h2>
+      <div class="ui grid">
+        <div class="sixteen wide mobile twelve wide tablet twelve wide computer column">
+          <span :class="categoryColor(post.category.code)" class="ui label"> {{$t(categoryLabel(post.category.code))}}</span>
+          <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}} &middot; <i class="eye icon"></i>{{post.views}}
+        </div>
+        <div class="right aligned sixteen wide mobile four wide tablet four wide computer wide column">
+          <button @click="like">
+            <i class="smile blue large icon"></i><strong>{{likeCount}}</strong>
+          </button>
+          <button @click="dislike">
+            <i class="frown pink large icon"></i><strong>{{dislikeCount}}</strong>
+          </button>
+        </div>
+      </div>
     </div>
     <div class="ui blue segment" v-html="post.content"></div>
+    <div class="ui center aligned segment">
+      <button @click="like" class="ui basic button">
+        <i class="smile blue large icon"></i><strong>{{likeCount}}</strong>
+      </button>
+      <button @click="dislike" class="ui basic button">
+      <i class="frown pink large icon"></i><strong>{{dislikeCount}}</strong>
+      </button>
+    </div>
+    <h4 class="ui blue segment">{{$t('latest.articles.author')}}</h4>
+    <div class="ui segment">
+      <div class="ui divided selection relaxed list">
+        <router-link :to="'/board/topic/' + post.seq" v-for="post in latestPostsByWriter" :key="post.id" class="item">
+          <div class="content">
+            <div class="header">{{post.subject}}</div>
+            <div class="list-item-extra">
+              <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
+            </div>
+          </div>
+        </router-link>
+      </div>
+    </div>
+  </div>
+
+  <!--코멘트-->
+  <div class="ui segment">
+    <div class="ui comments">
+      <div v-for="comment in comments" class="comment">
+        <a class="avatar">
+          <img :src="comment.writer.picture || '/assets/jakduk/img/logo_128.png'">
+        </a>
+        <div class="content">
+          <a class="author">{{comment.writer.username}}</a>
+          <div class="metadata">
+            <span class="date">{{comment.id | IdToRegDate('LL')}}</span>
+            &middot;
+            <div class="rating">
+              <button @click="likeComment(comment)">
+                <i class="smile blue large icon"></i> {{comment.usersLiking.length}}
+              </button>
+              <button @click="dislikeComment(comment)">
+                <i class="frown pink large icon"></i> {{comment.usersDisliking.length}}
+              </button>
+            </div>
+          </div>
+          <div class="text" v-html="comment.content"></div>
+          <!--
+          댓글답변 추후기능
+          <div class="actions">
+            <a class="reply">Reply</a>
+          </div>
+          -->
+        </div>
+      </div>
+      <form class="ui reply form">
+        <div class="field">
+          <textarea v-model="inputComment"></textarea>
+        </div>
+        <button class="ui blue labeled submit icon button">
+          <i class="icon edit"></i> {{$t('common.button.write.comment')}}
+        </button>
+      </form>
+    </div>
   </div>
 </div>

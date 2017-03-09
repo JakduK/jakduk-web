@@ -2,7 +2,9 @@
   <div class="ui container">
     <div class="ui grid">
       <div id="content" class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
-        <router-view></router-view>
+        <transition name="slide-right">
+          <router-view></router-view>
+        </transition>
         <div v-if="loading" class="full-fill-loader">
           <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
         </div>
