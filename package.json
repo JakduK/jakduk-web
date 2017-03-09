@@ -1,6 +1,6 @@
 {
   "name": "jakduk-web",
-  "version": "1.2.43",
+  "version": "1.2.44",
   "private": true,
   "main": "app.js",
   "scripts": {
