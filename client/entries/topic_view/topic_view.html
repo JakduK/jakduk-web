@@ -1,15 +1,15 @@
 <div class="topic-view">
   <router-link :to="{path: '/board', query: $route.query}" class="ui icon button"><i class="list icon"></i></router-link>
-  <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : '')}" :class="{disabled: !prevPost}" class="ui icon button"><i class="left chevron icon"></i></router-link>
-  <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : '')}" :class="{disabled: !nextPost}" class="ui icon button"><i class="right chevron icon"></i></router-link>
+  <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon button"><i class="left chevron icon"></i></router-link>
+  <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon button"><i class="right chevron icon"></i></router-link>
   <a href="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></a>
   <div class="ui segments">
     <div class="ui segment">
-      <h2>{{post.subject}}</h2>
+      <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
       <div class="ui grid">
         <div class="sixteen wide mobile twelve wide tablet twelve wide computer column">
           <span :class="categoryColor(post.category.code)" class="ui label"> {{$t(categoryLabel(post.category.code))}}</span>
-          <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}} &middot; <i class="eye icon"></i>{{post.views}}
+          <strong v-if="(!post.status || !post.status.delete)">{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}} &middot; <i class="eye icon"></i>{{post.views}}
         </div>
         <div class="right aligned sixteen wide mobile four wide tablet four wide computer wide column">
           <button @click="like">
@@ -30,8 +30,8 @@
       <i class="frown pink large icon"></i><strong>{{dislikeCount}}</strong>
       </button>
     </div>
-    <h4 class="ui blue segment">{{$t('latest.articles.author')}}</h4>
-    <div class="ui segment">
+    <h4 v-if="latestPostsByWriter" class="ui blue segment">{{$t('latest.articles.author')}}</h4>
+    <div v-if="latestPostsByWriter" class="ui segment">
       <div class="ui divided selection relaxed list">
         <router-link :to="'/board/topic/' + post.seq" v-for="post in latestPostsByWriter" :key="post.id" class="item">
           <div class="content">
@@ -59,10 +59,10 @@
             &middot;
             <div class="rating">
               <button @click="likeComment(comment)">
-                <i class="smile blue large icon"></i> {{comment.usersLiking.length}}
+                <i class="smile blue large icon"></i> {{(comment.usersLiking || []).length}}
               </button>
               <button @click="dislikeComment(comment)">
-                <i class="frown pink large icon"></i> {{comment.usersDisliking.length}}
+                <i class="frown pink large icon"></i> {{(comment.usersDisliking || []).length}}
               </button>
             </div>
           </div>

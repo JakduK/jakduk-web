@@ -5,6 +5,13 @@ import CategoryColor from '../../filters/category_color';
 import CategoryIcon from '../../filters/category_icon';
 import CategoryLabel from '../../filters/category_label';
 
+function fetch(seq) {
+  return $.when(
+    $.getJSON(`/api/board/free/${seq}`).then(data => data, (jXhr, result) => result),
+    $.getJSON(`/api/board/free/${seq}/comments`).then(data => data, (jXhr, result) => result)
+  );
+}
+
 export default Vue.component('topic-view', {
   template: require('./topic_view.html'),
   data() {
@@ -24,34 +31,26 @@ export default Vue.component('topic-view', {
     };
   },
   beforeRouteEnter(to, from, next) {
-    $.when(
-      $.getJSON(`/api/board/free/${to.params.seq}`).then(data => data, (jXhr, result) => result),
-      $.getJSON(`/api/board/free/${to.params.seq}/comments`).then(data => data, (jXhr, result) => result)
-    )
-    .then((post, comments) => {
+    fetch(to.params.seq).then((post, comments) => {
       next(_this => {
         $.extend(_this, post);
         _this.comments = comments.comments;
         _this.commentCount = comments.commentCount;
         _this.$store.commit('load', false);
-        _this.$nextTick(() => {
-          $('.ui.sticky').sticky('refresh', true);
-        });
       });
     });
   },
   beforeRouteUpdate(to, from, next) {
-    $.getJSON(`/api/board/free/${to.params.seq}`).then(data => data, (jXhr, result) => result).then(data => {
-      $.extend(this, data);
-      this.$store.commit('load', false);
-      this.$nextTick(() => {
-        $('.ui.sticky').sticky('refresh', true);
-      });
+    fetch(to.params.seq).then((post, comments) => {
+      $.extend(this, post);
+      this.comments = comments.comments;
+      this.commentCount = comments.commentCount;
 
       next();
     });
   },
   updated() {
+    $('.ui.sticky').sticky('refresh', true);
     $(this.$el).find('img').one('load', () => {
       $('.ui.sticky').sticky('refresh', true);
     });
