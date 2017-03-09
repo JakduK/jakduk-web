@@ -119,3 +119,7 @@ button {
   max-width: 100%;
   height: auto;
 }
+
+.topic-view .note-video-clip {
+  max-width: 100%;
+}
