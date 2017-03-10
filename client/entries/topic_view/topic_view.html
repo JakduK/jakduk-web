@@ -22,23 +22,23 @@
           <span class="nowrap">{{post.id | IdToRegDate('LL')}}</span>
         </div>
         <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
-          <i class="eye grey lage icon"></i><strong>{{post.views}}</strong> &nbsp;
-          <button @click="like">
-            <i class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
+          <i class="eye grey large icon"></i><strong>{{post.views}}</strong> &nbsp;
+          <button @click="likeOrDislike('LIKE')">
+            <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
           </button> &nbsp;
-          <button @click="dislike">
-            <i class="frown pink large icon"></i><strong>{{post.numberOfDislike}}</strong>
+          <button @click="likeOrDislike('DISLIKE')">
+            <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink large icon"></i><strong>{{post.numberOfDislike}}</strong>
           </button>
         </div>
       </div>
     </div>
     <div class="ui blue segment" v-html="post.content"></div>
     <div class="ui center aligned segment">
-      <button @click="like" class="ui basic button">
-        <i class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
+      <button @click="likeOrDislike('LIKE')" class="ui basic button">
+        <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
       </button>
-      <button @click="dislike" class="ui basic button">
-      <i class="frown pink large icon"></i><strong>{{post.numberOfDislike}}</strong>
+      <button @click="likeOrDislike('DISLIKE')" class="ui basic button">
+      <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink large icon"></i><strong>{{post.numberOfDislike}}</strong>
       </button>
     </div>
   </div>
@@ -76,11 +76,11 @@
           <div class="metadata">
             <span class="date">{{comment.id | IdToRegDate('LL')}}</span> &middot;
             <div class="rating">
-              <button @click="likeComment(comment)">
-                <i class="smile blue large icon"></i> {{comment.numberOfLike}}
+              <button @click="likeOrDislikeComment(comment, 'LIKE')">
+                <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i> {{comment.numberOfLike}}
               </button> &nbsp;
-              <button @click="dislikeComment(comment)">
-                <i class="frown pink large icon"></i> {{comment.numberOfDislike}}
+              <button @click="likeOrDislikeComment(comment, 'DISLIKE')">
+                <i :style="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink large icon"></i> {{comment.numberOfDislike}}
               </button>
             </div>
           </div>

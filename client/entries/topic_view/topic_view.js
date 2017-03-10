@@ -89,40 +89,18 @@ export default Vue.component('topic-view', {
     categoryColor: CategoryColor,
     categoryLabel: CategoryLabel,
     categoryIcon: CategoryIcon,
-    like() {
-      $.post(`/api/board/free/${this.post.seq}/LIKE`).then(data => {
-        if (data.myFeeling) {
-          this.post.numberOfLike++;
-        } else {
-          this.post.numberOfLike--;
-        }
+    likeOrDislike(what) {
+      $.post(`/api/board/free/${this.post.seq}/${what}`).then(data => {
+        this.post.myFeeling = data.myFeeling;
+        this.post.numberOfLike = data.numberOfLike;
+        this.post.numberOfDislike = data.numberOfDislike;
       }, ErrorDialog);
     },
-    dislike() {
-      $.post(`/api/board/free/${this.post.seq}/DISLIKE`).then(data => {
-        if (data.myFeeling) {
-          this.post.numberOfDislike++;
-        } else {
-          this.post.numberOfDislike--;
-        }
-      }, ErrorDialog);
-    },
-    likeComment(comment) {
-      $.post(`/api/board/free/comment/${comment.id}/LIKE`).then(data => {
-        if (data.myFeeling) {
-          comment.numberOfLike++;
-        } else {
-          comment.numberOfLike--;
-        }
-      }, ErrorDialog);
-    },
-    dislikeComment(comment) {
-      $.post(`/api/board/free/comment/${comment.id}/DISLIKE`).then(data => {
-        if (data.myFeeling) {
-          comment.numberOfDislike++;
-        } else {
-          comment.numberOfDislike--;
-        }
+    likeOrDislikeComment(comment, what) {
+      $.post(`/api/board/free/comment/${comment.id}/${what}`).then(data => {
+        comment.myFeeling = data.myFeeling;
+        comment.numberOfLike = data.numberOfLike;
+        comment.numberOfDislike = data.numberOfDislike;
       }, ErrorDialog);
     }
   }
