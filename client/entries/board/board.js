@@ -16,8 +16,8 @@ function fetch(options) {
       page: options.page,
       size: options.size,
       category: options.category
-    }).then(data => data, (jXhr, result) => result),
-    $.getJSON('/api/board/free/tops').then(data => data, (jXhr, result) => result)
+    }).then(data => data, (response, result) => result),
+    $.getJSON('/api/board/free/tops').then(data => data, (response, result) => result)
   ).always((posts, tops) => {
     this.top = (tops === 'error' || !tops) ? undefined : tops;
     this.board = (posts === 'error' || !posts) ? undefined : posts;

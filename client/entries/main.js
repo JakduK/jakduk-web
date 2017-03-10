@@ -16,6 +16,9 @@ Vue.mixin({
   methods: {
     src(src) {
       return `${src}?${window.ENV.revision}`;
+    },
+    isEmptyArray(arr) {
+      return !arr || !arr.length;
     }
   }
 });

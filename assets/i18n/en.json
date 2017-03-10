@@ -311,5 +311,8 @@
   "failed.loading": "Failed to load",
   "common.news": "News",
   "there.is.no.activity": "There is no activity.",
-  "common.loading": "Loading"
+  "common.loading": "Loading",
+  "common.do.you.want.to.login": "Do you want to login?",
+  "common.error.occurred.on.server": "Error occurred on server.",
+  "common.network.in.problem": "May your network is in problem."
 }
