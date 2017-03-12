@@ -10,6 +10,7 @@
       <i class="right chevron icon"></i>
     </router-link>
     <a href="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></a>
+
     <div class="ui segments">
       <div class="ui segment">
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
@@ -44,6 +45,18 @@
       </div>
     </div>
 
+    <div class="text-center">
+      <router-link :to="{path: '/board', query: $route.query}" class="ui icon button">
+        <i class="list icon"></i>
+      </router-link>
+      <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon button">
+        <i class="left chevron icon"></i>
+      </router-link>
+      <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon button">
+        <i class="right chevron icon"></i>
+      </router-link>
+    </div>
+
     <div v-if="latestPostsByWriter && latestPostsByWriter.length" class="ui segments summary-list">
       <h4 class="ui segment">{{$t('latest.articles.author')}}</h4>
       <div class="ui blue segment">
@@ -67,6 +80,7 @@
 
     <!--코멘트-->
     <div class="ui segment">
+      <h3 class="ui dividing header">{{$t('board.comments')}}</h3>
       <div class="ui comments">
         <div v-for="comment in comments" :key="comment.id" class="comment">
           <a class="avatar">

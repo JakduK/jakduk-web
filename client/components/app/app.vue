@@ -94,6 +94,10 @@
     overflow: hidden;
     visibility: hidden;
   }
+
+  .text-center {
+    text-align: center;
+  }
 </style>
 
 <script src="./app.js"></script>
