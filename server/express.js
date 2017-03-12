@@ -39,7 +39,7 @@ function setup(app) {
 
     app.use(devMiddleware(compiler, {
       publicPath: webpackConfig.output.publicPath,
-      quiet: true
+      quiet: false
     }));
 
     app.use(hotMiddleware(compiler, {
