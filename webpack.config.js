@@ -72,7 +72,8 @@ module.exports = {
       jQuery: 'jquery'
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
   ]
 };
 
