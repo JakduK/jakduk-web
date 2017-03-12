@@ -96,9 +96,10 @@ export default {
         fileInput.addEventListener('change', () => {
           if (fileInput.files !== null && fileInput.files[0] !== null) {
             const range = quill.getSelection(true);
-            console.log(range);
             const formData = new FormData();
+
             formData.append('file', fileInput.files[0]);
+
             $.ajax({
               type: 'post',
               url: '/api/gallery',
@@ -106,7 +107,7 @@ export default {
               processData: false,
               contentType: false
             }).done(data => {
-              quill.insertEmbed(range.index, 'image', data.imageUrl);
+              quill.insertEmbed(range.index, 'image', data.thumbnailUrl);
             });
           }
         });
@@ -155,7 +156,7 @@ export default {
       }));
     },
     submitComment() {
-      const commentText = this.quill.getText();
+      const commentText = this.quill.getText().trim();
 
       if (commentText.length < 3 || commentText.length > 800) {
         window.alert(this.$t('Size.board.comment.content'));
