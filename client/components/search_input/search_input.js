@@ -1,7 +1,4 @@
-import Vue from 'vue';
-
-export default Vue.component('search-input', {
-  template: require('./search_input.html'),
+export default {
   data() {
     return {
       keyword: ''
@@ -12,4 +9,4 @@ export default Vue.component('search-input', {
       window.location = `/search?w=PO;CO;GA&q=${encodeURIComponent(this.keyword)}`;
     }
   }
-});
+};

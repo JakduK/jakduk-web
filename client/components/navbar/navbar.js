@@ -1,11 +1,9 @@
-import Vue from 'vue';
 import $ from 'jquery';
 import {mapState} from 'vuex';
-import './profile_menu';
-import '../search_input/search_input';
+import ProfileMenu from '../profile_menu/profile_menu.vue';
+import SearchInput from '../search_input/search_input.vue';
 
-export default Vue.component('navbar', {
-  template: require('./navbar.html'),
+export default {
   data() {
     return {
       path: window.location.pathname
@@ -36,5 +34,9 @@ export default Vue.component('navbar', {
       }
     }
   },
-  computed: mapState(['isAuthenticated'])
-});
+  computed: mapState(['isAuthenticated']),
+  components: {
+    'search-input': SearchInput,
+    'profile-menu': ProfileMenu
+  }
+};

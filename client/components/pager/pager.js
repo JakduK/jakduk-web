@@ -1,7 +1,4 @@
-import Vue from 'vue';
-
-export default Vue.component('pager', {
-  template: require('./pager.html'),
+export default {
   props: {
     isFirst: Boolean,
     isLast: Boolean
@@ -14,4 +11,4 @@ export default Vue.component('pager', {
       this.$emit('on-prev', 'prev');
     }
   }
-});
+};

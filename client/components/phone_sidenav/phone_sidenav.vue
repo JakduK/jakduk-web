@@ -1,0 +1,22 @@
+<template>
+  <div id="phoneSidenav" class="ui left inverted blue vertical accordion menu sidebar">
+    <search-input class="ui search item"></search-input>
+    <router-link active-class="active" to="/home" class="item">{{$t('common.home')}}</router-link>
+    <router-link active-class="active" to="/board" class="item">{{$t('board')}}</router-link>
+    <a active-class="active" class="item">{{$t('gallery')}}</a>
+    <a active-class="active" class="item">{{$t('stats')}}</a>
+    <a active-class="active" class="item">{{$t('jakdu.write')}}</a>
+    <div class="item">
+      <a class="title">
+        <i class="dropdown icon"></i>
+        <i class="globe icon"></i> {{$t('common.language')}}
+      </a>
+      <div class="content">
+        <a :href="path + 'lang=ko'" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
+        <a :href="path + 'lang=en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="./phone_sidenav.js"></script>

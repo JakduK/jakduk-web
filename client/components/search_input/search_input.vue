@@ -1,0 +1,11 @@
+<template>
+  <div>
+    <form class="ui icon input" @submit.prevent="search()">
+      <input type="text" v-model="keyword" :placeholder="$t('search.placeholder.words')" autocomplete="off">
+      <i class="search link icon"></i>
+    </form>
+    <div class="results"></div>
+  </div>
+</template>
+
+<script src="./search_input.js"></script>

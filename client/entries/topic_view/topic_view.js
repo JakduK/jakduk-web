@@ -18,29 +18,16 @@ function apply(post, comments) {
   comments = comments === 'error' ? undefined : comments;
 
   if (post) {
-    $.extend(post.post, {
-      numberOfLike: (post.post.usersLiking || []).length,
-      numberOfDislike: (post.post.usersDisliking || []).length
-    });
     $.extend(this, post);
   }
 
   if (comments) {
-    if (comments.comments && comments.comments.length) {
-      comments.comments = comments.comments.map(comment => {
-        comment.numberOfLike = (comment.usersLiking || []).length;
-        comment.numberOfDislike = (comment.usersDisliking || []).length;
-        return comment;
-      });
-    }
-
     this.comments = comments.comments;
     this.commentCount = comments.commentCount;
   }
 }
 
-export default Vue.component('topic-view', {
-  template: require('./topic_view.html'),
+export default {
   data() {
     return {
       post: {
@@ -104,4 +91,4 @@ export default Vue.component('topic-view', {
       }, ErrorDialog);
     }
   }
-});
+};

@@ -1,8 +1,6 @@
-import Vue from 'vue';
 import $ from 'jquery';
 import Swiper from 'swiper';
 import Truncate from 'lodash/fp/truncate';
-import '../../components/sidenav/sidenav';
 import IdToRegDate from '../../filters/id_to_regdate';
 
 const COLORS = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'purple', 'violet', 'pink', 'brown', 'grey'];
@@ -49,8 +47,7 @@ function fetch() {
   });
 }
 
-export default Vue.component('home', {
-  template: require('./home.html'),
+export default {
   filters: {
     IdToRegDate: IdToRegDate
   },
@@ -92,4 +89,4 @@ export default Vue.component('home', {
       return `${Truncate(50)(this.encyclopedia.content)}`;
     }
   }
-});
+};

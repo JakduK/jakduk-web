@@ -1,11 +1,8 @@
-import Vue from 'vue';
 import {mapState} from 'vuex';
-import './app.css';
-import '../search_input/search_input';
-import '../site_footer/site_footer';
+import Sidenav from '../sidenav/sidenav.vue';
+import SiteFooter from '../site_footer/site_footer.vue';
 
-export default Vue.component('app', {
-  template: require('./app.html'),
+export default {
   data() {
     return {
       appLoaded: false
@@ -18,5 +15,9 @@ export default Vue.component('app', {
       }
       return state.loading;
     }
-  })
-});
+  }),
+  components: {
+    sidenav: Sidenav,
+    'site-footer': SiteFooter
+  }
+};

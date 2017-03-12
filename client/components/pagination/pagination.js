@@ -1,7 +1,4 @@
-import Vue from 'vue';
-
-export default Vue.component('pagination', {
-  template: require('./pagination.html'),
+export default {
   props: {
     pagination: Object
   },
@@ -22,4 +19,4 @@ export default Vue.component('pagination', {
       this.$emit('change', 'unshift');
     }
   }
-});
+};

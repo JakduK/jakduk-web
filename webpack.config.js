@@ -14,37 +14,30 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.html$/,
-      loader: 'html-loader',
-      query: {
-        minimize: true
-      }
+      test: /\.vue$/,
+      loader: 'vue-loader'
+    }, {
+      test: /\.js$/,
+      loader: 'babel-loader',
+      exclude: /(node_modules|bower_components)/
     }, {
       test: /\.css$/,
       use: ['style-loader', 'css-loader']
     }, {
-      test: /\.js$/,
-      loader: 'babel-loader',
-      exclude: /(node_modules|bower_components)/,
+      test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      loader: 'url-loader',
       query: {
-        presets: ['es2015', 'stage-2'],
-        plugins: ['add-module-exports']
+        limit: 10000,
+        name: 'img/[name].[hash:7].[ext]'
       }
-    }
-    // , {
-    //   test: /\.vue$/,
-    //   loader: 'vue-loader',
-    //   options: {
-    //     loaders: {}
-    //   }
-    // }, {
-    //   test: /\.(png|jpg|gif|svg)$/,
-    //   loader: 'file-loader',
-    //   options: {
-    //     name: '[name].[ext]?[hash]'
-    //   }
-    // }
-    ]
+    }, {
+      test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+      loader: 'url-loader',
+      query: {
+        limit: 10000,
+        name: 'fonts/[name].[hash:7].[ext]'
+      }
+    }]
   },
   resolve: {
     alias: {
@@ -54,7 +47,7 @@ module.exports = {
       'vuex': 'vuex/dist/vuex.js',
       moment: 'moment/min/moment.min.js',
       '../moment': 'moment/min/moment.min.js',
-      semantic: path.join(__dirname, 'dist/semantic/semantic.js')
+      semantic: path.join(__dirname, 'client/semantic/dist/semantic.js')
     }
   },
   plugins: [
@@ -65,18 +58,8 @@ module.exports = {
       jQuery: 'jquery'
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-    // ,
-    // new webpack.HotModuleReplacementPlugin()
+    // , new webpack.HotModuleReplacementPlugin()
   ]
-  // ,
-  // devServer: {
-  //   historyApiFallback: true,
-  //   noInfo: true
-  // },
-  // performance: {
-  //   hints: false
-  // },
-  // devtool: '#eval-source-map'
 };
 
 if (process.env.NODE_ENV === 'production') {

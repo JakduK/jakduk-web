@@ -1,9 +1,7 @@
-import Vue from 'vue';
 import $ from 'jquery';
-import '../search_input/search_input';
+import SearchInput from '../search_input/search_input.vue';
 
-export default Vue.component('phone-sidenav', {
-  template: require('./phone_sidenav.html'),
+export default {
   data() {
     return {
       path: window.location.pathname
@@ -42,5 +40,8 @@ export default Vue.component('phone-sidenav', {
         return `${window.location.href}?lang=${locale}`;
       }
     }
+  },
+  components: {
+    'search-input': SearchInput
   }
-});
+};

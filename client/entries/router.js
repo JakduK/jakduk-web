@@ -5,19 +5,19 @@ Vue.use(VueRouter);
 
 const Home = resolve => {
   require.ensure([], (require) => {
-    resolve(require('../entries/home/home'));
+    resolve(require('../entries/home/home.vue'));
   }, 'home');
 };
 
 const Board = resolve => {
   require.ensure([], (require) => {
-    resolve(require('../entries/board/board'));
+    resolve(require('../entries/board/board.vue'));
   }, 'board');
 };
 
 const TopicView = resolve => {
   require.ensure([], (require) => {
-    resolve(require('../entries/topic_view/topic_view'));
+    resolve(require('../entries/topic_view/topic_view.vue'));
   }, 'topic_view');
 };
 

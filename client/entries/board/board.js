@@ -1,7 +1,6 @@
-import Vue from 'vue';
 import $ from 'jquery';
-import '../../components/pagination/pagination';
-import '../../components/pager/pager';
+import Pagination from '../../components/pagination/pagination.vue';
+import Pager from '../../components/pager/pager.vue';
 import IdToRegDate from '../../filters/id_to_regdate';
 import CategoryColor from '../../filters/category_color';
 import CategoryIcon from '../../filters/category_icon';
@@ -52,8 +51,7 @@ function fetch(options) {
   });
 }
 
-export default Vue.component('board', {
-  template: require('./board.html'),
+export default {
   filters: {
     IdToRegDate: IdToRegDate
   },
@@ -167,5 +165,9 @@ export default Vue.component('board', {
         query: this.$route.query
       });
     }
+  },
+  components: {
+    pager: Pager,
+    pagination: Pagination
   }
-});
+};
