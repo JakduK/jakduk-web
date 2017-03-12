@@ -122,15 +122,15 @@
     width: 54px;
   }
 
-  .notice {
-    margin-bottom: 0.45em;
+  .ui.list.notice {
+    margin-bottom: 0.5em;
   }
 
-  .notice + .ui.list {
+  .ui.list.notice + .ui.list {
     margin-top: 0;
   }
 
-  .notice .item {
+  .ui.list.notice .item {
     padding-top: 0.3em !important;
     padding-bottom: 0.3em !important;
   }
