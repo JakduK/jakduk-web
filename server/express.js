@@ -31,6 +31,24 @@ function setup(app) {
   // view engine setup
   require('./config/handlebars')(app);
 
+  if (config.env !== 'production') {
+    const webpackConfig = require('../webpack.config');
+    const compiler = require('webpack')(webpackConfig);
+    const devMiddleware = require('webpack-dev-middleware');
+    const hotMiddleware = require('webpack-hot-middleware');
+
+    app.use(devMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+      quiet: true
+    }));
+
+    app.use(hotMiddleware(compiler, {
+      log(output) {
+        console.log(output);
+      }
+    }));
+  }
+
   app.use(logger(config.env === 'production' ? 'combined' : 'dev'));
   app.use(compression());
   app.use('/assets', [

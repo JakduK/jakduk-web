@@ -3,8 +3,22 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    vendor: ['vue', 'vue-router', 'vue-i18n', 'vuex', 'moment', 'jquery', 'semantic'],
-    app: [path.resolve(__dirname, './client/entries/main.js')]
+    vendor: [
+      'vue',
+      'vue-i18n',
+      'vue-router',
+      'vuex',
+      'moment',
+      'jquery',
+      'semantic'
+    ],
+    app: (() => {
+      const appEntry = [];
+      if (process.env.NODE_ENV !== 'production') {
+        appEntry.push(path.resolve(__dirname, './client/entries/dev-client.js'));
+      }
+      return appEntry.concat(path.resolve(__dirname, './client/entries/main.js'));
+    })()
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -42,8 +56,8 @@ module.exports = {
   resolve: {
     alias: {
       vue: 'vue/dist/vue.common.js',
-      'vue-router': 'vue-router/dist/vue-router.common.js',
       'vue-i18n': 'vue-i18n/dist/vue-i18n.common.js',
+      'vue-router': 'vue-router/dist/vue-router.common.js',
       'vuex': 'vuex/dist/vuex.js',
       moment: 'moment/min/moment.min.js',
       '../moment': 'moment/min/moment.min.js',
@@ -57,8 +71,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       jQuery: 'jquery'
     }),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-    // , new webpack.HotModuleReplacementPlugin()
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.HotModuleReplacementPlugin()
   ]
 };
 
