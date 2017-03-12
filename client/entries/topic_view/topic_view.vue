@@ -1,12 +1,12 @@
 <template>
   <div class="topic-view">
-    <router-link :to="{path: '/board', query: $route.query}" class="ui icon button">
+    <router-link :to="{path: '/board', query: $route.query}" class="ui icon basic button">
       <i class="list icon"></i>
     </router-link>
-    <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon button">
+    <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon basic button">
       <i class="left chevron icon"></i>
     </router-link>
-    <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon button">
+    <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon basic button">
       <i class="right chevron icon"></i>
     </router-link>
     <a href="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></a>
@@ -46,13 +46,13 @@
     </div>
 
     <div class="text-center">
-      <router-link :to="{path: '/board', query: $route.query}" class="ui icon button">
+      <router-link :to="{path: '/board', query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
       </router-link>
-      <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon button">
+      <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon basic button">
         <i class="left chevron icon"></i>
       </router-link>
-      <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon button">
+      <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon basic button">
         <i class="right chevron icon"></i>
       </router-link>
     </div>
@@ -79,48 +79,50 @@
     </div>
 
     <!--코멘트-->
-    <div class="ui segment">
-      <h3 class="ui dividing header">{{$t('board.comments')}}</h3>
-      <div class="ui comments">
-        <div v-for="comment in comments" :key="comment.id" class="comment">
-          <a class="avatar">
-            <img :src="comment.writer.picture || '/assets/jakduk/img/logo_128.png'">
-          </a>
-          <div v-if="isAuthenticated && myProfile.id === comment.writer.userId" class="pull-right">
-            <button @click="deleteComment(comment)" class="ui icon mini basic button"><i class="remove grey fitted icon"></i></button>
-          </div>
-          <div class="content">
-            <a class="author">{{comment.writer.username}}</a>
-            <div class="metadata">
-              <span class="date">{{comment.id | IdToRegDate('LL')}}</span>&middot;
-              <div class="rating">
-                <button @click="likeOrDislikeComment(comment, 'LIKE')">
-                  <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i> {{comment.numberOfLike}}
-                </button> &nbsp;
-                <button @click="likeOrDislikeComment(comment, 'DISLIKE')">
-                  <i :class="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink icon"></i> {{comment.numberOfDislike}}
-                </button>
+    <div class="ui segments">
+      <h4 class="ui segment">{{$t('board.comments')}}</h4>
+      <div class="ui blue segment">
+        <div class="ui comments">
+          <div v-for="comment in comments" :key="comment.id" class="comment">
+            <a class="avatar">
+              <img :src="comment.writer.picture || '/assets/jakduk/img/logo_128.png'">
+            </a>
+            <div v-if="isAuthenticated && myProfile.id === comment.writer.userId" class="pull-right">
+              <button @click="deleteComment(comment)" class="ui icon mini basic button"><i class="remove grey fitted icon"></i></button>
+            </div>
+            <div class="content">
+              <a class="author">{{comment.writer.username}}</a>
+              <div class="metadata">
+                <span class="date">{{comment.id | IdToRegDate('LL')}}</span>&middot;
+                <div class="rating">
+                  <button @click="likeOrDislikeComment(comment, 'LIKE')">
+                    <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i> {{comment.numberOfLike}}
+                  </button> &nbsp;
+                  <button @click="likeOrDislikeComment(comment, 'DISLIKE')">
+                    <i :class="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink icon"></i> {{comment.numberOfDislike}}
+                  </button>
+                </div>
               </div>
+              <div class="text" v-html="comment.content"></div>
+              <!--
+              댓글답변 추후기능
+              <div class="actions">
+                <a class="reply">Reply</a>
+              </div>
+              -->
             </div>
-            <div class="text" v-html="comment.content"></div>
-            <!--
-            댓글답변 추후기능
-            <div class="actions">
-              <a class="reply">Reply</a>
-            </div>
-            -->
           </div>
-        </div>
 
-        <div class="comment-form">
-          <div class="comment-editor">
-            <div id="commentEditorToolbar"></div>
-            <div id="commentEditor"></div>
-          </div>
-          <div class="clearfix">
-            <button @click="submitComment" class="ui right floated blue labeled submit icon button">
-              <i class="icon edit"></i> {{$t('common.button.write.comment')}}
-            </button>
+          <div class="comment-form">
+            <div class="comment-editor">
+              <div id="commentEditorToolbar"></div>
+              <div id="commentEditor"></div>
+            </div>
+            <div class="clearfix">
+              <button @click="submitComment" class="ui right floated blue labeled submit icon button">
+                <i class="icon edit"></i> {{$t('common.button.write.comment')}}
+              </button>
+            </div>
           </div>
         </div>
       </div>
