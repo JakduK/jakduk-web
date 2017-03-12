@@ -15,7 +15,7 @@
     <script>
       window.ENV = {
       {{#if @root.userInfo}}
-        profile: {{JSON_STRINGIFY @root.userInfo}},
+        myProfile: {{JSON_STRINGIFY @root.userInfo}},
       {{/if}}
         revision: '{{@root.revision}}',
         locale: '{{@root.locale}}'

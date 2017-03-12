@@ -85,6 +85,15 @@
   .pull-right {
     float: right;
   }
+
+  .clearfix:after {
+    display: block;
+    content: ' ';
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden;
+  }
 </style>
 
 <script src="./app.js"></script>

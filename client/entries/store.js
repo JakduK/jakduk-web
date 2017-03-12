@@ -5,8 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    isAuthenticated: !!window.ENV.profile,
-    profile: window.ENV.profile,
+    isAuthenticated: !!window.ENV.myProfile,
+    myProfile: window.ENV.myProfile,
     notification: {
       list: []
     },

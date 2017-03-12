@@ -15,11 +15,11 @@
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
         <div class="ui grid">
           <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
-          <span :class="categoryColor(post.category.code)" class="ui horizontal label">
-            {{$t(categoryLabel(post.category.code))}}
-            <div class="detail">{{post.seq}}</div>
-          </span>
-            <strong v-if="(!post.status || !post.status.delete)">{{post.writer.username}}</strong> &nbsp;
+            <div :class="categoryColor(post.category.code)" class="ui horizontal label">
+              {{$t(categoryLabel(post.category.code))}}
+              <div class="detail">{{post.seq}}</div>
+            </div>
+            <strong v-if="(!post.status || !post.status.delete)">&nbsp;{{post.writer.username}}</strong> &nbsp;
             <span class="nowrap">{{post.id | IdToRegDate('LL')}}</span>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
@@ -72,16 +72,19 @@
           <a class="avatar">
             <img :src="comment.writer.picture || '/assets/jakduk/img/logo_128.png'">
           </a>
+          <div v-if="isAuthenticated && myProfile.id === comment.writer.userId" class="pull-right">
+            <button @click="deleteComment(comment)" class="ui icon mini basic button"><i class="remove grey fitted icon"></i></button>
+          </div>
           <div class="content">
             <a class="author">{{comment.writer.username}}</a>
             <div class="metadata">
-              <span class="date">{{comment.id | IdToRegDate('LL')}}</span> &middot;
+              <span class="date">{{comment.id | IdToRegDate('LL')}}</span>&middot;
               <div class="rating">
                 <button @click="likeOrDislikeComment(comment, 'LIKE')">
-                  <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i> {{comment.numberOfLike}}
+                  <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i> {{comment.numberOfLike}}
                 </button> &nbsp;
                 <button @click="likeOrDislikeComment(comment, 'DISLIKE')">
-                  <i :style="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink large icon"></i> {{comment.numberOfDislike}}
+                  <i :class="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink icon"></i> {{comment.numberOfDislike}}
                 </button>
               </div>
             </div>
@@ -94,19 +97,24 @@
             -->
           </div>
         </div>
-        <form class="ui reply form">
-          <div class="field">
-            <textarea v-model="inputComment"></textarea>
+
+        <div class="comment-form">
+          <div class="comment-editor">
+            <div id="commentEditorToolbar"></div>
+            <div id="commentEditor"></div>
           </div>
-          <button class="ui blue labeled submit icon button">
-            <i class="icon edit"></i> {{$t('common.button.write.comment')}}
-          </button>
-        </form>
+          <div class="clearfix">
+            <button @click="submitComment" class="ui right floated blue labeled submit icon button">
+              <i class="icon edit"></i> {{$t('common.button.write.comment')}}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
+<style src="../../../node_modules/quill/dist/quill.snow.css"></style>
 <style>
   .topic-view img {
     display: block;
@@ -125,6 +133,14 @@
 
   .topic-view .note-video-clip {
     max-width: 100%;
+  }
+
+  .comment-form {
+    margin-top: 2em;
+  }
+
+  .comment-form .comment-editor {
+    margin-bottom: 1em;
   }
 </style>
 
