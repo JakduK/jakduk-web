@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {mapState} from 'vuex';
 import $ from 'jquery';
+import Pager from '../../components/pager/pager.vue';
 import IdToRegDate from '../../filters/id_to_regdate';
 import CategoryColor from '../../filters/category_color';
 import CategoryIcon from '../../filters/category_icon';
@@ -71,9 +72,11 @@ export default {
       modules: {
         toolbar: ['link', 'image', 'video']
       },
-      placeholder: this.$t('Size.board.comment.content'),
-      bounds: $('#main')[0]
+      placeholder: this.$t('board.msg.write.text.here'),
+      bounds: $('#main')[0],
+      readOnly: !this.$store.state.isAuthenticated
     });
+    const toolbar = quill.getModule('toolbar');
 
     quill.on('selection-change', (range, oldRange, source) => {
       if (!this.$store.state.isAuthenticated) {
@@ -85,8 +88,12 @@ export default {
       }
     });
 
-    quill.getModule('toolbar').addHandler('image', () => {
-      let fileInput = quill.root.querySelector('input.ql-image[type=file]');
+    toolbar.addHandler('image', () => {
+      if (!quill.isEnabled()) {
+        return;
+      }
+
+      let fileInput = toolbar.container.querySelector('input.ql-image[type=file]');
 
       if (fileInput === null) {
         fileInput = document.createElement('input');
@@ -111,7 +118,7 @@ export default {
             });
           }
         });
-        quill.root.appendChild(fileInput);
+        toolbar.container.appendChild(fileInput);
       }
 
       fileInput.click();
@@ -133,6 +140,18 @@ export default {
     categoryColor: CategoryColor,
     categoryLabel: CategoryLabel,
     categoryIcon: CategoryIcon,
+    prevTopic() {
+      this.$router.push({
+        path: `/board/topic/${this.prevPost.seq}`,
+        query: this.$route.query
+      });
+    },
+    nextTopic() {
+      this.$router.push({
+        path: `/board/topic/${this.nextPost.seq}`,
+        query: this.$route.query
+      });
+    },
     likeOrDislike(what) {
       $.post(`/api/board/free/${this.post.seq}/${what}`).then(data => {
         this.post.myFeeling = data.myFeeling;
@@ -187,5 +206,8 @@ export default {
         });
       }
     }
+  },
+  components: {
+    pager: Pager
   }
 };

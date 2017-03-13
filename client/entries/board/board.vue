@@ -15,7 +15,7 @@
               <i :class="[categoryColor(id), categoryIcon(id)]" class="icon"></i> {{$t(categoryLabel(id))}}
             </option>
           </select>
-          <button v-tooltip :data-content="$t('board.write')" @click="compose" class="ui right floated icon button"><i class="write icon"></i></button>
+          <router-link to="/board/topic/write" class="ui right floated icon button"><i class="write icon"></i></router-link>
         </div>
 
         <div class="ui blue segment">

@@ -98,6 +98,10 @@
   .text-center {
     text-align: center;
   }
+
+  .inline {
+    display: inline-block;
+  }
 </style>
 
 <script src="./app.js"></script>

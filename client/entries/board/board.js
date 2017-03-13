@@ -158,12 +158,6 @@ export default {
           category: this.$route.query.category
         }
       });
-    },
-    compose() {
-      this.$router.push({
-        path: '/board/topic/write',
-        query: this.$route.query
-      });
     }
   },
   components: {

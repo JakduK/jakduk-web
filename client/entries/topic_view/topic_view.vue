@@ -3,14 +3,8 @@
     <router-link :to="{path: '/board', query: $route.query}" class="ui icon basic button">
       <i class="list icon"></i>
     </router-link>
-    <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon basic button">
-      <i class="left chevron icon"></i>
-    </router-link>
-    <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon basic button">
-      <i class="right chevron icon"></i>
-    </router-link>
-    <a href="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></a>
-
+    <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
+    <router-link to="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></router-link>
     <div class="ui segments">
       <div class="ui segment">
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
@@ -49,12 +43,7 @@
       <router-link :to="{path: '/board', query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
       </router-link>
-      <router-link :to="{path: '/board/topic/' + (prevPost ? prevPost.seq : ''), query: $route.query}" :class="{disabled: !prevPost}" class="ui icon basic button">
-        <i class="left chevron icon"></i>
-      </router-link>
-      <router-link :to="{path: '/board/topic/' + (nextPost ? nextPost.seq : ''), query: $route.query}" :class="{disabled: !nextPost}" class="ui icon basic button">
-        <i class="right chevron icon"></i>
-      </router-link>
+      <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     </div>
 
     <div v-if="latestPostsByWriter && latestPostsByWriter.length" class="ui segments summary-list">
@@ -115,7 +104,6 @@
 
           <div class="comment-form">
             <div class="comment-editor">
-              <div id="commentEditorToolbar"></div>
               <div id="commentEditor"></div>
             </div>
             <div class="clearfix">
@@ -157,6 +145,16 @@
 
   .comment-form .comment-editor {
     margin-bottom: 1em;
+    border-radius: 0.28571429rem;
+    box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.15) inset;
+  }
+  .comment-form .comment-editor .ql-toolbar,
+  .comment-form .comment-editor .ql-container {
+    border: none;
+  }
+
+  .comment-form .comment-editor .ql-tooltip {
+    z-index: 2;
   }
 </style>
 
