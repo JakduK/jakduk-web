@@ -111,4 +111,12 @@ module.exports = function(ApiClient, internalFn) {
       rest.get(this.serverUrl.replace(/\/api$/, '/rss')).on('complete', callback.bind(null, resolve));
     }.bind(this));
   };
+
+  ApiClient.prototype.sitemap = function() {
+    return new Promise(function(resolve) {
+      rest.request(this.serverUrl.replace(/\/api$/, '/sitemap.xml'), {
+        method: 'get'
+      }).on('complete', callback.bind(null, resolve));
+    }.bind(this));
+  };
 };
