@@ -107,7 +107,7 @@
           <div class="comment-form">
             <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
             <div class="comment-editor">
-              <editor @on-created="onEditorCreated" id="commentEditor" mode="comment"></editor>
+              <editor @on-created="onEditorCreated" id="commentEditor" data-mode="comment"></editor>
             </div>
             <div class="clearfix">
               <button @click="submitComment" class="ui right floated blue labeled submit icon button">

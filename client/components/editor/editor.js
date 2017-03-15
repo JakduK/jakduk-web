@@ -10,6 +10,7 @@ const defaultOptions = {
   relative_urls: true,
   file_picker_types: 'image',
   image_description: false,
+  image_dimensions: false,
   file_picker_callback(cb, value, meta) {
     const editor = this;
     const input = document.createElement('input');
@@ -47,8 +48,7 @@ const commentOptions = $.extend({
   plugins: [
     'advlist autolink lists link image codesample media paste'
   ],
-  toolbar: 'undo redo | bold italic | codesample | bullist numlist | link image media',
-  image_dimensions: false
+  toolbar: 'undo redo | bold italic | codesample | bullist numlist | link image media'
 }, defaultOptions);
 
 const editorOptions = $.extend({
@@ -62,13 +62,23 @@ const editorOptions = $.extend({
 }, defaultOptions);
 
 export default {
+  props: {
+    options: Object
+  },
   mounted() {
-    const options = $(this.$el).attr('mode') === 'comment' ? commentOptions : editorOptions;
+    let options = $(this.$el).data('mode') === 'comment' ? commentOptions : editorOptions;
+    options = $.extend({}, options, this.$props.options);
     options.target = this.$el;
     options.init_instance_callback = function (editor) {
+      this.editor = editor;
       this.$emit('on-created', editor);
     }.bind(this);
 
     Tinymce.init(options);
+  },
+  destroyed() {
+    if (this.editor) {
+      this.editor.destroy();
+    }
   }
 };

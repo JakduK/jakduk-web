@@ -163,6 +163,7 @@ export default {
     },
     onEditorCreated(editor) {
       this.commentEditor = editor;
+      $('.ui.sticky').sticky('refresh', true);
     }
   },
   components: {
