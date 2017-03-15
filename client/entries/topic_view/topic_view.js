@@ -7,7 +7,7 @@ import CategoryColor from '../../filters/category_color';
 import CategoryIcon from '../../filters/category_icon';
 import CategoryLabel from '../../filters/category_label';
 import ErrorDialog from '../../utils/dialog_response_error';
-import Quill from 'quill/dist/quill';
+import Editor from '../../components/editor/editor.vue';
 
 function fetch(seq) {
   return $.when(
@@ -47,6 +47,7 @@ export default {
       inputComment: ''
     };
   },
+  computed: mapState(['isAuthenticated', 'myProfile']),
   beforeRouteEnter(to, from, next) {
     fetch(to.params.seq).then((post, comments) => {
       if (post === 'error') {
@@ -66,73 +67,12 @@ export default {
       next();
     });
   },
-  mounted() {
-    const quill = new Quill('#commentEditor', {
-      theme: 'snow',
-      modules: {
-        toolbar: ['link', 'image', 'video']
-      },
-      placeholder: this.$t('board.msg.write.text.here'),
-      bounds: $('#main')[0],
-      readOnly: !this.$store.state.isAuthenticated
-    });
-    const toolbar = quill.getModule('toolbar');
-
-    quill.on('selection-change', (range, oldRange, source) => {
-      if (!this.$store.state.isAuthenticated) {
-        if (oldRange === null && window.confirm(this.$t('common.do.you.want.to.login'))) {
-          window.location = `/login?redir=${encodeURIComponent(`${location.pathname}${location.search}`)}`;
-        } else if (range !== null) {
-          quill.setSelection(null);
-        }
-      }
-    });
-
-    toolbar.addHandler('image', () => {
-      if (!quill.isEnabled()) {
-        return;
-      }
-
-      let fileInput = toolbar.container.querySelector('input.ql-image[type=file]');
-
-      if (fileInput === null) {
-        fileInput = document.createElement('input');
-        fileInput.setAttribute('type', 'file');
-        fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml');
-        fileInput.classList.add('ql-image');
-        fileInput.addEventListener('change', () => {
-          if (fileInput.files !== null && fileInput.files[0] !== null) {
-            const range = quill.getSelection(true);
-            const formData = new FormData();
-
-            formData.append('file', fileInput.files[0]);
-
-            $.ajax({
-              type: 'post',
-              url: '/api/gallery',
-              data: formData,
-              processData: false,
-              contentType: false
-            }).done(data => {
-              quill.insertEmbed(range.index, 'image', data.thumbnailUrl);
-            });
-          }
-        });
-        toolbar.container.appendChild(fileInput);
-      }
-
-      fileInput.click();
-    });
-
-    this.quill = quill;
-  },
   updated() {
     $('.ui.sticky').sticky('refresh', true);
     $(this.$el).find('img').one('load', () => {
       $('.ui.sticky').sticky('refresh', true);
     });
   },
-  computed: mapState(['isAuthenticated', 'myProfile']),
   filters: {
     IdToRegDate: IdToRegDate
   },
@@ -142,13 +82,21 @@ export default {
     categoryIcon: CategoryIcon,
     prevTopic() {
       this.$router.push({
-        path: `/board/topic/${this.prevPost.seq}`,
+        name: 'board.view',
+        params: {
+          name: this.$route.params.name,
+          seq: this.prevPost.seq
+        },
         query: this.$route.query
       });
     },
     nextTopic() {
       this.$router.push({
-        path: `/board/topic/${this.nextPost.seq}`,
+        name: 'board.view',
+        params: {
+          name: this.$route.params.name,
+          seq: this.nextPost.seq
+        },
         query: this.$route.query
       });
     },
@@ -175,7 +123,14 @@ export default {
       }));
     },
     submitComment() {
-      const commentText = this.quill.getText().trim();
+      if (!this.$store.state.isAuthenticated) {
+        if (window.confirm(this.$t('common.do.you.want.to.login'))) {
+          window.location = `/login?redir=${encodeURIComponent(`${location.pathname}${location.search}`)}`;
+        }
+        return;
+      }
+
+      const commentText = this.commentEditor.getContent({format: 'text'}).trim();
 
       if (commentText.length < 3 || commentText.length > 800) {
         window.alert(this.$t('Size.board.comment.content'));
@@ -187,12 +142,12 @@ export default {
         url: '/api/board/free/comment',
         contentType: 'application/json',
         data: JSON.stringify({
-          content: this.quill.root.innerHTML,
+          content: this.commentEditor.getContent(),
           seq: this.post.seq
         })
       }).then(data => {
         this.comments.push(data);
-        this.quill.setText('');
+        this.commentEditor.setContent('');
       });
     },
     deleteComment(comment) {
@@ -205,9 +160,13 @@ export default {
           this.comments.splice(index, 1);
         });
       }
+    },
+    onEditorCreated(editor) {
+      this.commentEditor = editor;
     }
   },
   components: {
-    pager: Pager
+    pager: Pager,
+    editor: Editor
   }
 };

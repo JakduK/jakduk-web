@@ -21,6 +21,12 @@ const TopicView = resolve => {
   }, 'topic_view');
 };
 
+const TopicWrite = resolve => {
+  require.ensure([], (require) => {
+    resolve(require('../entries/topic_write/topic_write.vue'));
+  }, 'topic_write');
+};
+
 export default new VueRouter({
   mode: 'history',
   scrollBehavior(to, from, savedPosition) {
@@ -33,18 +39,20 @@ export default new VueRouter({
     path: '/',
     redirect: '/home'
   }, {
+    name: 'home',
     path: '/home',
     component: Home
   }, {
-    path: '/board',
+    name: 'board',
+    path: '/board/:name',
     component: Board
   }, {
-    path: '/board/topic/write',
-    component: {
-      template: '<p>{{$route}}</p>'
-    }
-  }, {
-    path: '/board/topic/:seq',
+    name: 'board.view',
+    path: '/board/:name/:seq',
     component: TopicView
+  }, {
+    name: 'board.write',
+    path: '/board/:name/write',
+    component: TopicWrite
   }]
 });

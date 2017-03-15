@@ -17,7 +17,7 @@
         <h5 class="ui segment"><i class="lightning green icon"></i> {{$t('home.posts.latest')}}</h5>
         <div class="ui blue segment">
           <div class="ui selection divided list">
-            <router-link :to="'/board/topic/' + post.seq" v-for="post in latest.posts" :key="post.seq" class="item">
+            <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.posts" :key="post.seq" class="item">
               <div class="right floated content">
                 <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
                   <img :src="post.galleries[0].thumbnailUrl">
@@ -35,7 +35,7 @@
                 </template>
               </div>
             </router-link>
-            <router-link :to="'/board/topic/' + comment.boardItem.seq" v-for="comment in latest.comments" :key="comment.id" class="item">
+            <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.boardItem.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
               <div class="content">
                 <div class="header">{{comment.content}}</div>
                 <div v-if="comment.writer" class="extra">

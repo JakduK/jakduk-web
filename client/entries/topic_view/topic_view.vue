@@ -1,10 +1,12 @@
 <template>
   <div class="topic-view">
-    <router-link :to="{path: '/board', query: $route.query}" class="ui icon basic button">
+    <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
       <i class="list icon"></i>
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
-    <router-link to="/board/free/write" class="ui icon button pull-right"><i class="write icon"></i></router-link>
+    <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button pull-right">
+      <i class="write icon"></i>
+    </router-link>
     <div class="ui segments">
       <div class="ui segment">
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
@@ -40,7 +42,7 @@
     </div>
 
     <div class="text-center">
-      <router-link :to="{path: '/board', query: $route.query}" class="ui icon basic button">
+      <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
       </router-link>
       <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
@@ -50,7 +52,7 @@
       <h4 class="ui segment">{{$t('latest.articles.author')}}</h4>
       <div class="ui blue segment">
         <div class="ui divided selection relaxed list">
-          <router-link :to="'/board/topic/' + post.seq" v-for="post in latestPostsByWriter" :key="post.id" class="item">
+          <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="post in latestPostsByWriter" :key="post.id" class="item">
             <div class="right floated content">
               <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
                 <img :src="post.galleries[0].thumbnailUrl">
@@ -103,8 +105,9 @@
           </div>
 
           <div class="comment-form">
+            <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
             <div class="comment-editor">
-              <div id="commentEditor"></div>
+              <editor @on-created="onEditorCreated" id="commentEditor" mode="comment"></editor>
             </div>
             <div class="clearfix">
               <button @click="submitComment" class="ui right floated blue labeled submit icon button">
@@ -118,7 +121,6 @@
   </div>
 </template>
 
-<style src="../../../node_modules/quill/dist/quill.snow.css"></style>
 <style>
   .topic-view img {
     display: block;
@@ -130,7 +132,8 @@
     max-width: inherit;
   }
 
-  .topic-view .img-responsive {
+  .topic-view .img-responsive,
+  .comment .content img {
     max-width: 100%;
     height: auto;
   }

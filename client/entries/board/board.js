@@ -101,7 +101,8 @@ export default {
         $(_this.$el).find('#categories').dropdown({
           onChange(category) {
             _this.$router.push({
-              path: '/board',
+              name: 'board',
+              params: _this.$route.params,
               query: {
                 category: category
               }
@@ -152,7 +153,8 @@ export default {
       pageNumber = Math.max(1, Math.min(pageNumber, this.board.totalPages));
 
       this.$router.push({
-        path: '/board',
+        name: 'board',
+        params: this.$route.params,
         query: {
           page: pageNumber,
           category: this.$route.query.category

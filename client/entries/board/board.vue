@@ -3,7 +3,7 @@
     <div class="sixteen wide mobile eleven wide tablet twelve wide computer column">
       <!--top네이게이션-->
       <div class="ui grid">
-        <pagination :pagination="pagination" @change="onPageChange" class="sixteen wide mobile twelve wide tablet twelve wide computer column"></pagination>
+        <pagination :pagination="pagination" @on-change="onPageChange" class="sixteen wide mobile twelve wide tablet twelve wide computer column"></pagination>
         <pager :is-first="pagination.first" :is-last="pagination.last" @on-prev="onPageChange" @on-next="onPageChange" class="four wide tablet only four wide computer only right aligned column"></pager>
       </div>
 
@@ -15,13 +15,13 @@
               <i :class="[categoryColor(id), categoryIcon(id)]" class="icon"></i> {{$t(categoryLabel(id))}}
             </option>
           </select>
-          <router-link to="/board/topic/write" class="ui right floated icon button"><i class="write icon"></i></router-link>
+          <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui right floated icon button"><i class="write icon"></i></router-link>
         </div>
 
         <div class="ui blue segment">
           <!--공지-->
           <div class="ui selection relaxed small list notice">
-            <router-link :to="{path: '/board/topic/' + notice.seq, query: $route.query}" v-for="notice in board.notices" :key="notice.seq" class="item">
+            <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: notice.seq}, query: $route.query}" v-for="notice in board.notices" :key="notice.seq" class="item">
               <div class="ui image">
                 <span class="ui basic small label nowrap"><i class="announcement blue icon"></i>{{$t('board.notice')}}</span>
               </div>
@@ -33,7 +33,7 @@
 
           <!-- 게시글 -->
           <div class="ui selection divided list board">
-            <router-link :to="{path: '/board/topic/' + post.seq, query: $route.query}" v-for="post in board.posts" :key="post.seq" class="item">
+            <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="post in board.posts" :key="post.seq" class="item">
               <div class="right floated content">
                 <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
                   <img :src="post.galleries[0].thumbnailUrl">
@@ -66,7 +66,7 @@
 
       <!--bottom네비게이션-->
       <div class="ui grid">
-        <pagination :pagination="pagination" @change="onPageChange" class="eleven wide tablet computer only column"></pagination>
+        <pagination :pagination="pagination" @on-change="onPageChange" class="eleven wide tablet computer only column"></pagination>
         <pager :is-first="pagination.first" :is-last="pagination.last" @on-prev="onPageChange" @on-next="onPageChange" class="sixteen wide mobile five wide tablet five wide computer right aligned column"></pager>
       </div>
     </div>
@@ -77,7 +77,7 @@
         <h5 class="ui segment"><i class="thumbs outline up teal icon"></i> {{$t('board.top.likes')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
-            <router-link :to="{path: '/board/topic/' + post.seq, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
+            <router-link :to="{path: '/board/:name/' + post.seq, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
               <div class="header text-overflow">{{post.subject}}</div>
               <div class="extra">
                 <i class="smile icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
@@ -96,7 +96,7 @@
         <h5 class="ui segment"><i class="talk flipped horizontally green icon"></i> {{$t('board.top.comments')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
-            <router-link :to="{path: '/board/topic/' + post.seq, query: $route.query}" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
+            <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
               <div class="header text-overflow">{{post.subject}}</div>
               <div class="extra">
                 <i class="talk outline flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
