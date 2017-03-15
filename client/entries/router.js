@@ -47,12 +47,12 @@ export default new VueRouter({
     path: '/board/:name',
     component: Board
   }, {
-    name: 'board.view',
-    path: '/board/:name/:seq',
-    component: TopicView
-  }, {
     name: 'board.write',
     path: '/board/:name/write',
     component: TopicWrite
+  }, {
+    name: 'board.view',
+    path: '/board/:name/:seq',
+    component: TopicView
   }]
 });
