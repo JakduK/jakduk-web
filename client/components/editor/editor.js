@@ -63,7 +63,12 @@ const editorOptions = $.extend({
 
 export default {
   props: {
-    options: Object
+    options: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
   },
   mounted() {
     let options = $(this.$el).data('mode') === 'comment' ? commentOptions : editorOptions;
