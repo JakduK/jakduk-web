@@ -63,16 +63,11 @@ const editorOptions = $.extend({
 
 export default {
   props: {
-    options: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
+    options: Object
   },
   mounted() {
     let options = $(this.$el).data('mode') === 'comment' ? commentOptions : editorOptions;
-    options = $.extend({}, options, this.$props.options);
+    options = $.extend({}, options, this.$props && this.$props.options);
     options.target = this.$el;
     options.init_instance_callback = function (editor) {
       this.editor = editor;
