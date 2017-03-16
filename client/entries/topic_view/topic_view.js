@@ -125,7 +125,7 @@ export default {
     submitComment() {
       if (!this.$store.state.isAuthenticated) {
         if (window.confirm(this.$t('common.do.you.want.to.login'))) {
-          window.location = `/login?redir=${encodeURIComponent(`${location.pathname}${location.search}`)}`;
+          window.location = `/login?redir=${encodeURIComponent(this.$route.fullPath)}`;
         }
         return;
       }

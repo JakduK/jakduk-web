@@ -13,7 +13,7 @@
               <i class="user icon"></i>
               <profile-menu></profile-menu>
             </a>
-            <a v-else href="/login" class="icon item">
+            <a v-else :href="'/login?redir=' + encodeURIComponent($route.fullPath)" class="icon item">
               <i class="sign in icon"></i>
             </a>
           </div>
@@ -38,7 +38,7 @@
                 <i class="user icon"></i>
                 <profile-menu></profile-menu>
               </a>
-              <a v-else href="/login" class="item">{{$t('common.login')}}</a>
+              <a v-else :href="'/login?redir=' + encodeURIComponent($route.fullPath)" class="item">{{$t('common.login')}}</a>
               <search-input class="ui search item"></search-input>
             </div>
           </div>
