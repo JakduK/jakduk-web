@@ -49,6 +49,9 @@ export default new VueRouter({
   }, {
     name: 'board.write',
     path: '/board/:name/write',
+    meta: {
+      requiresAuth: true
+    },
     component: TopicWrite
   }, {
     name: 'board.view',

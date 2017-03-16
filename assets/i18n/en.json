@@ -315,5 +315,6 @@
   "common.do.you.want.to.login": "Do you want to login?",
   "common.error.occurred.on.server": "Error occurred on server.",
   "common.network.in.problem": "May your network is in problem.",
-  "common.do.you.want.to.delete.a.comment": "Do you want to delete a comment?"
+  "common.do.you.want.to.delete.a.comment": "Do you want to delete a comment?",
+  "common.post": "Post"
 }

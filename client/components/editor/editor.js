@@ -1,4 +1,4 @@
-import Tinymce from 'tinymce/tinymce.jquery';
+import Tinymce from 'tinymce/tinymce';
 import $ from 'jquery';
 
 Tinymce.baseURL = '/assets/tinymce';
@@ -54,11 +54,11 @@ const commentOptions = $.extend({
 const editorOptions = $.extend({
   height: 500,
   plugins: [
-    'advlist autolink lists link image charmap print preview anchor',
+    'advlist autolink lists link image preview',
     'searchreplace visualblocks code fullscreen',
     'insertdatetime media table contextmenu paste code'
   ],
-  toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
+  toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | preview fullscreen'
 }, defaultOptions);
 
 export default {
