@@ -131,8 +131,10 @@ export default {
       }
 
       const commentText = this.commentEditor.getContent({format: 'text'}).trim();
+      const existVideo = this.commentEditor.getDoc().querySelector('iframe') || this.commentEditor.getDoc().querySelector('video');
+      const existImage = this.commentEditor.getDoc().querySelector('img');
 
-      if (commentText.length < 3 || commentText.length > 800) {
+      if (!existVideo && !existImage && (commentText.length < 3 || commentText.length > 800)) {
         window.alert(this.$t('Size.board.comment.content'));
         return;
       }
