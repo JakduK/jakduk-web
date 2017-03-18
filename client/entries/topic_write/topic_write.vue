@@ -39,11 +39,20 @@
 
       $.when.apply(null, promises).then((categories, post) => {
         next(_this => {
-          _this.editMode = editMode;
-          _this.categories = categories.categories;
+          if (editMode) {
+            if (!_this.$store.myProfile || _this.$store.myProfile.userId !== post.writer.userId) {
+              window.alert(_this.$t('common.msg.error.401'));
+              _this.$router.go(-1);
+              return;
+            }
+          }
+
           if (post) {
             _this.post = post.post;
           }
+
+          _this.editMode = editMode;
+          _this.categories = categories.categories;
 
           _this.$nextTick(() => {
             $(_this.$el).find('#categories').dropdown({
@@ -66,6 +75,8 @@
       }
     },
     created() {
+      this.$store.commit('load', true);
+
       this.defers = {
         editor: $.Deferred(),
         data: $.Deferred()
