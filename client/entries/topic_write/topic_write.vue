@@ -73,7 +73,7 @@
 
       $.when(this.defers.editor, this.defers.data).then(() => {
         if (this.editMode) {
-          this.category = this.post.category.code;
+          $(this.$el).find('#categories').dropdown('set selected', this.post.category.code);
           this.subject = this.post.subject;
           this.imageList = this.post.galleries;
           this.editor.setContent(this.post.content);
