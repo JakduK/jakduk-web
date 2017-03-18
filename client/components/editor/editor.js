@@ -59,7 +59,6 @@ function uploadImage(blobInfo, success, failure) {
     contentType: false
   }).done(data => {
     success(data.imageUrl);
-    this.data.imageList.push(data);
     this.$emit('on-image-uploaded', data);
   });
 }
