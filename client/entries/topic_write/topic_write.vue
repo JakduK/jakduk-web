@@ -7,10 +7,10 @@
             <i :class="[categoryColor(category.code), categoryIcon(category.code)]" class="icon"></i> {{$t(categoryLabel(category.code))}}
           </option>
         </select>
-        <input v-model="subject" type="text">
+        <input v-model="subject" type="text" autofocus>
       </div>
       <div class="ui divider"></div>
-      <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :data="{}" :options="{language: $store.state.locale, resize: true, statusbar: true}" data-mode="editor"></editor>
+      <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :data="{imageList: imageList}" :options="{language: $store.state.locale, resize: true, statusbar: true}" data-mode="editor"></editor>
       <div class="ui divider"></div>
       <div class="clearfix">
         <button @click="submitPost" class="ui right floated blue labeled icon button">
@@ -30,15 +30,29 @@
 
   export default {
     beforeRouteEnter(to, from, next) {
-      $.getJSON('/api/board/free/categories').then(data => data, (response, result) => result).then(data => {
+      const editMode = to.meta.mode === 'edit';
+      let promises = [$.getJSON('/api/board/free/categories').then(data => data, (response, result) => result)];
+
+      if (editMode) {
+        promises.push($.getJSON(`/api/board/free/${to.params.seq}`).then(data => data, (response, result) => result));
+      }
+
+      $.when.apply(null, promises).then((categories, post) => {
         next(_this => {
-          _this.categories = data.categories;
+          _this.editMode = editMode;
+          _this.categories = categories.categories;
+          if (post) {
+            _this.post = post.post;
+          }
+
           _this.$nextTick(() => {
             $(_this.$el).find('#categories').dropdown({
               onChange(category) {
                 _this.category = category;
               }
             }).dropdown('set selected', 'FREE');
+
+            _this.defers.data.resolve();
           });
         });
       });
@@ -50,6 +64,23 @@
         subject: '',
         imageList: []
       }
+    },
+    created() {
+      this.defers = {
+        editor: $.Deferred(),
+        data: $.Deferred()
+      };
+
+      $.when(this.defers.editor, this.defers.data).then(() => {
+        if (this.editMode) {
+          this.category = this.post.category.code;
+          this.subject = this.post.subject;
+          this.imageList = this.post.galleries;
+          this.editor.setContent(this.post.content);
+        }
+
+        this.$store.commit('load', false);
+      });
     },
     methods: {
       categoryColor: CategoryColor,
@@ -67,17 +98,15 @@
 
         this.editor = editor;
 
-        this.$nextTick(() => {
-          this.$store.commit('load', false);
-        })
+        this.defers.editor.resolve();
       },
       onImageUploaded(image) {
         this.imageList.push(image);
       },
       submitPost() {
         $.ajax({
-          type: 'post',
-          url: '/api/board/free',
+          type: this.editMode ? 'put' : 'post',
+          url: `/api/board/free/${this.editMode ? this.post.seq : ''}`,
           contentType: 'application/json',
           data: JSON.stringify({
             categoryCode: this.category,

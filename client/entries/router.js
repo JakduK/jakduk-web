@@ -57,5 +57,13 @@ export default new VueRouter({
     name: 'board.view',
     path: '/board/:name/:seq',
     component: TopicView
+  }, {
+    name: 'board.edit',
+    path: '/board/:name/:seq/edit',
+    meta: {
+      requiresAuth: true,
+      mode: 'edit'
+    },
+    component: TopicWrite
   }]
 });

@@ -59,24 +59,29 @@ function uploadImage(blobInfo, success, failure) {
     contentType: false
   }).done(data => {
     success(data.imageUrl);
-    this.imageList.push(data);
+    this.data.imageList.push(data);
     this.$emit('on-image-uploaded', data);
   });
 }
 
 export default {
   props: {
-    data: Object,
-    options: Object
-  },
-  data() {
-    return {
-      imageList: []
-    };
+    data: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    options: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
   },
   mounted() {
     let options = $(this.$el).data('mode') === 'comment' ? commentOptions : editorOptions;
-    options = $.extend({}, options, this.$props && this.$props.options);
+    options = $.extend({}, options, this.options);
     options.target = this.$el;
     options.init_instance_callback = function (editor) {
       this.editor = editor;
@@ -84,9 +89,9 @@ export default {
     }.bind(this);
     options.images_upload_handler = uploadImage.bind(this);
     options.image_list = (callback) => {
-      callback(this.imageList.map(image => {
+      callback(this.data.imageList.map(image => {
         return {
-          title: image.fileName,
+          title: image.fileName || image.name,
           value: image.imageUrl
         };
       }));
@@ -98,6 +103,10 @@ export default {
 
     if (options.language === 'en_US') {
       delete options.language;
+    }
+
+    if (!this.data.imageList) {
+      this.data.imageList = [];
     }
 
     Tinymce.init(options);
