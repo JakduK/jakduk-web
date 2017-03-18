@@ -116,6 +116,10 @@ hbs.registerHelper('DEFAULT_VALUE', function(val1, val2) {
   return val1 || val2;
 });
 
+hbs.registerHelper('LOWERCASE', function(val) {
+  return (val || '').toLowerCase();
+});
+
 hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
   return locale.startsWith('ko') ? 'ko-KR' : '';
 });

@@ -28,7 +28,7 @@
           {{#if (SUMMERNOTE_LOCALE locale)}}
             'summernote-{{SUMMERNOTE_LOCALE locale}}': '/assets/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}',
           {{/if}}
-          'angular-locale': '/assets/bower_components/angular-i18n/angular-locale_{{locale}}'
+          'angular-locale': '/assets/bower_components/angular-i18n/angular-locale_{{LOWERCASE locale}}'
         },
         shim: {
           {{#if (SUMMERNOTE_LOCALE locale)}}
