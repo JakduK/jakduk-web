@@ -25,21 +25,6 @@ const defaultOptions = {
     });
 
     input.click();
-  },
-  images_upload_handler(blobInfo, success, failure) {
-    const formData = new FormData();
-
-    formData.append('file', blobInfo.blob());
-
-    $.ajax({
-      type: 'post',
-      url: '/api/gallery',
-      data: formData,
-      processData: false,
-      contentType: false
-    }).done(data => {
-      success(data.imageUrl);
-    });
   }
 };
 
@@ -61,9 +46,33 @@ const editorOptions = $.extend({
   toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | preview fullscreen'
 }, defaultOptions);
 
+function uploadImage(blobInfo, success, failure) {
+  const formData = new FormData();
+
+  formData.append('file', blobInfo.blob());
+
+  $.ajax({
+    type: 'post',
+    url: '/api/gallery',
+    data: formData,
+    processData: false,
+    contentType: false
+  }).done(data => {
+    success(data.imageUrl);
+    this.imageList.push(data);
+    this.$emit('on-image-uploaded', data);
+  });
+}
+
 export default {
   props: {
+    data: Object,
     options: Object
+  },
+  data() {
+    return {
+      imageList: []
+    };
   },
   mounted() {
     let options = $(this.$el).data('mode') === 'comment' ? commentOptions : editorOptions;
@@ -73,6 +82,23 @@ export default {
       this.editor = editor;
       this.$emit('on-created', editor);
     }.bind(this);
+    options.images_upload_handler = uploadImage.bind(this);
+    options.image_list = (callback) => {
+      callback(this.imageList.map(image => {
+        return {
+          title: image.fileName,
+          value: image.imageUrl
+        };
+      }));
+    };
+
+    if (options.language) {
+      options.language = options.language.replace('-', '_');
+    }
+
+    if (options.language === 'en_US') {
+      delete options.language;
+    }
 
     Tinymce.init(options);
   },

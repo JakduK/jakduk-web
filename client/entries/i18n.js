@@ -14,12 +14,20 @@ function loadI18nBundle(locale) {
 
 function loadMomentLocale(locale) {
   const deferred = $.Deferred();
-  if (locale === 'en') {
+  if (locale === 'en' || locale === 'en-US') {
     deferred.resolve();
   } else {
-    require(`bundle-loader!../../node_modules/moment/locale/${locale}.js`)(() => {
+    require(`bundle-loader!../../node_modules/moment/locale/${aliasLocale(locale)}.js`)(() => {
       deferred.resolve();
     });
+  }
+
+  function aliasLocale(locale) {
+    if (locale.startsWith('ko')) {
+      return 'ko';
+    } else {
+      return locale.toLowerCase();
+    }
   }
 }
 

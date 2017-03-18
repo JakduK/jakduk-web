@@ -1,17 +1,23 @@
 <template>
-  <div class="ui segment">
-    <div class="ui labled fluid input">
-      <select id="categories" class="ui compact selection dropdown">
-        <option v-for="category in categories" :value="category.code">
-          <i :class="[categoryColor(category.code), categoryIcon(category.code)]" class="icon"></i> {{$t(categoryLabel(category.code))}}
-        </option>
-      </select>
-      <input v-model="subject" type="text">
+  <div class="ui segments">
+    <div class="ui segment">
+      <div class="ui labled fluid input">
+        <select id="categories" class="ui compact selection dropdown">
+          <option v-for="category in categories" :value="category.code">
+            <i :class="[categoryColor(category.code), categoryIcon(category.code)]" class="icon"></i> {{$t(categoryLabel(category.code))}}
+          </option>
+        </select>
+        <input v-model="subject" type="text">
+      </div>
+      <div class="ui divider"></div>
+      <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :data="{}" :options="{language: $store.state.locale, resize: true, statusbar: true}" data-mode="editor"></editor>
+      <div class="ui divider"></div>
+      <div class="clearfix">
+        <button @click="submitPost" class="ui right floated blue labeled icon button">
+          <i class="icon edit"></i> {{$t('common.post')}}
+        </button>
+      </div>
     </div>
-    <editor @on-created="onEditorCreated" :options="{resize: true, statusbar: true}" data-mode="editor"></editor>
-    <button @click="submitPost" class="ui right floated blue labeled submit icon button">
-      <i class="icon edit"></i> {{$t('common.post')}}
-    </button>
   </div>
 </template>
 
@@ -33,7 +39,6 @@
                 _this.category = category;
               }
             }).dropdown('set selected', 'FREE');
-            _this.$store.commit('load', false);
           });
         });
       });
@@ -41,12 +46,10 @@
     data() {
       return {
         categories: [],
-        category: '',
-        subject: ''
+        category: 'FREE',
+        subject: '',
+        imageList: []
       }
-    },
-    created() {
-      this.$store.commit('load', true);
     },
     methods: {
       categoryColor: CategoryColor,
@@ -56,12 +59,20 @@
         editor.on('FullscreenStateChanged', event => {
           $('#main').css('z-index', event.state ? 99999 : '');
         });
+
         editor.on('ResizeEditor', () => {
           $('.ui.sticky').sticky('refresh', true);
         });
-        this.editor = editor;
-        this.$store.commit('load', false);
         $('.ui.sticky').sticky('refresh', true);
+
+        this.editor = editor;
+
+        this.$nextTick(() => {
+          this.$store.commit('load', false);
+        })
+      },
+      onImageUploaded(image) {
+        this.imageList.push(image);
       },
       submitPost() {
         $.ajax({
@@ -71,7 +82,8 @@
           data: JSON.stringify({
             categoryCode: this.category,
             subject: this.subject,
-            content: this.editor.getContent()
+            content: this.editor.getContent(),
+            galleries: this.imageList
           })
         }).then(data => {
           this.$router.replace({

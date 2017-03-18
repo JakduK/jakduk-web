@@ -110,7 +110,7 @@
               <editor @on-created="onEditorCreated" id="commentEditor" data-mode="comment"></editor>
             </div>
             <div class="clearfix">
-              <button @click="submitComment" class="ui right floated blue labeled submit icon button">
+              <button @click="submitComment" class="ui right floated blue labeled icon button">
                 <i class="icon edit"></i> {{$t('common.button.write.comment')}}
               </button>
             </div>
@@ -123,6 +123,7 @@
 
 <style>
   .topic-view img {
+    max-width: 100%;
     display: block;
     margin: auto;
     border-radius: 0.28571429rem;
@@ -133,6 +134,7 @@
   }
 
   .topic-view .img-responsive,
+  .topic-view .note-video-clip,
   .comment .content img,
   .comment .content video {
     max-width: 100%;
@@ -142,10 +144,6 @@
   .comment .content iframe {
     max-width: 100%;
     border: 0;
-  }
-
-  .topic-view .note-video-clip {
-    max-width: 100%;
   }
 
   .comment-form {

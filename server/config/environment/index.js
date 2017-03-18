@@ -35,11 +35,11 @@ var defaultConfig = {
   thumbnailServerUrl: 'https://api.jakduk.com',
 
   locale: {
-    list: ['ko', 'en'],
-    default: 'ko',
+    list: ['ko-KR', 'en-US'],
+    default: 'ko-KR',
     alias: {
-      'ko-*': 'ko',
-      'en-*': 'en'
+      'ko-*': 'ko-KR',
+      'en-*': 'en-US'
     }
   },
 
