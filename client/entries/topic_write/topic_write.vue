@@ -123,7 +123,15 @@
             categoryCode: this.category,
             subject: this.subject,
             content: this.editor.getContent(),
-            galleries: this.imageList
+            galleries: this.imageList.map(image => {
+              const img = this.editor.getDoc().querySelector(`[data-mce-src="${image.imageUrl}"]`);
+              return {
+                id: image.id,
+                fileName: image.fileName,
+                size: image.size,
+                name: img.getAttribute('title') || image.fileName || image.name
+              };
+            })
           })
         }).then(data => {
           this.$router.replace({

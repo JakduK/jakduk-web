@@ -38,6 +38,7 @@ const commentOptions = $.extend({
 
 const editorOptions = $.extend({
   height: 500,
+  image_title: true,
   plugins: [
     'advlist autolink lists link image preview',
     'searchreplace visualblocks code fullscreen',
@@ -90,7 +91,7 @@ export default {
     options.image_list = (callback) => {
       callback(this.data.imageList.map(image => {
         return {
-          title: image.fileName || image.name,
+          title: image.name,
           value: image.imageUrl
         };
       }));
