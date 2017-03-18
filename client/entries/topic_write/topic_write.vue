@@ -40,7 +40,7 @@
       $.when.apply(null, promises).then((categories, post) => {
         next(_this => {
           if (editMode) {
-            if (!_this.$store.myProfile || _this.$store.myProfile.userId !== post.writer.userId) {
+            if (!_this.$store.state.myProfile || _this.$store.state.myProfile.id !== post.post.writer.userId) {
               window.alert(_this.$t('common.msg.error.401'));
               _this.$router.go(-1);
               return;
