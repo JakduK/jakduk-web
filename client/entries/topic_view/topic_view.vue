@@ -5,7 +5,7 @@
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     <div class="pull-right">
-      <button @click="toggleNotice" :class="{blue: isNotice}" class="ui toggle button">
+      <button v-if="isAdmin" @click="toggleNotice" :class="{blue: isNotice}" class="ui toggle button">
         {{$t(isNotice ? 'common.button.cancel.notice' : 'common.button.set.as.notice')}}
       </button>
       <div class="ui buttons">
