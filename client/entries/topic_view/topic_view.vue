@@ -1,5 +1,6 @@
 <template>
   <div class="topic-view">
+    <!--상단 메뉴 모음-->
     <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
       <i class="list icon"></i>
     </router-link>
@@ -26,6 +27,7 @@
       </div>
     </div>
 
+    <!--본문-->
     <div class="ui segments">
       <div class="ui segment">
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
@@ -63,6 +65,7 @@
       </div>
     </div>
 
+    <!--하단 좋아요-->
     <div class="text-center">
       <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
@@ -133,7 +136,7 @@
               <editor @on-created="onEditorCreated" :options="{language: $store.state.locale}" id="commentEditor" data-mode="comment"></editor>
             </div>
             <div class="clearfix">
-              <button @click="submitComment" class="ui right floated blue labeled icon button">
+              <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
                 <i class="icon edit"></i> {{$t('common.button.write.comment')}}
               </button>
             </div>
@@ -191,6 +194,7 @@
   import CategoryLabel from '../../filters/category_label';
   import ErrorDialog from '../../utils/dialog_response_error';
   import Editor from '../../components/editor/editor.vue';
+  import EditorValidator from '../../utils/editor_validator';
 
   function fetch(seq) {
     return $.when(
@@ -227,7 +231,7 @@
         nextPost: {},
         prevPost: {},
         comments: [],
-        inputComment: ''
+        isCommentSubmitting: false
       };
     },
     computed: {
@@ -242,25 +246,6 @@
         isAdmin: 'isAdmin',
         myProfile: 'myProfile'
       })
-    },
-    beforeRouteEnter(to, from, next) {
-      fetch(to.params.seq).then((post, comments) => {
-        if (post === 'error') {
-          window.alert(Vue.t('common.error.occurred.on.server'));
-          next(false);
-        } else {
-          next(_this => {
-            apply.call(_this, post, comments);
-            _this.$store.commit('load', false);
-          });
-        }
-      });
-    },
-    beforeRouteUpdate(to, from, next) {
-      fetch(to.params.seq).then((post, comments) => {
-        apply.call(this, post, comments);
-        next();
-      });
     },
     updated() {
       $('.ui.sticky').sticky('refresh', true);
@@ -318,22 +303,31 @@
           }
         }));
       },
-      submitComment() {
+      checkCommentForm() {
         if (!this.$store.state.isAuthenticated) {
           if (window.confirm(this.$t('common.do.you.want.to.login'))) {
             window.location = `/login?redir=${encodeURIComponent(this.$route.fullPath)}`;
           }
-          return;
+          return false;
         }
 
-        const commentText = this.commentEditor.getContent({format: 'text'}).trim();
-        const existVideo = this.commentEditor.getDoc().querySelector('iframe') || this.commentEditor.getDoc().querySelector('video');
-        const existImage = this.commentEditor.getDoc().querySelector('img');
-
-        if (!existVideo && !existImage && (commentText.length < 3 || commentText.length > 800)) {
-          window.alert(this.$t('Size.board.comment.content'));
-          return;
+        if (this.isCommentSubmitting) {
+          return false;
         }
+
+        if (!EditorValidator(this.commentEditor)) {
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            message: this.$t('Size.board.comment.content')
+          });
+          this.commentEditor.focus();
+          return false;
+        }
+
+        return true;
+      },
+      submitComment() {
+        this.isCommentSubmitting = true;
 
         $.ajax({
           type: 'post',
@@ -346,6 +340,13 @@
         }).then(data => {
           this.comments.push(data);
           this.commentEditor.setContent('');
+        }, ...response => {
+          this.$store.dispatch('globalMessage', {
+            level: 'error',
+            message: response[2]
+          });
+        }).always(() => {
+          this.isCommentSubmitting = false;
         });
       },
       deletePost() {
@@ -397,6 +398,25 @@
         this.commentEditor = editor;
         $('.ui.sticky').sticky('refresh', true);
       }
+    },
+    beforeRouteEnter(to, from, next) {
+      fetch(to.params.seq).then((post, comments) => {
+        if (post === 'error') {
+          window.alert(Vue.t('common.error.occurred.on.server'));
+          next(false);
+        } else {
+          next(_this => {
+            apply.call(_this, post, comments);
+            _this.$store.commit('load', false);
+          });
+        }
+      });
+    },
+    beforeRouteUpdate(to, from, next) {
+      fetch(to.params.seq).then((post, comments) => {
+        apply.call(this, post, comments);
+        next();
+      });
     },
     components: {
       pager: Pager,

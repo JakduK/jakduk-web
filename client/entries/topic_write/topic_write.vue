@@ -1,19 +1,19 @@
 <template>
   <div class="ui segments">
     <div class="ui segment">
-      <div class="ui labled fluid input">
-        <select id="categories" class="ui compact selection dropdown">
+      <div class="ui labeled fluid input">
+        <select id="categories" class="ui label compact selection dropdown">
           <option v-for="category in categories" :value="category.code">
             <i :class="[categoryColor(category.code), categoryIcon(category.code)]" class="icon"></i> {{$t(categoryLabel(category.code))}}
           </option>
         </select>
-        <input v-model="subject" type="text" autofocus>
+        <input v-model="subject" id="subject" type="text" autofocus>
       </div>
       <div class="ui divider"></div>
       <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :data="{imageList: imageList}" :options="{language: $store.state.locale, resize: true, statusbar: true}" data-mode="editor"></editor>
       <div class="ui divider"></div>
       <div class="clearfix">
-        <button @click="submitPost" class="ui right floated blue labeled icon button">
+        <button @click="checkForm(editor) && submitPost()" :class="{loading: isSubmitting}" class="ui right floated blue labeled icon button">
           <i class="icon edit"></i> {{$t('common.post')}}
         </button>
         <button @click="$router.go(-1)" class="ui right floated blue labeled icon button">
@@ -30,51 +30,16 @@
   import CategoryColor from '../../filters/category_color';
   import CategoryIcon from '../../filters/category_icon';
   import CategoryLabel from '../../filters/category_label';
+  import EditorValidator from '../../utils/editor_validator';
 
   export default {
-    beforeRouteEnter(to, from, next) {
-      const editMode = to.meta.mode === 'edit';
-      let promises = [$.getJSON('/api/board/free/categories').then(data => data, (response, result) => result)];
-
-      if (editMode) {
-        promises.push($.getJSON(`/api/board/free/${to.params.seq}`).then(data => data, (response, result) => result));
-      }
-
-      $.when.apply(null, promises).then((categories, post) => {
-        next(_this => {
-          if (editMode) {
-            if (!_this.$store.state.myProfile || _this.$store.state.myProfile.id !== post.post.writer.userId) {
-              window.alert(_this.$t('common.msg.error.401'));
-              _this.$router.go(-1);
-              return;
-            }
-          }
-
-          if (post) {
-            _this.post = post.post;
-          }
-
-          _this.editMode = editMode;
-          _this.categories = categories.categories;
-
-          _this.$nextTick(() => {
-            $(_this.$el).find('#categories').dropdown({
-              onChange(category) {
-                _this.category = category;
-              }
-            }).dropdown('set selected', 'FREE');
-
-            _this.defers.data.resolve();
-          });
-        });
-      });
-    },
     data() {
       return {
         categories: [],
         category: 'FREE',
         subject: '',
-        imageList: []
+        imageList: [],
+        isSubmitting: false
       }
     },
     created() {
@@ -117,7 +82,41 @@
       onImageUploaded(image) {
         this.imageList.push(image);
       },
+      checkForm() {
+        if (!this.$store.state.isAuthenticated) {
+          if (window.confirm(this.$t('common.do.you.want.to.login'))) {
+            window.location = `/login?redir=${encodeURIComponent(this.$route.fullPath)}`;
+          }
+          return false;
+        }
+
+        if (this.isSubmitting) {
+          return false;
+        }
+
+        if (this.subject.length < 3) {
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            message: this.$t('Size.boardFreeWrite.subject')
+          });
+          $(this.$el).find('#subject').focus();
+          return false;
+        }
+
+        if (!EditorValidator(this.editor, {min: 5, max: Infinity})) {
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            message: this.$t('Size.boardFreeWrite.content')
+          });
+          this.editor.focus();
+          return false;
+        }
+
+        return true;
+      },
       submitPost() {
+        this.isSubmitting = true;
+
         $.ajax({
           type: this.editMode ? 'put' : 'post',
           url: `/api/board/free/${this.editMode ? this.post.seq : ''}`,
@@ -143,8 +142,51 @@
               seq: data.seq
             }
           });
+        }, ...response => {
+          this.$store.dispatch('globalMessage', {
+            level: 'error',
+            message: response[2]
+          });
+          this.isSubmitting = false;
         });
       }
+    },
+    beforeRouteEnter(to, from, next) {
+      const editMode = to.meta.mode === 'edit';
+      let promises = [$.getJSON('/api/board/free/categories').then(data => data, (response, result) => result)];
+
+      if (editMode) {
+        promises.push($.getJSON(`/api/board/free/${to.params.seq}`).then(data => data, (response, result) => result));
+      }
+
+      $.when.apply(null, promises).then((categories, post) => {
+        next(_this => {
+          if (editMode) {
+            if (!_this.$store.state.myProfile || _this.$store.state.myProfile.id !== post.post.writer.userId) {
+              window.alert(_this.$t('common.msg.error.401'));
+              _this.$router.go(-1);
+              return;
+            }
+          }
+
+          if (post) {
+            _this.post = post.post;
+          }
+
+          _this.editMode = editMode;
+          _this.categories = categories.categories;
+
+          _this.$nextTick(() => {
+            $(_this.$el).find('#categories').dropdown({
+              onChange(category) {
+                _this.category = category;
+              }
+            }).dropdown('set selected', 'FREE');
+
+            _this.defers.data.resolve();
+          });
+        });
+      });
     },
     components: {
       editor: Editor

@@ -2,7 +2,7 @@
   <div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" :class="{'is-loading': loading}" id="main" class="pusher">
     <div v-if="globalMessage.length" class="global-message">
       <transition-group name="fade">
-        <toast v-for="message in globalMessage" :key="message" :level="message.level" :title="message.title" :content="message.content" @on-click="toastClicked(message)"></toast>
+        <toast v-for="message in globalMessage" :key="message" :level="message.level" :title="message.title" :message="message.message" @on-click="toastClicked(message)"></toast>
       </transition-group>
     </div>
 

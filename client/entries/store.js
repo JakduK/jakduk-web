@@ -33,7 +33,7 @@ export default new Vuex.Store({
     globalMessage({commit}, message) {
       if (typeof message === 'string') {
         message = {
-          content: message
+          message: message
         };
       }
 

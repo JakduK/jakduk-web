@@ -3,7 +3,7 @@
     <i :class="levelStyle" class="icon"></i>
     <div class="content">
       <div v-if="title" class="header">{{title}}</div>
-      <p v-if="content">{{content}}</p>
+      <p v-if="message">{{message}}</p>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
     props: {
       level: '',
       title: '',
-      content: ''
+      message: ''
     },
     computed: {
       levelStyle() {
