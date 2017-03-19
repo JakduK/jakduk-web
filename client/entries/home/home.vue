@@ -3,7 +3,7 @@
     <div class="sixteen wide mobile ten wide tablet twelve wide computer column">
       <!-- 공지 -->
       <div class="ui segments">
-        <h5 class="ui segment"><i class="announcement red icon"></i> {{$t('common.news')}}</h5>
+        <h5 class="ui segment"><i class="grey announcement icon"></i> {{$t('common.news')}}</h5>
         <div class="ui blue segment">
           <div v-if="latest" class="ui selection list">
             <div v-for="desc in latest.homeDescription.desc" v-html="desc" class="item"></div>
@@ -12,48 +12,59 @@
         </div>
       </div>
 
-      <!-- 최신글 -->
-      <div v-if="latest" class="ui segments summary-list">
-        <h5 class="ui segment"><i class="lightning green icon"></i> {{$t('home.posts.latest')}}</h5>
-        <div class="ui blue segment">
-          <div class="ui selection divided list">
-            <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.posts" :key="post.seq" class="item">
-              <div class="right floated content">
-                <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
-                  <img :src="post.galleries[0].thumbnailUrl">
-                </div>
-              </div>
-              <div class="content">
-                <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
-                  {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
-                </div>
-                <template v-if="post.writer">
-                  <div class="extra">{{post.shortContent}}</div>
-                  <div class="extra">
-                    <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
+      <template v-if="latest">
+        <!-- 최신글 -->
+        <div class="ui segments summary-list">
+          <h5 class="ui segment"><i class="grey feed icon"></i> {{$t('home.posts.latest')}}</h5>
+          <div class="ui blue segment">
+            <div class="ui selection divided list">
+              <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.posts" :key="post.seq" class="item">
+                <div class="right floated content">
+                  <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
+                    <img :src="post.galleries[0].thumbnailUrl">
                   </div>
-                </template>
-              </div>
-            </router-link>
-            <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.boardItem.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
-              <div class="content">
-                <div class="header">{{comment.content}}</div>
-                <div v-if="comment.writer" class="extra">
-                  <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | IdToRegDate('LL')}}
                 </div>
-              </div>
-            </router-link>
+                <div class="content">
+                  <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
+                    {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
+                  </div>
+                  <template v-if="post.writer">
+                    <div class="extra">{{post.shortContent}}</div>
+                    <div class="extra">
+                      <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
+                    </div>
+                  </template>
+                </div>
+              </router-link>
+            </div>
           </div>
         </div>
-      </div>
+
+        <!-- 최신 댓글 -->
+        <div class="ui segments summary-list">
+          <h5 class="ui segment"><i class="grey talk icon"></i> {{$t('home.comments.latest')}}</h5>
+          <div class="ui blue segment">
+            <div class="ui selection divided list">
+              <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.boardItem.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
+                <div class="content">
+                  <div class="header">{{comment.content}}</div>
+                  <div v-if="comment.writer" class="extra">
+                    <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | IdToRegDate('LL')}}
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
 
     <div class="sixteen wide mobile six wide tablet four wide computer column">
       <!-- 최신 사진 -->
       <div class="ui segments">
         <h5 class="ui segment">
-          <a href="/gallery">
-            <i class="image blue icon"></i> {{$t('home.pictures.latest')}} <i class="chevron right blue icon"></i>
+          <a href="/gallery" class="black-link">
+            <i class="grey image icon"></i> {{$t('home.pictures.latest')}} <i class="chevron right blue icon pull-right"></i>
           </a>
         </h5>
         <div class="ui blue segment">
@@ -76,7 +87,7 @@
 
       <!--인기 검색어-->
       <div class="ui segments">
-        <h5 class="ui segment"><i class="search teal icon"></i> {{$t('popular.search.words')}}</h5>
+        <h5 class="ui segment"><i class="grey search icon"></i> {{$t('popular.search.words')}}</h5>
         <div v-if="popularSearchWords" class="ui blue segment">
           <a :class="indexedColor(index, true)" :href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" :key="word.key" class="ui label search-keyword">{{word.key}}</a>
         </div>
@@ -85,7 +96,7 @@
 
       <!--최근 가입 회원-->
       <div class="ui segments">
-        <h5 class="ui segment"><i class="birthday pink icon"></i> {{$t('home.members.registered.latest')}}</h5>
+        <h5 class="ui segment"><i class="grey birthday icon"></i> {{$t('home.members.registered.latest')}}</h5>
         <div class="ui blue segment">
           <div v-if="latest" class="ui middle aligned small list">
             <div v-for="(user, index) in latest.users" :key="user.id" class="item">
@@ -103,7 +114,7 @@
 
       <!--백과사전-->
       <div class="ui segments">
-        <h5 class="ui segment"><i class="quote right olive icon"></i> {{$t('home.encyclopedia')}}</h5>
+        <h5 class="ui segment"><i class="grey quote right icon"></i> {{$t('home.encyclopedia')}}</h5>
         <div class="ui blue segment">
           <div v-if="encyclopedia" v-tooltip :data-content="encyclopedia.content">
             <strong>{{encyclopedia.subject}}</strong>

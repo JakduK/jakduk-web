@@ -23,10 +23,14 @@
           <div class="ui selection relaxed small list notice">
             <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: notice.seq}, query: $route.query}" v-for="notice in board.notices" :key="notice.seq" class="item">
               <div class="ui image">
-                <span class="ui basic small label nowrap"><i class="announcement blue icon"></i>{{$t('board.notice')}}</span>
+                <span class="ui horizontal basic label nowrap">
+                  <i class="announcement blue icon"></i>{{$t('board.notice')}}
+                </span>
               </div>
               <div class="middle aligned content">
-                <div class="header">{{(notice.status && notice.status.delete) ? $t('board.msg.deleted') : notice.subject}}</div>
+                <div class="header">
+                  {{(notice.status && notice.status.delete) ? $t('board.msg.deleted') : notice.subject}}
+                </div>
               </div>
             </router-link>
           </div>
@@ -50,7 +54,7 @@
                   {{post.seq}} &middot;
                   <template v-if="post.writer"><strong>{{post.writer.username}}</strong> &middot;</template>
                   <span class="nowrap">{{post.id | IdToRegDate('LL')}} &middot;</span>
-                  <span class="nowrap"><i class="talk outline flipped horizontally icon"></i>{{post.commentCount}}</span>
+                  <span class="nowrap"><i class="talk outline icon"></i>{{post.commentCount}}</span>
                   <span class="pull-right nowrap">
                   <i class="eye icon"></i>{{post.views}} &middot;
                     <i class="smile blue icon"></i>{{post.likingCount}} &middot;
@@ -74,13 +78,13 @@
     <div class="sixteen wide mobile five wide tablet four wide computer column">
       <!--주간 좋아요 선두-->
       <div class="ui segments widget">
-        <h5 class="ui segment"><i class="thumbs outline up teal icon"></i> {{$t('board.top.likes')}}</h5>
+        <h5 class="ui segment"><i class="grey thumbs outline up icon"></i> {{$t('board.top.likes')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
             <router-link :to="{path: '/board/:name/' + post.seq, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
               <div class="header text-overflow">{{post.subject}}</div>
               <div class="extra">
-                <i class="smile icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
+                <i class="smile icon"></i>{{post.count}} &nbsp; <i class="eye icon"></i>{{post.views}}
               </div>
             </router-link>
             <p v-if="!top.topLikes.length">
@@ -93,13 +97,13 @@
 
       <!--주간 댓글 선두-->
       <div class="ui segments widget">
-        <h5 class="ui segment"><i class="talk flipped horizontally green icon"></i> {{$t('board.top.comments')}}</h5>
+        <h5 class="ui segment"><i class="grey talk icon"></i> {{$t('board.top.comments')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
             <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
               <div class="header text-overflow">{{post.subject}}</div>
               <div class="extra">
-                <i class="talk outline flipped horizontally icon"></i>{{post.count}} &middot; <i class="eye icon"></i>{{post.views}}
+                <i class="talk outline icon"></i>{{post.count}} &nbsp; <i class="eye icon"></i>{{post.views}}
               </div>
             </router-link>
             <p v-if="!top.topComments.length">

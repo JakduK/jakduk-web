@@ -70,8 +70,9 @@
       <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     </div>
 
+    <!--작성자의 최근 게시물-->
     <div v-if="latestPostsByWriter && latestPostsByWriter.length" class="ui segments summary-list">
-      <h4 class="ui segment">{{$t('latest.articles.author')}}</h4>
+      <h4 class="ui segment"><i class="grey feed icon"></i> {{$t('latest.articles.author')}}</h4>
       <div class="ui blue segment">
         <div class="ui divided selection relaxed list">
           <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="post in latestPostsByWriter" :key="post.id" class="item">
@@ -93,7 +94,7 @@
 
     <!--코멘트-->
     <div class="ui segments">
-      <h4 class="ui segment">{{$t('board.comments')}}</h4>
+      <h4 class="ui segment"><i class="grey talk icon"></i> {{$t('board.comments')}}</h4>
       <div class="ui blue segment">
         <div class="ui comments">
           <div v-for="comment in comments" :key="comment.id" class="comment">

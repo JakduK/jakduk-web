@@ -8,7 +8,7 @@
 
     <div class="ui container">
       <div class="ui grid">
-        <div id="content" class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
+        <div id="content" class="sixteen wide mobile sixteen wide tablet fourteen wide computer column">
           <router-view></router-view>
           <div v-if="loading" class="full-fill-loader">
             <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
@@ -16,7 +16,7 @@
         </div>
 
         <!-- desktop sidenav -->
-        <sidenav class="three wide computer only column"></sidenav>
+        <sidenav class="two wide computer only column"></sidenav>
       </div>
     </div>
 
@@ -126,6 +126,10 @@
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
     opacity: 0
+  }
+
+  a.black-link {
+    color: rgba(0, 0, 0, 0.87);
   }
 </style>
 
