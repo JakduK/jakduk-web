@@ -16,6 +16,9 @@
         <button @click="submitPost" class="ui right floated blue labeled icon button">
           <i class="icon edit"></i> {{$t('common.post')}}
         </button>
+        <button @click="$router.go(-1)" class="ui right floated blue labeled icon button">
+          <i class="icon chevron left"></i> {{$t('common.back')}}
+        </button>
       </div>
     </div>
   </div>
