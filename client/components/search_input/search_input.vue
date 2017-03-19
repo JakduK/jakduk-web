@@ -8,4 +8,18 @@
   </div>
 </template>
 
-<script src="./search_input.js"></script>
+<script>
+  export default {
+    data() {
+      return {
+        keyword: ''
+      };
+    },
+    methods: {
+      search() {
+        window.location = `/search?w=PO;CO;GA&q=${encodeURIComponent(this.keyword)}`;
+      }
+    }
+  };
+
+</script>

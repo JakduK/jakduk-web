@@ -9,4 +9,20 @@
   </div>
 </template>
 
-<script src="./pager.js"></script>
+<script>
+  export default {
+    props: {
+      isFirst: Boolean,
+      isLast: Boolean
+    },
+    methods: {
+      next() {
+        this.$emit('on-next', 'next');
+      },
+      prev() {
+        this.$emit('on-prev', 'prev');
+      }
+    }
+  };
+
+</script>

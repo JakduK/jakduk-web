@@ -23,4 +23,11 @@
   </div>
 </template>
 
-<script src="./profile_menu.js"></script>
+<script>
+  import {mapState} from 'vuex';
+
+  export default {
+    computed: mapState(['myProfile', 'notification'])
+  };
+
+</script>
