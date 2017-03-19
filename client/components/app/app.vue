@@ -1,5 +1,11 @@
 <template>
   <div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" :class="{'is-loading': loading}" id="main" class="pusher">
+    <div v-if="globalMessage.length" class="global-message">
+      <transition-group name="fade">
+        <toast v-for="message in globalMessage" :key="message" :level="message.level" :title="message.title" :content="message.content" @on-click="toastClicked(message)"></toast>
+      </transition-group>
+    </div>
+
     <div class="ui container">
       <div class="ui grid">
         <div id="content" class="sixteen wide mobile sixteen wide tablet thirteen wide computer column">
@@ -102,6 +108,56 @@
   .inline {
     display: inline-block;
   }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .global-message {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
+  }
 </style>
 
-<script src="./app.js"></script>
+<script>
+  import {mapState} from 'vuex';
+  import Sidenav from '../sidenav/sidenav.vue';
+  import SiteFooter from '../site_footer/site_footer.vue';
+
+  export default {
+    data() {
+      return {
+        appLoaded: false
+      };
+    },
+    computed: {
+      loading() {
+        if (!this.appLoaded && !this.$store.state.loading) {
+          this.appLoaded = true;
+        }
+        return this.$store.state.loading;
+      },
+      ...mapState({globalMessage: 'globalMessage'})
+    },
+    methods: {
+      toastClicked(message) {
+        this.$store.commit('deleteGlobalMessage', message);
+      }
+    },
+    components: {
+      sidenav: Sidenav,
+      'site-footer': SiteFooter
+    }
+  };
+
+</script>

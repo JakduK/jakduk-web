@@ -4,27 +4,36 @@
       <i class="list icon"></i>
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
-    <div class="ui buttons pull-right">
-      <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button">
-        <i class="write icon"></i>
-      </router-link>
-      <div v-if="isAuthenticated && isEditable" class="ui floating dropdown icon button">
-        <i class="dropdown icon"></i>
-        <div class="menu">
-          <router-link :to="{name: 'board.edit', params: {name: $route.params.name, seq: post.seq}}" class="item">
-            <i class="edit icon"></i> {{$t('common.button.edit')}}
-          </router-link>
-          <button @click="deletePost" class="item">
-            <i class="trash icon"></i> {{$t('common.button.delete')}}
-          </button>
+    <div class="pull-right">
+      <button @click="toggleNotice" :class="{blue: isNotice}" class="ui toggle button">
+        {{$t(isNotice ? 'common.button.cancel.notice' : 'common.button.set.as.notice')}}
+      </button>
+      <div class="ui buttons">
+        <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button">
+          <i class="write icon"></i>
+        </router-link>
+        <div v-if="isAuthenticated && isEditable" class="ui floating dropdown icon button">
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <router-link :to="{name: 'board.edit', params: {name: $route.params.name, seq: post.seq}}" class="item">
+              <i class="edit icon"></i> {{$t('common.button.edit')}}
+            </router-link>
+            <button @click="deletePost" class="item">
+              <i class="trash icon"></i> {{$t('common.button.delete')}}
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="ui segments">
       <div class="ui segment">
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
         <div class="ui grid">
           <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
+            <div v-if="isNotice" class="ui horizontal image basic label">
+              <i class="announcement blue icon"></i> {{$t('board.notice')}}
+            </div>
             <div :class="categoryColor(post.category.code)" class="ui horizontal label">
               {{$t(categoryLabel(post.category.code))}}
               <div class="detail">{{post.seq}}</div>
@@ -221,10 +230,17 @@
       };
     },
     computed: {
+      isNotice() {
+        return this.post.status && this.post.status.notice;
+      },
       isEditable() {
         return !!(this.post.writer && (this.myProfile.id === this.post.writer.userId));
       },
-      ...mapState({isAuthenticated: 'isAuthenticated', myProfile: 'myProfile'})
+      ...mapState({
+        isAuthenticated: 'isAuthenticated',
+        isAdmin: 'isAdmin',
+        myProfile: 'myProfile'
+      })
     },
     beforeRouteEnter(to, from, next) {
       fetch(to.params.seq).then((post, comments) => {
@@ -356,6 +372,25 @@
             this.comments.splice(index, 1);
           });
         }
+      },
+      toggleNotice() {
+        const isNotice = this.isNotice;
+
+        $.ajax({
+          type: isNotice ? 'delete' : 'post',
+          url: `/api/board/free/${this.post.seq}/notice`
+        }).then(() => {
+          if (!this.post.status) {
+            this.post.status = {};
+          }
+
+          this.post.status.notice = !isNotice;
+
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            content: this.$t(isNotice ? 'board.msg.cancel.notice' : 'board.msg.set.as.notice')
+          });
+        });
       },
       onEditorCreated(editor) {
         this.commentEditor = editor;

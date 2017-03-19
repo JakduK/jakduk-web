@@ -7,7 +7,9 @@ import {load as loadI18n} from './i18n';
 import App from '../components/app/app.vue';
 import Navbar from '../components/navbar/navbar.vue';
 import PhoneSidenav from '../components/phone_sidenav/phone_sidenav.vue';
+import Toast from '../components/toast/toast.vue';
 
+Vue.component('toast', Toast);
 Vue.directive('tooltip', Tooltip);
 Vue.filter('encode', Encode);
 
