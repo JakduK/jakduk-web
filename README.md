@@ -1,29 +1,32 @@
-#jakduk-web
-Single page application
+# jakduk-web
+* Single page application
+* Stage https://staging.jakduk.com
+* Production https://jakduk.com
 
-##Server
-* Node.js 6.9.1+
+## Client
+* Vue.js
+* semantic-ui
+
+## Server
+* Node.js 6.10.0+
 * Express
 * Environment variables
   * PORT (Default: 3000)
   * NODE_ENV (Default : development)
-##Client
-* Vue.js
-* semantic-ui
 
-#Prerequisite
+# Prerequisite
 ```
 npm install -g bower gulp webpack
 ```
 
-#Install
+# Install
 ```
 bower install
 npm install
 webpack
 ```
 
-#Run
+# Run
 ```
 NODE_ENV=production npm start
 NODE_ENV=development npm start
