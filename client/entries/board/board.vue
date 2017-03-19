@@ -81,7 +81,7 @@
         <h5 class="ui segment"><i class="grey thumbs outline up icon"></i> {{$t('board.top.likes')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
-            <router-link :to="{path: '/board/:name/' + post.seq, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
+            <router-link :to="{name: 'board.view', params: {seq: post.seq}, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
               <div class="header text-overflow">{{post.subject}}</div>
               <div class="extra">
                 <i class="smile icon"></i>{{post.count}} &nbsp; <i class="eye icon"></i>{{post.views}}
