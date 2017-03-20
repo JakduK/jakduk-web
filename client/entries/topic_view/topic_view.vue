@@ -6,25 +6,29 @@
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     <div class="pull-right">
-      <button v-if="isAdmin" @click="toggleNotice" :class="{blue: isNotice}" class="ui toggle button">
-        {{$t(isNotice ? 'common.button.cancel.notice' : 'common.button.set.as.notice')}}
-      </button>
-      <div class="ui buttons">
-        <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button">
-          <i class="write icon"></i>
-        </router-link>
-        <div v-if="isAuthenticated && isEditable" class="ui floating dropdown icon button">
-          <i class="dropdown icon"></i>
-          <div class="menu">
-            <router-link :to="{name: 'board.edit', params: {name: $route.params.name, seq: post.seq}}" class="item">
-              <i class="edit icon"></i> {{$t('common.button.edit')}}
-            </router-link>
-            <button @click="deletePost" class="item">
-              <i class="trash icon"></i> {{$t('common.button.delete')}}
-            </button>
-          </div>
+      <!--<button class="ui icon button">-->
+        <!--<i class="icon share alternate"></i>-->
+      <!--</button>-->
+      <div v-if="isAuthenticated && (isEditable || isAdmin)" class="ui top right pointing dropdown icon button">
+        <i class="icon wrench"></i>
+        <div class="menu">
+          <button v-if="isAdmin && isNotice" @click="toggleNotice" class="item">
+            <i class="arrow circle outline down icon"></i> {{$t('common.button.cancel.notice')}}
+          </button>
+          <button v-else-if="isAdmin && !isNotice" @click="toggleNotice" class="item">
+            <i class="arrow circle outline up icon"></i> {{$t('common.button.set.as.notice')}}
+          </button>
+          <router-link v-if="isEditable" :to="{name: 'board.edit', params: {name: $route.params.name, seq: post.seq}}" class="item">
+            <i class="edit icon"></i> {{$t('common.button.edit')}}
+          </router-link>
+          <button v-if="isEditable" @click="deletePost" class="item" style="width: 100%;">
+            <i class="trash icon"></i> {{$t('common.button.delete')}}
+          </button>
         </div>
       </div>
+      <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button">
+        <i class="write icon"></i>
+      </router-link>
     </div>
 
     <!--본문-->
@@ -40,8 +44,10 @@
               {{$t(categoryLabel(post.category.code))}}
               <div class="detail">{{post.seq}}</div>
             </div>
-            <strong v-if="(!post.status || !post.status.delete)">&nbsp;{{post.writer.username}}</strong> &nbsp;
-            <span class="nowrap">{{post.id | IdToRegDate('LL')}}</span>
+            <span class="nowrap">
+              <strong v-if="(!post.status || !post.status.delete)">&nbsp;{{post.writer.username}}</strong> &nbsp;
+              <span class="nowrap">{{post.id | IdToRegDate('LL')}}</span>
+            </span>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
             <i class="eye grey large icon"></i><strong>{{post.views}}</strong> &nbsp;
@@ -99,6 +105,11 @@
     <div class="ui segments">
       <h4 class="ui segment"><i class="grey talk icon"></i> {{$t('board.comments')}}</h4>
       <div class="ui blue segment">
+
+        <!--<div class="fluid ui button">-->
+          <!--<i class="icon chevron up"></i> More-->
+        <!--</div>-->
+
         <div class="ui comments">
           <div v-for="comment in comments" :key="comment.id" class="comment">
             <a class="avatar">
@@ -129,17 +140,21 @@
               -->
             </div>
           </div>
+        </div>
 
-          <div class="comment-form">
-            <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
-            <div class="comment-editor">
-              <editor @on-created="onEditorCreated" :options="{language: $store.state.locale}" id="commentEditor" data-mode="comment"></editor>
-            </div>
-            <div class="clearfix">
-              <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
-                <i class="icon edit"></i> {{$t('common.button.write.comment')}}
-              </button>
-            </div>
+        <!--<div class="fluid ui button">-->
+          <!--<i class="icon chevron down"></i> More-->
+        <!--</div>-->
+
+        <div class="comment-form">
+          <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
+          <div class="comment-editor">
+            <editor @on-created="onEditorCreated" :options="{language: $store.state.locale}" id="commentEditor" data-mode="comment"></editor>
+          </div>
+          <div class="clearfix">
+            <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
+              <i class="icon edit"></i> {{$t('common.button.write.comment')}}
+            </button>
           </div>
         </div>
       </div>
@@ -390,7 +405,7 @@
 
           this.$store.dispatch('globalMessage', {
             level: 'info',
-            content: this.$t(isNotice ? 'board.msg.cancel.notice' : 'board.msg.set.as.notice')
+            message: this.$t(isNotice ? 'board.msg.cancel.notice' : 'board.msg.set.as.notice')
           });
         });
       },
