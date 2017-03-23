@@ -105,6 +105,10 @@
     text-align: center;
   }
 
+  .text-right {
+    text-align: right;
+  }
+
   .inline {
     display: inline-block;
   }

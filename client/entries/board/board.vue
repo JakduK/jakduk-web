@@ -18,51 +18,11 @@
           <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui right floated icon button"><i class="write icon"></i></router-link>
         </div>
 
+        <!--공지/게시글-->
         <div class="ui blue segment">
-          <!--공지-->
-          <div class="ui selection relaxed small list notice">
-            <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: notice.seq}, query: $route.query}" v-for="notice in board.notices" :key="notice.seq" class="item">
-              <div class="ui image">
-                <span class="ui horizontal basic label nowrap">
-                  <i class="announcement blue icon"></i>{{$t('board.notice')}}
-                </span>
-              </div>
-              <div class="middle aligned content">
-                <div class="header">
-                  {{(notice.status && notice.status.delete) ? $t('board.msg.deleted') : notice.subject}}
-                </div>
-              </div>
-            </router-link>
-          </div>
-
-          <!-- 게시글 -->
           <div class="ui selection divided list board">
-            <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="post in board.posts" :key="post.seq" class="item">
-              <div class="right floated content">
-                <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
-                  <img :src="post.galleries[0].thumbnailUrl">
-                </div>
-              </div>
-              <div class="content">
-                <div :class="{'ui tiny disabled': post.status && post.status.delete}" class="header">
-                  {{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}
-                  <span v-if="!post.status || !post.status.delete" :class="categoryColor(post.category)" class="ui tiny basic label">
-                  {{$t(categoryLabel(post.category))}}
-                </span>
-                </div>
-                <div class="extra">
-                  {{post.seq}} &middot;
-                  <template v-if="post.writer"><strong>{{post.writer.username}}</strong> &middot;</template>
-                  <span class="nowrap">{{post.id | IdToRegDate('LL')}} &middot;</span>
-                  <span class="nowrap"><i class="talk outline icon"></i>{{post.commentCount}}</span>
-                  <span class="pull-right nowrap">
-                  <i class="eye icon"></i>{{post.views}} &middot;
-                    <i class="smile blue icon"></i>{{post.likingCount}} &middot;
-                    <i class="frown pink icon"></i>{{post.dislikingCount}}
-                </span>
-                </div>
-              </div>
-            </router-link>
+            <board-list-item :is-notice="true" :item="notice" v-for="notice in board.notices" :key="notice.seq"></board-list-item>
+            <board-list-item :is-notice="false" :item="post" v-for="post in board.posts" :key="post.seq"></board-list-item>
           </div>
         </div>
       </div>
@@ -78,7 +38,7 @@
     <div class="sixteen wide mobile five wide tablet four wide computer column">
       <!--주간 좋아요 선두-->
       <div class="ui segments widget">
-        <h5 class="ui segment"><i class="grey thumbs outline up icon"></i> {{$t('board.top.likes')}}</h5>
+        <h5 class="ui segment"><i class="blue thumbs outline up icon"></i> {{$t('board.top.likes')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
             <router-link :to="{name: 'board.view', params: {seq: post.seq}, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
@@ -97,7 +57,7 @@
 
       <!--주간 댓글 선두-->
       <div class="ui segments widget">
-        <h5 class="ui segment"><i class="grey talk icon"></i> {{$t('board.top.comments')}}</h5>
+        <h5 class="ui segment"><i class="blue talk icon"></i> {{$t('board.top.comments')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
             <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="(post, index) in top.topComments" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
@@ -123,7 +83,9 @@
   }
 
   .board .thumbnail {
-    width: 54px;
+    display: block;
+    width: 95px;
+    margin: 0 auto 5px;
   }
 
   .ui.list.notice {
@@ -140,4 +102,173 @@
   }
 </style>
 
-<script src="./board.js"></script>
+<script>
+  import $ from 'jquery';
+  import BoardListItem from '../../components/board_list_item/board_list_item.vue';
+  import Pagination from '../../components/pagination/pagination.vue';
+  import Pager from '../../components/pager/pager.vue';
+  import CategoryColor from '../../filters/category_color';
+  import CategoryIcon from '../../filters/category_icon';
+  import CategoryLabel from '../../filters/category_label';
+
+  const PAGE_SIZE = 15;
+  const PAGINATION_SHIFT_SIZE = 5;
+
+  function fetch(options) {
+    return $.when(
+      $.getJSON('/api/board/free/posts', {
+        page: options.page,
+        size: options.size,
+        category: options.category
+      }).then(data => data, (response, result) => result),
+      $.getJSON('/api/board/free/tops').then(data => data, (response, result) => result)
+    ).always((posts, tops) => {
+      this.top = (tops === 'error' || !tops) ? undefined : tops;
+      this.board = (posts === 'error' || !posts) ? undefined : posts;
+
+      if (this.board) {
+        const start = Math.floor(posts.number / PAGINATION_SHIFT_SIZE) * PAGINATION_SHIFT_SIZE + 1;
+        const end = Math.min(posts.totalPages + 1, start + PAGINATION_SHIFT_SIZE);
+
+        this.pagination.start = start;
+        this.pagination.end = end;
+        this.pagination.first = posts.first;
+        this.pagination.last = posts.last;
+        this.pagination.current = posts.number + 1;
+        this.pagination.items = [];
+
+        for (let i = start; i < end; i++) {
+          this.pagination.items.push({
+            label: i,
+            page: i
+          });
+        }
+
+        this.categories = ['ALL'];
+        Object.keys(this.board.categories).forEach(key => {
+          if (key !== 'ALL') {
+            this.categories.push(key);
+          }
+        });
+      }
+
+      this.$store.commit('load', false);
+    });
+  }
+
+  export default {
+    data() {
+      return {
+        categories: [],
+        board: {
+          categories: {},
+          first: undefined,
+          last: undefined,
+          notices: [],
+          number: 0,
+          numberOfElements: 0,
+          posts: [],
+          size: 0,
+          totalElements: 0,
+          totalPages: 0
+        },
+        top: {
+          topLikes: [],
+          topComments: []
+        },
+        pagination: {
+          current: 0,
+          items: []
+        },
+        category: undefined
+      };
+    },
+    created() {
+      this.$store.commit('load', true);
+    },
+    updated() {
+      $('.ui.sticky').sticky('refresh', true);
+    },
+    beforeRouteEnter(to, from, next) {
+      next(_this => {
+        const category = (to.query.category || 'ALL').toUpperCase();
+
+        _this.category = category;
+
+        fetch.call(_this, {
+          page: Math.max(1, parseInt(to.query.page) || 1),
+          size: PAGE_SIZE,
+          category: category
+        }).then(() => {
+          $(_this.$el).find('#categories').dropdown({
+            onChange(category) {
+              _this.$router.push({
+                name: 'board',
+                params: _this.$route.params,
+                query: {
+                  category: category
+                }
+              });
+            }
+          }).dropdown('set selected', category);
+        });
+      });
+    },
+    beforeRouteUpdate(to, from, next) {
+      const category = (to.query.category || 'ALL').toUpperCase();
+
+      this.category = category;
+
+      fetch.call(this, {
+        page: Math.max(1, parseInt(to.query.page) || 1),
+        size: PAGE_SIZE,
+        category: category
+      }).then(() => {
+        next();
+      });
+    },
+    methods: {
+      categoryColor: CategoryColor,
+      categoryLabel: CategoryLabel,
+      categoryIcon: CategoryIcon,
+      onPageChange(what) {
+        let pageNumber = Math.max(1, parseInt(this.$route.query.page) || 1);
+
+        switch (what) {
+          case 'prev':
+            pageNumber--;
+            break;
+          case 'next':
+            pageNumber++;
+            break;
+          case 'unshift':
+            pageNumber -= PAGINATION_SHIFT_SIZE;
+            break;
+          case 'shift':
+            pageNumber += PAGINATION_SHIFT_SIZE;
+            break;
+          default:
+            pageNumber = what;
+            break;
+        }
+
+        pageNumber = Math.max(1, Math.min(pageNumber, this.board.totalPages));
+
+        this.$router.push({
+          name: 'board',
+          params: this.$route.params,
+          query: {
+            page: pageNumber,
+            category: this.$route.query.category
+          }
+        });
+      }
+    },
+    components: {
+      'board-list-item': BoardListItem,
+      pager: Pager,
+      pagination: Pagination
+    }
+  };
+
+</script>
