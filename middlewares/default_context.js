@@ -32,7 +32,7 @@ module.exports = function () {
             card: 'summary'
           },
           og: {
-            description: i18n.__('about.jakduk'),
+            description: i18n.__('about.summary'),
             url: config.origin + req.path,
             image: config.origin + '/jakduk/img/logo_256.png',
             type: 'website'

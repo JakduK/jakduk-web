@@ -18,7 +18,6 @@ module.exports.setup = function (app) {
     ]).then(responses => {
       res.render('home/home', {
         title: [
-          i18n.__('common.home'),
           i18n.__('common.jakduk')
         ],
         todayDate: moment(new Date().setHours(0, 0, 0, 0)).valueOf(),

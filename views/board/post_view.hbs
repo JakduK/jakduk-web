@@ -107,7 +107,7 @@
             {{#each post.galleries}}
               <div>
                 <span aria-hidden="true" class="icon-paper-clip"></span>
-                <a href="/gallery/{{id}}">{{DEFAULT_VALUE name fileName}}</a> | {{SIZE_FORMAT size}}
+                <a href="/gallery/{{id}}">{{DEFAULT_VALUE name fileName}}</a>{{#if size}} | {{SIZE_FORMAT size}}{{/if}}
               </div>
             {{/each}}
           </li>
