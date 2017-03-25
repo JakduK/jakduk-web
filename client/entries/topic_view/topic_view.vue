@@ -38,17 +38,19 @@
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
         <div class="ui grid">
           <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
-            <div v-if="isNotice" class="ui horizontal image basic label">
+            <div v-if="isNotice" class="ui basic label">
               <i class="announcement blue icon"></i> {{$t('board.notice')}}
             </div>
-            <div :class="categoryColor(post.category.code)" class="ui horizontal label">
+            <div :class="categoryColor(post.category.code)" class="ui label">
               {{$t(categoryLabel(post.category.code))}}
               <div class="detail">{{post.seq}}</div>
             </div>
-            <span class="nowrap">
-              <strong v-if="(!post.status || !post.status.delete)">&nbsp;{{post.writer.username}}</strong> &nbsp;
-              <span class="nowrap">{{post.id | IdToRegDate('LL')}}</span>
-            </span>
+            <div :class="{image: post.writer.picture}" class="ui basic label">
+              <img v-if="post.writer.picture" :src="post.writer.picture">
+              <i v-else class="icon spy"></i>
+              {{post.writer.username}}
+              <div class="detail">{{post.id | IdToRegDate('LL')}}</div>
+            </div>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
             <span>
@@ -120,7 +122,8 @@
           </div>
           <div v-for="comment in comments" :key="comment.id" class="comment">
             <a class="avatar">
-              <img :src="comment.writer.picture || '/assets/jakduk/img/logo_128.png'">
+              <img v-if="comment.writer.picture" :src="comment.writer.picture">
+              <i v-else class="icon big grey spy"></i>
             </a>
             <div v-if="isAuthenticated && myProfile.id === comment.writer.userId" class="pull-right">
               <button @click="deleteComment(comment)" class="ui icon mini basic button"><i class="remove blue fitted icon"></i></button>
