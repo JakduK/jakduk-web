@@ -51,7 +51,9 @@
             </span>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
-            <i class="eye grey large icon"></i><strong>{{post.views}}</strong> &nbsp;
+            <span>
+              <i class="eye grey large icon"></i><strong>{{post.views}}</strong> &nbsp;
+            </span>
             <button @click="likeOrDislike('LIKE')">
               <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
             </button> &nbsp;

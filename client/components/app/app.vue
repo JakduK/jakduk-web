@@ -51,7 +51,7 @@
     top: 240px;
   }
 
-  .icon + * {
+  * > .icon.large + * {
     vertical-align: middle;
   }
 
