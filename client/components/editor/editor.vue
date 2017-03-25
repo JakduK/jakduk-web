@@ -1,93 +1,57 @@
 <template>
-  <div></div>
+  <div class="__wrapper"><div></div></div>
 </template>
 
-<script>
-  import Tinymce from 'tinymce/tinymce';
-  import $ from 'jquery';
-
-  Tinymce.baseURL = '/assets/tinymce';
-
-  const defaultOptions = {
-    resize: false,
-    menubar: false,
-    statusbar: false,
-    relative_urls: true,
-    file_picker_types: 'image',
-    image_description: false,
-    file_picker_callback(cb, value, meta) {
-      const $body = $('body');
-      const id = 'image-chooser';
-      const editor = this;
-      const input = document.createElement('input');
-
-      $(input)
-        .attr({
-          id: id,
-          type: 'file',
-          accept: 'image/*',
-          hidden: ''
-        })
-        .change(function () {
-          const file = this.files[0];
-          const id = 'blobid' + (new Date()).getTime();
-          const blobCache = editor.editorUpload.blobCache;
-          const blobInfo = blobCache.create(id, file);
-          blobCache.add(blobInfo);
-          cb(blobInfo.blobUri(), {title: file.name});
-        });
-
-      $body.find(`#${id}`).remove();
-      $body.append(input);
-
-      input.click();
-    }
-  };
-
-  const commentOptions = $.extend({
-    height: 150,
-    plugins: [
-      'advlist autolink lists link image codesample media paste'
-    ],
-    toolbar: 'undo redo | bold italic | codesample | bullist numlist | link image media'
-  }, defaultOptions);
-
-  const editorOptions = $.extend({
-    height: 500,
-    image_title: true,
-    plugins: [
-      'advlist autolink lists link image preview',
-      'searchreplace visualblocks code fullscreen',
-      'insertdatetime media table contextmenu paste code'
-    ],
-    toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | preview fullscreen'
-  }, defaultOptions);
-
-  function uploadImage(blobInfo, success, failure) {
-    const formData = new FormData();
-
-    formData.append('file', blobInfo.blob());
-
-    $.ajax({
-      type: 'post',
-      url: '/api/gallery',
-      data: formData,
-      processData: false,
-      contentType: false
-    }).done(data => {
-      success(data.imageUrl);
-      this.$emit('on-image-uploaded', data);
-    });
+<style src="quill/dist/quill.snow.css"></style>
+<style src="highlight.js/styles/monokai-sublime.css"></style>
+<style>
+  .__wrapper {
+    height: 100%;
+    display:flex;
+    flex-direction: column;
   }
+  .__wrapper .ql-toolbar.ql-snow {
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    border-top-left-radius: 0.28571429rem;
+    border-top-right-radius: 0.28571429rem;
+  }
+  .__wrapper .ql-container.ql-snow {
+    flex: 2;
+    overflow: hidden;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    border-bottom-left-radius: 0.28571429rem;
+    border-bottom-right-radius: 0.28571429rem;
+  }
+</style>
+
+<script>
+  import Quill from 'quill/dist/quill';
+  import $ from 'jquery';
+  import Highlightjs from 'highlight.js';
+
+  const editorToolbarOptions = [
+    [{ 'font': [] }],  // custom dropdown
+    [{ 'size': ['small', false, 'large', 'huge'] }],
+
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+
+    [{ 'align': [] }, { 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent,
+    ['blockquote', 'code-block'],
+
+    ['link', 'image', 'video']
+  ];
+
+  const commentToolbarOptions = [
+    ['link', 'image', 'video'],
+    [{ 'align': [] }, { 'list': 'ordered'}, { 'list': 'bullet' }],
+    ['blockquote', 'code-block']
+  ];
 
   export default {
     props: {
-      data: {
-        type: Object,
-        default() {
-          return {};
-        }
-      },
       options: {
         type: Object,
         default() {
@@ -96,40 +60,106 @@
       }
     },
     mounted() {
-      let options = $(this.$el).data('mode') === 'comment' ? commentOptions : editorOptions;
-      options = $.extend({}, options, this.options);
-      options.target = this.$el;
-      options.init_instance_callback = function (editor) {
-        this.editor = editor;
-        this.$emit('on-created', editor);
-      }.bind(this);
-      options.images_upload_handler = uploadImage.bind(this);
-      options.image_list = (callback) => {
-        callback(this.data.imageList.map(image => {
-          return {
-            title: image.name || image.fileName,
-            value: image.imageUrl
-          };
-        }));
-      };
+      const quill = new Quill(this.$el.children[0], {
+        theme: 'snow',
+        modules: {
+          syntax: {
+            highlight(text) {
+              let result = Highlightjs.highlightAuto(text, ['javascript', 'java', 'python', 'html', 'css']);
+              return result.value;
+            }
+          },
+          toolbar: this.options.mode === 'editor' ? editorToolbarOptions : commentToolbarOptions
+        },
+        placeholder: this.$t('board.msg.write.text.here'),
+        bounds: this.$el,
+        readOnly: !this.$store.state.isAuthenticated
+      });
+      const toolbar = quill.getModule('toolbar');
 
-      if (options.language) {
-        options.language = options.language.replace('-', '_');
-      }
+      quill.on('selection-change', (range, oldRange, source) => {
+        if (!this.$store.state.isAuthenticated) {
+          if (oldRange === null && window.confirm(this.$t('common.do.you.want.to.login'))) {
+            window.location = `/login?redir=${encodeURIComponent(`${location.pathname}${location.search}`)}`;
+          } else if (range !== null) {
+            quill.setSelection(null);
+          }
+        }
+      });
 
-      if (options.language === 'en_US') {
-        delete options.language;
-      }
+      toolbar.addHandler('image', () => {
+        if (!quill.isEnabled()) {
+          return;
+        }
 
-      if (!this.data.imageList) {
-        this.data.imageList = [];
-      }
+        let fileInput = toolbar.container.querySelector('input.ql-image[type=file]');
 
-      Tinymce.init(options);
+        if (fileInput === null) {
+          fileInput = document.createElement('input');
+          fileInput.setAttribute('type', 'file');
+          fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml');
+          fileInput.classList.add('ql-image');
+          fileInput.addEventListener('change', () => {
+            if (fileInput.files !== null && fileInput.files[0] !== null) {
+              const range = quill.getSelection(true);
+              const formData = new FormData();
+
+              formData.append('file', fileInput.files[0]);
+
+              $.ajax({
+                type: 'post',
+                url: '/api/gallery',
+                data: formData,
+                processData: false,
+                contentType: false
+              }).done(resData => {
+                quill.insertEmbed(range.index, 'image', resData.imageUrl);
+                this.$emit('on-image-uploaded', resData);
+                fileInput.remove();
+              });
+            }
+          });
+          toolbar.container.appendChild(fileInput);
+        }
+
+        fileInput.click();
+      });
+
+      this.quill = quill;
+
+      this.$emit('on-created', this);
     },
-    destroyed() {
-      if (this.editor) {
-        this.editor.destroy();
+    methods: {
+      hasEmbed() {
+        const delta = this.quill.getContents();
+        return delta.ops.some(op => {
+          return op.insert && (op.insert.image || op.insert.video);
+        });
+      },
+      getContentLength() {
+        return this.quill.getLength();
+      },
+      setContents(contents) {
+        this.quill.clipboard.dangerouslyPasteHTML(contents);
+      },
+      getContents() {
+        return this.quill.root.innerHTML;
+      },
+      getText() {
+        return this.quill.getText();
+      },
+      clear() {
+        this.quill.setText('');
+      },
+      focus() {
+        this.quill.focus();
+      },
+      insertImage(imageUrl) {
+        const range = this.quill.getSelection(true);
+        this.quill.insertEmbed(range.index, 'image', imageUrl);
+      },
+      deleteImage(imageUrl) {
+        this.quill.root.querySelectorAll(`img[src="${imageUrl}"]`).forEach(img => img.remove());
       }
     }
   };

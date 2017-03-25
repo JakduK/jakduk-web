@@ -33,6 +33,7 @@
 
     <!--본문-->
     <div class="ui segments">
+      <!--본문 메타 데이터-->
       <div class="ui segment">
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
         <div class="ui grid">
@@ -55,18 +56,19 @@
               <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
             </button> &nbsp;
             <button @click="likeOrDislike('DISLIKE')">
-              <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink large icon"></i><strong>{{post.numberOfDislike}}</strong>
+              <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal large icon"></i><strong>{{post.numberOfDislike}}</strong>
             </button>
           </div>
         </div>
       </div>
-      <div class="ui blue segment" v-html="post.content"></div>
+      <!--본문 콘텐트-->
+      <div class="ui blue segment ql-editor" v-html="post.content"></div>
       <div class="ui center aligned segment">
-        <button @click="likeOrDislike('LIKE')" class="ui basic button">
+        <button @click="likeOrDislike('LIKE')" class="ui compact basic button">
           <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
         </button>
-        <button @click="likeOrDislike('DISLIKE')" class="ui basic button">
-          <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink large icon"></i><strong>{{post.numberOfDislike}}</strong>
+        <button @click="likeOrDislike('DISLIKE')" class="ui compact basic button">
+          <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal large icon"></i><strong>{{post.numberOfDislike}}</strong>
         </button>
       </div>
     </div>
@@ -111,6 +113,9 @@
         <!--</div>-->
 
         <div class="ui comments">
+          <div v-if="!comments.length" class="ui small header">
+            {{$t('board.msg.there.is.no.new.comment')}} <i class="blue icon meh"></i>
+          </div>
           <div v-for="comment in comments" :key="comment.id" class="comment">
             <a class="avatar">
               <img :src="comment.writer.picture || '/assets/jakduk/img/logo_128.png'">
@@ -124,16 +129,17 @@
                 <span class="date">{{comment.id | IdToRegDate('LL')}}</span>&middot;
                 <div class="rating">
                   <button @click="likeOrDislikeComment(comment, 'LIKE')">
-                    <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i> {{comment.numberOfLike}}
+                    <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i>
+                    {{comment.numberOfLike || 0}}
                   </button> &nbsp;
                   <button @click="likeOrDislikeComment(comment, 'DISLIKE')">
-                    <i :class="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="frown pink icon"></i> {{comment.numberOfDislike}}
+                    <i :class="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal icon"></i> {{comment.numberOfDislike || 0}}
                   </button>
                 </div>
               </div>
               <div class="text" v-html="comment.content"></div>
               <!--
-              댓글답변 추후기능
+              추후 댓글답변
               <div class="actions">
                 <a class="reply">Reply</a>
               </div>
@@ -146,10 +152,12 @@
           <!--<i class="icon chevron down"></i> More-->
         <!--</div>-->
 
+        <div class="ui divider"></div>
+
         <div class="comment-form">
           <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
           <div class="comment-editor">
-            <editor @on-created="onEditorCreated" :options="{language: $store.state.locale}" id="commentEditor" data-mode="comment"></editor>
+            <editor @on-created="onEditorCreated" :options="{mode: 'comment', language: $store.state.locale}"></editor>
           </div>
           <div class="clearfix">
             <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
@@ -165,8 +173,6 @@
 <style>
   .topic-view img {
     max-width: 100%;
-    display: block;
-    margin: auto;
     border-radius: 0.28571429rem;
   }
 
@@ -188,13 +194,12 @@
   }
 
   .comment-form {
-    margin-top: 2em;
+    margin-top: 1.5em;
   }
 
   .comment-form .comment-editor {
     margin-bottom: 1em;
-    border-radius: 0.28571429rem;
-    box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.15) inset;
+    height: 200px;
   }
 </style>
 
@@ -209,7 +214,6 @@
   import CategoryLabel from '../../filters/category_label';
   import ErrorDialog from '../../utils/dialog_response_error';
   import Editor from '../../components/editor/editor.vue';
-  import EditorValidator from '../../utils/editor_validator';
 
   function fetch(seq) {
     return $.when(
@@ -330,7 +334,8 @@
           return false;
         }
 
-        if (!EditorValidator(this.commentEditor)) {
+        const text = this.commentEditor.getText().trim();
+        if ((text.length < 3 || text.length > 800) && !this.commentEditor.hasEmbed()) {
           this.$store.dispatch('globalMessage', {
             level: 'info',
             message: this.$t('Size.board.comment.content')
@@ -349,12 +354,12 @@
           url: '/api/board/free/comment',
           contentType: 'application/json',
           data: JSON.stringify({
-            content: this.commentEditor.getContent(),
+            content: this.commentEditor.getContents(),
             seq: this.post.seq
           })
         }).then(data => {
           this.comments.push(data);
-          this.commentEditor.setContent('');
+          this.commentEditor.clear();
         }, ...response => {
           this.$store.dispatch('globalMessage', {
             level: 'error',

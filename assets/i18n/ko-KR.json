@@ -316,6 +316,11 @@
   "common.error.occurred.on.server": "서버가 이상합니다.",
   "common.network.in.problem": "네트워크 연결상태를 확인 해주세요.",
   "common.do.you.want.to.delete.a.comment": "댓글을 삭제합니다?",
-  "common.post": "글 올리기",
-  "common.back": "돌아가기"
+  "common.save": "저장",
+  "common.post": "올리기",
+  "common.back": "돌아가기",
+  "common.rename": "이름 바꾸기",
+  "common.insert": "삽입",
+  "common.insert.into.content": "본문에 삽입",
+  "common.delete": "삭제"
 }

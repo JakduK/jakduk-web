@@ -28,7 +28,7 @@
       <span class="extra nowrap">
         <i class="eye icon"></i>{{item.views}} &middot;
         <i class="smile blue icon"></i>{{item.likingCount}} &middot;
-        <i class="frown pink icon"></i>{{item.dislikingCount}}
+        <i class="meh teal icon"></i>{{item.dislikingCount}}
       </span>
     </div>
   </router-link>

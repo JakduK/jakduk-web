@@ -9,12 +9,50 @@
         </select>
         <input v-model="subject" id="subject" type="text" autofocus>
       </div>
+
       <div class="ui divider"></div>
-      <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :data="{imageList: imageList}" :options="{language: $store.state.locale, resize: true, statusbar: true}" data-mode="editor"></editor>
+
+      <div class="editor-container">
+        <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'editor', language: $store.state.locale}"></editor>
+      </div>
+
+      <div v-if="imageList.length" class="ui divided items">
+        <div v-for="image in imageList" :key="image.id" :data-image-id="image.id" class="item">
+          <div class="ui small image">
+            <img :src="image.imageUrl">
+          </div>
+          <div class="content">
+            <div class="ui header tiny">
+              <div v-if="image.isRenaming" class="ui form">
+                <div class="field">
+                  <input v-model="image.newName" @keyup.enter.esc="enterNewImageName(image, $event)">
+                </div>
+              </div>
+              <template v-else>{{image.name}}</template>
+            </div>
+            <div v-if="image.fileSize" class="meta">
+              <span class="date">{{image.fileSize | fileSize}}</span>
+            </div>
+            <div class="extra">
+              <div class="ui right floated basic buttons">
+                <button @click="deleteImage(image)" class="ui icon compact button">
+                  <i class="icon blue remove"></i>
+                </button>
+              </div>
+              <div class="ui right floated basic buttons">
+                <button @click="insertImage(image)" class="ui compact button">{{$t('common.insert.into.content')}}</button>
+                <button @click="renameImage(image)" class="ui compact button">{{$t('common.rename')}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="ui divider"></div>
+
       <div class="clearfix">
         <button @click="checkForm(editor) && submitPost()" :class="{loading: isSubmitting}" class="ui right floated blue labeled icon button">
-          <i class="icon edit"></i> {{$t('common.post')}}
+          <i class="icon edit"></i> {{$t(editMode ? 'common.save' : 'common.post')}}
         </button>
         <button @click="$router.go(-1)" class="ui right floated blue labeled icon button">
           <i class="icon chevron left"></i> {{$t('common.back')}}
@@ -24,21 +62,29 @@
   </div>
 </template>
 
+<style>
+  .editor-container {
+    height: 640px;
+  }
+</style>
+
 <script>
   import $ from 'jquery';
   import Editor from '../../components/editor/editor.vue';
   import CategoryColor from '../../filters/category_color';
   import CategoryIcon from '../../filters/category_icon';
   import CategoryLabel from '../../filters/category_label';
-  import EditorValidator from '../../utils/editor_validator';
+  import FileSize from 'filesize';
 
   export default {
     data() {
       return {
+        editMode: false,
         categories: [],
         category: 'FREE',
         subject: '',
         imageList: [],
+        deletedImageList: [],
         isSubmitting: false
       }
     },
@@ -54,102 +100,18 @@
         if (this.editMode) {
           $(this.$el).find('#categories').dropdown('set selected', this.post.category.code);
           this.subject = this.post.subject;
-          this.imageList = this.post.galleries;
-          this.editor.setContent(this.post.content);
+          this.imageList = (this.post.galleries || []).map(image => {
+            image.name = image.name || image.fileName;
+            image.isRenaming = false;
+            return image;
+          });
+          this.editor.setContents(this.post.content);
         }
+
+        $('.ui.sticky').sticky('refresh', true);
 
         this.$store.commit('load', false);
       });
-    },
-    methods: {
-      categoryColor: CategoryColor,
-      categoryLabel: CategoryLabel,
-      categoryIcon: CategoryIcon,
-      onEditorCreated(editor) {
-        editor.on('FullscreenStateChanged', event => {
-          $('#main').css('z-index', event.state ? 99999 : '');
-        });
-
-        editor.on('ResizeEditor', () => {
-          $('.ui.sticky').sticky('refresh', true);
-        });
-        $('.ui.sticky').sticky('refresh', true);
-
-        this.editor = editor;
-
-        this.defers.editor.resolve();
-      },
-      onImageUploaded(image) {
-        this.imageList.push(image);
-      },
-      checkForm() {
-        if (!this.$store.state.isAuthenticated) {
-          if (window.confirm(this.$t('common.do.you.want.to.login'))) {
-            window.location = `/login?redir=${encodeURIComponent(this.$route.fullPath)}`;
-          }
-          return false;
-        }
-
-        if (this.isSubmitting) {
-          return false;
-        }
-
-        if (this.subject.length < 3) {
-          this.$store.dispatch('globalMessage', {
-            level: 'info',
-            message: this.$t('Size.boardFreeWrite.subject')
-          });
-          $(this.$el).find('#subject').focus();
-          return false;
-        }
-
-        if (!EditorValidator(this.editor, {min: 5, max: Infinity})) {
-          this.$store.dispatch('globalMessage', {
-            level: 'info',
-            message: this.$t('Size.boardFreeWrite.content')
-          });
-          this.editor.focus();
-          return false;
-        }
-
-        return true;
-      },
-      submitPost() {
-        this.isSubmitting = true;
-
-        $.ajax({
-          type: this.editMode ? 'put' : 'post',
-          url: `/api/board/free/${this.editMode ? this.post.seq : ''}`,
-          contentType: 'application/json',
-          data: JSON.stringify({
-            categoryCode: this.category,
-            subject: this.subject,
-            content: this.editor.getContent(),
-            galleries: this.imageList.map(image => {
-              const img = this.editor.getDoc().querySelector(`[data-mce-src="${image.imageUrl}"]`);
-              return {
-                id: image.id,
-                fileName: image.fileName,
-                size: image.size,
-                name: img.getAttribute('title') || image.fileName || image.name
-              };
-            })
-          })
-        }).then(data => {
-          this.$router.replace({
-            name: 'board.view',
-            params: {
-              seq: data.seq
-            }
-          });
-        }, ...response => {
-          this.$store.dispatch('globalMessage', {
-            level: 'error',
-            message: response[2]
-          });
-          this.isSubmitting = false;
-        });
-      }
     },
     beforeRouteEnter(to, from, next) {
       const editMode = to.meta.mode === 'edit';
@@ -187,6 +149,129 @@
           });
         });
       });
+    },
+    methods: {
+      categoryColor: CategoryColor,
+      categoryLabel: CategoryLabel,
+      categoryIcon: CategoryIcon,
+      onEditorCreated(editor) {
+        this.editor = editor;
+        this.defers.editor.resolve();
+      },
+      onImageUploaded(image) {
+        image.isRenaming = false;
+        image.name = image.name || image.fileName;
+        this.imageList.push(image);
+      },
+      checkForm() {
+        if (!this.$store.state.isAuthenticated) {
+          if (window.confirm(this.$t('common.do.you.want.to.login'))) {
+            window.location = `/login?redir=${encodeURIComponent(this.$route.fullPath)}`;
+          }
+          return false;
+        }
+
+        if (this.isSubmitting) {
+          return false;
+        }
+
+        if (this.subject.length < 3) {
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            message: this.$t('Size.boardFreeWrite.subject')
+          });
+          $(this.$el).find('#subject').focus();
+          return false;
+        }
+
+        const text = this.editor.getText().trim();
+        if (text.length < 5 && !this.editor.hasEmbed()) {
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            message: this.$t('Size.boardFreeWrite.content')
+          });
+          this.editor.focus();
+          return false;
+        }
+
+        return true;
+      },
+      submitPost() {
+        this.isSubmitting = true;
+
+        $.ajax({
+          type: this.editMode ? 'put' : 'post',
+          url: `/api/board/free/${this.editMode ? this.post.seq : ''}`,
+          contentType: 'application/json',
+          data: JSON.stringify({
+            categoryCode: this.category,
+            subject: this.subject,
+            content: this.editor.getContents(),
+            galleries: this.imageList.map(image => {
+              return {
+                id: image.id,
+                fileName: image.fileName,
+                size: image.size,
+                name: image.newName || image.name
+              };
+            })
+          })
+        }).then(data => {
+          this.$router.replace({
+            name: 'board.view',
+            params: {
+              seq: data.seq
+            }
+          });
+        }, ...response => {
+          this.$store.dispatch('globalMessage', {
+            level: 'error',
+            message: response[2]
+          });
+        }).then(() => {
+          const promise = [];
+
+          this.deletedImageList.forEach(image => {
+            promise.push($.ajax({
+              type: 'delete',
+              url: `/api/gallery/${image.id}`
+            }));
+          });
+
+          $.when(...promise).then(() => {
+            this.isSubmitting = false;
+          });
+        });
+      },
+      insertImage(image) {
+        this.editor.insertImage(image.imageUrl);
+      },
+      renameImage(image) {
+        image.isRenaming = !image.isRenaming;
+
+        if (image.isRenaming) {
+          image.newName = image.name;
+          this.$nextTick(() => {
+            $(this.$el).find(`[data-image-id="${image.id}"]`).find('input').select();
+          });
+        }
+      },
+      deleteImage(image) {
+        const imageIndex = this.imageList.findIndex(_image => image === _image);
+        const deleted = this.imageList.splice(imageIndex, 1);
+        this.deletedImageList.push(...deleted);
+        this.editor.deleteImage(image.imageUrl);
+      },
+      enterNewImageName(image, $event) {
+        if ($event.code === 'Enter' && image.newName) {
+          image.name = image.newName;
+        }
+
+        image.isRenaming = false;
+      }
+    },
+    filters: {
+      fileSize: FileSize
     },
     components: {
       editor: Editor

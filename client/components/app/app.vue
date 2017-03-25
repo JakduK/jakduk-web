@@ -51,6 +51,10 @@
     top: 240px;
   }
 
+  .icon + * {
+    vertical-align: middle;
+  }
+
   .full-fill-loader {
     z-index: 801;
     position: absolute;
@@ -115,21 +119,6 @@
 
   .cursor-pointer {
     cursor: pointer;
-  }
-
-  .global-message {
-    position: fixed;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99999;
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-    opacity: 0
   }
 
   a.black-link {

@@ -85,7 +85,7 @@
   .board .thumbnail {
     display: block;
     width: 95px;
-    margin: 0 auto 5px;
+    margin: 5px auto;
   }
 
   .ui.list.notice {
