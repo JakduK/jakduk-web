@@ -14,7 +14,7 @@
     },
     render(createElement) {
       return createElement(
-        this.$props.tag,
+        this.tag,
         null,
         this.$slots.default
       );
