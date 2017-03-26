@@ -322,5 +322,7 @@
   "common.rename": "Rename",
   "common.insert": "Insert",
   "common.insert.into.content": "Insert into content",
-  "common.delete": "Delete"
+  "common.delete": "Delete",
+  "common.url.of.name": "URL of {name}",
+  "common.send.url.via.kakaotalk": "Send URL via Kakao Talk"
 }

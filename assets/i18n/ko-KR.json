@@ -322,5 +322,7 @@
   "common.rename": "이름 바꾸기",
   "common.insert": "삽입",
   "common.insert.into.content": "본문에 삽입",
-  "common.delete": "삭제"
+  "common.delete": "삭제",
+  "common.url.of.name": "{name}의 URL",
+  "common.send.url.via.kakaotalk": "카카오톡으로 보내기"
 }

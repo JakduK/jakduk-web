@@ -6,6 +6,17 @@
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     <div class="pull-right">
+      <div class="ui top right pointing dropdown icon button">
+        <i class="icon share alternate"></i>
+        <div class="menu">
+          <div @click="copyLinkIntoClipboard" class="item">
+            <i class="linkify icon"></i> {{$t('common.button.copy.url.to.clipboard')}}
+          </div>
+          <kakao-share v-if="isMobile" :options="kakaoShareOptions" tag="div" class="item">
+            <img src="../../components/kakao_share/kakaolink_btn_small.png" class="item-icon-kakao"> {{$t('common.send.url.via.kakaotalk')}}
+          </kakao-share>
+        </div>
+      </div>
       <div v-if="isAuthenticated && (isEditable || isAdmin)" class="ui top right pointing dropdown icon button">
         <i class="icon wrench"></i>
         <div class="menu">
@@ -18,9 +29,9 @@
           <router-link v-if="isEditable" :to="{name: 'board.edit', params: {name: $route.params.name, seq: post.seq}}" class="item">
             <i class="edit icon"></i> {{$t('common.button.edit')}}
           </router-link>
-          <button v-if="isEditable" @click="deletePost" class="item" style="width: 100%;">
+          <div v-if="isEditable" @click="deletePost" class="item">
             <i class="trash icon"></i> {{$t('common.button.delete')}}
-          </button>
+          </div>
         </div>
       </div>
       <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button">
@@ -80,6 +91,16 @@
         <i class="list icon"></i>
       </router-link>
       <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
+    </div>
+
+    <!--하단 공유-->
+    <div class="shares text-center">
+      <button @click="copyLinkIntoClipboard" type="button" class="ui icon button">
+        <i class="linkify icon"></i>
+      </button>
+      <kakao-share v-if="isMobile" :options="kakaoShareOptions" tag="button" type="button" class="button-kakao">
+        <img src="../../components/kakao_share/kakaolink_btn_medium.png">
+      </kakao-share>
     </div>
 
     <!--작성자의 최근 게시물-->
@@ -177,6 +198,23 @@
     margin-bottom: 1em;
     height: 200px;
   }
+
+  .button-kakao {
+    height: 36px;
+    vertical-align: top;
+  }
+
+  .button-kakao > img {
+    height: 100%;
+  }
+
+  .item .item-icon-kakao {
+    height: 14px !important;
+  }
+
+  .shares {
+    margin-top: 1rem;
+  }
 </style>
 
 <script>
@@ -229,18 +267,24 @@
         isCommentSubmitting: false
       };
     },
-    computed: {
-      isNotice() {
-        return this.post.status && this.post.status.notice;
-      },
-      isEditable() {
-        return !!(this.post.writer && (this.myProfile.id === this.post.writer.userId));
-      },
-      ...mapState({
-        isAuthenticated: 'isAuthenticated',
-        isAdmin: 'isAdmin',
-        myProfile: 'myProfile'
-      })
+    beforeRouteEnter(to, from, next) {
+      fetch(to.params.seq).then((post, comments) => {
+        if (post === 'error') {
+          window.alert(Vue.t('common.error.occurred.on.server'));
+          next(false);
+        } else {
+          next(_this => {
+            apply.call(_this, post, comments);
+            _this.$store.commit('load', false);
+          });
+        }
+      });
+    },
+    beforeRouteUpdate(to, from, next) {
+      fetch(to.params.seq).then((post, comments) => {
+        apply.call(this, post, comments);
+        next();
+      });
     },
     updated() {
       $('.ui.sticky').sticky('refresh', true);
@@ -249,6 +293,28 @@
       });
       $(this.$el).find('.button.dropdown').dropdown();
     },
+    computed: {
+      isNotice() {
+        return this.post.status && this.post.status.notice;
+      },
+      isEditable() {
+        return !!(this.post.writer && (this.myProfile.id === this.post.writer.userId));
+      },
+      kakaoShareOptions() {
+        return {
+          kakaoClientId: this.$store.state.kakaoClientID,
+          label: this.post.subject,
+          url: `${window.location.origin}${this.$route.fullPath}`,
+          thumbnailUrl: (this.post.galleries && this.post.galleries[0] && this.post.galleries[0].imageUrl) || `${window.location.origin}/assets/jakduk/img/logo_256.png`
+        }
+      },
+      ...mapState({
+        isAuthenticated: 'isAuthenticated',
+        isAdmin: 'isAdmin',
+        isMobile: 'isMobile',
+        myProfile: 'myProfile'
+      })
+    },
     filters: {
       IdToRegDate: IdToRegDate
     },
@@ -256,6 +322,10 @@
       categoryColor: CategoryColor,
       categoryLabel: CategoryLabel,
       categoryIcon: CategoryIcon,
+      onEditorCreated(editor) {
+        this.commentEditor = editor;
+        $('.ui.sticky').sticky('refresh', true);
+      },
       prevTopic() {
         this.$router.push({
           name: 'board.view',
@@ -276,6 +346,28 @@
           query: this.$route.query
         });
       },
+      toggleNotice() {
+        const isNotice = this.isNotice;
+
+        $.ajax({
+          type: isNotice ? 'delete' : 'post',
+          url: `/api/board/free/${this.post.seq}/notice`
+        }).then(() => {
+          if (!this.post.status) {
+            this.post.status = {};
+          }
+
+          this.post.status.notice = !isNotice;
+
+          this.$store.dispatch('globalMessage', {
+            level: 'info',
+            message: this.$t(isNotice ? 'board.msg.cancel.notice' : 'board.msg.set.as.notice')
+          });
+        });
+      },
+      copyLinkIntoClipboard() {
+        window.prompt(this.$t('common.url.of.name', {name: this.post.subject}), `${window.location.origin}${this.$route.fullPath}`);
+      },
       likeOrDislike(what) {
         $.post(`/api/board/free/${this.post.seq}/${what}`).then(data => {
           this.post.myFeeling = data.myFeeling;
@@ -287,6 +379,21 @@
           }
         }));
       },
+      deletePost() {
+        if (window.confirm(this.$t('board.msg.confirm.delete.post'))) {
+          $.ajax({
+            type: 'delete',
+            url: `/api/board/free/${this.post.seq}`
+          }).then(() => {
+            this.$router.replace({
+              name: 'board',
+              params: {
+                name: this.$route.params.name
+              }
+            });
+          });
+        }
+      },
       likeOrDislikeComment(comment, what) {
         $.post(`/api/board/free/comment/${comment.id}/${what}`).then(data => {
           comment.myFeeling = data.myFeeling;
@@ -297,6 +404,17 @@
             return 'board.msg.you.are.writer';
           }
         }));
+      },
+      deleteComment(comment) {
+        if (window.confirm(this.$t('common.do.you.want.to.delete.a.comment'))) {
+          $.ajax({
+            type: 'delete',
+            url: `/api/board/free/comment/${comment.id}`
+          }).then(() => {
+            const index = this.comments.findIndex(_comment => _comment.id === comment.id);
+            this.comments.splice(index, 1);
+          });
+        }
       },
       checkCommentForm() {
         if (!this.$store.state.isAuthenticated) {
@@ -344,75 +462,7 @@
         }).always(() => {
           this.isCommentSubmitting = false;
         });
-      },
-      deletePost() {
-        if (window.confirm(this.$t('board.msg.confirm.delete.post'))) {
-          $.ajax({
-            type: 'delete',
-            url: `/api/board/free/${this.post.seq}`
-          }).then(() => {
-            this.$router.replace({
-              name: 'board',
-              params: {
-                name: this.$route.params.name
-              }
-            });
-          });
-        }
-      },
-      deleteComment(comment) {
-        if (window.confirm(this.$t('common.do.you.want.to.delete.a.comment'))) {
-          $.ajax({
-            type: 'delete',
-            url: `/api/board/free/comment/${comment.id}`
-          }).then(() => {
-            const index = this.comments.findIndex(_comment => _comment.id === comment.id);
-            this.comments.splice(index, 1);
-          });
-        }
-      },
-      toggleNotice() {
-        const isNotice = this.isNotice;
-
-        $.ajax({
-          type: isNotice ? 'delete' : 'post',
-          url: `/api/board/free/${this.post.seq}/notice`
-        }).then(() => {
-          if (!this.post.status) {
-            this.post.status = {};
-          }
-
-          this.post.status.notice = !isNotice;
-
-          this.$store.dispatch('globalMessage', {
-            level: 'info',
-            message: this.$t(isNotice ? 'board.msg.cancel.notice' : 'board.msg.set.as.notice')
-          });
-        });
-      },
-      onEditorCreated(editor) {
-        this.commentEditor = editor;
-        $('.ui.sticky').sticky('refresh', true);
       }
-    },
-    beforeRouteEnter(to, from, next) {
-      fetch(to.params.seq).then((post, comments) => {
-        if (post === 'error') {
-          window.alert(Vue.t('common.error.occurred.on.server'));
-          next(false);
-        } else {
-          next(_this => {
-            apply.call(_this, post, comments);
-            _this.$store.commit('load', false);
-          });
-        }
-      });
-    },
-    beforeRouteUpdate(to, from, next) {
-      fetch(to.params.seq).then((post, comments) => {
-        apply.call(this, post, comments);
-        next();
-      });
     },
     components: {
       pager: Pager,
@@ -421,6 +471,11 @@
         require.ensure([], require => {
           resolve(require('../../components/editor/editor.vue'));
         }, 'editor');
+      },
+      'kakao-share': resolve => {
+        require.ensure([], require => {
+          resolve(require('../../components/kakao_share/kakao_share.vue'));
+        }, 'kakao_share');
       }
     }
   };

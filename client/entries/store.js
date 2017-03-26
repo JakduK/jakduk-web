@@ -5,6 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    isMobile: /iphone|ipad|android/i.test(window.navigator.userAgent),
+    kakaoClientID: window.ENV.kakaoClientID,
     locale: window.ENV.locale,
     isAuthenticated: !!window.ENV.myProfile,
     isAdmin: window.ENV.myProfile && window.ENV.myProfile.roles.some(role => role === 'ROLE_ROOT'),

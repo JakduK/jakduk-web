@@ -21,6 +21,10 @@ Vue.mixin({
   }
 });
 
+if (!window.location.origin) {
+  window.location.origin = `${window.location.protocol}//${window.location.host}`;
+}
+
 loadI18n(window.ENV.locale).done(() => {
   router.beforeEach((to, from, next) => {
     if (!store.state.isAuthenticated && to.matched.some(record => record.meta.requiresAuth)) {
@@ -41,19 +45,19 @@ function startApp() {
   const navbar = new Vue({
     store,
     router,
-    render: h => h(Navbar)
+    render: createElement => createElement(Navbar)
   });
 
   const main = new Vue({
     store,
     router,
-    render: h => h(App)
+    render: createElement => createElement(App)
   });
 
   const phoneSidenav = new Vue({
     store,
     router,
-    render: h => h(PhoneSidenav)
+    render: createElement => createElement(PhoneSidenav)
   });
 
   navbar.$mount('#navbar');
