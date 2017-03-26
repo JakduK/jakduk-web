@@ -1,12 +1,12 @@
 import Vue from 'vue';
 
-export default function (fnMessage) {
+export default function (pass) {
   return function (response) {
-    const message = fnMessage ? fnMessage(response) : '';
+    if (pass && pass(response)) {
+      return;
+    }
 
-    if (message) {
-      window.alert(Vue.t(message));
-    } else if (response.status === 401) {
+    if (response.status === 401) {
       if (window.confirm(Vue.t('common.do.you.want.to.login'))) {
         window.location = `/login?redir=${encodeURIComponent(`${location.pathname}${location.search}`)}`;
       }

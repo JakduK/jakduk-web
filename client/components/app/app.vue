@@ -51,6 +51,13 @@
     top: 240px;
   }
 
+  .global-message {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+  }
+
   * > .icon.large + * {
     vertical-align: middle;
   }

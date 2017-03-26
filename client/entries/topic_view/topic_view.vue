@@ -130,10 +130,6 @@
       <h4 class="ui segment"><i class="blue talk icon"></i> {{$t('board.comments')}}</h4>
       <div class="ui blue segment">
 
-        <!--<div class="fluid ui button">-->
-          <!--<i class="icon chevron up"></i> More-->
-        <!--</div>-->
-
         <div class="ui comments">
           <div v-if="!comments.length" class="ui small header">
             {{$t('board.msg.there.is.no.new.comment')}} <i class="blue icon meh"></i>
@@ -141,9 +137,9 @@
           <comment-list-item :item="comment" v-for="comment in comments" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
         </div>
 
-        <!--<div class="fluid ui button">-->
-          <!--<i class="icon chevron down"></i> More-->
-        <!--</div>-->
+        <button @click="moreComments" type="button" class="fluid ui basic button">
+          <i class="icon arrow circle down"></i> {{$t('common.button.more')}}
+        </button>
 
         <div class="ui divider"></div>
 
@@ -375,7 +371,11 @@
           this.post.numberOfDislike = data.numberOfDislike;
         }, ErrorDialog(response => {
           if (response.status === 400) {
-            return 'board.msg.you.are.writer';
+            this.$store.dispatch('globalMessage', {
+              level: 'warn',
+              message: this.$t('board.msg.you.are.writer')
+            });
+            return true;
           }
         }));
       },
@@ -401,7 +401,11 @@
           comment.numberOfDislike = data.numberOfDislike;
         }, ErrorDialog(response => {
           if (response.status === 400) {
-            return 'board.msg.you.are.writer';
+            this.$store.dispatch('globalMessage', {
+              level: 'warn',
+              message: this.$t('board.msg.you.are.writer')
+            });
+            return true;
           }
         }));
       },
@@ -415,6 +419,24 @@
             this.comments.splice(index, 1);
           });
         }
+      },
+      moreComments() {
+        const lastComment = this.comments[this.comments.length - 1];
+        $.getJSON(`/api/board/free/${this.post.seq}/comments${lastComment ? `?commentId=${lastComment.id}` : ''}`).then(data => {
+          if (data.comments.length) {
+            this.comments.splice(this.comments.length, 0, ...data.comments);
+          } else {
+            this.$store.dispatch('globalMessage', {
+              level: 'info',
+              message: this.$t('board.msg.there.is.no.new.comment')
+            });
+          }
+        }, response => {
+          this.$store.dispatch('globalMessage', {
+            level: 'error',
+            message: response[2]
+          });
+        });
       },
       checkCommentForm() {
         if (!this.$store.state.isAuthenticated) {
