@@ -120,37 +120,7 @@
           <div v-if="!comments.length" class="ui small header">
             {{$t('board.msg.there.is.no.new.comment')}} <i class="blue icon meh"></i>
           </div>
-          <div v-for="comment in comments" :key="comment.id" class="comment">
-            <a class="avatar">
-              <img v-if="comment.writer.picture" :src="comment.writer.picture">
-              <i v-else class="icon big grey spy"></i>
-            </a>
-            <div v-if="isAuthenticated && myProfile.id === comment.writer.userId" class="pull-right">
-              <button @click="deleteComment(comment)" class="ui icon mini basic button"><i class="remove blue fitted icon"></i></button>
-            </div>
-            <div class="content">
-              <a class="author">{{comment.writer.username}}</a>
-              <div class="metadata">
-                <span class="date">{{comment.id | IdToRegDate('LL')}}</span>&middot;
-                <div class="rating">
-                  <button @click="likeOrDislikeComment(comment, 'LIKE')">
-                    <i :style="{'font-weight': comment.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i>
-                    {{comment.numberOfLike || 0}}
-                  </button> &nbsp;
-                  <button @click="likeOrDislikeComment(comment, 'DISLIKE')">
-                    <i :class="{'font-weight': comment.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal icon"></i> {{comment.numberOfDislike || 0}}
-                  </button>
-                </div>
-              </div>
-              <div class="text" v-html="comment.content"></div>
-              <!--
-              추후 댓글답변
-              <div class="actions">
-                <a class="reply">Reply</a>
-              </div>
-              -->
-            </div>
-          </div>
+          <comment-list-item :item="comment" v-for="comment in comments" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
         </div>
 
         <!--<div class="fluid ui button">-->
@@ -198,6 +168,10 @@
     border: 0;
   }
 
+  .comment .text.ql-editor {
+    padding: 0 1em 0 0;
+  }
+
   .comment-form {
     margin-top: 1.5em;
   }
@@ -219,6 +193,7 @@
   import CategoryLabel from '../../filters/category_label';
   import ErrorDialog from '../../utils/dialog_response_error';
   import Editor from '../../components/editor/editor.vue';
+  import CommentListItem from '../../components/comment_list_item/comment_list_item.vue';
 
   function fetch(seq) {
     return $.when(
@@ -445,7 +420,8 @@
     },
     components: {
       pager: Pager,
-      editor: Editor
+      editor: Editor,
+      'comment-list-item': CommentListItem
     }
   };
 </script>
