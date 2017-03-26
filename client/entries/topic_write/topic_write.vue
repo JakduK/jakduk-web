@@ -70,7 +70,6 @@
 
 <script>
   import $ from 'jquery';
-  import Editor from '../../components/editor/editor.vue';
   import CategoryColor from '../../filters/category_color';
   import CategoryIcon from '../../filters/category_icon';
   import CategoryLabel from '../../filters/category_label';
@@ -274,7 +273,11 @@
       fileSize: FileSize
     },
     components: {
-      editor: Editor
+      editor: resolve => {
+        require.ensure([], require => {
+          resolve(require('../../components/editor/editor.vue'));
+        }, 'editor');
+      },
     }
   };
 </script>

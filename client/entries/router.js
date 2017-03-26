@@ -4,25 +4,25 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 const Home = resolve => {
-  require.ensure([], (require) => {
+  require.ensure([], require => {
     resolve(require('../entries/home/home.vue'));
   }, 'home');
 };
 
 const Board = resolve => {
-  require.ensure([], (require) => {
+  require.ensure([], require => {
     resolve(require('../entries/board/board.vue'));
   }, 'board');
 };
 
 const TopicView = resolve => {
-  require.ensure([], (require) => {
+  require.ensure([], require => {
     resolve(require('../entries/topic_view/topic_view.vue'));
   }, 'topic_view');
 };
 
 const TopicWrite = resolve => {
-  require.ensure([], (require) => {
+  require.ensure([], require => {
     resolve(require('../entries/topic_write/topic_write.vue'));
   }, 'topic_write');
 };

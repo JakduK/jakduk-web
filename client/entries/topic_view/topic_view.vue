@@ -6,9 +6,6 @@
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     <div class="pull-right">
-      <!--<button class="ui icon button">-->
-        <!--<i class="icon share alternate"></i>-->
-      <!--</button>-->
       <div v-if="isAuthenticated && (isEditable || isAdmin)" class="ui top right pointing dropdown icon button">
         <i class="icon wrench"></i>
         <div class="menu">
@@ -192,7 +189,6 @@
   import CategoryIcon from '../../filters/category_icon';
   import CategoryLabel from '../../filters/category_label';
   import ErrorDialog from '../../utils/dialog_response_error';
-  import Editor from '../../components/editor/editor.vue';
   import CommentListItem from '../../components/comment_list_item/comment_list_item.vue';
 
   function fetch(seq) {
@@ -420,8 +416,12 @@
     },
     components: {
       pager: Pager,
-      editor: Editor,
-      'comment-list-item': CommentListItem
+      'comment-list-item': CommentListItem,
+      editor: resolve => {
+        require.ensure([], require => {
+          resolve(require('../../components/editor/editor.vue'));
+        }, 'editor');
+      }
     }
   };
 </script>
