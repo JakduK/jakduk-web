@@ -15,13 +15,13 @@ module.exports = {
     app: (() => {
       const appEntry = [];
       if (process.env.NODE_ENV !== 'production') {
-        appEntry.push(path.resolve(__dirname, './client/entries/dev-client.js'));
+        appEntry.push(path.resolve('client/entries/dev-client.js'));
       }
-      return appEntry.concat(path.resolve(__dirname, './client/entries/main.js'));
+      return appEntry.concat(path.resolve('client/entries/main.js'));
     })()
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve('dist'),
     publicPath: '/assets/',
     filename: '[name].js',
     chunkFilename: '[name].js?[chunkhash]'
@@ -61,7 +61,7 @@ module.exports = {
       'vuex': 'vuex/dist/vuex.js',
       moment: 'moment/min/moment.min.js',
       '../moment': 'moment/min/moment.min.js',
-      semantic: path.join(__dirname, 'client/semantic/dist/semantic.js')
+      semantic: path.resolve('client/semantic/dist/semantic.js')
     }
   },
   plugins: [

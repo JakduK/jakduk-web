@@ -22,7 +22,7 @@
             <img :src="image.imageUrl">
           </div>
           <div class="content">
-            <div class="ui header tiny">
+            <div class="ui header tiny break-all">
               <div v-if="image.isRenaming" class="ui form">
                 <div class="field">
                   <input v-model="image.newName" @keyup.enter.esc="enterNewImageName(image, $event)">
@@ -35,13 +35,9 @@
             </div>
             <div class="extra">
               <div class="ui right floated basic buttons">
-                <button @click="deleteImage(image)" class="ui icon compact button">
-                  <i class="icon blue remove"></i>
-                </button>
-              </div>
-              <div class="ui right floated basic buttons">
                 <button @click="insertImage(image)" class="ui compact button">{{$t('common.insert.into.content')}}</button>
                 <button @click="renameImage(image)" class="ui compact button">{{$t('common.rename')}}</button>
+                <button @click="deleteImage(image)" class="ui icon compact button"><i class="icon blue remove"></i></button>
               </div>
             </div>
           </div>

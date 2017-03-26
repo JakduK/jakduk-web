@@ -121,6 +121,14 @@
     cursor: pointer;
   }
 
+  .vertical-align-middle {
+    vertical-align: middle;
+  }
+
+  .break-all {
+    word-break: break-all;
+  }
+
   a.black-link {
     color: rgba(0, 0, 0, 0.87);
   }

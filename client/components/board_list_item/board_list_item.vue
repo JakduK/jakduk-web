@@ -14,11 +14,13 @@
         </span>
       </div>
 
-      <div :class="{'ui tiny disabled': item.status && item.status.delete}" class="header">
-        <span v-if="isNotice" class="ui horizontal basic label nowrap">
+      <div :class="{'ui tiny disabled': item.status && item.status.delete}" class="header break-all">
+        <span v-if="isNotice" class="ui horizontal small basic label nowrap">
           <i class="announcement blue icon"></i>{{$t('board.notice')}}
         </span>
-        {{(item.status && item.status.delete) ? $t('board.msg.deleted') : item.subject}}
+        <span class="vertical-align-middle">
+          {{(item.status && item.status.delete) ? $t('board.msg.deleted') : item.subject}}
+        </span>
         <span v-if="!item.status || !item.status.delete" :class="categoryColor(item.category)" class="ui tiny basic label">
           {{$t(categoryLabel(item.category))}}
         </span>

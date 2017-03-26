@@ -25,7 +25,7 @@
                   </div>
                 </div>
                 <div class="content">
-                  <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
+                  <div :class="{'ui tiny disabled': post.status.delete}"  class="header break-all">
                     {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
                   </div>
                   <template v-if="post.writer">
@@ -47,7 +47,7 @@
             <div class="ui selection divided list">
               <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.boardItem.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
                 <div class="content">
-                  <div class="header">{{comment.content}}</div>
+                  <div class="header break-all">{{comment.content}}</div>
                   <div v-if="comment.writer" class="extra">
                     <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | IdToRegDate('LL')}}
                   </div>
