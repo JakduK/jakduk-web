@@ -183,9 +183,6 @@
         category: undefined
       };
     },
-    created() {
-      this.$store.commit('load', true);
-    },
     updated() {
       $('.ui.sticky').sticky('refresh', true);
     },

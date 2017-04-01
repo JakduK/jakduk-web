@@ -1,7 +1,7 @@
 <template>
   <div>
     <form class="ui icon input" @submit.prevent="search()">
-      <input type="text" v-model="keyword" :placeholder="$t('search.placeholder.words')" autocomplete="off">
+      <input ref="input" @input="updateValue($event.target.value)" :value="value" :placeholder="$t('search.placeholder.words')" type="text" autocomplete="off">
       <i class="search link icon"></i>
     </form>
     <div class="results"></div>
@@ -10,16 +10,14 @@
 
 <script>
   export default {
-    data() {
-      return {
-        keyword: ''
-      };
-    },
+    props: ['value'],
     methods: {
+      updateValue(value) {
+        this.$emit('input', value);
+      },
       search() {
-        window.location = `/search?w=PO;CO;GA&q=${encodeURIComponent(this.keyword)}`;
+        this.$emit('on-enter', this.value);
       }
     }
   };
-
 </script>

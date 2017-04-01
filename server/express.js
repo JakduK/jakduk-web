@@ -66,7 +66,7 @@ function setup(app) {
   app.use(i18nMdw());
   app.use(defaultContext());
 
-  app.get(['/', '/home', '/board/**'], (req, res) => {
+  app.get(['/', '/home', '/board/**', '/search'], (req, res) => {
     res.render('index', {
       layout: false,
       title: [

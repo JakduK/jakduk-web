@@ -244,6 +244,8 @@
       this.comments = comments.comments;
       this.commentCount = comments.commentCount;
     }
+
+    this.$store.commit('load', false);
   }
 
   export default {
@@ -271,7 +273,6 @@
         } else {
           next(_this => {
             apply.call(_this, post, comments);
-            _this.$store.commit('load', false);
           });
         }
       });

@@ -89,7 +89,9 @@
       <div class="ui segments">
         <h5 class="ui segment"><i class="blue search icon"></i> {{$t('popular.search.words')}}</h5>
         <div v-if="popularSearchWords" class="ui blue segment">
-          <a :class="indexedColor(index, true)" :href="searchQuery(word.key)" v-for="(word, index) in popularSearchWords" :key="word.key" class="ui label search-keyword">{{word.key}}</a>
+          <router-link :to="{name: 'search', query: {q: word.key, w: 'PO;CO;GA', from: 0, size: 3}}" v-for="(word, index) in popularSearchWords" :key="word" :class="indexedColor(index, true)" class="ui label search-keyword">
+            {{word.key}}
+          </router-link>
         </div>
         <div v-else class="ui blue segment">{{$t('failed.loading')}}</div>
       </div>
@@ -127,10 +129,88 @@
   </div>
 </template>
 
-<style>
-  .ui.label.search-keyword {
-    margin: 0.1em;
-  }
-</style>
+<script>
+  import $ from 'jquery';
+  import Swiper from 'swiper';
+  import Truncate from 'lodash/fp/truncate';
+  import IdToRegDate from '../../filters/id_to_regdate';
+  import IndexedColor from '../../filters/indexed_color';
 
-<script src="./home.js"></script>
+  function reduce() {
+    return Array.prototype.reduce.call(arguments[0], arguments[1], arguments[2]);
+  }
+
+  function fetch() {
+    const promises = $.when(
+      $.getJSON('/api/home/latest').then(data => data, (response, result) => result),
+      $.getJSON('/api/search/popular/words?size=10').then(data => data, (response, result) => result),
+      $.getJSON('/api/home/encyclopedia').then(data => data, (response, result) => result)
+    );
+
+    promises.always((latest, popularSearchWords, encyclopedia) => {
+      if (latest !== 'error') {
+        let $news = $(`<div>${latest.homeDescription.desc}</div>`).find('>ul').children();
+        latest.homeDescription.desc = reduce($news, (list, elem) => {
+          list.push(elem.innerHTML);
+          return list;
+        }, []);
+      }
+
+      this.latest = latest === 'error' ? undefined : latest;
+      this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
+      this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
+      this.$store.commit('load', false);
+
+      this.$nextTick(() => {
+        $('.swiper-container').each((index, element) => {
+          /* eslint-disable no-new */
+          new Swiper(element, {
+            autoplay: true,
+            autoplayDisableOnInteraction: false,
+            loop: true,
+            setWrapperSize: true,
+            preloadImages: false,
+            lazyLoading: true,
+            lazyLoadingInPrevNext: true
+          });
+        });
+      });
+    });
+  }
+
+  export default {
+    filters: {
+      IdToRegDate: IdToRegDate
+    },
+    data() {
+      return {
+        latest: {
+          posts: [],
+          comments: [],
+          galleries: [],
+          users: [],
+          homeDescription: {}
+        },
+        popularSearchWords: [],
+        encyclopedia: {},
+        isReady: false
+      };
+    },
+    beforeRouteEnter(to, from, next) {
+      next(_this => {
+        fetch.call(_this);
+      });
+    },
+    updated() {
+      $('.ui.sticky').sticky('refresh', true);
+    },
+    methods: {
+      indexedColor: IndexedColor
+    },
+    computed: {
+      encyclopediaSummary() {
+        return `${Truncate(50)(this.encyclopedia.content)}`;
+      }
+    }
+  };
+</script>

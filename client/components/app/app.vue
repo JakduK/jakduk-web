@@ -6,7 +6,7 @@
       </transition-group>
     </div>
 
-    <div class="ui container">
+    <div :style="loading ? {overflow: 'hidden', display: 'flex', 'flex-direction': 'column'} : {}" class="ui container">
       <div class="ui grid">
         <div id="content" class="sixteen wide mobile sixteen wide tablet fourteen wide computer column">
           <router-view></router-view>
@@ -138,6 +138,15 @@
 
   a.black-link {
     color: rgba(0, 0, 0, 0.87);
+  }
+
+  .color-orange {
+    color: #00aceb;
+    font-weight: bold;
+  }
+
+  .ui.label.search-keyword {
+    margin: 0.1em;
   }
 </style>
 

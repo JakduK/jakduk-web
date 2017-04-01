@@ -27,6 +27,12 @@ const TopicWrite = resolve => {
   }, 'topic_write');
 };
 
+const SearchView = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/search_view/search_view.vue'));
+  }, 'search_view');
+};
+
 export default new VueRouter({
   mode: 'history',
   scrollBehavior(to, from, savedPosition) {
@@ -65,5 +71,9 @@ export default new VueRouter({
       mode: 'edit'
     },
     component: TopicWrite
+  }, {
+    name: 'search',
+    path: '/search',
+    component: SearchView
   }]
 });

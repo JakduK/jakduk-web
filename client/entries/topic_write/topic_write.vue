@@ -84,8 +84,6 @@
       }
     },
     created() {
-      this.$store.commit('load', true);
-
       this.defers = {
         editor: $.Deferred(),
         data: $.Deferred()

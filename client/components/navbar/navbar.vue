@@ -39,7 +39,7 @@
                 <profile-menu></profile-menu>
               </a>
               <a v-else :href="'/login?redir=' + encodeURIComponent($route.fullPath)" class="item">{{$t('common.login')}}</a>
-              <search-input class="ui search item"></search-input>
+              <search-input v-model="searchKeyword" @on-enter="onSearchEnter" class="ui search item"></search-input>
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@
   export default {
     data() {
       return {
-        path: window.location.pathname
+        searchKeyword: ''
       };
     },
     mounted() {
@@ -97,9 +97,31 @@
         } else {
           this.path = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}`;
         }
+
+        if (to.path === '/search') {
+          this.searchKeyword = to.query.q;
+        }
       }
     },
-    computed: mapState(['isAuthenticated']),
+    computed: {
+      path() {
+        return window.location.pathname;
+      },
+      ...mapState(['isAuthenticated'])
+    },
+    methods: {
+      onSearchEnter(keyword) {
+        this.$router.push({
+          name: 'search',
+          query: {
+            q: keyword,
+            w: 'PO;CO;GA',
+            from: 0,
+            size: 3
+          }
+        });
+      }
+    },
     components: {
       'search-input': SearchInput,
       'profile-menu': ProfileMenu

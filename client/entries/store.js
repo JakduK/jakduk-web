@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import searchViewStore from './search_view/store';
 
 Vue.use(Vuex);
 
@@ -53,5 +54,8 @@ export default new Vuex.Store({
         commit('deleteGlobalMessage', message);
       }, message.duration);
     }
+  },
+  modules: {
+    searchView: searchViewStore
   }
 });

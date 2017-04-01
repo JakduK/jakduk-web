@@ -1,6 +1,6 @@
 <template>
   <div id="phoneSidenav" class="ui left inverted blue vertical accordion menu sidebar">
-    <search-input class="ui search item"></search-input>
+    <search-input v-model="searchKeyword" @on-enter="onSearchEnter" class="ui search item"></search-input>
     <router-link active-class="active" to="/home" class="item">{{$t('common.home')}}</router-link>
     <router-link active-class="active" to="/board/free" class="item">{{$t('board')}}</router-link>
     <a active-class="active" class="item">{{$t('gallery')}}</a>
@@ -26,7 +26,8 @@
   export default {
     data() {
       return {
-        path: window.location.pathname
+        path: window.location.pathname,
+        searchKeyword: ''
       };
     },
     mounted() {
@@ -46,10 +47,15 @@
     watch: {
       $route(to, from) {
         const langQueryRegexp = /lang=(.[^&]+)/g;
+
         if (to.fullPath.match(langQueryRegexp)) {
           this.path = to.fullPath.replace(langQueryRegexp, () => '');
         } else {
           this.path = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}`;
+        }
+
+        if (to.path === '/search') {
+          this.searchKeyword = to.query.q;
         }
       }
     },
@@ -61,6 +67,19 @@
         } else {
           return `${window.location.href}?lang=${locale}`;
         }
+      },
+      onSearchEnter(keyword) {
+        this.$router.push({
+          name: 'search',
+          query: {
+            q: keyword,
+            w: 'PO;CO;GA',
+            from: 0,
+            size: 3
+          }
+        });
+
+        $(this.$el).sidebar('toggle');
       }
     },
     components: {
