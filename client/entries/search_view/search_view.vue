@@ -2,7 +2,7 @@
   <div>
     <div class="ui segments">
       <h5 class="ui segment"><i class="blue trophy icon"></i> {{$t('popular.search.words')}}</h5>
-      <div class="ui segment">
+      <div class="ui blue segment">
         <router-link v-for="(word, index) in popularSearchWords" :key="word.key" :class="indexedColor(index, false)" :to="{name: 'search', query: {q: word.key, w: 'PO;CO;GA', from: 0, size: 3}}" class="ui label search-keyword">{{word.key}}</router-link>
       </div>
     </div>
@@ -15,7 +15,7 @@
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
-      <div class="ui segment">
+      <div class="ui blue segment">
         <div v-if="!searchResult.postResult.posts.length">
           <i class="icon idea"></i> {{$t('search.no.result')}}
         </div>
@@ -50,7 +50,7 @@
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
-      <div class="ui segment">
+      <div class="ui blue segment">
         <div v-if="!searchResult.commentResult.comments.length">
           <i class="icon idea"></i> {{$t('search.no.result')}}
         </div>
@@ -81,7 +81,7 @@
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
-      <div class="ui segment">
+      <div class="ui blue segment">
         <div v-if="!searchResult.galleryResult.galleries.length">
           <i class="icon idea"></i> {{$t('search.no.result')}}
         </div>
