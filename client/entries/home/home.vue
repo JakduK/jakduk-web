@@ -65,21 +65,21 @@
       <!-- 최신 사진 -->
       <div class="ui segments">
         <h5 class="ui segment">
-          <a href="/gallery" class="black-link">
+          <router-link to="/gallery" class="black-link">
             <i class="blue image icon"></i> {{$t('home.pictures.latest')}} <i class="chevron right blue icon pull-right"></i>
-          </a>
+          </router-link>
         </h5>
         <div class="ui blue segment">
           <div v-if="latest" class="swiper-container text-overflow">
             <div class="swiper-wrapper">
               <div v-for="image in latest.galleries" :key="image.id" data-swiper-autoplay="3000" class="swiper-slide pull-left">
-                <a :href="'/gallery/' + image.id" class="ui fluid rounded bordered image">
+                <router-link :to="{name: 'gallery.view', params: {id: image.id}}" class="ui fluid rounded bordered image">
                   <img :data-src="image.thumbnailUrl" class="swiper-lazy">
                   <div class="ui divider"></div>
                   <div v-if="image.writer" class="">{{image.writer.username}}
                     <span class="nowrap">&middot; <i class="eye icon"></i>{{image.views}}</span>
                   </div>
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
