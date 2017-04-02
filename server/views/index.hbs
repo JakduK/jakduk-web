@@ -17,6 +17,7 @@
       {{#if @root.userInfo}}
         myProfile: {{JSON_STRINGIFY @root.userInfo}},
       {{/if}}
+        imageServerUrl: '{{thumbnailServerUrl}}',
         revision: '{{@root.revision}}',
         locale: '{{@root.locale}}',
         kakaoClientID: '{{kakaoClientID}}'

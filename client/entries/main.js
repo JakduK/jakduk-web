@@ -15,8 +15,17 @@ Vue.filter('encode', Encode);
 
 Vue.mixin({
   methods: {
+    imageSrc(id) {
+      return typeof id !== 'number' && !id ? '' : `${window.ENV.imageServerUrl}/gallery/${id}`;
+    },
+    thumbnailSrc(id) {
+      return typeof id !== 'number' && !id ? '' : `${window.ENV.imageServerUrl}/gallery/thumbnail/${id}`;
+    },
     isEmptyArray(arr) {
       return !arr || !arr.length;
+    },
+    lastElement(arr) {
+      return arr[arr.length - 1];
     }
   }
 });

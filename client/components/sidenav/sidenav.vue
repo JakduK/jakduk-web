@@ -5,7 +5,7 @@
         <div class="ui vertical blue inverted fluid menu">
           <router-link active-class="active" to="/home" class="item computer only row">{{$t('common.home')}}</router-link>
           <router-link active-class="active" to="/board/free" class="item computer only row">{{$t('board')}}</router-link>
-          <a active-class="active" href="/gallery" class="item computer only row">{{$t('gallery')}}</a>
+          <router-link active-class="active" to="/gallery" class="item computer only row">{{$t('gallery')}}</router-link>
           <a active-class="active" href="/stats" class="item computer only row">{{$t('stats')}}</a>
           <a active-class="active" href="/jakdu" class="item computer only row">{{$t('jakdu.write')}}</a>
         </div>
@@ -26,5 +26,4 @@
     },
     computed: mapState(['sidenav'])
   };
-
 </script>

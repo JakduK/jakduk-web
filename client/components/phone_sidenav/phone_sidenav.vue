@@ -3,7 +3,7 @@
     <search-input v-model="searchKeyword" @on-enter="onSearchEnter" class="ui search item"></search-input>
     <router-link active-class="active" to="/home" class="item">{{$t('common.home')}}</router-link>
     <router-link active-class="active" to="/board/free" class="item">{{$t('board')}}</router-link>
-    <a active-class="active" class="item">{{$t('gallery')}}</a>
+    <router-link active-class="active" to="/gallery" class="item">{{$t('gallery')}}</router-link>
     <a active-class="active" class="item">{{$t('stats')}}</a>
     <a active-class="active" class="item">{{$t('jakdu.write')}}</a>
     <div class="item">

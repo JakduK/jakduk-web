@@ -104,13 +104,13 @@
     </div>
 
     <!--작성자의 최근 게시물-->
-    <div v-if="latestPostsByWriter && latestPostsByWriter.length" class="ui segments summary-list">
+    <div v-if="!isEmptyArray(latestPostsByWriter)" class="ui segments summary-list">
       <h4 class="ui segment"><i class="blue feed icon"></i> {{$t('latest.articles.author')}}</h4>
       <div class="ui blue segment">
         <div class="ui divided selection relaxed list">
           <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="post in latestPostsByWriter" :key="post.id" class="item">
-            <div class="right floated content">
-              <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
+            <div v-if="!isEmptyArray(post.galleries)" class="right floated content">
+              <div class="ui rounded bordered image thumbnail">
                 <img :src="post.galleries[0].thumbnailUrl">
               </div>
             </div>
@@ -131,7 +131,7 @@
       <div class="ui blue segment">
 
         <div class="ui comments">
-          <div v-if="!comments.length" class="ui small header">
+          <div v-if="isEmptyArray(comments)" class="ui small header">
             {{$t('board.msg.there.is.no.new.comment')}} <i class="blue icon meh"></i>
           </div>
           <comment-list-item :item="comment" v-for="comment in comments" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
@@ -159,12 +159,30 @@
   </div>
 </template>
 
+<style scoped>
+  .button-kakao {
+    height: 36px;
+    vertical-align: top;
+  }
+
+  .button-kakao > img {
+    height: 100%;
+  }
+
+  .item .item-icon-kakao {
+    height: 14px !important;
+  }
+
+  .shares {
+    margin-top: 1rem;
+  }
+</style>
+
 <style>
   .topic-view img {
     max-width: 100%;
     border-radius: 0.28571429rem;
   }
-
   .topic-view .ui.comments {
     max-width: inherit;
   }
@@ -193,23 +211,6 @@
   .comment-form .comment-editor {
     margin-bottom: 1em;
     height: 200px;
-  }
-
-  .button-kakao {
-    height: 36px;
-    vertical-align: top;
-  }
-
-  .button-kakao > img {
-    height: 100%;
-  }
-
-  .item .item-icon-kakao {
-    height: 14px !important;
-  }
-
-  .shares {
-    margin-top: 1rem;
   }
 </style>
 

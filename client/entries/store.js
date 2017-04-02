@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import searchViewStore from './search_view/store';
+import galleryStore from './gallery/store';
+import galleryViewStore from './gallery_view/store';
 
 Vue.use(Vuex);
 
@@ -56,6 +58,8 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    searchView: searchViewStore
+    searchView: searchViewStore,
+    gallery: galleryStore,
+    galleryView: galleryViewStore
   }
 });
