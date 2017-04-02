@@ -226,26 +226,32 @@
   import CommentListItem from '../../components/comment_list_item/comment_list_item.vue';
 
   function fetch(seq) {
-    return $.when(
-      $.getJSON(`/api/board/free/${seq}`).then(data => data, (response, result) => result),
-      $.getJSON(`/api/board/free/${seq}/comments`).then(data => data, (response, result) => result)
-    );
+    return $.getJSON(`/api/board/free/${seq}`).then(data => {
+      return data;
+    }, response => response).then(post => {
+      return $.getJSON(`/api/board/free/${seq}/comments`).then(data => {
+        return {
+          post: post,
+          comments: data
+        }
+      });
+    }, response => response);
   }
 
   function apply(post, comments) {
-    post = post === 'error' ? undefined : post;
-    comments = comments === 'error' ? undefined : comments;
-
-    if (post) {
-      $.extend(this, post);
-    }
-
-    if (comments) {
-      this.comments = comments.comments;
-      this.commentCount = comments.commentCount;
-    }
-
+    $.extend(this, post);
+    this.comments = comments.comments;
+    this.commentCount = comments.commentCount;
     this.$store.commit('load', false);
+  }
+
+  function error(response) {
+    if (response.status !== 404) {
+      window.alert(this.$t('common.error.occurred.on.server'));
+      this.$router.replace(`/board/${this.$route.params.name}`);
+    } else {
+      this.$router.replace(`/page_not_found`);
+    }
   }
 
   export default {
@@ -266,21 +272,22 @@
       };
     },
     beforeRouteEnter(to, from, next) {
-      fetch(to.params.seq).then((post, comments) => {
-        if (post === 'error') {
-          window.alert(Vue.t('common.error.occurred.on.server'));
-          next(false);
-        } else {
-          next(_this => {
-            apply.call(_this, post, comments);
-          });
-        }
+      fetch(to.params.seq).then(({post, comments}) => {
+        next(_this => {
+          apply.call(_this, post, comments);
+        });
+      }, response => {
+        next(_this => {
+          error.call(_this, response);
+        });
       });
     },
     beforeRouteUpdate(to, from, next) {
-      fetch(to.params.seq).then((post, comments) => {
+      fetch(to.params.seq).then(({post, comments}) => {
         apply.call(this, post, comments);
         next();
+      }, response => {
+        error.call(this, response);
       });
     },
     updated() {

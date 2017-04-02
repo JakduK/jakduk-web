@@ -33,6 +33,12 @@ const SearchView = resolve => {
   }, 'search_view');
 };
 
+const NotFound = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/not_found/not_found.vue'));
+  }, 'not_found');
+};
+
 export default new VueRouter({
   mode: 'history',
   scrollBehavior(to, from, savedPosition) {
@@ -75,5 +81,8 @@ export default new VueRouter({
     name: 'search',
     path: '/search',
     component: SearchView
+  }, {
+    path: '*',
+    component: NotFound
   }]
 });

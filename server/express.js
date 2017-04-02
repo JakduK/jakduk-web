@@ -66,7 +66,10 @@ function setup(app) {
   app.use(i18nMdw());
   app.use(defaultContext());
 
-  app.get(['/', '/home', '/board/**', '/search'], (req, res) => {
+  // register routes
+  require('./routes')(app);
+
+  app.use('*', (req, res) => {
     res.render('index', {
       layout: false,
       title: [
@@ -75,9 +78,6 @@ function setup(app) {
       ]
     });
   });
-
-  // register routes
-  require('./routes')(app);
 
   return app;
 }
