@@ -7,7 +7,7 @@
             <img :src="item.galleries[0].thumbnailUrl">
           </div>
         </div>
-        <span v-if="isNotice" class="ui horizontal small basic label nowrap">
+        <span v-if="isNotice" class="ui horizontal basic label nowrap">
           <i class="announcement blue icon"></i>{{$t('board.notice')}}
         </span>
         <span class="vertical-align-middle">
