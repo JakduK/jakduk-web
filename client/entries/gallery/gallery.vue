@@ -2,14 +2,6 @@
   <div>
     <div class="ui four doubling cards">
       <div v-for="image in imageList" class="card">
-        <div class="content">
-          <div class="author text-overflow">
-            <span class="left floated">
-              <img v-if="image.writer.picture" :src="image.writer.picture" class="ui avatar image">
-              <i v-else class="spy large icon"></i> {{image.writer.username}}
-            </span>
-          </div>
-        </div>
         <a :href="imageSrc(image.id)" :data-title="image.name" data-dimmed="false" data-lightbox="roundtrip" class="blurring dimmable image">
           <div class="ui dimmer">
             <div class="content">
@@ -24,10 +16,18 @@
           <router-link :to="{name: 'gallery.view', params: {id: image.id}}" class="description break-all">{{image.name}}</router-link>
         </div>
         <div class="extra content">
+          <div class="author text-overflow">
+            <span class="left floated">
+              <img v-if="image.writer.picture" :src="image.writer.picture" class="ui avatar image">
+              <i v-else class="spy large icon"></i> {{image.writer.username}}
+            </span>
+          </div>
+        </div>
+        <div class="extra content">
           {{image.id | IdToRegDate('LL')}}
-          <span class="right floated">
-           <i class="eye icon"></i> {{image.views}}
-          </span>
+            <span class="right floated">
+             <i class="eye icon"></i> {{image.views}}
+            </span>
         </div>
       </div>
     </div>
