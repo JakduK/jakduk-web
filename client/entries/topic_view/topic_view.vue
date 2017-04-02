@@ -131,13 +131,13 @@
       <div class="ui blue segment">
 
         <div class="ui comments">
-          <div v-if="isEmptyArray(comments)" class="ui small header">
-            {{$t('board.msg.there.is.no.new.comment')}} <i class="blue icon meh"></i>
-          </div>
+          <p v-if="isEmptyArray(comments)">
+            <i class="icon idea"></i>{{$t('board.msg.there.is.no.new.comment')}}
+          </p>
           <comment-list-item :item="comment" v-for="comment in comments" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
         </div>
 
-        <button @click="moreComments" type="button" class="fluid ui basic button">
+        <button @click="moreComments" :class="{loading: isCommentLoading}" type="button" class="fluid ui basic button">
           <i class="icon arrow circle down"></i> {{$t('common.button.more')}}
         </button>
 
@@ -243,6 +243,7 @@
     $.extend(this, post);
     this.comments = comments.comments;
     this.commentCount = comments.commentCount;
+    this.isCommentLoading = false;
     this.$store.commit('load', false);
   }
 
@@ -269,7 +270,8 @@
         nextPost: {},
         prevPost: {},
         comments: [],
-        isCommentSubmitting: false
+        isCommentSubmitting: false,
+        isCommentLoading: true
       };
     },
     beforeRouteEnter(to, from, next) {
@@ -430,7 +432,14 @@
         }
       },
       moreComments() {
+        if (this.isCommentLoading) {
+          return;
+        }
+
         const lastComment = this.comments[this.comments.length - 1];
+
+        this.isCommentLoading = true;
+
         $.getJSON(`/api/board/free/${this.post.seq}/comments${lastComment ? `?commentId=${lastComment.id}` : ''}`).then(data => {
           if (data.comments.length) {
             this.comments.splice(this.comments.length, 0, ...data.comments);
@@ -445,6 +454,8 @@
             level: 'error',
             message: response[2]
           });
+        }).always(() => {
+          this.isCommentLoading = false;
         });
       },
       checkCommentForm() {
