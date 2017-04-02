@@ -122,7 +122,7 @@
             $scope.chartConfig.loading = true;
             $scope.supportersConn = "loading";
 
-            $http.get('{{apiServerUrl}}/stats/supporters?lang={{locale}}').then(function (response) {
+            $http.get('{{apiServerUrl}}/stats/supporters?lang={{SHORT_LOCALE locale}}').then(function (response) {
               var data = response.data;
 
               $scope.chartConfig.loading = false;

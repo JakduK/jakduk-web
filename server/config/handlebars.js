@@ -124,6 +124,10 @@ hbs.registerHelper('SUMMERNOTE_LOCALE', function(locale) {
   return locale.startsWith('ko') ? 'ko-KR' : '';
 });
 
+hbs.registerHelper('SHORT_LOCALE', function(locale) {
+  return locale.replace('-', '_').split('_')[0];
+});
+
 hbs.registerHelper('PARTIAL', function(name, options) {
   if (!this.$INJECT) {
     this.$INJECT = {};

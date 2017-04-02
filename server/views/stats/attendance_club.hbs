@@ -198,7 +198,7 @@
             $scope.chartConfig.loading = true;
             $scope.footballClubsConn = "loading";
 
-            promise = $http.get('{{apiServerUrl}}/football/clubs?lang={{locale}}').then(function (response) {
+            promise = $http.get('{{apiServerUrl}}/football/clubs?lang={{SHORT_LOCALE locale}}').then(function (response) {
               $scope.footballClubsConn = "none";
               $scope.footballClubs = $scope.footballClubs.concat(response.data);
               $scope.footballClubs.forEach(function (value, index) {
