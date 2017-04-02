@@ -20,7 +20,7 @@
 
         <!--공지/게시글-->
         <div class="ui blue segment">
-          <div class="ui selection divided list board">
+          <div class="ui divided items board">
             <board-list-item :is-notice="true" :item="notice" v-for="notice in board.notices" :key="notice.seq"></board-list-item>
             <board-list-item :is-notice="false" :item="post" v-for="post in board.posts" :key="post.seq"></board-list-item>
           </div>
@@ -76,31 +76,6 @@
     </div>
   </div>
 </template>
-
-<style>
-  .board .ui.label {
-    padding: 0.2em 0.4em;
-  }
-
-  .board .thumbnail {
-    display: block;
-    width: 95px;
-    margin: 5px auto;
-  }
-
-  .ui.list.notice {
-    margin-bottom: 0.5em;
-  }
-
-  .ui.list.notice + .ui.list {
-    margin-top: 0;
-  }
-
-  .ui.list.notice .item {
-    padding-top: 0.3em !important;
-    padding-bottom: 0.3em !important;
-  }
-</style>
 
 <script>
   import $ from 'jquery';

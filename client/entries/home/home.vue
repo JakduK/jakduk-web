@@ -5,7 +5,7 @@
       <div class="ui segments">
         <h5 class="ui segment"><i class="blue announcement icon"></i> {{$t('common.news')}}</h5>
         <div class="ui blue segment">
-          <div v-if="latest" class="ui selection list">
+          <div v-if="latest" class="ui divided items">
             <div v-for="desc in latest.homeDescription.desc" v-html="desc" class="item"></div>
           </div>
           <p v-else>{{$t('failed.loading')}}</p>
@@ -17,21 +17,23 @@
         <div class="ui segments summary-list">
           <h5 class="ui segment"><i class="blue feed icon"></i> {{$t('home.posts.latest')}}</h5>
           <div class="ui blue segment">
-            <div class="ui selection divided list">
+            <div class="ui divided items">
               <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.posts" :key="post.seq" class="item">
-                <div class="right floated content">
-                  <div v-if="post.galleries && post.galleries.length" class="ui rounded bordered image thumbnail">
-                    <img :src="post.galleries[0].thumbnailUrl">
-                  </div>
-                </div>
                 <div class="content">
-                  <div :class="{'ui tiny disabled': post.status.delete}"  class="header break-all">
-                    {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
+                  <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
+                    <div v-if="!isEmptyArray(post.galleries)" class="right floated content">
+                      <div class="ui rounded bordered image thumbnail">
+                        <img :src="post.galleries[0].thumbnailUrl">
+                      </div>
+                    </div>
+                    <div class="break-all">
+                      {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
+                    </div>
                   </div>
                   <template v-if="post.writer">
-                    <div class="extra">{{post.shortContent}}</div>
+                    <div class="extra">{{post.shortContent}}...</div>
                     <div class="extra">
-                      <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
+                      <strong>{{post.writer.username}}</strong>&middot;&nbsp; {{post.id | IdToRegDate('LL')}}
                     </div>
                   </template>
                 </div>
@@ -44,12 +46,12 @@
         <div class="ui segments summary-list">
           <h5 class="ui segment"><i class="blue talk icon"></i> {{$t('home.comments.latest')}}</h5>
           <div class="ui blue segment">
-            <div class="ui selection divided list">
+            <div class="ui divided items">
               <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.boardItem.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
                 <div class="content">
                   <div class="header break-all">{{comment.content}}</div>
                   <div v-if="comment.writer" class="extra">
-                    <strong>{{comment.writer.username}}</strong> &middot; {{comment.id | IdToRegDate('LL')}}
+                    <strong>{{comment.writer.username}}</strong>&middot;&nbsp; {{comment.id | IdToRegDate('LL')}}
                   </div>
                 </div>
               </router-link>
@@ -100,7 +102,7 @@
       <div class="ui segments">
         <h5 class="ui segment"><i class="blue birthday icon"></i> {{$t('home.members.registered.latest')}}</h5>
         <div class="ui blue segment">
-          <div v-if="latest" class="ui middle aligned small list">
+          <div v-if="latest" class="ui middle aligned relaxed list">
             <div v-for="(user, index) in latest.users" :key="user.id" class="item">
               <i :class="indexedColor(index, false)" class="user big fitted icon"></i>
               <i v-if="user.about" :class="indexedColor(index, false)" class="talk small fitted icon"></i>
@@ -128,6 +130,12 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .ui.items .item .header {
+    display: block;
+  }
+</style>
 
 <script>
   import $ from 'jquery';
@@ -179,9 +187,6 @@
   }
 
   export default {
-    filters: {
-      IdToRegDate: IdToRegDate
-    },
     data() {
       return {
         latest: {
@@ -204,13 +209,16 @@
     updated() {
       $('.ui.sticky').sticky('refresh', true);
     },
+    computed: {
+      encyclopediaSummary() {
+        return `${Truncate(100)(this.encyclopedia.content)}`;
+      }
+    },
     methods: {
       indexedColor: IndexedColor
     },
-    computed: {
-      encyclopediaSummary() {
-        return `${Truncate(50)(this.encyclopedia.content)}`;
-      }
+    filters: {
+      IdToRegDate: IdToRegDate
     }
   };
 </script>

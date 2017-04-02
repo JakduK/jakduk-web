@@ -94,22 +94,26 @@
     font-size: 90%;
   }
 
+  .nomargin {
+    margin: 0 !important;
+  }
+
   .nowrap {
-    white-space: nowrap;
+    white-space: nowrap !important;
   }
 
   .text-overflow {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 
   .pull-left {
-    float: left;
+    float: left !important;
   }
 
   .pull-right {
-    float: right;
+    float: right !important;
   }
 
   .clearfix:after {
@@ -122,31 +126,31 @@
   }
 
   .text-center {
-    text-align: center;
+    text-align: center !important;
   }
 
   .text-right {
-    text-align: right;
+    text-align: right !important;
   }
 
   .inline {
-    display: inline-block;
+    display: inline-block !important;
   }
 
   .cursor-pointer {
-    cursor: pointer;
+    cursor: pointer !important;
   }
 
   .vertical-align-middle {
-    vertical-align: middle;
+    vertical-align: middle !important;
   }
 
   .break-all {
-    word-break: break-all;
+    word-break: break-all !important;
   }
 
   a.black-link {
-    color: rgba(0, 0, 0, 0.87);
+    color: rgba(0, 0, 0, 0.87) !important;
   }
 
   .color-orange {
