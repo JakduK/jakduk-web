@@ -86,7 +86,7 @@
   import CategoryIcon from '../../filters/category_icon';
   import CategoryLabel from '../../filters/category_label';
 
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 10;
   const PAGINATION_SHIFT_SIZE = 5;
 
   function fetch(options) {
