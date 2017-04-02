@@ -1,16 +1,16 @@
 <template>
-  <div :style="loading ? {overflow: 'hidden', height: '100%'} : {}" :class="{'is-loading': loading}" id="main" class="pusher">
+  <div :class="{'is-loading': loading}" id="main" class="pusher">
     <div v-if="globalMessage.length" class="global-message">
       <transition-group name="fade">
         <toast v-for="message in globalMessage" :key="message" :level="message.level" :title="message.title" :message="message.message" @on-click="toastClicked(message)"></toast>
       </transition-group>
     </div>
 
-    <div :style="loading ? {overflow: 'hidden', display: 'flex', 'flex-direction': 'column'} : {}" class="ui container">
+    <div :class="{'is-loading': loading}" class="ui container">
       <div class="ui grid">
-        <div id="content" class="sixteen wide mobile sixteen wide tablet fourteen wide computer column">
+        <div id="content" :class="{'is-loading': loading}" class="sixteen wide mobile sixteen wide tablet fourteen wide computer column">
           <router-view></router-view>
-          <div v-if="loading" class="full-fill-loader">
+          <div v-show="loading" class="full-fill-loader">
             <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
           </div>
         </div>
@@ -23,8 +23,10 @@
     <!-- footer -->
     <site-footer class="ui container"></site-footer>
 
-    <div v-if="!appLoaded && loading" class="full-fill-loader">
-      <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
+    <div v-show="loading" class="ui grid">
+      <div :class="{'computer only': !appLoaded}" class="mobile only tablet only column full-fill-loader">
+        <div class="ui active large indeterminate text loader">{{$t('common.loading')}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -43,12 +45,23 @@
     padding-top: 70px;
   }
 
-  #content .is-loading {
+  #main.is-loading {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  #main.is-loading > .ui.container.is-loading {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #content.is-loading {
     min-height: 500px;
   }
 
-  #content .is-loading  .full-fill-loader > .ui.loader {
-    top: 240px;
+  * > .icon.large + * {
+    vertical-align: middle;
   }
 
   .global-message {
@@ -58,19 +71,15 @@
     z-index: 99999;
   }
 
-  * > .icon.large + * {
-    vertical-align: middle;
-  }
-
   .full-fill-loader {
     z-index: 801;
-    position: absolute;
+    position: absolute !important;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100%;
-    width: 100%;
+    height: 100% !important;
+    width: 100% !important;
     background-color: white;
   }
 
@@ -147,6 +156,13 @@
 
   .ui.label.search-keyword {
     margin: 0.1em;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0
   }
 </style>
 
