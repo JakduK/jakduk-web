@@ -43,6 +43,7 @@ loadI18n(window.ENV.locale).done(() => {
         window.location = `/login?redir=${encodeURIComponent(to.fullPath)}`;
       } else {
         next(false);
+        store.commit('load', false);
       }
     } else {
       next();
