@@ -30,8 +30,8 @@
                 <i class="globe icon"></i> {{$t('common.language')}}
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                  <a :href="path + 'lang=ko'" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
-                  <a :href="path + 'lang=en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
+                  <a :href="langPath + 'ko'" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
+                  <a :href="langPath + 'en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
                 </div>
               </div>
               <a v-if="isAuthenticated" class="logon icon item">
@@ -71,6 +71,7 @@
   export default {
     data() {
       return {
+        langPath: window.location.pathname,
         searchKeyword: ''
       };
     },
@@ -89,25 +90,21 @@
         $('#phoneSidenav').sidebar('toggle');
       });
     },
+    computed: mapState(['isAuthenticated']),
     watch: {
       $route(to, from) {
-        const langQueryRegexp = /lang=(.[^&]+)/g;
+        const langQueryRegexp = /([?&])?lang=[^&]+/g;
+
         if (to.fullPath.match(langQueryRegexp)) {
-          this.path = to.fullPath.replace(langQueryRegexp, () => '');
+          this.langPath = to.fullPath.replace(langQueryRegexp, (matched, $1) => `${$1}lang=`);
         } else {
-          this.path = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}`;
+          this.langPath = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}lang=`;
         }
 
         if (to.path === '/search') {
           this.searchKeyword = to.query.q;
         }
       }
-    },
-    computed: {
-      path() {
-        return window.location.pathname;
-      },
-      ...mapState(['isAuthenticated'])
     },
     methods: {
       onSearchEnter(keyword) {

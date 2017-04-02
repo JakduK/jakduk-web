@@ -12,8 +12,8 @@
         <i class="globe icon"></i> {{$t('common.language')}}
       </a>
       <div class="content">
-        <a :href="path + 'lang=ko'" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
-        <a :href="path + 'lang=en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
+        <a :href="langPath + 'ko'" class="item"><i class="kr flag"></i> {{$t('common.language.korean')}}</a>
+        <a :href="langPath + 'en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
   export default {
     data() {
       return {
-        path: window.location.pathname,
+        langPath: window.location.pathname,
         searchKeyword: ''
       };
     },
@@ -46,12 +46,12 @@
     },
     watch: {
       $route(to, from) {
-        const langQueryRegexp = /lang=(.[^&]+)/g;
+        const langQueryRegexp = /([?&])?lang=[^&]+/g;
 
         if (to.fullPath.match(langQueryRegexp)) {
-          this.path = to.fullPath.replace(langQueryRegexp, () => '');
+          this.langPath = to.fullPath.replace(langQueryRegexp, (matched, $1) => `${$1}lang=`);
         } else {
-          this.path = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}`;
+          this.langPath = `${to.fullPath}${to.fullPath.lastIndexOf('?') !== -1 ? '&' : '?'}lang=`;
         }
 
         if (to.path === '/search') {
@@ -60,14 +60,6 @@
       }
     },
     methods: {
-      changeLocale(locale) {
-        const langQueryRegexp = /lang=(.[^&]+)/g;
-        if (window.location.href.match(langQueryRegexp)) {
-          return window.location.href.replace(langQueryRegexp, () => `lang=${locale}`);
-        } else {
-          return `${window.location.href}?lang=${locale}`;
-        }
-      },
       onSearchEnter(keyword) {
         this.$router.push({
           name: 'search',
