@@ -2,7 +2,7 @@
   <div>
     <div class="ui four doubling cards">
       <div v-for="image in imageList" :key="image.id" class="card">
-        <a :href="imageSrc(image.id)" :data-title="image.name" data-dimmed="false" data-lightbox="roundtrip" class="blurring dimmable image">
+        <a :href="imageSrc(image.id)" :data-title="image.name" data-checked="false" data-lightbox="roundtrip" class="blurring dimmable image">
           <div class="ui dimmer">
             <div class="content">
               <div class="center">
@@ -70,16 +70,14 @@
       });
     },
     updated() {
-      const $images = $(this.$el).find('.image[data-dimmed="false"]');
+      const $images = $(this.$el).find('.image[data-checked="false"]');
 
-      $images.attr('data-dimmed', true);
-
-      $images.dimmer({
-        on: 'hover'
-      });
+      $images.attr('data-checked', true);
 
       $images.find('img').one('load', () => {
         $('.ui.sticky').sticky('refresh', true);
+      }).one('error', function () {
+        $(this).off('load');
       });
 
       $('.ui.sticky').sticky('refresh', true);
