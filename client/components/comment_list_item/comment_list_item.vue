@@ -1,8 +1,7 @@
 <template>
   <div class="comment">
     <a class="avatar">
-      <img v-if="item.writer.picture" :src="item.writer.picture">
-      <i v-else class="icon big grey spy"></i>
+      <img :src="avatarSrc(item.writer.picture)">
     </a>
     <div v-if="isAuthenticated && myProfile.id === item.writer.userId" class="pull-right">
       <button @click="deleteComment(item)" class="ui icon mini basic button"><i class="remove blue fitted icon"></i></button>

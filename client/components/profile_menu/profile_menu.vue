@@ -4,7 +4,7 @@
       <div class="column">
         <h4 class="ui header">{{myProfile.username}}</h4>
         <a href="/user/profile" class="ui fluid small green button">
-          <i class="user icon"></i> {{$t('common.view.my.profile')}}
+          {{$t('common.view.my.profile')}}
         </a>
         <div class="ui segment" v-if="notification.list.length">
           <div class="ui relaxed divided list">

@@ -53,9 +53,8 @@
               {{$t(categoryLabel(post.category.code))}}
               <div class="detail">{{post.seq}}</div>
             </div>
-            <div :class="{image: post.writer.picture}" class="ui basic label">
-              <img v-if="post.writer.picture" :src="post.writer.picture">
-              <i v-else class="icon spy"></i>
+            <div :class="{image: post.writer.picture}" class="ui basic image label">
+              <img :src="avatarSrc(post.writer.picture)">
               {{post.writer.username}}
               <div class="detail">{{post.id | IdToRegDate('LL')}}</div>
             </div>
@@ -137,8 +136,8 @@
           <comment-list-item :item="comment" v-for="comment in comments" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
         </div>
 
-        <button @click="moreComments" :class="{loading: isCommentLoading}" type="button" class="fluid ui basic button">
-          <i class="icon arrow circle down"></i> {{$t('common.button.more')}}
+        <button @click="moreComments" :class="{loading: isCommentLoading}" type="button" class="fluid ui button">
+          <i class="icon history"></i> {{$t('common.button.more')}}
         </button>
 
         <div class="ui divider"></div>

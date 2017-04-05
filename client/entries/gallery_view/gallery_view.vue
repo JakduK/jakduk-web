@@ -26,9 +26,8 @@
         <h2 class="break-all">{{image.name}}</h2>
         <div class="ui grid">
           <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
-            <div :class="{image: image.writer.picture}" class="ui basic label">
-              <img v-if="image.writer.picture" :src="image.writer.picture">
-              <i v-else class="icon spy"></i>
+            <div :class="{image: image.writer.picture}" class="ui basic image label">
+              <img :src="avatarSrc(image.writer.picture)">
               {{image.writer.username}}
               <div class="detail">{{image.id | IdToRegDate('LL')}}</div>
             </div>

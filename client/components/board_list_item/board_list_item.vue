@@ -19,13 +19,12 @@
 
       <div class="extra">
         <div class="pull-left nomargin">
-          <div :class="categoryColor(item.category)" class="ui label">
+          <div :class="categoryColor(item.category)" class="ui small label">
             {{$t(categoryLabel(item.category))}}
             <div class="detail">{{item.seq}}</div>
           </div>
-          <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui basic label">
-            <img v-if="item.writer.picture" :src="item.writer.picture">
-            <i v-else class="icon spy"></i>
+          <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui small image basic label">
+            <img :src="avatarSrc(item.writer.picture)">
             {{item.writer.username}}
             <div class="detail">{{item.id | IdToRegDate('LL')}}</div>
           </div>
@@ -48,10 +47,6 @@
 
   .ui.items .item .header {
     display: block;
-  }
-
-  .ui.items .item .ui.label {
-    padding: 0.4em 0.6em;
   }
 </style>
 

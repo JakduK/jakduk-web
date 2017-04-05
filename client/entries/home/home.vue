@@ -30,12 +30,15 @@
                       {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
                     </div>
                   </div>
-                  <template v-if="post.writer">
-                    <div class="extra">{{post.shortContent}}...</div>
-                    <div class="extra">
-                      <strong>{{post.writer.username}}</strong>&middot;&nbsp; {{post.id | IdToRegDate('LL')}}
-                    </div>
-                  </template>
+                  <div v-if="post.writer" class="extra">
+                    <p>{{post.shortContent}}...</p>
+                    <p>
+                      <span class="ui avatar bordered image">
+                        <img :src="avatarSrc(post.writer.picture)">
+                      </span>
+                      <strong>{{post.writer.username}}</strong><span class="nowrap"> &middot; {{post.id | IdToRegDate('LL')}}</span>
+                    </p>
+                  </div>
                 </div>
               </router-link>
             </div>
@@ -51,7 +54,10 @@
                 <div class="content">
                   <div class="header break-all">{{comment.content}}</div>
                   <div v-if="comment.writer" class="extra">
-                    <strong>{{comment.writer.username}}</strong>&middot;&nbsp; {{comment.id | IdToRegDate('LL')}}
+                    <span class="ui avatar bordered image">
+                      <img :src="avatarSrc(comment.writer.picture)">
+                    </span>
+                    <strong>{{comment.writer.username}}</strong> &middot {{comment.id | IdToRegDate('LL')}}
                   </div>
                 </div>
               </router-link>

@@ -9,8 +9,10 @@
           </button>
           <router-link to="/home" class="item">{{$t('common.jakduk')}}</router-link>
           <div class="right menu">
-            <a v-if="isAuthenticated" class="logon icon item">
-              <i class="user icon"></i>
+            <a v-if="isAuthenticated" class="icon item logon">
+              <div class="ui rounded image avatar nomargin">
+                <img :src="avatarSrc(myProfile.picture)" class="nomargin">
+              </div>
               <profile-menu></profile-menu>
             </a>
             <a v-else :href="'/login?redir=' + encodeURIComponent($route.fullPath)" class="icon item">
@@ -34,8 +36,10 @@
                   <a :href="langPath + 'en'" class="item"><i class="us flag"></i> {{$t('common.language.english')}}</a>
                 </div>
               </div>
-              <a v-if="isAuthenticated" class="logon icon item">
-                <i class="user icon"></i>
+              <a v-if="isAuthenticated" class="icon item logon">
+                <div class="ui rounded image avatar nomargin">
+                  <img :src="avatarSrc(myProfile.picture)" class="nomargin">
+                </div>
                 <profile-menu></profile-menu>
               </a>
               <a v-else :href="'/login?redir=' + encodeURIComponent($route.fullPath)" class="item">{{$t('common.login')}}</a>
@@ -59,6 +63,11 @@
 
   #navbar .popup .item {
     color: black;
+  }
+
+  #navbar .item.logon {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 </style>
 
@@ -90,7 +99,7 @@
         $('#phoneSidenav').sidebar('toggle');
       });
     },
-    computed: mapState(['isAuthenticated']),
+    computed: mapState(['myProfile', 'isAuthenticated']),
     watch: {
       $route(to, from) {
         const langQueryRegexp = /([?&])?lang=[^&]+/g;

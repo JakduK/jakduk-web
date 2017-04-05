@@ -13,11 +13,9 @@
           <img :src="thumbnailSrc(image.id)">
         </a>
         <div class="content">
-          <div class="description">
-            <img v-if="image.writer.picture" :src="image.writer.picture" class="ui avatar image">
-            <i v-else class="spy icon"></i>
-            {{image.writer.username}}
-          </div>
+          <p class="description">
+            <img :src="avatarSrc(image.writer.picture)" class="ui bordered avatar image"> {{image.writer.username}}
+          </p>
           <router-link :to="{name: 'gallery.view', params: {id: image.id}}" class="description break-all">
             {{image.name}}
           </router-link>
@@ -30,7 +28,9 @@
         </div>
       </div>
     </div>
-    <button @click="moreImages()" :class="{loading: isLoading}" type="button" class="ui fluid button trigger">{{$t('common.button.more.galleries')}}</button>
+    <button @click="moreImages()" :class="{loading: isLoading}" type="button" class="ui fluid button trigger">
+      <i class="icon history"></i> {{$t('common.button.more.galleries')}}
+    </button>
   </div>
 </template>
 

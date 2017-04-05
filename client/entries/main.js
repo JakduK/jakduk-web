@@ -21,6 +21,9 @@ Vue.mixin({
     thumbnailSrc(id) {
       return typeof id !== 'number' && !id ? '' : `${window.ENV.imageServerUrl}/gallery/thumbnail/${id}`;
     },
+    avatarSrc(src) {
+      return src ? src : '/assets/images/default_avatar.jpg';
+    },
     isEmptyArray(arr) {
       return !arr || !arr.length;
     },
