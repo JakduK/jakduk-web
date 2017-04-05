@@ -8,14 +8,14 @@
             <h4 class="ui header">{{$t('about')}}</h4>
             <div class="ui link list">
               <a href="/about" class="item">{{$t('about.site')}}</a>
-              <a href="/board/free/98" class="item">{{$t('about.site.use.guide')}}</a>
+              <router-link :to="{name: 'board.view', params: {name: 'free', seq: 98}}" class="item">{{$t('about.site.use.guide')}}</router-link>
             </div>
           </div>
           <div class="four wide column">
             <h4 class="ui header">{{$t('board')}}</h4>
             <div class="ui link list">
-              <a href="/board/free?category=FREE" class="item">{{$t('board.name.free')}}</a>
-              <a href="/board/free?category=FOOTBALL" class="item">{{$t('board.category.football')}}</a>
+              <router-link :to="{name: 'board', params: {name: 'free'}, query: {category: 'FREE'}}" class="item">{{$t('board.name.free')}}</router-link>
+              <router-link :to="{name: 'board', params: {name: 'free'}, query: {category: 'FOOTBALL'}}" class="item">{{$t('board.category.football')}}</router-link>
               <a href="/rss" class="item">RSS</a>
             </div>
           </div>
