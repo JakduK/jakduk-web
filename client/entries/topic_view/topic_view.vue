@@ -46,45 +46,51 @@
         <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
         <div class="ui grid">
           <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
-            <div v-if="isNotice" class="ui basic label">
-              <i class="announcement blue icon"></i> {{$t('board.notice')}}
-            </div>
-            <div :class="categoryColor(post.category.code)" class="ui label">
-              {{$t(categoryLabel(post.category.code))}}
+            <div class="ui labels">
+              <div v-if="isNotice" class="ui basic label nomargin">
+                <i class="announcement blue icon"></i> {{$t('board.notice')}}
+              </div>
+              <div :class="categoryColor(post.category.code)" class="ui label nomargin">
+                {{$t(categoryLabel(post.category.code))}}
               <div class="detail">{{post.seq}}</div>
-            </div>
-            <div class="ui basic image label">
-              <img :src="avatarSrc(post.writer.picture)">
-              {{post.writer.username}}
+              </div>
+              <div class="ui basic image label nomargin">
+                <img :src="avatarSrc(post.writer.picture)">
+                {{post.writer.username}}
               <div class="detail">{{post.id | IdToRegDate('LL')}}</div>
+              </div>
             </div>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
-            <span>
-              <i class="eye grey large icon"></i><strong>{{post.views}}</strong> &nbsp;
-            </span>
-            <button @click="likeOrDislike('LIKE')">
-              <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
-            </button> &nbsp;
-            <button @click="likeOrDislike('DISLIKE')">
-              <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal large icon"></i><strong>{{post.numberOfDislike}}</strong>
-            </button>
+            <div class="ui labels">
+              <button class="ui basic label nomargin">
+                <i class="eye grey icon"></i>{{post.views}}
+              </button>
+              <button @click="likeOrDislike('LIKE')" :class="post.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
+                <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: post.myFeeling !== 'LIKE'}" class="smile icon"></i>{{post.numberOfLike}}
+              </button>
+              <button @click="likeOrDislike('DISLIKE')" :class="post.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
+                <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: post.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{post.numberOfDislike}}
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
       <!--본문 콘텐트-->
       <div class="ui blue segment ql-editor" v-html="post.content"></div>
+
+      <!--하단 좋아요-->
       <div class="ui center aligned segment">
-        <button @click="likeOrDislike('LIKE')" class="ui compact basic button">
-          <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{post.numberOfLike}}</strong>
+        <button @click="likeOrDislike('LIKE')" :class="post.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: post.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{post.numberOfLike}}</strong>
         </button>
-        <button @click="likeOrDislike('DISLIKE')" class="ui compact basic button">
-          <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal large icon"></i><strong>{{post.numberOfDislike}}</strong>
+        <button @click="likeOrDislike('DISLIKE')" :class="post.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: post.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{post.numberOfDislike}}</strong>
         </button>
       </div>
     </div>
 
-    <!--하단 좋아요-->
     <div class="text-center">
       <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
