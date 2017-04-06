@@ -98,6 +98,10 @@
     margin: 0 !important;
   }
 
+  .nomargin-right {
+    margin-right: 0 !important;
+  }
+
   .nowrap {
     white-space: nowrap !important;
   }
