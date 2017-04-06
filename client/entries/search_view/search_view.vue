@@ -29,9 +29,8 @@
                   {{$t(categoryLabel(result.category))}}
                   <div class="detail">{{result.seq}}</div>
                 </div>
-                <div :class="{image: result.writer.picture}" class="ui basic label">
-                  <img v-if="result.writer.picture" :src="result.writer.picture">
-                  <i v-else class="icon spy"></i>
+                <div class="ui image basic label">
+                  <img :src="avatarSrc(result.writer.picture)">
                   {{result.writer.username}}
                   <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
                 </div>
@@ -60,9 +59,8 @@
               <div v-html="result.highlight.content[0]" class="ui header tiny"></div>
               <div v-html="result.parentBoard.subject" class="extra"></div>
               <div class="extra">
-                <div :class="{image: result.writer.picture}" class="ui basic label">
-                  <img v-if="result.writer.picture" :src="result.writer.picture">
-                  <i v-else class="icon spy"></i>
+                <div class="ui image basic label">
+                  <img :src="avatarSrc(result.writer.picture)">
                   {{result.writer.username}}
                   <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
                 </div>
@@ -86,21 +84,20 @@
           <i class="icon idea"></i> {{$t('search.no.result')}}
         </div>
         <div v-else class="ui link five doubling cards">
-          <a v-for="result in searchResult.galleryResult.galleries" :key="result.id" class="card">
+          <router-link :to="{name: 'gallery.view', params: {id: result.id}}" v-for="result in searchResult.galleryResult.galleries" :key="result.id" class="card">
             <div class="ui image">
-              <img :src="'https://staging.jakduk.com:8080/gallery/thumbnail/' + result.id">
+              <img :src="thumbnailSrc(result.id)">
             </div>
             <div class="content">
               <div class="description break-all" v-html="result.highlight.name[0]"></div>
             </div>
             <div class="extra content">
               <div class="author text-overflow">
-                <img v-if="result.writer.picture" :src="result.writer.picture" class="ui avatar image">
-                <i class="spy large icon"></i>
+                <img :src="avatarSrc(result.writer.picture)" class="ui avatar bordered image">
                 {{result.writer.username}}
               </div>
             </div>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>

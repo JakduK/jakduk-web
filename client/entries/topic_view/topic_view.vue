@@ -53,7 +53,7 @@
               {{$t(categoryLabel(post.category.code))}}
               <div class="detail">{{post.seq}}</div>
             </div>
-            <div :class="{image: post.writer.picture}" class="ui basic image label">
+            <div class="ui basic image label">
               <img :src="avatarSrc(post.writer.picture)">
               {{post.writer.username}}
               <div class="detail">{{post.id | IdToRegDate('LL')}}</div>
