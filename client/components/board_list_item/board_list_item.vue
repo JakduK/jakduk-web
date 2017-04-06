@@ -7,34 +7,35 @@
             <img :src="item.galleries[0].thumbnailUrl">
           </div>
         </div>
-        <div class="ui mini labels">
-          <div :class="categoryColor(item.category)" class="ui label nomargin-right">
-            {{$t(categoryLabel(item.category))}}<div class="detail">{{item.seq}}</div>
-          </div>
-          <div v-if="isNotice" class="ui basic label nowrap">
-            <i class="announcement blue icon"></i>{{$t('board.notice')}}
-          </div>
+        <div v-if="isNotice" class="ui horizontal basic label">
+          <i class="announcement blue icon"></i>{{$t('board.notice')}}
         </div>
-        <div class="header">{{(item.status && item.status.delete) ? $t('board.msg.deleted') : item.subject}}</div>
+        <span class="vertical-align-middle">
+          {{(item.status && item.status.delete) ? $t('board.msg.deleted') : item.subject}}
+        </span>
       </div>
 
       <div class="extra">{{item.shortContent}}...</div>
 
       <div class="extra">
-        <div class="nomargin">
-          <div class="ui small labels">
-            <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui image basic label nomargin">
-              <img :src="avatarSrc(item.writer.picture)">
-              {{item.writer.username}}
-            <div class="detail">{{item.id | IdToRegDate('LL')}}</div>
-            </div>
-            <div class="ui basic label nomargin"><i class="talk outline icon"></i>{{item.commentCount}}</div>
-            <div class="ui small labels pull-right">
-              <div class="ui basic label nomargin"><i class="eye icon"></i>{{item.views}}</div>
-              <div class="ui basic label nomargin"><i class="smile blue icon"></i>{{item.likingCount}}</div>
-              <div class="ui basic label nomargin"><i class="meh teal icon"></i>{{item.dislikingCount}}</div>
-            </div>
+        <!--<div class="ui small labels">-->
+
+        <!--</div>-->
+        <div class="ui small labels nomargin">
+          <div :class="categoryColor(item.category)" class="ui label bottom">
+            {{$t(categoryLabel(item.category))}}<div class="detail">{{item.seq}}</div>
           </div>
+          <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui image basic label bottom">
+            <img :src="avatarSrc(item.writer.picture)">
+            {{item.writer.username}}
+            <div class="detail">{{item.id | IdToRegDate('LL')}}</div>
+          </div>
+          <span class="pull-right counter">
+            <i class="talk outline icon"></i>{{item.commentCount}} &middot;
+            <i class="eye icon"></i>{{item.views}} &middot;
+            <i class="smile blue icon"></i>{{item.likingCount}} &middot;
+            <i class="meh teal icon"></i>{{item.dislikingCount}}
+          </span>
         </div>
       </div>
     </div>
@@ -45,10 +46,20 @@
   .ui.items .item .thumbnail {
     display: block;
     width: 120px;
+    margin-top: 6px;
+    margin-left: 6px;
   }
 
   .ui.items .item .header {
     display: block;
+  }
+
+  .ui.label.bottom {
+    margin: 5px 0 0 0;
+  }
+
+  .counter {
+    margin-top: 6px;
   }
 </style>
 
