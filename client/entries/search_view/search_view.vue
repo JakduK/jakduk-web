@@ -25,14 +25,16 @@
               <div v-if="result.highlight.subject" v-html="result.highlight.subject[0]" class="header"></div>
               <div v-if="result.highlight.content" v-html="result.highlight.content[0]" class="description"></div>
               <div class="extra">
-                <div :class="categoryColor(result.category)" class="ui label">
-                  {{$t(categoryLabel(result.category))}}
-                  <div class="detail">{{result.seq}}</div>
-                </div>
-                <div class="ui image basic label">
-                  <img :src="avatarSrc(result.writer.picture)">
-                  {{result.writer.username}}
-                  <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
+                <div class="ui small labels">
+                  <div :class="categoryColor(result.category)" class="ui label nomargin">
+                    {{$t(categoryLabel(result.category))}}
+                    <div class="detail">{{result.seq}}</div>
+                  </div>
+                  <div class="ui image basic label nomargin">
+                    <img :src="avatarSrc(result.writer.picture)">
+                    {{result.writer.username}}
+                    <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -59,7 +61,7 @@
               <div v-html="result.highlight.content[0]" class="ui header tiny"></div>
               <div v-html="result.parentBoard.subject" class="extra"></div>
               <div class="extra">
-                <div class="ui image basic label">
+                <div class="ui small image basic label">
                   <img :src="avatarSrc(result.writer.picture)">
                   {{result.writer.username}}
                   <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
