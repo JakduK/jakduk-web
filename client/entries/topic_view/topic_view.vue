@@ -80,6 +80,15 @@
       <!--본문 콘텐트-->
       <div class="ui blue segment ql-editor" v-html="post.content"></div>
 
+      <div v-if="!isEmptyArray(post.galleries)" class="ui segment">
+        <h5>{{$t('board.gallery.list')}}</h5>
+        <p v-for="file in post.galleries">
+          <router-link :to="{name: 'gallery.view', params: {id: file.id}}">
+            <i class="icon attach"></i> {{file.name}}
+          </router-link>
+        </p>
+      </div>
+
       <!--하단 좋아요-->
       <div class="ui center aligned segment">
         <button @click="likeOrDislike('LIKE')" :class="post.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
