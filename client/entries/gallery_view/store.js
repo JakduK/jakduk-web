@@ -8,14 +8,16 @@ export default {
     },
     next: {},
     prev: {},
-    linkedPosts: []
+    linkedPosts: [],
+    surroundingsGalleries: []
   },
   mutations: {
-    image(state, {gallery, next, prev, linkedPosts}) {
+    image(state, {gallery, next, prev, linkedPosts, surroundingsGalleries}) {
       state.image = gallery;
       state.next = next;
       state.prev = prev;
       state.linkedPosts = linkedPosts;
+      state.surroundingsGalleries = surroundingsGalleries;
     },
     feeling(state, {myFeeling, numberOfLike, numberOfDislike}) {
       state.image.myFeeling = myFeeling;

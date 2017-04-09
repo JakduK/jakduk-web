@@ -4,7 +4,6 @@
     <router-link :to="{name: 'gallery', query: $route.query}" class="ui icon basic button">
       <i class="list icon"></i>
     </router-link>
-    <pager :is-first="!prevImage" :is-last="!nextImage" @on-prev="prev" @on-next="next" class="inline"></pager>
     <div class="pull-right">
       <div class="ui top right pointing dropdown icon button">
         <i class="icon share alternate"></i>
@@ -33,15 +32,17 @@
             </div>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
-            <span>
-              <i class="eye grey large icon"></i><strong>{{image.views}}</strong> &nbsp;
-            </span>
-            <button @click="likeOrDislike('LIKE')">
-              <i :style="{'font-weight': image.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{image.numberOfLike}}</strong>
-            </button> &nbsp;
-            <button @click="likeOrDislike('DISLIKE')">
-              <i :style="{'font-weight': image.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal large icon"></i><strong>{{image.numberOfDislike}}</strong>
-            </button>
+            <div class="ui labels">
+              <button class="ui basic label nomargin">
+                <i class="eye grey icon"></i>{{image.views}}
+              </button>
+              <button @click="likeOrDislike('LIKE')" :class="image.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
+                <i :style="{'font-weight': image.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: image.myFeeling !== 'LIKE'}" class="smile icon"></i>{{image.numberOfLike}}
+              </button>
+              <button @click="likeOrDislike('DISLIKE')" :class="image.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
+                <i :style="{'font-weight': image.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: image.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{image.numberOfDislike}}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -49,26 +50,22 @@
       <div class="ui blue segment text-center">
         <img :src="imageSrc(image.id)">
       </div>
+      <!--하단 좋아요-->
       <div class="ui center aligned segment">
-        <button @click="likeOrDislike('LIKE')" class="ui compact basic button">
-          <i :style="{'font-weight': image.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue large icon"></i><strong>{{image.numberOfLike}}</strong>
+        <button @click="likeOrDislike('LIKE')" :class="image.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': image.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: image.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{image.numberOfLike}}</strong>
         </button>
-        <button @click="likeOrDislike('DISLIKE')" class="ui compact basic button">
-          <i :style="{'font-weight': image.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal large icon"></i><strong>{{image.numberOfDislike}}</strong>
+        <button @click="likeOrDislike('DISLIKE')" :class="image.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': image.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: image.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{image.numberOfDislike}}</strong>
         </button>
       </div>
     </div>
-
-    <!--하단 좋아요-->
-    <div class="text-center">
+    
+    <!--하단 공유-->
+    <div class="shares text-center">
       <router-link :to="{name: 'gallery', query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
       </router-link>
-      <pager :is-first="!prevImage" :is-last="!nextImage" @on-prev="prev" @on-next="next" class="inline"></pager>
-    </div>
-
-    <!--하단 공유-->
-    <div class="shares text-center">
       <button @click="copyLinkIntoClipboard" type="button" class="ui icon button">
         <i class="linkify icon"></i>
       </button>
@@ -88,6 +85,29 @@
               <div class="extra">
                 <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
               </div>
+            </div>
+          </router-link>
+        </div>
+      </div>
+    </div>
+
+    <!--사진 더보기-->
+    <div v-if="!isEmptyArray(surroundingsGalleries)" class="ui segments">
+      <h4 class="ui segment"><i class="blue linkify icon"></i> {{$t('common.button.more.galleries')}}</h4>
+      <div class="ui blue segment">
+        <div class="ui four doubling link cards">
+          <router-link :to="{name: 'gallery.view', params: {id: image.id}}" v-for="image in surroundingsGalleries" :key="image.id" class="card">
+            <div data-checked="false" class="image">
+              <img :src="thumbnailSrc(image.id)">
+            </div>
+            <div class="content">
+              <div class="description break-all">{{image.name}}</div>
+            </div>
+            <div class="extra content">
+              {{image.id | IdToRegDate('LL')}}
+              <span class="right floated">
+               <i class="eye icon"></i> {{image.views}}
+              </span>
             </div>
           </router-link>
         </div>
@@ -166,6 +186,7 @@
         nextImage: state => state.galleryView.next,
         prevImage: state => state.galleryView.prev,
         linkedPosts: state => state.galleryView.linkedPosts,
+        surroundingsGalleries: state => state.galleryView.surroundingsGalleries
       })
     },
     methods: {
