@@ -22,7 +22,14 @@
         <div v-else class="ui divided link items">
           <router-link :to="{name: 'board.view', params: {name:'free', seq: result.seq}}" v-for="result in searchResult.postResult.posts" :key="result.id" class="item">
             <div class="content">
-              <div v-if="result.highlight.subject" v-html="result.highlight.subject[0]" class="header"></div>
+              <div v-if="result.highlight.subject" class="header">
+                <div v-if="!isEmptyArray(result.galleries)" class="pull-right">
+                  <div class="ui rounded bordered image thumbnail">
+                    <img :src="result.galleries[0].thumbnailUrl">
+                  </div>
+                </div>
+                <span v-html="result.highlight.subject[0]"></span>
+              </div>
               <div v-if="result.highlight.content" v-html="result.highlight.content[0]" class="description"></div>
               <div class="extra">
                 <div class="ui small labels">
@@ -105,6 +112,18 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .ui.items .item .thumbnail {
+    display: block;
+    width: 130px;
+    margin-left: 6px;
+  }
+
+  .ui.items .item .header {
+    display: block;
+  }
+</style>
 
 <script>
   import {mapState} from 'vuex';
