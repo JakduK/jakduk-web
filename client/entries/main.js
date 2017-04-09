@@ -22,7 +22,7 @@ Vue.mixin({
       return typeof id !== 'number' && !id ? '' : `${window.ENV.imageServerUrl}/gallery/thumbnail/${id}`;
     },
     avatarSrc(src) {
-      return src ? src : '/assets/images/default_avatar.jpg';
+      return src ? src.smallPictureUrl : '/assets/images/default_avatar.png';
     },
     isEmptyArray(arr) {
       return !arr || !arr.length;

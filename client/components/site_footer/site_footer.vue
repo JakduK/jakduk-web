@@ -50,7 +50,12 @@
         </div>
         <div class="ui section divider"></div>
         <img src="/assets/jakduk/img/logo_128.png" class="ui centered mini image">
-        <div class="ui horizontal small divided link list">{{$t('common.jakduk.description')}}</div>
+        <div class="ui tiny header">{{$t('common.jakduk.description')}}</div>
+        <div class="ui horizontal small divided link list">
+          <div class="item">
+            <a href="https://icons8.com/web-app/for/all/ghost">Free icons by Icons8</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

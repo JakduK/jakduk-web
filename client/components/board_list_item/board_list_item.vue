@@ -18,9 +18,6 @@
       <div class="extra">{{item.shortContent}}...</div>
 
       <div class="extra">
-        <!--<div class="ui small labels">-->
-
-        <!--</div>-->
         <div class="ui small labels nomargin">
           <div :class="categoryColor(item.category)" class="ui label bottom">
             {{$t(categoryLabel(item.category))}}<div class="detail">{{item.seq}}</div>
