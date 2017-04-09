@@ -149,6 +149,10 @@
     vertical-align: middle !important;
   }
 
+  .vertical-align-top {
+    vertical-align: top !important;
+  }
+
   .break-all {
     word-break: break-all !important;
   }

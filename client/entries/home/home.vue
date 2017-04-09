@@ -110,11 +110,13 @@
         <div class="ui blue segment">
           <div v-if="latest" class="ui middle aligned relaxed list">
             <div v-for="(user, index) in latest.users" :key="user.id" class="item">
-              <i :class="indexedColor(index, false)" class="user big fitted icon"></i>
-              <i v-if="user.about" :class="indexedColor(index, false)" class="talk small fitted icon"></i>
+              <div class="image">
+                <img :src="avatarSrc(user.picture)" class="ui image avatar nomargin">
+                <i v-if="user.about" class="talk small outline fitted icon vertical-align-top"></i>
+              </div>
               <div class="content">
                 <div class="header">{{user.username}}</div>
-                <div class="description extra">{{user.about}}</div>
+                <div v-if="user.about" class="description extra">{{user.about}}</div>
               </div>
             </div>
           </div>
@@ -217,7 +219,7 @@
     },
     computed: {
       encyclopediaSummary() {
-        return `${Truncate(100)(this.encyclopedia.content)}`;
+        return `${Truncate({length: 100})(this.encyclopedia.content)}`;
       }
     },
     methods: {
