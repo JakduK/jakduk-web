@@ -4,8 +4,8 @@
     <router-link active-class="active" to="/home" class="item">{{$t('common.home')}}</router-link>
     <router-link active-class="active" to="/board/free" class="item">{{$t('board')}}</router-link>
     <router-link active-class="active" to="/gallery" class="item">{{$t('gallery')}}</router-link>
-    <a active-class="active" class="item">{{$t('stats')}}</a>
-    <a active-class="active" class="item">{{$t('jakdu.write')}}</a>
+    <router-link active-class="active" to="/stats/supporters" class="item">{{$t('stats')}}</router-link>
+    <router-link active-class="active" to="/jakdu" class="item">{{$t('jakdu.write')}}</router-link>
     <div class="item">
       <a class="title">
         <i class="dropdown icon"></i>

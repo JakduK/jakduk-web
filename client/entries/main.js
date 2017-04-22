@@ -39,7 +39,9 @@ if (!window.location.origin) {
 
 loadI18n(window.ENV.locale).done(() => {
   router.beforeEach((to, from, next) => {
-    store.commit('load', true);
+    if (to.path !== from.path) {
+      store.commit('load', true);
+    }
 
     if (!store.state.isAuthenticated && to.matched.some(record => record.meta.requiresAuth)) {
       if (window.confirm(Vue.t('common.do.you.want.to.login'))) {

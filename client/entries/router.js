@@ -45,6 +45,30 @@ const GalleryView = resolve => {
   }, 'gallery_view');
 };
 
+const Jakdu = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/jakdu/jakdu.vue'));
+  }, 'jakdu');
+};
+
+const Stats = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/stats/stats.vue'));
+  }, 'stats');
+};
+
+const StatsAttendances = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/stats/attandances.vue'));
+  }, 'stats_attendances');
+};
+
+const StatsSupporters = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/stats/supporters.vue'));
+  }, 'stats_supporters');
+};
+
 const NotFound = resolve => {
   require.ensure([], require => {
     resolve(require('../entries/not_found/not_found.vue'));
@@ -101,6 +125,23 @@ export default new VueRouter({
     name: 'gallery.view',
     path: '/gallery/:id',
     component: GalleryView
+  }, {
+    name: 'stats',
+    path: '/stats',
+    component: Stats,
+    children: [{
+      name: 'stats.supporters',
+      path: 'supporters',
+      component: StatsSupporters
+    }, {
+      name: 'stats.attendances',
+      path: 'attendance/:category?',
+      component: StatsAttendances
+    }]
+  }, {
+    name: 'jakdu',
+    path: '/jakdu',
+    component: Jakdu
   }, {
     path: '*',
     component: NotFound

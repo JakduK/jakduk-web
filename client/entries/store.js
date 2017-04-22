@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import searchViewStore from './search_view/store';
 import galleryStore from './gallery/store';
 import galleryViewStore from './gallery_view/store';
+import stats from './stats/store';
 
 Vue.use(Vuex);
 
@@ -19,6 +20,10 @@ export default new Vuex.Store({
       list: []
     },
     loading: true
+  },
+  getters: {
+    isMobile: state => state.isMobile,
+    kakaoClientID: state => state.kakaoClientID
   },
   mutations: {
     load(state, b) {
@@ -60,6 +65,7 @@ export default new Vuex.Store({
   modules: {
     searchView: searchViewStore,
     gallery: galleryStore,
-    galleryView: galleryViewStore
+    galleryView: galleryViewStore,
+    stats: stats
   }
 });

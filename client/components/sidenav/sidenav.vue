@@ -6,8 +6,8 @@
           <router-link active-class="active" to="/home" class="item computer only row">{{$t('common.home')}}</router-link>
           <router-link active-class="active" to="/board/free" class="item computer only row">{{$t('board')}}</router-link>
           <router-link active-class="active" to="/gallery" class="item computer only row">{{$t('gallery')}}</router-link>
-          <a active-class="active" href="/stats" class="item computer only row">{{$t('stats')}}</a>
-          <a active-class="active" href="/jakdu" class="item computer only row">{{$t('jakdu.write')}}</a>
+          <router-link active-class="active" to="/stats/supporters" class="item computer only row">{{$t('stats')}}</router-link>
+          <router-link active-class="active" to="/jakdu" class="item computer only row">{{$t('jakdu.write')}}</router-link>
         </div>
       </div>
     </div>

@@ -9,8 +9,8 @@ module.exports = function (app) {
   // require('./board').setup(app);
   require('./about').setup(app);
   // require('./gallery').setup(app);
-  require('./jakdu').setup(app);
-  require('./stats').setup(app);
+  // require('./jakdu').setup(app);
+  // require('./stats').setup(app);
   // require('./search').setup(app);
   require('./admin').setup(app);
   require('./rss').setup(app);
