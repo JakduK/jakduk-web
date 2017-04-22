@@ -22,8 +22,8 @@
           <div class="four wide column">
             <h4 class="ui header">{{$t('stats')}}</h4>
             <div class="ui link list">
-              <a href="/stats/supporters" class="item">{{$t('stats.supporters')}}</a>
-              <a href="/stats/attendance/league" class="item">{{$t('stats.attendance')}}</a>
+              <router-link to="/stats/supporters" class="item">{{$t('stats.supporters')}}</router-link>
+              <router-link to="/stats/attendance/league" class="item">{{$t('stats.attendance')}}</router-link>
             </div>
           </div>
           <div class="four wide column">
