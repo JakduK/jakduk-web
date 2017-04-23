@@ -6,7 +6,7 @@
     </div>
 
     <!--차트-->
-    <chart :options="chartOptions" :series="supportersChartData"></chart>
+    <chart :options="chartOptions" :series="supportersChartData" @on-chart-created="onChartCreated"></chart>
 
     <!--숫자 통계-->
     <div class="ui segment">
@@ -107,7 +107,7 @@
         this.chartOptions.chart.type = this.$route.query.chartType;
       }
     },
-    created() {
+    mounted() {
       this.$store.commit('load', false);
 
       $.getJSON('/api/stats/supporters', {
@@ -150,9 +150,19 @@
         'totalSupporters'
       ])
     },
+    updated() {
+      if (this.chart) {
+        this.chart.hideLoading();
+      }
+    },
     methods: {
       copyLinkIntoClipboard() {
         window.prompt(this.$t('common.url.of.name', {name: this.$t('stats.supporters.title')}), `${window.location.origin}${this.$route.fullPath}`);
+      },
+      onChartCreated(chart) {
+        this.chart = chart;
+        this.chart.showLoading(this.$t('common.loading'));
+        $('.ui.sticky').sticky('refresh', true);
       }
     },
     components: {

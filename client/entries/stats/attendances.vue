@@ -33,7 +33,7 @@
     </div>
 
     <!--차트-->
-    <chart :options="chartOptions" :series="chartData"></chart>
+    <chart :options="chartOptions" :series="chartData" @on-chart-created="onChartCreated"></chart>
 
     <!--숫자 통계-->
     <div class="ui segment">
@@ -216,8 +216,7 @@
         thousandsSep: ','
       },
       chart: {
-        type: 'bar',
-        height: 200
+        type: 'bar'
       },
       tooltip: {
         shared: true
@@ -414,6 +413,7 @@
       name: this.$t('stats.attendance.total'),
       yAxis: 0,
       type: 'column',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -427,6 +427,7 @@
       name: `${this.$t('stats.attendance.average')}`,
       yAxis: 1,
       type: 'column',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -441,6 +442,7 @@
       yAxis: 2,
       visible: false,
       type: 'spline',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -453,6 +455,7 @@
     return [{
       name: this.$t('stats.attendance.total'),
       yAxis: 0,
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -466,6 +469,7 @@
     }, {
       name: this.$t('stats.attendance.average'),
       yAxis: 1,
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -484,6 +488,7 @@
       name: this.$t('stats.attendance.total'),
       yAxis: 0,
       type: 'column',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -498,6 +503,7 @@
       name: this.$t('stats.attendance.average'),
       yAxis: 1,
       type: 'spline',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -508,6 +514,7 @@
       yAxis: 2,
       visible: false,
       type: 'spline',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -518,6 +525,7 @@
       yAxis: 3,
       visible: false,
       type: 'spline',
+      animation: true,
       data: [],
       dataLabels: {
         enabled: true,
@@ -614,7 +622,7 @@
       });
     } else {
       promise = $.getJSON(`/api/stats/league/attendances`, {
-        competitionCode: league,
+        competitionCode: league || KLCL_ID,
         lang: this.$lang.split('-')[0]
       }).then(data => {
         let totalAttendees = 0;
@@ -714,6 +722,7 @@
       $route() {
         fetch.call(this, this.$route.query).then(() => {
           updateFilter.call(this, this.$route.query);
+          this.chart.hideLoading();
         });
       }
     },
@@ -721,6 +730,7 @@
       this.$store.commit('load', false);
       fetch.call(this, this.$route.query).then(() => {
         updateFilter.call(this, this.$route.query);
+        this.chart.hideLoading();
       });
     },
     computed: {
@@ -743,7 +753,12 @@
       copyLinkIntoClipboard() {
         window.prompt(this.$t('common.url.of.name', {name: this.$t('stats.supporters.title')}), `${window.location.origin}${this.$route.fullPath}`);
       },
-      comma: comma
+      comma: comma,
+      onChartCreated(chart) {
+        this.chart = chart;
+        this.chart.showLoading(this.$t('common.loading'));
+        $('.ui.sticky').sticky('refresh', true);
+      }
     },
     components: {
       chart: resolve => {
