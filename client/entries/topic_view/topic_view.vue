@@ -206,7 +206,6 @@
   .comment .content img,
   .comment .content video {
     max-width: 100%;
-    height: auto;
   }
 
   .comment .content iframe {

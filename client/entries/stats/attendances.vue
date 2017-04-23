@@ -15,17 +15,17 @@
     <!--필터-->
     <div class="ui container text-center">
       <div v-if="filter" class="ui selection dropdown filter">
-        <input type="hidden" :value="filter[0].id">
+        <input type="hidden">
         <i class="dropdown icon"></i>
-        <div class="text">{{filter[0].name}}</div>
+        <div class="text"></div>
         <div class="menu">
           <div v-for="cond in filter" :key="cond.id" :data-value="cond.id" :class="{disabled: cond.disabled}" class="item">{{cond.name}}</div>
         </div>
       </div>
       <div v-if="subFilter" class="ui selection dropdown subFilter">
-        <input type="hidden" :value="subFilter[0].id">
+        <input type="hidden">
         <i class="dropdown icon"></i>
-        <div class="text">{{subFilter[0].name}}</div>
+        <div class="text"></div>
         <div class="menu">
           <div v-for="cond in subFilter" :key="cond.id" :data-value="cond.id" :class="{disabled: cond.disabled}" class="item">{{cond.name}}</div>
         </div>
@@ -212,11 +212,9 @@
     }
 
     return {
-      lang: {
-        thousandsSep: ','
-      },
       chart: {
-        type: 'bar'
+        type: 'bar',
+        height: 300
       },
       tooltip: {
         shared: true
@@ -288,14 +286,12 @@
 
   function getDefaultClubChartOptions() {
     return {
-      options: {
-        chart: {
-          type: 'column',
-          height: 500
-        },
-        tooltip: {
-          shared: true
-        }
+      chart: {
+        type: 'column',
+        height: 300
+      },
+      tooltip: {
+        shared: true
       },
       title: {
         text: ''
@@ -353,14 +349,12 @@
 
   function getDefaultSeasonChartOptions() {
     return {
-      options: {
-        chart: {
-          type: 'bar',
-          height: 200
-        },
-        tooltip: {
-          shared: true
-        }
+      chart: {
+        type: 'bar',
+        height: 300
+      },
+      tooltip: {
+        shared: true
       },
       title: {
         text: this.$t('stats.attendance')
@@ -573,6 +567,8 @@
               totalMatches += attendance.games;
             });
 
+            this.chartOptions.chart.height += data.length * 30;
+
             this.$store.commit('club.data', {
               totalMatches: totalMatches,
               totalAttendees: totalAttendees,
@@ -595,7 +591,7 @@
           let totalMatches = 0;
 
           data.forEach(attendance => {
-            if (league === KL_ID || league === attendance.league) {
+            if (!league || league === KL_ID || league === attendance.league) {
               let clubName = 'Unknown';
               footballClubs.some(club => {
                 if ((attendance.club && attendance.club.name) === club.origin.name) {
@@ -612,6 +608,8 @@
               totalMatches += attendance.games;
             }
           });
+
+          this.chartOptions.chart.height += data.length * 30;
 
           this.$store.commit('season.data', {
             totalMatches: totalMatches,
@@ -638,7 +636,7 @@
           totalMatches += attendance.games;
         });
 
-        this.chartOptions.chart.height = 300 + (data.length * 30);
+        this.chartOptions.chart.height += data.length * 30;
 
         this.$store.commit('league.data', {
           totalMatches: totalMatches,
@@ -661,8 +659,10 @@
       selected = league || this.filter[0].id;
     }
 
-    $(this.$el).find('.dropdown.filter').dropdown('set selected', selected);
-    $(this.$el).find('.dropdown.filter').dropdown({
+    let $filter = $(this.$el).find('.dropdown.filter');
+    $filter.dropdown({onChange: $.noop});
+    $filter.dropdown('set selected', selected);
+    $filter.dropdown({
       onChange: value => {
         const category = this.$route.query.category;
         const query = {category};
@@ -684,8 +684,10 @@
     });
 
     if (this.subFilter) {
-      $(this.$el).find('.dropdown.subFilter').dropdown('set selected', league || this.subFilter[0].id);
-      $(this.$el).find('.dropdown.subFilter').dropdown({
+      const $subFilter = $(this.$el).find('.dropdown.subFilter');
+      $subFilter.dropdown({onChange: $.noop});
+      $subFilter.dropdown('set selected', league || this.subFilter[0].id);
+      $subFilter.dropdown({
         onChange: value => {
           const category = this.$route.query.category;
           const query = {

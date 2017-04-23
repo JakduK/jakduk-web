@@ -56,7 +56,7 @@
       },
       chart: {
         type: this.$route.query.chartType || 'bar',
-        height: 200 + (this.$store.getters.supporterList.length * 30)
+        height: 300
       },
       plotOptions: {
         pie: {
@@ -110,6 +110,7 @@
     watch: {
       $route() {
         this.chartOptions.chart.type = this.$route.query.chartType;
+        this.chartOptions.chart.height = 300 + (this.$store.getters.supporterList.length * 30);
       }
     },
     mounted() {
@@ -124,6 +125,8 @@
           const item = [supporter.supportFC.names[0].shortName, supporter.count];
           chartData.push(item);
         });
+
+        this.chartOptions.chart.height = 300 + (data.supporters.length * 30);
 
         this.$store.commit('supporters.data', {
           totalMembers: data.usersTotal,
