@@ -7,7 +7,7 @@ module.exports = function (app) {
   require('./logout').setup(app);
   require('./user').setup(app);
   // require('./board').setup(app);
-  require('./about').setup(app);
+  // require('./about').setup(app);
   // require('./gallery').setup(app);
   // require('./jakdu').setup(app);
   // require('./stats').setup(app);

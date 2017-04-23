@@ -7,7 +7,7 @@
           <div class="four wide column">
             <h4 class="ui header">{{$t('about')}}</h4>
             <div class="ui link list">
-              <a href="/about" class="item">{{$t('about.site')}}</a>
+              <router-link to="/about" class="item">{{$t('about.site')}}</router-link>
               <router-link :to="{name: 'board.view', params: {name: 'free', seq: 98}}" class="item">{{$t('about.site.use.guide')}}</router-link>
             </div>
           </div>

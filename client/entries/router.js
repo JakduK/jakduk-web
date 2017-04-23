@@ -51,6 +51,12 @@ const Jakdu = resolve => {
   }, 'jakdu');
 };
 
+const About = resolve => {
+  require.ensure([], require => {
+    resolve(require('../entries/about/about.vue'));
+  }, 'about');
+};
+
 const Stats = resolve => {
   require.ensure([], require => {
     resolve(require('../entries/stats/stats.vue'));
@@ -142,6 +148,10 @@ export default new VueRouter({
     name: 'jakdu',
     path: '/jakdu',
     component: Jakdu
+  }, {
+    name: 'about',
+    path: '/about',
+    component: About
   }, {
     path: '*',
     component: NotFound
