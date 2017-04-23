@@ -59,8 +59,8 @@ module.exports = {
       'vue-i18n': 'vue-i18n/dist/vue-i18n.common.js',
       'vue-router': 'vue-router/dist/vue-router.common.js',
       'vuex': 'vuex/dist/vuex.js',
-      moment: 'moment/min/moment.min.js',
-      '../moment': 'moment/min/moment.min.js',
+      moment: 'moment/moment.js',
+      '../moment': 'moment/moment.js',
       semantic: path.resolve('client/semantic/dist/semantic.js')
     }
   },
