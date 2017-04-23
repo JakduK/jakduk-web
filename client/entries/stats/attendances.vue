@@ -612,6 +612,7 @@
           this.chartOptions.chart.height += data.length * 30;
 
           this.$store.commit('season.data', {
+            totalClubs: data.length,
             totalMatches: totalMatches,
             totalAttendees: totalAttendees,
             attendeesAverage: Math.floor(totalAttendees / totalMatches) || 0
