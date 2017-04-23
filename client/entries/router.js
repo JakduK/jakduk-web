@@ -65,7 +65,7 @@ const Stats = resolve => {
 
 const StatsAttendances = resolve => {
   require.ensure([], require => {
-    resolve(require('../entries/stats/attandances.vue'));
+    resolve(require('../entries/stats/attendances.vue'));
   }, 'stats_attendances');
 };
 
