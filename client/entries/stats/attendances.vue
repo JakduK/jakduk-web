@@ -703,6 +703,20 @@
     }
   }
 
+  function getTitle({category}) {
+    let title;
+
+    if (category === 'club') {
+      title = 'stats.attendance.club.title';
+    } else if (category === 'season') {
+      title = 'stats.attendance.season.title';
+    } else {
+      title = 'stats.attendance.league.title';
+    }
+
+    return title;
+  }
+
   export default {
     data() {
       return {
@@ -717,6 +731,15 @@
           thumbnailUrl: `${window.location.origin}/assets/jakduk/img/logo_256.png`
         }
       };
+    },
+    beforeRouteEnter(to, from, next) {
+      next(_this => {
+        _this.setDocumentTitle(_this.$t(getTitle(to.query)), _this.$t('common.jakduk'));
+      });
+    },
+    beforeRouteUpdate(to, from, next) {
+      this.setDocumentTitle(this.$t(getTitle(to.query)), this.$t('common.jakduk'));
+      next();
     },
     watch: {
       $route() {
@@ -751,7 +774,10 @@
     },
     methods: {
       copyLinkIntoClipboard() {
-        window.prompt(this.$t('common.url.of.name', {name: this.$t('stats.supporters.title')}), `${window.location.origin}${this.$route.fullPath}`);
+        window.prompt(
+          this.$t('common.url.of.name', {name: this.$t(getTitle(this.$route.query))}),
+          `${window.location.origin}${this.$route.fullPath}`
+        );
       },
       comma: comma,
       onChartCreated(chart) {

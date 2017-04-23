@@ -62,6 +62,11 @@
 
 <script>
   export default {
+    beforeRouteEnter(to, from, next) {
+      next(_this => {
+        _this.setDocumentTitle(_this.$t('common.error'), _this.$t('common.jakduk'));
+      });
+    },
     created() {
       this.$store.commit('load', false);
     }

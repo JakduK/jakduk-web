@@ -159,12 +159,14 @@
     beforeRouteEnter(to, from, next) {
       fetch(to.query).then((popularSearchWords, searchResult) => {
         next(_this => {
+          _this.setDocumentTitle(_this.$t('search'), _this.$t('common.jakduk'));
           apply.call(_this, popularSearchWords, searchResult);
         });
       });
     },
     beforeRouteUpdate(to, from, next) {
       fetch(to.query).then((popularSearchWords, searchResult) => {
+        this.setDocumentTitle(this.$t('search'), this.$t('common.jakduk'));
         apply.call(this, popularSearchWords, searchResult);
         next();
       });

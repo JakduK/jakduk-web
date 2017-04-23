@@ -1,16 +1,13 @@
 const path = require('path');
-
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const i18n = require('i18n');
 const apiClient = require('./middlewares/api_client');
 const apiProxy = require('./middlewares/api_proxy');
 const config = require('./config/environment');
 const i18nMdw = require('./middlewares/i18n');
 const defaultContext = require('./middlewares/default_context');
-
 const express = require('express');
 
 module.exports = setup(express());
@@ -69,13 +66,16 @@ function setup(app) {
   // register routes
   require('./routes')(app);
 
-  app.use('*', (req, res) => {
+  app.use('*', (err, req, res, next) => {
+    res.status(err.status);
     res.render('index', {
-      layout: false,
-      title: [
-        i18n.__('common.home'),
-        i18n.__('common.jakduk')
-      ]
+      layout: false
+    });
+  });
+
+  app.use('*', (req, res, next) => {
+    res.render('index', {
+      layout: false
     });
   });
 

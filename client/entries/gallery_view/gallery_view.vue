@@ -151,6 +151,7 @@
     beforeRouteEnter(to, from, next) {
       $.getJSON(`/api/gallery/${to.params.id}`).then(data => {
         next(_this => {
+          _this.setDocumentTitle(data.gallery.name, _this.$t('gallery'), _this.$t('common.jakduk'));
           _this.$store.commit('image', data);
           _this.$store.commit('load', false);
         })
@@ -158,6 +159,7 @@
     },
     beforeRouteUpdate(to, from, next) {
       $.getJSON(`/api/gallery/${to.params.id}`).then(data => {
+        this.setDocumentTitle(data.gallery.name, this.$t('gallery'), this.$t('common.jakduk'));
         this.$store.commit('image', data);
         this.$store.commit('load', false);
         next();

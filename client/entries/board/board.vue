@@ -158,14 +158,13 @@
         category: undefined
       };
     },
-    updated() {
-      $('.ui.sticky').sticky('refresh', true);
-    },
     beforeRouteEnter(to, from, next) {
       next(_this => {
         const category = (to.query.category || 'ALL').toUpperCase();
 
         _this.category = category;
+
+        _this.setDocumentTitle(_this.$t('board.name.free'), _this.$t('common.jakduk'));
 
         fetch.call(_this, {
           page: Math.max(1, parseInt(to.query.page) || 1),
@@ -198,6 +197,9 @@
       }).then(() => {
         next();
       });
+    },
+    updated() {
+      $('.ui.sticky').sticky('refresh', true);
     },
     methods: {
       categoryColor: CategoryColor,

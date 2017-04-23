@@ -15,6 +15,9 @@ Vue.filter('encode', Encode);
 
 Vue.mixin({
   methods: {
+    setDocumentTitle(...titles) {
+      document.title = titles.join(' · ');
+    },
     imageSrc(id) {
       return typeof id !== 'number' && !id ? '' : `${window.ENV.imageServerUrl}/gallery/${id}`;
     },

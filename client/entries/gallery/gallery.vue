@@ -53,6 +53,11 @@
         isLoading: true
       };
     },
+    beforeRouteEnter(to, from, next) {
+      next(_this => {
+        _this.setDocumentTitle(_this.$t('gallery'), _this.$t('common.jakduk'));
+      });
+    },
     created() {
       $.getJSON('/api/galleries').then(data => {
         this.$store.commit('gallery', data.galleries);

@@ -229,7 +229,6 @@
 </style>
 
 <script>
-  import Vue from 'vue';
   import {mapState} from 'vuex';
   import $ from 'jquery';
   import Pager from '../../components/pager/pager.vue';
@@ -291,6 +290,11 @@
     beforeRouteEnter(to, from, next) {
       fetch(to.params.seq).then(({post, comments}) => {
         next(_this => {
+          _this.setDocumentTitle(
+            (post.post.status && post.post.status.delete) ? _this.$t('board.msg.deleted') : post.post.subject,
+            _this.$t('board.name.free'),
+            _this.$t('common.jakduk')
+          );
           apply.call(_this, post, comments);
         });
       }, response => {
@@ -387,7 +391,10 @@
         });
       },
       copyLinkIntoClipboard() {
-        window.prompt(this.$t('common.url.of.name', {name: this.post.subject}), `${window.location.origin}${this.$route.fullPath}`);
+        window.prompt(
+          this.$t('common.url.of.name', {name: this.post.subject}),
+          `${window.location.origin}${window.location.pathname}`
+        );
       },
       likeOrDislike(what) {
         $.post(`/api/board/free/${this.post.seq}/${what}`).then(data => {

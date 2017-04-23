@@ -102,6 +102,11 @@
         }
       };
     },
+    beforeRouteEnter(to, from, next) {
+      next(_this => {
+        _this.setDocumentTitle(_this.$t('stats.supporters.title'), _this.$t('common.jakduk'));
+      });
+    },
     watch: {
       $route() {
         this.chartOptions.chart.type = this.$route.query.chartType;

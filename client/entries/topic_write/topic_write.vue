@@ -117,11 +117,15 @@
       $.when.apply(null, promises).then((categories, post) => {
         next(_this => {
           if (editMode) {
+            _this.setDocumentTitle(post.post.subject, _this.$t('board.edit'), _this.$t('common.jakduk'));
+
             if (!_this.$store.state.myProfile || _this.$store.state.myProfile.id !== post.post.writer.userId) {
               window.alert(_this.$t('common.msg.error.401'));
               _this.$router.go(-1);
               return;
             }
+          } else {
+            _this.setDocumentTitle(_this.$t('board.write'), _this.$t('common.jakduk'));
           }
 
           if (post) {

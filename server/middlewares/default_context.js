@@ -16,6 +16,7 @@ module.exports = function () {
       }
 
       req.isAuthenticated = !!req.userInfo;
+
       if (req.isAuthenticated) {
         res.locals.isAdmin = req.userInfo.roles.some(role => role === 'ROLE_ROOT');
         req.isAdmin = res.locals.isAdmin;
@@ -44,7 +45,8 @@ module.exports = function () {
       });
 
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
       next();
-    }).catch(err => next(err));
+    }).catch(next);
   };
 };

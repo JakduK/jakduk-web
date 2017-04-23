@@ -1,30 +1,34 @@
-'use strict';
-
-var express = require('express');
-var _ = require('lodash');
-var i18n = require('i18n');
-var config = require('../../config/environment');
+const express = require('express');
+const _ = require('lodash');
+const i18n = require('i18n');
+const config = require('../../config/environment');
+const Util = require('../../helpers/jakduk_util');
 
 module.exports.setup = function (app) {
-  var router = express.Router();
+  const router = express.Router();
 
-  router.get('/', function (req, res) {
-    res.render('gallery/list', {
-      title: [
-        i18n.__('gallery'),
-        i18n.__('common.jakduk')
-      ]
-    });
+  router.get('/', (req, res, next) => {
+    res.locals.title = [
+      i18n.__('gallery'),
+      i18n.__('common.jakduk')
+    ];
+
+    next();
   });
 
-  router.get('/:id', function (req, res, next) {
-    req.api.getGalleryItem(req.params.id).then(function (response) {
-      var context = res.locals;
-      var data = response.data;
+  router.get('/:id', (req, res, next) => {
+    req.api.getGalleryItem(req.params.id).then(response => {
+      if (response.statusCode !== 200) {
+        next(Util.makeError(response));
+        return;
+      }
+
+      const context = res.locals;
+      const data = response.data;
 
       _.merge(context.meta, {
         og: {
-          image: config.thumbnailServerUrl + req.baseUrl +'/' + req.params.id,
+          image: `${config.thumbnailServerUrl}${req.baseUrl}'/'${req.params.id}`,
           description: data.gallery.name
         },
         twitter: {
@@ -35,20 +39,15 @@ module.exports.setup = function (app) {
       if (response.headers['set-cookie']) {
         res.append('Set-Cookie', response.headers['set-cookie']);
       }
-      res.render('gallery/item_view', {
-        title: [
-          data.gallery.name,
-          i18n.__('gallery'),
-          i18n.__('common.jakduk')
-        ],
-        gallery: data.gallery,
-        linkedPosts: data.linkedPosts,
-        next: data.next,
-        prev: data.prev
-      });
-    }).catch(function (err) {
-      next(err);
-    });
+
+      res.locals.title = [
+        data.gallery.name,
+        i18n.__('gallery'),
+        i18n.__('common.jakduk')
+      ];
+
+      next();
+    }).catch(next);
   });
 
   app.use('/gallery', router);

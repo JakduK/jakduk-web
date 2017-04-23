@@ -211,6 +211,7 @@
     },
     beforeRouteEnter(to, from, next) {
       next(_this => {
+        _this.setDocumentTitle(_this.$t('common.home'), _this.$t('common.jakduk'));
         fetch.call(_this);
       });
     },
