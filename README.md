@@ -16,14 +16,14 @@
 
 # Prerequisite
 ```
-npm install -g bower gulp webpack
+npm install -g bower gulp
 ```
 
 # Install
 ```
 bower install
 npm install
-webpack
+gulp build
 ```
 
 # Run
