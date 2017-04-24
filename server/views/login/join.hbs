@@ -1,25 +1,33 @@
 <div class="wrapper" ng-controller="writeCtrl">
-
-  {{> navigation}}
-
-  <!--=== Breadcrumbs ===-->
-  <div class="breadcrumbs">
-    <div class="container">
-      <h1 class="pull-left">{{TRANSLATION "user.register"}}</h1>
-    </div><!--/container-->
-  </div><!--/breadcrumbs-->
-  <!--=== End Breadcrumbs ===-->
-
   <div class="container content">
-
     <div class="row">
       <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="clearfix">
+          <div class="dropdown pull-right">
+            <button type="button" id="menus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-link dropdown-toggle">
+              <i class="fa fa-globe"></i> {{TRANSLATION "common.language"}}
+            </button>
+            <ul aria-labelledby="menus" class="dropdown-menu">
+              <li><a href="?lang=ko-KR">{{TRANSLATION "common.language.korean"}}</a></li>
+              <li><a href="?lang=en-US">{{TRANSLATION "common.language.english"}}</a></li>
+            </ul>
+          </div>
+        </div>
 
         <!-- Reg-Form -->
         <form name="userWrite" action="/join{{#if bySocialAccount}}/oauth{{/if}}{{{redir}}}" method="POST" class="reg-page" ng-submit="onSubmit($event)">
           {{#if bySocialAccount}}<input type="hidden" name="tempToken" value="{{tempToken}}">{{/if}}
 
           <div class="reg-header">
+            <p>
+              <a class="logo" href="/">
+                {{#if (EQ locale 'ko-KR')}}
+                  <img src="/assets/jakduk/img/logo_type_A_kr.png" alt="Logo" class="center-block">
+                {{else}}
+                  <img src="/assets/jakduk/img/logo_type_A_en.png" alt="Logo" class="center-block">
+                {{/if}}
+              </a>
+            </p>
             <h2>{{TRANSLATION "user.register.header"}}</h2>
           </div>
 
@@ -120,8 +128,6 @@
     </div>
 
   </div><!-- /.container -->
-
-  {{> footer}}
 
 </div>
 {{#CHUNK 'css'}}

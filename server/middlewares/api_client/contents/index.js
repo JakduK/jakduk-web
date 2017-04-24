@@ -26,7 +26,7 @@ module.exports = function(ApiClient, internalFn) {
     return new Promise(function(resolve) {
       rest.json(this.serverUrl + '/football/clubs', null, {
         query: {
-          lang: lang
+          lang: lang.replace('-', '_')
         }
       }).on('complete', callback.bind(null, resolve));
     }.bind(this));

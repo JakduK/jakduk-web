@@ -23,7 +23,7 @@
     <![endif]-->
 
     <script type="text/javascript">
-      var require = {
+      window.require = {
         paths: {
           {{#if (SUMMERNOTE_LOCALE locale)}}
             'summernote-{{SUMMERNOTE_LOCALE locale}}': '/assets/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}',
