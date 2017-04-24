@@ -25,24 +25,16 @@
     <script type="text/javascript">
       window.require = {
         paths: {
-          {{#if (SUMMERNOTE_LOCALE locale)}}
-            'summernote-{{SUMMERNOTE_LOCALE locale}}': '/assets/bower_components/summernote/lang/summernote-{{SUMMERNOTE_LOCALE locale}}',
-          {{/if}}
-          'angular-locale': '/assets/bower_components/angular-i18n/angular-locale_{{LOWERCASE locale}}'
+          'angular-locale': '/assets/angular-i18n/angular-locale_{{LOWERCASE locale}}'
         },
         shim: {
-          {{#if (SUMMERNOTE_LOCALE locale)}}
-            'summernote-{{SUMMERNOTE_LOCALE locale}}': {
-              deps: ['jquery', 'summernote']
-            },
-          {{/if}}
           'angular-locale': {
             deps: ['jquery', 'angular']
           }
         }
       };
     </script>
-    <script src="/assets/bower_components/requirejs/require.js"></script>
+    <script src="/assets/requirejs/require.js"></script>
     <script src="/assets/jakduk/js/config.js"></script>
   </head>
   <body class="{{bodyClass}}">
