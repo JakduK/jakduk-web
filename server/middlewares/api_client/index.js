@@ -1,9 +1,7 @@
-'use strict';
-
 const config = require('../../config/environment');
 
-var internalFn = {
-  callback (resolve, data, response) {
+const internalFn = {
+  callback(resolve, data, response) {
     response = response || {statusCode: 0};
     response.data = data;
     resolve(response);
@@ -24,10 +22,10 @@ module.exports.ApiClient = ApiClient;
 
 module.exports.middleware = function () {
   return function (req, res, next) {
-    let credentials = {
+    const credentials = {
       [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''
     };
     req.api = new ApiClient(credentials, req.headers.cookie || '', config.internalApiServerUrl);
     next();
-  }
+  };
 };
