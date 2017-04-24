@@ -23,7 +23,7 @@ function setup(app) {
   app.set('env', config.env);
   app.set('port', config.port);
   app.set('trust proxy', true);
-  app.set('views', path.resolve(__dirname, 'views'));
+  app.set('views', path.resolve('server', 'views'));
 
   // view engine setup
   require('./config/handlebars')(app);
@@ -49,12 +49,12 @@ function setup(app) {
   app.use(logger(config.env === 'production' ? 'combined' : 'dev'));
   app.use(compression());
   app.use('/assets', [
-    express.static(path.resolve(__dirname, '../dist')),
-    express.static(path.resolve(__dirname, '../assets')),
-    express.static(path.resolve(__dirname, '../client')),
-    express.static(path.resolve(__dirname, '../node_modules'))
+    express.static(path.resolve('dist')),
+    express.static(path.resolve('assets')),
+    express.static(path.resolve('client')),
+    express.static(path.resolve('node_modules'))
   ]);
-  app.get(/\*.html/, express.static(path.resolve(__dirname, '../assets/html')));
+  app.get(/\*.html/, express.static(path.resolve('assets', 'html')));
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));
