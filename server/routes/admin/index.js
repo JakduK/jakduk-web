@@ -1,9 +1,7 @@
-'use strict';
-
-var i18n = require('i18n');
+const i18n = require('i18n');
 
 module.exports.setup = function (app) {
-  app.use('/admin', function (req, res) {
+  app.use('/admin', (req, res) => {
     if (!req.isAdmin) {
       res.render('error/denied', {
         title: [

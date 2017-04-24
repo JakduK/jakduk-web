@@ -1,33 +1,51 @@
 <div class="wrapper">
-
-  {{> navigation}}
-
-  <!--=== Breadcrumbs ===-->
-  <div class="breadcrumbs">
-    <div class="container">
-      <h1 class="pull-left"><a href="/home">{{TRANSLATION "common.error"}}</a></h1>
-    </div><!--/container-->
-  </div><!--/breadcrumbs-->
-  <!--=== End Breadcrumbs ===-->
-
   <div class="container content">
-    <h3>{{TRANSLATION "common.msg.error.default"}}</h3>
-    <p><small>Host : <code>{{req.headers.host}}</code></small></p>
-    <p><small>URI : <code>{{req.headers.host}}{{req.originalUrl}}</code></small></p>
-    <p><small>Code : <code>{{code}}</code></small></p>
-    <p><small>Message : <code>{{message}}</code></small></p>
-    {{#if error}}
-      <p><small>Stack : <pre>{{error}}</pre></small></p>
-    {{/if}}
-    <p><small>Date : <code ng-bind="{{now}} | date:'medium'"></code></small></p>
-    <p class="text-info"><strong>{{TRANSLATION "common.msg.error.show.error.to.administrator"}}</strong></p>
-    <button class="btn btn-default" onclick="location.href='/home'">{{TRANSLATION "common.button.home"}}</button>
-    <button class="btn btn-default" onclick="history.back()">{{TRANSLATION "common.button.previous.page"}}</button>
-  </div><!-- /.container -->
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="clearfix">
+          <div class="dropdown pull-right">
+            <button type="button" id="menus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-link dropdown-toggle">
+              <i class="fa fa-globe"></i> {{TRANSLATION "common.language"}}
+            </button>
+            <ul aria-labelledby="menus" class="dropdown-menu">
+              <li><a href="?lang=ko-KR">{{TRANSLATION "common.language.korean"}}</a></li>
+              <li><a href="?lang=en-US">{{TRANSLATION "common.language.english"}}</a></li>
+            </ul>
+          </div>
+        </div>
 
-  {{> footer}}
-
-</div><!-- /.wrapper -->
+        <div class="reg-page">
+          <div class="reg-header">
+            <p>
+              <a class="logo" href="/">
+                {{#if (EQ locale 'ko-KR')}}
+                  <img src="/assets/jakduk/img/logo_type_A_kr.png" alt="Logo" class="center-block">
+                {{else}}
+                  <img src="/assets/jakduk/img/logo_type_A_en.png" alt="Logo" class="center-block">
+                {{/if}}
+              </a>
+            </p>
+            <h2>{{TRANSLATION "common.msg.error.default"}}</h2>
+          </div>
+          <p><small>Host : <code>{{req.headers.host}}</code></small></p>
+          <p><small>URI : <code>{{req.headers.host}}{{req.originalUrl}}</code></small></p>
+          <p><small>Code : <code>{{code}}</code></small></p>
+          <p><small>Message : <code>{{message}}</code></small></p>
+          {{#if error}}
+            <p><small>Stack : <pre>{{error}}</pre></small></p>
+          {{/if}}
+          <p><small>Date : <code ng-bind="{{now}} | date:'medium'"></code></small></p>
+          <p class="text-info"><strong>{{TRANSLATION "common.msg.error.show.error.to.administrator"}}</strong></p>
+          <button class="btn btn-default" onclick="location.href='/home'">{{TRANSLATION "common.button.home"}}</button>
+          <button class="btn btn-default" onclick="history.back()">{{TRANSLATION "common.button.previous.page"}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/assets/unify/assets/css/pages/page_log_reg_v1.css"/>
+{{/CHUNK}}
 {{#CHUNK 'js'}}
   <script>
     require(['angular', 'jakduk'], function (angular) {
