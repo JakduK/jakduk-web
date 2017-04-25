@@ -538,7 +538,7 @@
 
     if (category === 'club') {
       promise = $.getJSON('/api/football/clubs', {
-        lang: this.$lang.split('-')[0]
+        lang: this.$lang.replace('-', '_')
       }).then(footballClubs => {
         const footballClub = footballClubs.find(_club => _club.origin.name === club) || footballClubs[0];
 
@@ -553,7 +553,7 @@
 
         if (footballClub) {
           return $.getJSON(`/api/stats/attendance/club/${footballClub.origin.name}`, {
-            lang: this.$lang.split('-')[0]
+            lang: this.$lang.replace('-', '_')
           }).then(data => {
             let totalAttendees = 0;
             let totalMatches = 0;
@@ -581,11 +581,11 @@
       this.subFilter = this.filter.find(f => `${f.id}` === `${season || 2016}`).sub;
 
       promise = $.getJSON('/api/football/clubs', {
-        lang: this.$lang.split('-')[0]
+        lang: this.$lang.replace('-', '_')
       }).then(footballClubs => {
         return $.getJSON(`/api/stats/attendance/season/${season || 2016}`, {
           league: league || KL_ID,
-          lang: this.$lang.split('-')[0]
+          lang: this.$lang.replace('-', '_')
         }).then(data => {
           let totalAttendees = 0;
           let totalMatches = 0;
@@ -622,7 +622,7 @@
     } else {
       promise = $.getJSON(`/api/stats/league/attendances`, {
         competitionCode: league || KLCL_ID,
-        lang: this.$lang.split('-')[0]
+        lang: this.$lang.replace('-', '_')
       }).then(data => {
         let totalAttendees = 0;
         let totalMatches = 0;

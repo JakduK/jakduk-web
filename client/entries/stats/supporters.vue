@@ -51,9 +51,6 @@
 
   function getDefaultChartOptions() {
     return {
-      lang: {
-        thousandsSep: ','
-      },
       chart: {
         type: this.$route.query.chartType || 'bar',
         height: 300
@@ -117,7 +114,7 @@
       this.$store.commit('load', false);
 
       $.getJSON('/api/stats/supporters', {
-        lang: this.$lang.split('-')[0]
+        lang: this.$lang.replace('-', '_')
       }).then(data => {
         const chartData = [];
 
@@ -126,7 +123,7 @@
           chartData.push(item);
         });
 
-        this.chartOptions.chart.height = 300 + (data.supporters.length * 30);
+        this.chartOptions.chart.height = Math.min($(window).outerWidth(), 600);
 
         this.$store.commit('supporters.data', {
           totalMembers: data.usersTotal,
