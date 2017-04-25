@@ -87,6 +87,14 @@
     };
   }
 
+  function adjustChartHeight() {
+    if (this.chartOptions.chart.type === 'bar') {
+      this.chartOptions.chart.height = 300 + (this.$store.getters.supporterList.length * 30);
+    } else {
+      this.chartOptions.chart.height = Math.min($(window).outerWidth(), 700);
+    }
+  }
+
   export default {
     data() {
       return {
@@ -107,7 +115,7 @@
     watch: {
       $route() {
         this.chartOptions.chart.type = this.$route.query.chartType;
-        this.chartOptions.chart.height = 300 + (this.$store.getters.supporterList.length * 30);
+        adjustChartHeight.call(this);
       }
     },
     mounted() {
@@ -122,8 +130,6 @@
           const item = [supporter.supportFC.names[0].shortName, supporter.count];
           chartData.push(item);
         });
-
-        this.chartOptions.chart.height = Math.min($(window).outerWidth(), 600);
 
         this.$store.commit('supporters.data', {
           totalMembers: data.usersTotal,
@@ -142,6 +148,8 @@
             }
           }]
         });
+
+        adjustChartHeight.call(this);
       });
     },
     computed: {
