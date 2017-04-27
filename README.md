@@ -16,12 +16,11 @@
 
 # Prerequisite
 ```
-npm install -g bower gulp
+npm install -g gulp
 ```
 
 # Install
 ```
-bower install
 npm install
 gulp build
 ```
