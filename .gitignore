@@ -2,7 +2,6 @@
 .tmp/
 .logs/
 dist/
-build/
 node_modules/
 bower_components/
 local.js
