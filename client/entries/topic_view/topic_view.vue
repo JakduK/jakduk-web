@@ -208,6 +208,10 @@
     max-width: 100%;
   }
 
+  .ui.segment.ql-editor {
+    padding: 2em;
+  }
+
   .comment .content iframe {
     max-width: 100%;
     border: 0;
