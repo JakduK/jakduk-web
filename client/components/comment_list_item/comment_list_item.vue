@@ -9,14 +9,14 @@
     <div class="content ql-snow">
       <a class="author">{{item.writer.username}}</a>
       <div class="metadata">
-        <span class="date">{{item.id | IdToRegDate('LL')}}</span>&middot;
+        <span class="date">{{item.id | IdToRegDate('LL')}}</span>
         <div class="rating">
-          <button @click="likeComment(item)">
-            <i :style="{'font-weight': item.myFeeling === 'LIKE' ? 'bold' : 'normal'}" class="smile blue icon"></i>
+          <button @click="likeComment(item)" :class="item.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui label nomargin mini">
+            <i :class="{blue: item.myFeeling !== 'LIKE'}" class="smile icon"></i>
             {{item.numberOfLike || 0}}
-          </button> &nbsp;
-          <button @click="dislikeComment(item)">
-            <i :class="{'font-weight': item.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" class="meh teal icon"></i> {{item.numberOfDislike || 0}}
+          </button>
+          <button @click="dislikeComment(item)" :class="item.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui label nomargin mini">
+            <i :class="{teal: item.myFeeling !== 'DISLIKE'}" class="meh icon"></i> {{item.numberOfDislike || 0}}
           </button>
         </div>
       </div>
