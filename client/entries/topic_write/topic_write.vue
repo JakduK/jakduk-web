@@ -227,11 +227,23 @@
           });
         }).then(() => {
           const promise = [];
+          let reqData;
+
+          if (this.editMode) {
+            reqData = JSON.stringify({
+              form: {
+                from: 'BOARD_FREE',
+                itemId: this.post.id
+              }
+            });
+          }
 
           this.deletedImageList.forEach(image => {
             promise.push($.ajax({
               type: 'delete',
-              url: `/api/gallery/${image.id}`
+              url: `/api/gallery/${image.id}`,
+              contentType: 'application/json',
+              data: reqData
             }));
           });
 
