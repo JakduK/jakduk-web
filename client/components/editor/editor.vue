@@ -148,6 +148,24 @@
       getText() {
         return this.quill.getText();
       },
+      getEmbeds() {
+        const delta = this.quill.getContents();
+        return delta.ops.reduce((list, op) => {
+          if (op.insert) {
+            if (op.insert.image) {
+              list.push({
+                image: op.insert.image
+              });
+            } else if (op.insert.video) {
+              list.push({
+                video: op.insert.video
+              });
+            }
+          }
+
+          return list;
+        }, []);
+      },
       clear() {
         this.quill.setText('');
       },

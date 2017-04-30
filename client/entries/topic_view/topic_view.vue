@@ -160,7 +160,7 @@
         <div class="comment-form">
           <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
           <div class="comment-editor">
-            <editor @on-created="onEditorCreated" :options="{mode: 'comment', language: $store.state.locale}"></editor>
+            <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'comment', language: $store.state.locale}"></editor>
           </div>
           <div class="clearfix">
             <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
@@ -241,6 +241,8 @@
   import CategoryLabel from '../../filters/category_label';
   import ErrorDialog from '../../utils/dialog_response_error';
   import CommentListItem from '../../components/comment_list_item/comment_list_item.vue';
+
+  let commentEdiotImageList = [];
 
   function fetch(seq) {
     return $.getJSON(`/api/board/free/${seq}`).then(data => {
@@ -515,11 +517,24 @@
           contentType: 'application/json',
           data: JSON.stringify({
             content: this.commentEditor.getContents(),
-            seq: this.post.seq
+            seq: this.post.seq,
+            galleries: this.commentEditor.getEmbeds().reduce((list, embed) => {
+              const image = commentEdiotImageList.find(image => image.imageUrl === embed.image);
+
+              if (embed.image && image) {
+                list.push({
+                  id: image.id,
+                  name: image.name
+                });
+              }
+
+              return list;
+            }, [])
           })
         }).then(data => {
           this.comments.push(data);
           this.commentEditor.clear();
+          commentEdiotImageList = [];
         }, ...response => {
           this.$store.dispatch('globalMessage', {
             level: 'error',
@@ -528,6 +543,10 @@
         }).always(() => {
           this.isCommentSubmitting = false;
         });
+      },
+      onImageUploaded(image) {
+        image.name = image.name || image.fileName;
+        commentEdiotImageList.push(image);
       }
     },
     components: {
