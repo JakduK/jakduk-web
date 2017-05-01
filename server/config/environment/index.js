@@ -1,14 +1,13 @@
-'use strict';
+const _ = require('lodash');
 
-var _ = require('lodash');
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
-var env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+let envConfig;
 
-var envConfig;
 if (env === 'production') {
-  envConfig = require('./' + env + '.js')[process.env.ENV || 'staging'];
+  envConfig = require(`./${env}.js`)[process.env.ENV || 'staging'];
 } else {
-  envConfig = require('./' + env + '.js');
+  envConfig = require(`./${env}.js`);
 }
 
 try {
@@ -17,7 +16,7 @@ try {
 }
 
 // All configurations will extend these options
-var defaultConfig = {
+const defaultConfig = {
   revision: '',
 
   env: env,
@@ -60,13 +59,13 @@ var defaultConfig = {
   facebook: {
     clientID: process.env.FACEBOOK_ID || '',
     clientSecret: process.env.FACEBOOK_SECRET || '',
-    callbackURL: envConfig.origin + '/auth/facebook/callback'
+    callbackURL: `${envConfig.origin}/auth/facebook/callback`
   },
 
   daum: {
     clientID: process.env.DAUM_ID || '',
     clientSecret: process.env.DAUM_SECRET || '',
-    callbackURL: envConfig.origin + '/auth/daum/callback'
+    callbackURL: `${envConfig.origin}/auth/daum/callback`
   },
 
   kakao: {

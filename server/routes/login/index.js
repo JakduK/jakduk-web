@@ -1,11 +1,8 @@
-'use strict';
-
-var querystring = require('querystring');
-var express = require('express');
-var _ = require('lodash');
-var i18n = require('i18n');
-var Util = require('../../helpers/jakduk_util');
-var config = require('../../config/environment');
+const querystring = require('querystring');
+const _ = require('lodash');
+const i18n = require('i18n');
+const Util = require('../../helpers/jakduk_util');
+const config = require('../../config/environment');
 
 function index(req, res) {
   res.render('login/login', {
@@ -13,7 +10,7 @@ function index(req, res) {
       i18n.__('user.sign.in'),
       i18n.__('common.jakduk')
     ],
-    redir: '?redir=' + querystring.escape(req.query.redir || '')
+    redir: `?redir=${querystring.escape(req.query.redir || '')}`
   });
 }
 
@@ -22,23 +19,27 @@ function submit(req, res, next) {
     req.body.username,
     req.body.password
   ).then(function (response) {
-    var status = response.statusCode;
-    var redir;
-    var message;
+    const status = response.statusCode;
 
     if (status === 200) {
-      Util.saveSession(res, response.headers[config.tokenHeader], req.body.remember === 'on');
-      redir = req.query.redir || '/';
+      let redir = req.query.redir || '/';
+
       redir = _.some(req.noRedirectPaths, function (value) {
         return redir.endsWith(value);
       }) ? '/' : redir;
+
+      Util.saveSession(res, response.headers[config.tokenHeader], req.body.remember === 'on');
+
       res.redirect(redir);
     } else {
+      let message;
+
       if (status === 400) {
         message = 'common.exception.wrong.password';
       } else {
         message = 'common.exception.not.found.jakduk.account';
       }
+
       res.render('login/login', {
         title: [
           i18n.__('user.sign.in'),

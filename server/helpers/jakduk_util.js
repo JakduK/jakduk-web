@@ -1,28 +1,26 @@
-'use strict';
-
-var querystring = require('querystring');
-var _s = require('underscore.string');
-var i18n = require('i18n');
-var config = require('../config/environment');
+const querystring = require('querystring');
+const _s = require('underscore.string');
+const i18n = require('i18n');
+const config = require('../config/environment');
 
 const ytRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
 
 module.exports = {
-  saveSession (res, token, remember) {
-    var options = {httpOnly: true};
+  saveSession(res, token, remember) {
+    const options = {httpOnly: true};
     if (remember) {
       options.maxAge = config.tokenMaxAge;
     }
     res.cookie(config.tokenCookieName, token, options);
   },
-  clearSession (res) {
+  clearSession(res) {
     res.clearCookie(config.tokenCookieName);
   },
-  redirect (target, callbackUrl, res) {
+  redirect(target, callbackUrl, res) {
     res.redirect(target + '?redir=' + querystring.escape(callbackUrl));
   },
-  ogFromPost (post, limit) {
-    let og = {
+  ogFromPost(post, limit) {
+    const og = {
       author: post.writer.username,
       title: post.subject,
       link: config.origin + '/board/free/' + post.seq,
@@ -43,7 +41,7 @@ module.exports = {
 
     if (video) {
       video = video[0].match(/src=(['"])(.*?)\1/)[2];
-      let ytMatch = (video.startsWith('//') ? 'https:' + video : video).match(ytRegExp);
+      const ytMatch = (video.startsWith('//') ? 'https:' + video : video).match(ytRegExp);
       if (ytMatch && ytMatch[1].length === 11) {
         let youtubeId = ytMatch[1];
         video = 'https://www.youtube.com/watch?v=' + youtubeId;
@@ -54,8 +52,8 @@ module.exports = {
 
     return og;
   },
-  makeError (response) {
-    let err = new Error(JSON.stringify({
+  makeError(response) {
+    const err = new Error(JSON.stringify({
       type: response.req ? 'api error' : 'server unavailable',
       api: response.req ? `${response.req.agent.protocol}${response.req._headers.host}${response.req.path}` : '',
       data: response.data
@@ -65,7 +63,7 @@ module.exports = {
     return err;
   },
   makeForbidden() {
-    let err = new Error(i18n.__('common.msg.error.401'));
+    const err = new Error(i18n.__('common.msg.error.401'));
     err.status = 401;
     err.statusMessage = 'Unauthorized';
     return err;
