@@ -278,7 +278,7 @@
   "user.msg.not.user": "Not a User?",
   "user.msg.register.here": "Register Here",
   "user.msg.check.mail.format": "Check email format. ex) example@jakduk.com",
-  "user.msg.already.email": "This Email adress used already.",
+  "user.msg.already.email": "This Email address used already.",
   "user.msg.need.validation.email": "You need email validation. Check email format.",
   "user.msg.already.username": "This Nickname used already.",
   "user.msg.need.validation.username": "You need username validation. Check username format.",
@@ -288,7 +288,7 @@
   "user.msg.login.failure": "Login failure. check your email address and password.",
   "user.msg.login.failure.locked": "Your account is locked. Please contact administrator by e-mail.",
   "user.msg.register.success": "Registration success. you can login now.",
-  "user.msg.old.password.is.not.vaild": "Old password isn#146;t vaild.",
+  "user.msg.old.password.is.not.valid": "Old password is not valid.",
   "user.msg.success.update.profile": "Update my profile successfully.",
   "user.msg.success.change.password": "Update password successfully.",
   "user.msg.reset.password.sendok": "you will receive a password recovery link at your email address in a few minutes.",
@@ -326,5 +326,6 @@
   "common.insert.into.content": "Insert into content",
   "common.delete": "Delete",
   "common.url.of.name": "URL of {name}",
-  "common.send.url.via.kakaotalk": "Send URL via Kakao Talk"
+  "common.send.url.via.kakaotalk": "Send URL via Kakao Talk",
+  "common.please.register.your.email": "You have issued a temporary email. Please register your email."
 }

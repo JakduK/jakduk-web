@@ -34,6 +34,9 @@
             </p>
             <h2>{{TRANSLATION "user.profile"}}</h2>
           </div>
+          {{#if userProfile.temporaryEmail}}
+            <div class="alert alert-info">{{TRANSLATION 'common.please.register.your.email'}}</div>
+          {{/if}}
           <div class="form-group">
             <label class="control-label">{{TRANSLATION "user.email"}}</label>
             <p class="form-control-static">{{userProfile.email}}</p>
@@ -55,11 +58,20 @@
             <p class="form-control-static">{{userProfile.about}}</p>
           </div>
           <hr>
-          <div class="form-group">
-            <a class="btn btn-default" href="/user/profile/edit">{{TRANSLATION "common.button.user.profile.update"}}</a>
+          <div class="form-group clearfix">
+            <a class="btn btn-default pull-right" href="/user/profile/edit">
+              <i class="glyphicon glyphicon-edit"></i>
+              {{TRANSLATION "common.button.user.profile.update"}}
+            </a>
             {{#if (EQ userProfile.providerId 'JAKDUK')}}
-              <a class="btn btn-default" href="/user/password/edit">{{TRANSLATION "common.button.user.password.update"}}</a>
+              <a class="btn btn-default pull-right" href="/user/password/edit">
+                <i class="glyphicon glyphicon-pencil"></i>
+                {{TRANSLATION "common.button.user.password.update"}}
+              </a>
             {{/if}}
+            <button type="button" class="btn btn-default pull-right" onclick="window.history.back()">
+              <span class="glyphicon glyphicon-chevron-left"></span> {{TRANSLATION "common.back"}}
+            </button>
           </div>
         </form>
       </div>
