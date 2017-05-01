@@ -110,7 +110,7 @@
         <div class="ui blue segment">
           <div v-if="latest" class="ui middle aligned relaxed list">
             <div v-for="(user, index) in latest.users" :key="user.id" class="item">
-              <div class="image">
+              <div class="image" :style="{width: user.about ? '50px' : ''}">
                 <img :src="avatarSrc(user.picture)" class="ui image avatar nomargin">
                 <i v-if="user.about" class="talk small outline fitted icon vertical-align-top"></i>
               </div>
