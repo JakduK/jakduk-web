@@ -58,7 +58,7 @@
   "board.placeholder.expect.home.score": "홈팀 점수를 예상해 보세요.",
   "board.placeholder.expect.away.score": "원정팀 점수를 예상해 보세요.",
   "Size.boardFreeWrite.categoryId": "말머리를 골라 주세요.",
-  "Size.boardFreeWrite.subject": "제목의 길이는 3 ~ 30자 입니다.",
+  "Size.boardFreeWrite.subject": "제목의 길이는 1 ~ 30자 입니다.",
   "Size.boardFreeWrite.content": "내용은 적어도 5자 이상을 입력해야 합니다.",
   "Size.board.comment.content": "댓글 내용은 3 ~ 800자 입니다.",
   "home.kind.best.player": "최고의 선수",

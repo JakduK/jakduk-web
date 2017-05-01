@@ -172,10 +172,10 @@
           return false;
         }
 
-        if (this.subject.length < 3) {
+        if (!this.subject.length) {
           this.$store.dispatch('globalMessage', {
             level: 'info',
-            message: this.$t('Size.boardFreeWrite.subject')
+            message: this.$t('size.boardFreeWrite.subject')
           });
           $(this.$el).find('#subject').focus();
           return false;
