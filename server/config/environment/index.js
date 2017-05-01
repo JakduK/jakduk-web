@@ -23,6 +23,8 @@ const defaultConfig = {
 
   port: process.env.PORT || 3000,
 
+  secureCookie: false,
+
   tokenCookieName: 'JSESSIONID',
 
   refreshTokenCookieName: 'remember-me',

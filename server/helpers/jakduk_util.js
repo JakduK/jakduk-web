@@ -8,17 +8,24 @@ const ytRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:emb
 
 module.exports = {
   saveSession(res, authResponse) {
-    let authCookies = authResponse.headers['set-cookie'];
+    if (_.isString(authResponse)) {
+      res.cookie(config.tokenCookieName, authResponse, {
+        httpOnly: true,
+        secure: config.secureCookie
+      });
+    } else {
+      let authCookies = authResponse.headers['set-cookie'];
 
-    if (!authCookies) {
-      return;
+      if (!authCookies) {
+        return;
+      }
+
+      authCookies = _.isArray(authCookies) ? authCookies : [authCookies];
+
+      _.each(authCookies, cookie => {
+        res.append('Set-Cookie', `${cookie}${config.secureCookie ? '; Secure' : ''}`);
+      });
     }
-
-    authCookies = _.isArray(authCookies) ? authCookies : [authCookies];
-
-    _.each(authCookies, cookie => {
-      res.append('Set-Cookie', cookie);
-    });
   },
   clearSession(res) {
     res.clearCookie(config.tokenCookieName);

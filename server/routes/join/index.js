@@ -58,9 +58,7 @@ function indexOAuth(req, res, next) {
     const snsProfile = responses[0].data;
     const footballClubs = responses[1].data;
 
-    res.cookie(config.tokenCookieName, req.cookies[config.tokenCookieName], {
-      httpOnly: true
-    });
+    Util.saveSession(res, req.cookies[config.tokenCookieName]);
 
     res.render('login/join', {
       title: [
