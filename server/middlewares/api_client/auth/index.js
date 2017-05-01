@@ -34,7 +34,7 @@ module.exports = function (ApiClient) {
   };
 
   ApiClient.prototype.logout = function () {
-    return this.requestGet(`${this.serverUrl}/logout`);
+    return this.requestGet(`${this.serverUrl}/auth/logout`);
   };
 
   ApiClient.prototype.findPassword = function (email, callbackUrl) {
