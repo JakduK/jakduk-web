@@ -20,9 +20,9 @@ hbs.registerHelper('TRANSLATION', function(key, options) {
 });
 
 hbs.registerHelper('TRUNCATE', function(val, options) {
-	return _.truncate(val, {
-		length: options.hash.size
-	})
+  return _.truncate(val, {
+    length: options.hash.size
+  });
 });
 
 hbs.registerHelper('ADD', function() {
@@ -79,7 +79,7 @@ hbs.registerHelper('OPR', function(operator, v1, v2) {
 });
 
 hbs.registerHelper('JSON_STRINGIFY', function(val) {
-  return new hbs.SafeString(JSON.stringify(val));
+  return JSON.stringify(val);
 });
 
 hbs.registerHelper('GET_PROP', function(obj, key) {

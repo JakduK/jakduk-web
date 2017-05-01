@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    err: window.ENV.err,
     isMobile: /iphone|ipad|android/i.test(window.navigator.userAgent),
     kakaoClientID: window.ENV.kakaoClientID,
     locale: window.ENV.locale,

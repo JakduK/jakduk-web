@@ -2,7 +2,6 @@ const querystring = require('querystring');
 const _ = require('lodash');
 const i18n = require('i18n');
 const Util = require('../../helpers/jakduk_util');
-const config = require('../../config/environment');
 
 function index(req, res) {
   res.render('login/login', {
@@ -17,18 +16,19 @@ function index(req, res) {
 function submit(req, res, next) {
   req.api.login(
     req.body.username,
-    req.body.password
-  ).then(function (response) {
+    req.body.password,
+    req.body.remember === 'on'
+  ).then(response => {
     const status = response.statusCode;
 
     if (status === 200) {
       let redir = req.query.redir || '/';
 
-      redir = _.some(req.noRedirectPaths, function (value) {
+      redir = _.some(req.noRedirectPaths, value => {
         return redir.endsWith(value);
       }) ? '/' : redir;
 
-      Util.saveSession(res, response.headers[config.tokenHeader], req.body.remember === 'on');
+      Util.saveSession(res, response);
 
       res.redirect(redir);
     } else {
@@ -48,15 +48,14 @@ function submit(req, res, next) {
         message: i18n.__(message)
       });
     }
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 module.exports.setup = function (app) {
-  app.use('/login', function (req, res, next) {
+  app.use('/login', (req, res, next) => {
     if (req.isAuthenticated) {
       res.redirect('/home');
+      return;
     }
     next();
   });

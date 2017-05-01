@@ -11,21 +11,21 @@ define(['angular', 'common'], function (angular) {
     .filter('dateFromObjectId', function () {
       return function (objectId) {
         return new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
-      }
+      };
     })
     // mongodb id의 앞 8자리(16진수)를 int로 변환.
     .filter('intFromObjectId', function () {
       return function (objectId) {
         return parseInt(objectId.substring(0, 8), 16) * 1000;
-      }
+      };
     })
     .filter('objectIdFromDate', function () {
       return function (date) {
-        return Math.floor(date.getTime() / 1000).toString(16) + "0000000000000000";
-      }
+        return Math.floor(date.getTime() / 1000).toString(16) + '0000000000000000';
+      };
     })
     .filter('filesize', function () {
-      return function(bytes, precision) {
+      return function (bytes, precision) {
         if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
           return '-';
         }
@@ -33,17 +33,16 @@ define(['angular', 'common'], function (angular) {
           precision = 1;
         }
 
-        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
-          number = Math.floor(Math.log(bytes) / Math.log(1024));
+        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
+        var number = Math.floor(Math.log(bytes) / Math.log(1024));
 
-        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
-      }
+        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
+      };
     })
-    .controller("headerCtrl", ['$scope', '$location', '$window', function ($scope, $location, $window) {
-
+    .controller('headerCtrl', ['$scope', '$location', '$window', function ($scope, $location, $window) {
       var port = $location.port();
       var prefix = $location.protocol() + '://' + $location.host();
-      var prefixPath = (port == 80 || port == 443) ? prefix : prefix + ':' + $location.port();
+      var prefixPath = (port === 80 || port === 443) ? prefix : prefix + ':' + $location.port();
       var absUrl = $location.absUrl();
       var path = absUrl.slice(prefixPath.length);
 
@@ -77,7 +76,7 @@ define(['angular', 'common'], function (angular) {
             }
           });
         }
-      }
+      };
     }])
     .directive('autofillFixer', [function () {
       return {
@@ -90,7 +89,7 @@ define(['angular', 'common'], function (angular) {
       };
     }]);
 
-  return window.Jakduk = {
+  window.Jakduk = {
     BoardCommentSize: 30,
     BoardCommentContentLengthMin: 3, // 게시판 댓글 입력 가능한 최소한의 문자열 수
     BoardCommentContentLengthMax: 800, // 게시판 댓글 입력 가능한 최대 문자열 수
@@ -101,9 +100,9 @@ define(['angular', 'common'], function (angular) {
     FormPasswordLengthMax: 20,
     FormUsernameLengthMin: 2,
     FormUsernameLengthMax: 20,
-    ItemsPerPageOnSearch: 10, 			// 찾기에서 페이지 당 아이템 수
-    ItemsPerPageOnSearchGallery: 12, 	// 찾기에서 사진첩의 페이지 당 아이템 수
-    ItemsPerPageOnGallery: 24,  		// 사진첩에서 한번 로딩할때 가져오는 그림의 수
+    ItemsPerPageOnSearch: 10, // 찾기에서 페이지 당 아이템 수
+    ItemsPerPageOnSearchGallery: 12, // 찾기에서 사진첩의 페이지 당 아이템 수
+    ItemsPerPageOnGallery: 24, // 사진첩에서 한번 로딩할때 가져오는 그림의 수
     ItemsPerPageOnBoardComments: 10,
     isEmpty: function (str) {
       return !str;
@@ -114,4 +113,6 @@ define(['angular', 'common'], function (angular) {
       }
     }
   };
+
+  return window.Jakduk;
 });

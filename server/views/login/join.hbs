@@ -16,8 +16,6 @@
 
         <!-- Reg-Form -->
         <form name="userWrite" action="/join{{#if bySocialAccount}}/oauth{{/if}}{{{redir}}}" method="POST" class="reg-page" ng-submit="onSubmit($event)">
-          {{#if bySocialAccount}}<input type="hidden" name="tempToken" value="{{tempToken}}">{{/if}}
-
           <div class="reg-header">
             <p>
               <a class="logo" href="/">
@@ -193,7 +191,7 @@
 
         $scope.onEmail = function () {
           if ($scope.userWrite.email.$valid) {
-            if ($scope.emailConn == "none") {
+            if ($scope.emailConn === "none") {
               $scope.emailConn = "connecting";
               $http.get('{{apiServerUrl}}/user/exist/email?email=' + encodeURIComponent($scope.email)).then(function () {
                 $scope.emailStatus = 'OK';
@@ -202,6 +200,7 @@
                   msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
                 $scope.emailConn = "none";
+                $scope.validationEmail();
               }, function () {
                 $scope.emailStatus = 'INVALID';
                 $scope.emailAlert = {
@@ -219,7 +218,7 @@
 
         $scope.onUsername = function () {
           if ($scope.userWrite.username.$valid) {
-            if ($scope.usernameConn == "none") {
+            if ($scope.usernameConn === "none") {
               $scope.usernameConn = "connecting";
               $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function () {
                 $scope.usernameStatus = 'OK';
@@ -228,6 +227,7 @@
                   msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
                 $scope.usernameConn = "none";
+                $scope.validationUsername();
               }, function () {
                 $scope.usernameStatus = 'INVALID';
                 $scope.usernameAlert = {

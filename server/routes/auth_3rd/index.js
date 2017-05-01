@@ -1,46 +1,43 @@
-'use strict';
-
-var express = require('express');
-var querystring = require('querystring');
-var _ = require('lodash');
-var config = require('../../config/environment');
-var oauthClient = require('../../helpers/oauth');
-var Util = require('../../helpers/jakduk_util');
+const express = require('express');
+const querystring = require('querystring');
+const _ = require('lodash');
+const oauthClient = require('../../helpers/oauth');
+const Util = require('../../helpers/jakduk_util');
 
 function oauth2(providers) {
-  var router = express.Router();
+  const router = express.Router();
 
-  _.forEach(providers, function(provider) {
-    router.get('/' + provider, login.bind(null, provider));
-    router.get('/' + provider + '/callback', callback.bind(null, provider));
+  _.forEach(providers, provider => {
+    router.get(`/${provider}`, login.bind(null, provider));
+    router.get(`/${provider}/callback`, callback.bind(null, provider));
   });
 
   return router;
 }
 
 function login(provider, req, res) {
-  res.redirect(oauthClient[provider].getLoginUrl() + '&state=' + querystring.escape('redir=' + (req.query.redir || '')));
+  res.redirect(`${oauthClient[provider].getLoginUrl()}&state=${querystring.escape(`redir=${(req.query.redir || '')}`)}`);
 }
 
 function callback(provider, req, res) {
-  oauthClient[provider].authorize(req.query.code).then(function (response) {
+  oauthClient[provider].authorize(req.query.code).then(response => {
     if (response.statusCode === 200) {
       return req.api.loginWith(provider, response.data.access_token);
     }
-  }).then(function (response) {
-    var extra = querystring.parse(req.query.state);
-    var status = response.statusCode;
+  }).then(response => {
+    const extra = querystring.parse(req.query.state);
+    const status = response.statusCode;
 
     if (status === 200) {
-      Util.saveSession(res, response.headers[config.tokenHeader], true);
+      Util.saveSession(res, response);
       res.redirect(extra.redir || '/');
     } else if (status === 404) {
-      Util.saveSession(res, response.headers[config.tempTokenHeader] || '');
+      Util.saveSession(res, response);
       Util.redirect('/join/oauth', extra.redir, res);
     } else {
-      return Promise.reject();
+      return Promise.reject(response);
     }
-  }).catch(function () {
+  }).catch(() => {
     res.redirect('/login');
   });
 }

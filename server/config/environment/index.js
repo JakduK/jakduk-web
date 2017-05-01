@@ -23,13 +23,9 @@ const defaultConfig = {
 
   port: process.env.PORT || 3000,
 
-  tokenCookieName: 'JKTK',
+  tokenCookieName: 'JSESSIONID',
 
-  tokenMaxAge: Math.floor(1000 * 60 * 60 * 24 * 365 * 0.5),
-
-  tokenHeader: 'authorization',
-
-  tempTokenHeader: 'x-attempt-token',
+  refreshTokenCookieName: 'remember-me',
 
   thumbnailServerUrl: 'https://api.jakduk.com',
 

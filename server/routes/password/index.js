@@ -1,8 +1,6 @@
-'use strict';
-
-var express = require('express');
-var i18n = require('i18n');
-var config = require('../../config/environment');
+const express = require('express');
+const i18n = require('i18n');
+const config = require('../../config/environment');
 
 function index(req, res) {
   res.render('login/password_reset', {
@@ -23,8 +21,9 @@ function indexFindPassword(req, res) {
 }
 
 function submitFindPassword(req, res, next) {
-  req.api.findPassword(req.body.email, config.origin + '/password/reset').then(function (response) {
-    var data = response.data;
+  req.api.findPassword(req.body.email, `${config.origin}/password/reset`).then(response => {
+    const data = response.data;
+
     res.render('login/password_find_message', {
       title: [
         i18n.__('user.msg.find.your.password.title'),
@@ -33,13 +32,11 @@ function submitFindPassword(req, res, next) {
       subject: data.subject,
       message: data.message
     });
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 function indexResetPassword(req, res, next) {
-  req.api.checkResetPasswordCode(req.params.code).then(function (response) {
+  req.api.checkResetPasswordCode(req.params.code).then(response => {
     if (response.statusCode === 200) {
       res.render('login/password_reset', {
         title: [
@@ -64,8 +61,9 @@ function indexResetPassword(req, res, next) {
 }
 
 function submitResetPassword(req, res, next) {
-  req.api.resetPassword(req.body.code, req.body.password).then(function (response) {
-    var data = response.data;
+  req.api.resetPassword(req.body.code, req.body.password).then(response => {
+    const data = response.data;
+
     res.render('login/password_find_message', {
       title: [
         i18n.__('user.msg.find.your.password.title'),
@@ -74,17 +72,16 @@ function submitResetPassword(req, res, next) {
       subject: data.subject,
       message: data.message
     });
-  }).catch(function (err) {
-    next(err);
-  });
+  }).catch(next);
 }
 
 module.exports.setup = function (app) {
-  var router = express.Router();
+  const router = express.Router();
 
-  router.use('/', function (req, res, next) {
+  router.use('/', (req, res, next) => {
     if (req.isAuthenticated) {
       res.redirect('back');
+      return;
     }
     next();
   });

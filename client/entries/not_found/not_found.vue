@@ -1,10 +1,15 @@
 <template>
   <div class="main">
     <div>
-      <img src="https://jakduk.com/jakduk/img/logo_256.png" alt="Logo" class="logo">
-      <h1 class="status">404</h1>
-      <h2 class="status_message">Page not found</h2>
-      <h1 class="jakduk">K LEAGUE JAKDU KING</h1>
+      <img src="https://jakduk.com/assets/jakduk/img/logo_256.png" alt="Logo" class="logo">
+      <h1 class="status">{{err.status || '404'}}</h1>
+      <h2 class="status_message">{{err.message || $t('common.msg.error.404')}}</h2>
+      <h1 class="jakduk">{{$t('common.jakduk')}}</h1>
+      <code v-if="err" class="ui segment error-block">Status: {{err.status}},
+        Message: {{err.message}},
+        Stack:
+        {{err.stack}}
+      </code>
     </div>
   </div>
 </template>
@@ -49,6 +54,15 @@
     width: 200px;
   }
 
+  .error-block {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    text-align: left;
+    white-space: pre-line;
+    font-size: 0.9em;
+  }
+
   @media (min-width: 720px) {
     .main {
       font-size: 18px;
@@ -61,6 +75,8 @@
 </style>
 
 <script>
+  import {mapState} from 'vuex';
+
   export default {
     beforeRouteEnter(to, from, next) {
       next(_this => {
@@ -69,6 +85,7 @@
     },
     created() {
       this.$store.commit('load', false);
-    }
+    },
+    computed: mapState(['err'])
   }
 </script>

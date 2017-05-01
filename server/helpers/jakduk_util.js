@@ -1,20 +1,28 @@
 const querystring = require('querystring');
 const _s = require('underscore.string');
+const _ = require('lodash');
 const i18n = require('i18n');
 const config = require('../config/environment');
 
 const ytRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
 
 module.exports = {
-  saveSession(res, token, remember) {
-    const options = {httpOnly: true};
-    if (remember) {
-      options.maxAge = config.tokenMaxAge;
+  saveSession(res, authResponse) {
+    let authCookies = authResponse.headers['set-cookie'];
+
+    if (!authCookies) {
+      return;
     }
-    res.cookie(config.tokenCookieName, token, options);
+
+    authCookies = _.isArray(authCookies) ? authCookies : [authCookies];
+
+    _.each(authCookies, cookie => {
+      res.append('Set-Cookie', cookie);
+    });
   },
   clearSession(res) {
     res.clearCookie(config.tokenCookieName);
+    res.clearCookie(config.refreshTokenCookieName);
   },
   redirect(target, callbackUrl, res) {
     res.redirect(target + '?redir=' + querystring.escape(callbackUrl));

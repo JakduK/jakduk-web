@@ -1,5 +1,3 @@
-'use strict';
-
 const querystring = require('querystring');
 const Util = require('../helpers/jakduk_util');
 const config = require('../config/environment');

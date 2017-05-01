@@ -1,5 +1,3 @@
-'use strict';
-
 const hpm = require('http-proxy-middleware');
 const _ = require('lodash');
 
@@ -9,10 +7,8 @@ const Util = require('../helpers/jakduk_util');
 const slack = require('../helpers/slack_notifier')(config.slack);
 
 const apiHooks = {
-  '/board/free' (resData, req) {
-    new ApiClient({
-        [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''
-      },
+  '/board/free'(resData, req) {
+    new ApiClient(
       `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.seq})}`,
       config.internalApiServerUrl
     ).getPost(resData.seq).then(response => {
@@ -29,10 +25,8 @@ const apiHooks = {
       });
     });
   },
-  '/board/free/comment' (resData, req) {
-    new ApiClient({
-        [config.tokenHeader]: req.cookies[config.tokenCookieName] || ''
-      },
+  '/board/free/comment'(resData, req) {
+    new ApiClient(
       `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.boardItem.seq})}`,
       config.internalApiServerUrl
     ).getPost(resData.boardItem.seq).then(response => {
@@ -56,19 +50,14 @@ module.exports = function (path, dest) {
     pathRewrite: {
       [`^${path}`]: ''
     },
-    onProxyReq (proxyReq, req) {
-      if (req.cookies[config.tokenCookieName]) {
-        proxyReq.setHeader(config.tokenHeader, req.cookies[config.tokenCookieName]);
-      }
-    },
-    onProxyRes (proxyRes, req) {
+    onProxyRes(proxyRes, req) {
       if (apiHooks[req.path] && proxyRes.statusCode === 200 && req.method === 'POST') {
         const chunks = [];
         proxyRes.on('data', chunk => {
-          chunks.push(chunk)
+          chunks.push(chunk);
         });
         proxyRes.on('end', () => {
-          const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => {return len + chunk.length}, 0));
+          const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => len + chunk.length, 0));
           apiHooks[req.path](JSON.parse(payload.toString('utf8')), req);
         });
       }

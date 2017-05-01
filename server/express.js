@@ -67,9 +67,15 @@ function setup(app) {
   require('./routes')(app);
 
   app.use('*', (err, req, res, next) => {
+    err.status = err.status || 500;
     res.status(err.status);
     res.render('index', {
-      layout: false
+      layout: false,
+      err: {
+        status: err.status,
+        message: err.message,
+        stack: err.stack
+      }
     });
   });
 

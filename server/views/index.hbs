@@ -14,8 +14,11 @@
 
     <script>
       window.ENV = {
+      {{#if @root.err}}
+        err: {{{JSON_STRINGIFY @root.err}}},
+      {{/if}}
       {{#if @root.userInfo}}
-        myProfile: {{JSON_STRINGIFY @root.userInfo}},
+        myProfile: {{{JSON_STRINGIFY @root.userInfo}}},
       {{/if}}
         imageServerUrl: '{{thumbnailServerUrl}}',
         revision: '{{@root.revision}}',
