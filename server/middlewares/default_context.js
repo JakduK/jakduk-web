@@ -9,7 +9,7 @@ module.exports = function () {
     req.api.getUserInfo().then(response => {
       if (response.statusCode === 200) {
         req.userInfo = response.data;
-      } else if (req.cookies[config.tokenCookieName]) {
+      } else if (req.cookies[config.tokenCookieName] && req.cookies[config.tempTokenCookieFlag] !== 'true') {
         Util.clearSession(res);
       }
 

@@ -22,20 +22,32 @@ function login(provider, req, res) {
 function callback(provider, req, res) {
   oauthClient[provider].authorize(req.query.code).then(response => {
     if (response.statusCode === 200) {
-      return req.api.loginWith(provider, response.data.access_token);
+      return Promise.all([
+        response.data.access_token,
+        req.api.loginWith(provider, response.data.access_token)
+      ]);
     }
-  }).then(response => {
+  }).then(responses => {
     const extra = querystring.parse(req.query.state);
-    const status = response.statusCode;
+    const status = responses[1].statusCode;
+    const accessToken = responses[0];
+    const loginResponse = responses[1];
 
     if (status === 200) {
-      Util.saveSession(res, response);
+      Util.saveSession(res, loginResponse);
       res.redirect(extra.redir || '/');
     } else if (status === 404) {
-      Util.saveSession(res, response);
-      Util.redirect('/join/oauth', extra.redir, res);
+      Util.saveSession(res, loginResponse, true);
+      Util.redirect(res, {
+        target: '/join/oauth',
+        query: {
+          redir: extra.redir,
+          provider: provider,
+          accessToken: accessToken
+        }
+      });
     } else {
-      return Promise.reject(response);
+      return Promise.reject(loginResponse);
     }
   }).catch(() => {
     res.redirect('/login');

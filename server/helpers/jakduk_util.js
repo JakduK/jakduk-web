@@ -7,7 +7,14 @@ const config = require('../config/environment');
 const ytRegExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
 
 module.exports = {
-  saveSession(res, authResponse) {
+  saveSession(res, authResponse, isTemporary) {
+    if (isTemporary) {
+      res.cookie(config.tempTokenCookieFlag, true, {
+        httpOnly: true,
+        secure: config.secureCookie
+      });
+    }
+
     if (_.isString(authResponse)) {
       res.cookie(config.tokenCookieName, authResponse, {
         httpOnly: true,
@@ -31,8 +38,8 @@ module.exports = {
     res.clearCookie(config.tokenCookieName);
     res.clearCookie(config.refreshTokenCookieName);
   },
-  redirect(target, callbackUrl, res) {
-    res.redirect(target + '?redir=' + querystring.escape(callbackUrl));
+  redirect(res, options) {
+    res.redirect(`${options.target}${options.query ? `?${querystring.stringify(options.query)}` : ''}`);
   },
   ogFromPost(post, limit) {
     const og = {

@@ -46,11 +46,16 @@ function editPassword(req, res) {
 }
 
 module.exports.setup = function (app) {
-  var router = express.Router();
+  const router = express.Router();
 
-  router.use(function(req, res, next) {
+  router.use((req, res, next) => {
     if (!req.isAuthenticated) {
-      Util.redirect('/login', req.originalUrl, res);
+      Util.redirect(res, {
+        target: '/login',
+        query: {
+          redir: req.originalUrl
+        }
+      });
       return;
     }
     next();

@@ -27,6 +27,8 @@ const defaultConfig = {
 
   tokenCookieName: 'JSESSIONID',
 
+  tempTokenCookieFlag: 'TMP_JSESSION',
+
   refreshTokenCookieName: 'remember-me',
 
   thumbnailServerUrl: 'https://api.jakduk.com',

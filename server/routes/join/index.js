@@ -68,13 +68,17 @@ function indexOAuth(req, res, next) {
       footballClubs: footballClubs,
       redir: `?redir=${querystring.escape(req.query.redir || '')}`,
       bySocialAccount: true,
-      snsProfile: snsProfile
+      snsProfile: snsProfile,
+      provider: req.query.provider,
+      accessToken: req.query.accessToken
     });
   }).catch(next);
 }
 
 function submitOAuth(req, res, next) {
   const body = req.body;
+
+  res.clearCookie(config.tempTokenCookieFlag);
 
   req.api.joinWith({
     email: body.email,
@@ -83,8 +87,9 @@ function submitOAuth(req, res, next) {
     about: body.about
   }).then(response => {
     if (response.statusCode === 200) {
-      Util.saveSession(res, response);
-      res.redirect(req.query.redir || '/');
+      req.api.loginWith(body.provider, body.accessToken).then(() => {
+        res.redirect(req.query.redir || '/');
+      });
     } else {
       res.redirect('/login');
     }
