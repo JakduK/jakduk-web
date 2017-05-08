@@ -16,7 +16,7 @@
             <div class="ui link list">
               <router-link :to="{name: 'board', params: {name: 'free'}, query: {category: 'FREE'}}" class="item">{{$t('board.name.free')}}</router-link>
               <router-link :to="{name: 'board', params: {name: 'free'}, query: {category: 'FOOTBALL'}}" class="item">{{$t('board.category.football')}}</router-link>
-              <a href="/rss" class="item">RSS</a>
+              <a href="/rss.xml" class="item">RSS</a>
             </div>
           </div>
           <div class="four wide column">

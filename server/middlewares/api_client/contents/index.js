@@ -68,7 +68,7 @@ module.exports = function (ApiClient) {
   };
 
   ApiClient.prototype.rss = function () {
-    return this.requestGetJson(this.serverUrl.replace(/\/api$/, '/rss'));
+    return this.requestGet(this.serverUrl.replace(/\/api$/, '/rss'));
   };
 
   ApiClient.prototype.sitemap = function () {
