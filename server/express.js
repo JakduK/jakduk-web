@@ -54,7 +54,7 @@ function setup(app) {
     express.static(path.resolve('client')),
     express.static(path.resolve('node_modules'))
   ]);
-  app.get('*.html', express.static(path.resolve('assets', 'html')));
+  app.use(express.static(path.resolve('static')));
   app.use(cookieParser());
   app.use(apiClient.middleware());
   app.use('/api', apiProxy('/api', config.internalApiServerUrl));
