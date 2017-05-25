@@ -55,8 +55,10 @@
               <div class="detail">{{post.seq}}</div>
               </div>
               <div class="ui basic image label nomargin">
-                <img :src="avatarSrc(post.writer.picture)">
-                {{post.writer.username}}
+                <template v-if="post.writer">
+                  <img :src="avatarSrc(post.writer.picture)">
+                  {{post.writer.username}}
+                </template>
               <div class="detail">{{post.id | IdToRegDate('LL')}}</div>
               </div>
             </div>
