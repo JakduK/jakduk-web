@@ -7,7 +7,7 @@ require.config({
     'angular-slick': '/assets/angular-slick-carousel/dist/angular-slick.min',
     'angular-animate': '/assets/angular-animate/angular-animate.min',
     'angular-ui-bootstrap': '/assets/angular-ui-bootstrap/dist/ui-bootstrap-tpls',
-    'angular-ui-router': '/assets/angular-ui-router/release/angular-ui-router.min',
+    'angular-ui-router': '/assets/@uirouter/angularjs/release/angular-ui-router.min',
     'angular-ladda': '/assets/angular-ladda/dist/angular-ladda.min',
     'angular-touch': '/assets/angular-touch/angular-touch.min',
     'angular-cookies': '/assets/angular-cookies/angular-cookies.min',
