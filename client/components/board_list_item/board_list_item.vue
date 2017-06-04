@@ -2,7 +2,7 @@
   <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: item.seq}, query: $route.query}" class="item">
     <div class="content">
       <div :class="{'ui tiny disabled': item.status && item.status.delete}" class="header break-all">
-        <div v-if="!isEmptyArray(item.galleries)" class="pull-right">
+        <div v-if="!isNotice && !isEmptyArray(item.galleries)" class="pull-right">
           <div class="ui rounded bordered image thumbnail">
             <img :src="item.galleries[0].thumbnailUrl">
           </div>
@@ -15,11 +15,11 @@
         </span>
       </div>
 
-      <div class="extra">{{item.shortContent}}...</div>
+      <div v-if="!isNotice" class="extra">{{item.shortContent}}...</div>
 
       <div class="extra">
         <div class="ui small labels nomargin">
-          <div :class="categoryColor(item.category)" class="ui label bottom">
+          <div v-if="!isNotice" :class="categoryColor(item.category)" class="ui label bottom">
             {{$t(categoryLabel(item.category))}}<div class="detail">{{item.seq}}</div>
           </div>
           <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui image basic label bottom">
