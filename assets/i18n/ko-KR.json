@@ -113,8 +113,8 @@
   "common.button.redundancy.check": "겹침 검사",
   "common.button.edit": "고치기",
   "common.button.delete": "지우기",
-  "common.button.user.profile.update": "내 정보 고치기",
-  "common.button.user.password.update": "비밀번호 고치기",
+  "common.button.user.profile.update": "내 정보 수정",
+  "common.button.user.password.update": "비밀번호 바꾸기",
   "common.button.write.comment": "댓글 달기",
   "common.button.more.comments": "댓글 더보기",
   "common.button.more.galleries": "사진 더보기",
@@ -255,7 +255,7 @@
   "user.email.remember": "이메일 기억 (30일간)",
   "user.remember.me": "로그인 유지",
   "user.password": "비밀번호",
-  "user.password.change": "비밀번호 고치기",
+  "user.password.change": "비밀번호 바꾸기",
   "user.password.confirm": "비밀번호 확인",
   "user.password.old": "현재 비밀번호",
   "user.password.new": "새 비밀번호",
@@ -327,5 +327,8 @@
   "common.delete": "삭제",
   "common.url.of.name": "{name}의 URL",
   "common.send.url.via.kakaotalk": "카카오톡으로 보내기",
-  "common.please.register.your.email": "임시 이메일을 발급하였습니다. 사용하실 이메일을 등록해주세요."
+  "common.please.register.your.email": "임시 이메일을 발급하였습니다. 사용하실 이메일을 등록해주세요.",
+  "common.delete.account": "계정 삭제",
+  "common.do.you.really.want.to.delete.account": "정말 계정 삭제를 원하시나요?",
+  "common.retry.after.few.seconds.please": "잠시 후 다시 시도 해주세요."
 }
