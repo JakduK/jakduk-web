@@ -214,6 +214,21 @@
     padding: 2em;
   }
 
+  .ui.segment.ql-editor .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+  }
+
+  .ui.segment.ql-editor .ql-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .comment .content iframe {
     max-width: 100%;
     border: 0;
@@ -265,6 +280,10 @@
     this.commentCount = comments.commentCount;
     this.isCommentLoading = false;
     this.$store.commit('load', false);
+
+    this.$nextTick(() => {
+      $('.ql-editor .ql-video').wrapAll('<div class="video-container"/>');
+    });
   }
 
   function error(response) {

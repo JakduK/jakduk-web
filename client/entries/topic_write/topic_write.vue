@@ -101,9 +101,11 @@
           this.editor.setContents(this.post.content);
         }
 
-        $('.ui.sticky').sticky('refresh', true);
-
         this.$store.commit('load', false);
+
+        this.$nextTick(() => {
+          $('.ui.sticky').sticky('refresh', true);
+        });
       });
     },
     beforeRouteEnter(to, from, next) {
