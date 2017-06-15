@@ -51,14 +51,16 @@ module.exports = function (path, dest) {
       [`^${path}`]: ''
     },
     onProxyRes(proxyRes, req) {
-      if (apiHooks[req.path] && proxyRes.statusCode === 200 && req.method === 'POST') {
+			const urlPath = /\/$/.test(req.path) ? req.path.replace(/\/$/, '') : req.path;
+
+			if (apiHooks[urlPath] && proxyRes.statusCode === 200 && req.method === 'POST') {
         const chunks = [];
         proxyRes.on('data', chunk => {
           chunks.push(chunk);
         });
         proxyRes.on('end', () => {
           const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => len + chunk.length, 0));
-          apiHooks[req.path](JSON.parse(payload.toString('utf8')), req);
+          apiHooks[urlPath](JSON.parse(payload.toString('utf8')), req);
         });
       }
     }

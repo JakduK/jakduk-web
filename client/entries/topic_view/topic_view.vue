@@ -6,17 +6,6 @@
     </router-link>
     <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     <div class="pull-right">
-      <div class="ui top right pointing dropdown icon button">
-        <i class="icon share alternate"></i>
-        <div class="menu">
-          <div @click="copyLinkIntoClipboard" class="item">
-            <i class="linkify icon"></i> {{$t('common.button.copy.url.to.clipboard')}}
-          </div>
-          <kakao-share v-if="isMobile" :options="kakaoShareOptions" tag="div" class="item">
-            <img src="../../components/kakao_share/kakaolink_btn_small.png" class="item-icon-kakao"> {{$t('common.send.url.via.kakaotalk')}}
-          </kakao-share>
-        </div>
-      </div>
       <div v-if="isAuthenticated && (isEditable || isAdmin)" class="ui top right pointing dropdown icon button">
         <i class="icon wrench"></i>
         <div class="menu">
@@ -32,6 +21,17 @@
           <div v-if="isEditable" @click="deletePost" class="item">
             <i class="trash icon"></i> {{$t('common.button.delete')}}
           </div>
+        </div>
+      </div>
+      <div class="ui top right pointing dropdown icon button">
+        <i class="icon share alternate"></i>
+        <div class="menu">
+          <div @click="copyLinkIntoClipboard" class="item">
+            <i class="linkify icon"></i> {{$t('common.button.copy.url.to.clipboard')}}
+          </div>
+          <kakao-share v-if="isMobile" :options="kakaoShareOptions" tag="div" class="item">
+            <img src="../../components/kakao_share/kakaolink_btn_small.png" class="item-icon-kakao"> {{$t('common.send.url.via.kakaotalk')}}
+          </kakao-share>
         </div>
       </div>
       <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui icon button">
