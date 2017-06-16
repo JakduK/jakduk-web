@@ -9,20 +9,15 @@ module.exports.setup = function (app) {
   });
 
   app.use((err, req, res, next) => {
-    const statusCode = err.status || 500;
-
-    res.status(statusCode);
-
-    res.render('error/error', {
-      title: [
-        i18n.__('common.error'),
-        i18n.__('common.jakduk')
-      ],
-      message: err.statusMessage,
-      error: err.stack,
-      code: statusCode,
-      req: req,
-      now: Date.now()
+    err.status = err.status || 500;
+    res.status(err.status);
+    res.render('index', {
+      layout: false,
+      err: {
+        status: err.status,
+        message: err.message,
+        stack: err.stack
+      }
     });
   });
 };

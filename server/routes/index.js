@@ -14,5 +14,5 @@ module.exports = function (app) {
   require('./search').setup(app);
   require('./admin').setup(app);
   require('./rss').setup(app);
-  // require('./error').setup(app);
+  require('./error').setup(app);
 };
