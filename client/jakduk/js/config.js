@@ -11,6 +11,7 @@ require.config({
     'angular-ladda': '/assets/angular-ladda/dist/angular-ladda.min',
     'angular-touch': '/assets/angular-touch/angular-touch.min',
     'angular-cookies': '/assets/angular-cookies/angular-cookies.min',
+    'angular-file-upload': '/assets/angular-file-upload/dist/angular-file-upload.min',
     jquery: '/assets/jquery/dist/jquery.min',
     bootstrap: '/assets/bootstrap/dist/js/bootstrap.min',
     ladda: '/assets/unify/assets/plugins/ladda-buttons/js/ladda.min',
@@ -43,6 +44,9 @@ require.config({
       deps: ['angular']
     },
     'angular-cookies': {
+      deps: ['angular']
+    },
+    'angular-file-upload': {
       deps: ['angular']
     }
   }

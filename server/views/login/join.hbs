@@ -29,6 +29,12 @@
             <h2>{{TRANSLATION "user.register.header"}}</h2>
           </div>
 
+          <!--<div class="form-group">-->
+            <!--<div ng-repeat="item in uploader.queue" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>-->
+            <!--<label class="control-label">{{TRANSLATION "common.avatar"}}</label>-->
+            <!--<input type="file" nv-file-select="" uploader="uploader" accept="image/*">-->
+          <!--</div>-->
+
           <div class="form-group has-feedback"
              ng-class="{'has-success':userWrite.email.$valid && emailStatus === 'OK', 'has-error':!userWrite.email.$pristine && (userWrite.email.$invalid || emailStatus !== 'OK')}">
             <label class="control-label">
@@ -136,11 +142,23 @@
 {{#CHUNK 'js'}}
   <script type="text/javascript">
     require([
-      'angular', 'jakduk'
+      'angular', 'jakduk', 'angular-file-upload'
     ], function (angular, Jakduk) {
       angular.module("jakdukApp", [
-        "angular-ladda", 'jakdukCommon'
-      ]).controller("writeCtrl", ['$scope', '$http', '$window', function ($scope, $http, $window) {
+        "angular-ladda", 'jakdukCommon', 'angularFileUpload'
+      ]).controller("writeCtrl", ['$scope', '$http', '$window', '$q', 'FileUploader', function ($scope, $http, $window, $q, FileUploader) {
+        var uploader = new FileUploader({
+          url: '/api/user/picture'
+        });
+
+        uploader.onAfterAddingFile = function(fileItem) {
+          if (uploader.queue.length > 1) {
+            uploader.queue.splice(0, 1);
+          }
+        };
+
+        $scope.uploader = uploader;
+
         $scope.emailLengthMin = Jakduk.FormEmailLengthMin;
         $scope.emailLengthMax = Jakduk.FormEmailLengthMax;
         $scope.passwordLengthMin = Jakduk.FormPasswordLengthMin;
@@ -321,7 +339,7 @@
 
           if ($scope.userWrite.passwordConfirm.$invalid) return;
 
-          if ($scope.password == $scope.passwordConfirm) {
+          if ($scope.password === $scope.passwordConfirm) {
             $scope.equalPasswordStatus = "true";
             $scope.passwordConfirmAlert = {
               classType: "text-success",

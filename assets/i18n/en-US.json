@@ -329,5 +329,7 @@
   "common.send.url.via.kakaotalk": "Send URL via Kakao Talk",
   "common.please.register.your.email": "You have issued a temporary email. Please register your email.",
   "common.delete.account": "Delete account",
-  "common.retry.after.few.seconds.please": "Retry after few seconds please."
+  "common.retry.after.few.seconds.please": "Retry after few seconds please.",
+  "common.avatar": "Avatar",
+  "common.failed.upload.avatar": "Failed to upload avatar."
 }

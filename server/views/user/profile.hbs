@@ -38,6 +38,10 @@
             <div class="alert alert-info">{{TRANSLATION 'common.please.register.your.email'}}</div>
           {{/if}}
           <div class="form-group">
+            <label class="control-label">{{TRANSLATION "common.avatar"}}</label>
+            <img ng-src="{%userProfile.picture.id || '/assets/images/default_avatar.png'%}" class="img-responsive">
+          </div>
+          <div class="form-group">
             <label class="control-label">{{TRANSLATION "user.email"}}</label>
             <p class="form-control-static">{{userProfile.email}}</p>
           </div>
