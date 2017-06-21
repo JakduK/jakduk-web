@@ -150,7 +150,7 @@
           <p v-if="isEmptyArray(comments)">
             <i class="icon idea"></i>{{$t('board.msg.there.is.no.new.comment')}}
           </p>
-          <comment-list-item :item="comment" v-for="comment in comments" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
+          <comment-list-item v-for="comment in comments" :item="comment" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
         </div>
 
         <button @click="moreComments" :class="{loading: isCommentLoading}" type="button" class="fluid ui button">
@@ -280,10 +280,6 @@
     this.commentCount = comments.commentCount;
     this.isCommentLoading = false;
     this.$store.commit('load', false);
-
-    this.$nextTick(() => {
-      $('.ql-editor .ql-video').wrapAll('<div class="video-container"/>');
-    });
   }
 
   function error(response) {
@@ -343,6 +339,12 @@
         $('.ui.sticky').sticky('refresh', true);
       });
       $(this.$el).find('.button.dropdown').dropdown();
+      $('.ql-editor .ql-video').each((index, element) => {
+        const $video = $(element);
+        if (!$video.parent().hasClass('video-container')) {
+          $video.wrapAll('<div class="video-container"/>');
+        }
+      });
     },
     computed: {
       isNotice() {
