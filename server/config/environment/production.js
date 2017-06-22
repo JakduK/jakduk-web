@@ -4,7 +4,7 @@ module.exports = {
     apiServerUrl: process.env.API_SERVER || '/api',
     internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'http://staging.jakduk.com:8080/api',
     thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'http://staging.jakduk.com:8080',
-    secureCookie: true,
+    secureCookie: false,
     debug: true
   },
   prod: {
@@ -13,7 +13,7 @@ module.exports = {
     internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'http://api.jakduk.com/api',
     thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'http://api.jakduk.com',
     gaAccount: 'UA-59051176-1',
-    secureCookie: true,
+    secureCookie: false,
     debug: false
   }
 };
