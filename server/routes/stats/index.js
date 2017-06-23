@@ -12,7 +12,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   attendanceRouter.get('/league', (req, res, next) => {
@@ -22,7 +24,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   attendanceRouter.get('/club', (req, res, next) => {
@@ -32,7 +36,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   attendanceRouter.get('/season', (req, res, next) => {
@@ -42,7 +48,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   app.use('/stats', supportersRouter);

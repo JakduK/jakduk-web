@@ -7,6 +7,8 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 };

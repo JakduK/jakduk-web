@@ -13,7 +13,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   router.get('/free/comments', (req, res, next) => {
@@ -23,7 +25,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   router.get('/free/write', (req, res, next) => {
@@ -32,7 +36,9 @@ module.exports.setup = function (app) {
       i18n.__('common.jakduk')
     ];
 
-    next();
+    res.render('index', {
+      layout: false
+    });
   });
 
   router.get('/free/edit/:id', (req, res, next) => {
@@ -55,7 +61,9 @@ module.exports.setup = function (app) {
         i18n.__('common.jakduk')
       ];
 
-      next();
+      res.render('index', {
+        layout: false
+      });
     }).catch(next);
   });
 
@@ -84,7 +92,9 @@ module.exports.setup = function (app) {
         i18n.__('common.jakduk')
       ];
 
-      next();
+      res.render('index', {
+        layout: false
+      });
     }).catch(next);
   });
 

@@ -66,11 +66,5 @@ function setup(app) {
   // register routes
   require('./routes')(app);
 
-  app.use('*', (req, res, next) => {
-    res.render('index', {
-      layout: false
-    });
-  });
-
   return app;
 }
