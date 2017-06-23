@@ -39,7 +39,7 @@
           {{/if}}
           <div class="form-group">
             <label class="control-label">{{TRANSLATION "common.avatar"}}</label>
-            <img ng-src="{%userProfile.picture.id || '/assets/images/default_avatar.png'%}" class="img-responsive">
+            <img src="{{DEFAULT_VALUE userProfile.picture.largePictureUrl '/assets/images/default_avatar.png'}}" class="img-responsive">
           </div>
           <div class="form-group">
             <label class="control-label">{{TRANSLATION "user.email"}}</label>
