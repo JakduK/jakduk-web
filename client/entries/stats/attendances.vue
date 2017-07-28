@@ -205,10 +205,10 @@
   function getDefaultLeagueChartOptions(league) {
     let title;
 
-    if (league === KLCL_ID) {
-      title = this.$t('stats.attendance.league.classic.title');
-    } else {
+    if (league === KLCH_ID) {
       title = this.$t('stats.attendance.league.challenge.title');
+    } else {
+      title = this.$t('stats.attendance.league.classic.title');
     }
 
     return {
