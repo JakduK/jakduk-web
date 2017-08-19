@@ -60,7 +60,7 @@
   "Size.boardFreeWrite.categoryId": "You should select category.",
   "size.boardFreeWrite.subject": "The length of subject is 1 ~ 30 characters.",
   "Size.boardFreeWrite.content": "At least you should enter 5 characters.",
-  "Size.board.comment.content": "The length of comment is 3 ~ 800 characters.",
+  "Size.board.comment.content": "The length of comment is 1 ~ 800 characters.",
   "home.kind.best.player": "Best Player",
   "home.kind.recommend.book": "Recommend Book",
   "home.posts.latest": "Latest Posts",

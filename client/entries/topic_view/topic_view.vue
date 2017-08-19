@@ -520,7 +520,7 @@
         }
 
         const text = this.commentEditor.getText().trim();
-        if ((text.length < 3 || text.length > 800) && !this.commentEditor.hasEmbed()) {
+        if ((!text.length || text.length > 800) && !this.commentEditor.hasEmbed()) {
           this.$store.dispatch('globalMessage', {
             level: 'info',
             message: this.$t('Size.board.comment.content')
