@@ -13,11 +13,8 @@
             {{image.name}}
           </router-link>
         </div>
-        <div class="extra content">
+        <div class="extra content text-right">
           {{image.id | IdToRegDate('LL')}}
-            <span class="right floated">
-             <i class="eye icon"></i> {{image.views}}
-            </span>
         </div>
       </div>
     </div>
