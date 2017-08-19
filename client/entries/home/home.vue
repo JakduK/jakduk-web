@@ -205,8 +205,7 @@
           homeDescription: {}
         },
         popularSearchWords: [],
-        encyclopedia: {},
-        isReady: false
+        encyclopedia: {}
       };
     },
     beforeRouteEnter(to, from, next) {

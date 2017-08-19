@@ -7,7 +7,7 @@
           <button id="btnSidebarToggle" class="ui icon blue item button">
             <i class="content icon"></i>
           </button>
-          <router-link to="/home" class="item">{{$t('common.jakduk')}}</router-link>
+          <a href="/home" class="item" @click.native="reload()">{{$t('common.jakduk')}}</a>
           <div class="right menu">
             <a v-if="isAuthenticated" class="icon item logon">
               <div class="ui rounded image avatar nomargin">
@@ -26,7 +26,7 @@
       <div class="computer only row">
         <div class="ui container">
           <div class="ui borderless inverted fluid blue menu">
-            <router-link to="/home" class="header item">{{$t('common.jakduk')}}</router-link>
+            <a href="/home" class="header item" @click.native="reload()">{{$t('common.jakduk')}}</a>
             <div class="right menu">
               <div class="ui simple dropdown item">
                 <i class="globe icon"></i> {{$t('common.language')}}
