@@ -97,7 +97,7 @@
       <div class="ui segments">
         <h5 class="ui segment"><i class="blue search icon"></i> {{$t('popular.search.words')}}</h5>
         <div v-if="popularSearchWords" class="ui blue segment">
-          <router-link :to="{name: 'search', query: {q: word.key, w: 'PO;CO;GA', from: 0, size: 3}}" v-for="(word, index) in popularSearchWords" :key="word" :class="indexedColor(index, true)" class="ui label search-keyword">
+          <router-link :to="{name: 'search', query: {q: word.key, w: 'PO;CO;GA', from: 0, size: 3}}" v-for="(word, index) in popularSearchWords" :key="word.key" :class="indexedColor(index, true)" class="ui label search-keyword">
             {{word.key}}
           </router-link>
         </div>
