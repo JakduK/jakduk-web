@@ -174,7 +174,7 @@
                 username: $scope.username,
                 userPictureId: pictureId
               }).then(function () {
-                $window.location = '/user/profile';
+                $window.history.back();
               }, function (response) {
                 $scope.submitConn = 'none';
                 $scope.buttonAlert = {
