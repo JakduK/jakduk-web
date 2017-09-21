@@ -2,7 +2,9 @@
   <div id="phoneSidenav" class="ui left inverted blue vertical accordion menu sidebar">
     <search-input v-model="searchKeyword" @on-enter="onSearchEnter" class="ui search item"></search-input>
     <router-link active-class="active" to="/home" class="item">{{$t('common.home')}}</router-link>
-    <router-link active-class="active" to="/board/free" class="item">{{$t('board')}}</router-link>
+    <router-link active-class="active" to="/board/free" class="item">{{$t('board.name.free')}}</router-link>
+    <router-link active-class="active" to="/board/football" class="item">{{$t('board.name.football')}}</router-link>
+    <router-link active-class="active" to="/board/developer" class="item">{{$t('board.name.swdev')}}</router-link>
     <router-link active-class="active" to="/gallery" class="item">{{$t('gallery')}}</router-link>
     <router-link :class="{active: $route.name && $route.name.startsWith('stats')}" to="/stats/supporters" class="item">{{$t('stats')}}</router-link>
     <router-link active-class="active" to="/jakdu" class="item">{{$t('jakdu.write')}}</router-link>

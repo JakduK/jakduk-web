@@ -18,7 +18,7 @@
           <h5 class="ui segment"><i class="blue feed icon"></i> {{$t('home.posts.latest')}}</h5>
           <div class="ui blue segment">
             <div class="ui divided items">
-              <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.posts" :key="post.seq" class="item">
+              <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.articles" :key="post.seq" class="item">
                 <div class="content">
                   <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
                     <div v-if="!isEmptyArray(post.galleries)" class="right floated content">
@@ -50,7 +50,7 @@
           <h5 class="ui segment"><i class="blue talk icon"></i> {{$t('home.comments.latest')}}</h5>
           <div class="ui blue segment">
             <div class="ui divided items">
-              <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.boardItem.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
+              <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.article.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
                 <div class="content">
                   <div class="header break-all">{{comment.content}}</div>
                   <div v-if="comment.writer" class="extra">
@@ -198,7 +198,7 @@
     data() {
       return {
         latest: {
-          posts: [],
+          articles: [],
           comments: [],
           galleries: [],
           users: [],

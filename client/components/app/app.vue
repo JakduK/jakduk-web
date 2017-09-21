@@ -2,7 +2,7 @@
   <div :class="{'is-loading': loading}" id="main" class="pusher">
     <div v-if="globalMessage.length" class="global-message">
       <transition-group name="fade">
-        <toast v-for="message in globalMessage" :key="message" :level="message.level" :title="message.title" :message="message.message" @on-click="toastClicked(message)"></toast>
+        <toast v-for="message in globalMessage" :key="message.message + Math.random()" :level="message.level" :title="message.title" :message="message.message" @on-click="toastClicked(message)"></toast>
       </transition-group>
     </div>
 

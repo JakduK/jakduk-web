@@ -7,7 +7,13 @@
             {{$t('common.home')}}
           </router-link>
           <router-link active-class="active" to="/board/free" class="item computer only row">
-            {{$t('board')}}
+            {{$t('board.name.free')}}
+          </router-link>
+          <router-link active-class="active" to="/board/football" class="item computer only row">
+            {{$t('board.name.football')}}
+          </router-link>
+          <router-link active-class="active" to="/board/developer" class="item computer only row">
+            {{$t('board.name.swdev')}}
           </router-link>
           <router-link active-class="active" to="/gallery" class="item computer only row">
             {{$t('gallery')}}

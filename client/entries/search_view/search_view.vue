@@ -128,8 +128,6 @@
 <script>
   import {mapState} from 'vuex';
   import $ from 'jquery';
-  import CategoryColor from '../../filters/category_color';
-  import CategoryLabel from '../../filters/category_label';
   import IdToRegDate from '../../filters/id_to_regdate';
   import IndexedColor from '../../filters/indexed_color';
 
@@ -182,8 +180,6 @@
       IdToRegDate: IdToRegDate
     },
     methods: {
-      categoryColor: CategoryColor,
-      categoryLabel: CategoryLabel,
       indexedColor: IndexedColor
     }
   };

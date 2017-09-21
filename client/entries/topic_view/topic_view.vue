@@ -4,7 +4,7 @@
     <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
       <i class="list icon"></i>
     </router-link>
-    <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
+    <pager :is-first="!prevArticle" :is-last="!nextArticle" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     <div class="pull-right">
       <div v-if="isAuthenticated && (isEditable || isAdmin)" class="ui top right pointing dropdown icon button">
         <i class="icon wrench"></i>
@@ -15,7 +15,7 @@
           <button v-else-if="isAdmin && !isNotice" @click="toggleNotice" class="item">
             <i class="arrow circle outline up icon"></i> {{$t('common.button.set.as.notice')}}
           </button>
-          <router-link v-if="isEditable" :to="{name: 'board.edit', params: {name: $route.params.name, seq: post.seq}}" class="item">
+          <router-link v-if="isEditable" :to="{name: 'board.edit', params: {name: $route.params.name, seq: article.seq}}" class="item">
             <i class="edit icon"></i> {{$t('common.button.edit')}}
           </router-link>
           <div v-if="isEditable" @click="deletePost" class="item">
@@ -43,36 +43,36 @@
     <div class="ui segments">
       <!--본문 메타 데이터-->
       <div class="ui segment">
-        <h2>{{(post.status && post.status.delete) ? $t('board.msg.deleted') : post.subject}}</h2>
+        <h2>{{(article.status && article.status.delete) ? $t('board.msg.deleted') : article.subject}}</h2>
         <div class="ui grid">
           <div class="sixteen wide mobile eleven wide tablet eleven wide computer column">
             <div class="ui labels">
               <div v-if="isNotice" class="ui basic label nomargin">
                 <i class="announcement blue icon"></i> {{$t('board.notice')}}
               </div>
-              <div :class="categoryColor(post.category.code)" class="ui label nomargin">
-                {{$t(categoryLabel(post.category.code))}}
-              <div class="detail">{{post.seq}}</div>
+              <div v-if="article.category" :class="categories[article.category.code].color" class="ui label nomargin">
+                {{categories[article.category.code].name}}
+              <div class="detail">{{article.seq}}</div>
               </div>
               <div class="ui basic image label nomargin">
-                <template v-if="post.writer">
-                  <img :src="avatarSrc(post.writer.picture)">
-                  {{post.writer.username}}
+                <template v-if="article.writer">
+                  <img :src="avatarSrc(article.writer.picture)">
+                  {{article.writer.username}}
                 </template>
-              <div class="detail">{{post.id | IdToRegDate('LL')}}</div>
+              <div class="detail">{{article.id | IdToRegDate('LL')}}</div>
               </div>
             </div>
           </div>
           <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
             <div class="ui labels">
               <button class="ui basic label nomargin">
-                <i class="eye grey icon"></i>{{post.views}}
+                <i class="eye grey icon"></i>{{article.views}}
               </button>
-              <button @click="likeOrDislike('LIKE')" :class="post.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
-                <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: post.myFeeling !== 'LIKE'}" class="smile icon"></i>{{post.numberOfLike}}
+              <button @click="likeOrDislike('LIKE')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
+                <i :style="{'font-weight': article.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: article.myFeeling !== 'LIKE'}" class="smile icon"></i>{{article.numberOfLike}}
               </button>
-              <button @click="likeOrDislike('DISLIKE')" :class="post.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
-                <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: post.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{post.numberOfDislike}}
+              <button @click="likeOrDislike('DISLIKE')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
+                <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{article.numberOfDislike}}
               </button>
             </div>
           </div>
@@ -80,11 +80,11 @@
       </div>
 
       <!--본문 콘텐트-->
-      <div class="ui blue segment ql-editor" v-html="post.content"></div>
+      <div class="ui blue segment ql-editor" v-html="article.content"></div>
 
-      <div v-if="!isEmptyArray(post.galleries)" class="ui segment">
+      <div v-if="!isEmptyArray(article.galleries)" class="ui segment">
         <h5>{{$t('board.gallery.list')}}</h5>
-        <p v-for="file in post.galleries">
+        <p v-for="file in article.galleries">
           <router-link :to="{name: 'gallery.view', params: {id: file.id}}">
             <i class="icon attach"></i> {{file.name}}
           </router-link>
@@ -93,11 +93,11 @@
 
       <!--하단 좋아요-->
       <div class="ui center aligned segment">
-        <button @click="likeOrDislike('LIKE')" :class="post.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
-          <i :style="{'font-weight': post.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: post.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{post.numberOfLike}}</strong>
+        <button @click="likeOrDislike('LIKE')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': article.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: article.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{article.numberOfLike}}</strong>
         </button>
-        <button @click="likeOrDislike('DISLIKE')" :class="post.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
-          <i :style="{'font-weight': post.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: post.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{post.numberOfDislike}}</strong>
+        <button @click="likeOrDislike('DISLIKE')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{article.numberOfDislike}}</strong>
         </button>
       </div>
     </div>
@@ -106,7 +106,7 @@
       <router-link :to="{name: 'board', params: {name: $route.params.name}, query: $route.query}" class="ui icon basic button">
         <i class="list icon"></i>
       </router-link>
-      <pager :is-first="!prevPost" :is-last="!nextPost" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
+      <pager :is-first="!prevArticle" :is-last="!nextArticle" @on-prev="prevTopic" @on-next="nextTopic" class="inline"></pager>
     </div>
 
     <!--하단 공유-->
@@ -120,20 +120,20 @@
     </div>
 
     <!--작성자의 최근 게시물-->
-    <div v-if="!isEmptyArray(latestPostsByWriter)" class="ui segments summary-list">
+    <div v-if="!isEmptyArray(latestArticlesByWriter)" class="ui segments summary-list">
       <h4 class="ui segment"><i class="blue feed icon"></i> {{$t('latest.articles.author')}}</h4>
       <div class="ui blue segment">
         <div class="ui divided selection relaxed list">
-          <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: post.seq}, query: $route.query}" v-for="post in latestPostsByWriter" :key="post.id" class="item">
-            <div v-if="!isEmptyArray(post.galleries)" class="right floated content">
+          <router-link :to="{name: 'board.view', params: {name: $route.params.name, seq: article.seq}, query: $route.query}" v-for="article in latestArticlesByWriter" :key="article.id" class="item">
+            <div v-if="!isEmptyArray(article.galleries)" class="right floated content">
               <div class="ui rounded bordered image thumbnail">
-                <img :src="post.galleries[0].thumbnailUrl">
+                <img :src="article.galleries[0].thumbnailUrl">
               </div>
             </div>
             <div class="content">
-              <div class="header">{{post.subject}}</div>
+              <div class="header">{{article.subject}}</div>
               <div class="extra">
-                <strong>{{post.writer.username}}</strong> &middot; {{post.id | IdToRegDate('LL')}}
+                <strong>{{article.writer.username}}</strong> &middot; {{article.id | IdToRegDate('LL')}}
               </div>
             </div>
           </router-link>
@@ -253,29 +253,35 @@
   import $ from 'jquery';
   import Pager from '../../components/pager/pager.vue';
   import IdToRegDate from '../../filters/id_to_regdate';
-  import CategoryColor from '../../filters/category_color';
-  import CategoryIcon from '../../filters/category_icon';
-  import CategoryLabel from '../../filters/category_label';
   import ErrorDialog from '../../utils/dialog_response_error';
   import CommentListItem from '../../components/comment_list_item/comment_list_item.vue';
+  import createCategoriesVM from '../../filters/categories_view_model';
 
   let commentEdiotImageList = [];
 
-  function fetch(seq) {
-    return $.getJSON(`/api/board/free/${seq}`).then(data => {
+  function fetch({name, seq}) {
+    return $.getJSON(`/api/board/${name}/categories`).then(data => {
       return data;
-    }, response => response).then(post => {
-      return $.getJSON(`/api/board/free/${seq}/comments`).then(data => {
-        return {
-          post: post,
-          comments: data
-        }
-      });
-    }, response => response);
+    }, response => response).then(categories => {
+      return $.getJSON(`/api/board/${name}/${seq}`).then(data => {
+        return data;
+      }, response => response).then(article => {
+        return $.getJSON(`/api/board/${name}/${seq}/comments`).then(data => {
+          return {
+            categories: categories,
+            article: article,
+            comments: data
+          }
+        });
+      }, response => response);
+    });
   }
 
-  function apply(post, comments) {
-    $.extend(this, post);
+  function apply(categories, article, comments) {
+    this.prevArticle = null;
+    this.nextArticle = null;
+    $.extend(this, article);
+    this.categories = createCategoriesVM.call(this, categories.categories, true);
     this.comments = comments.comments;
     this.commentCount = comments.commentCount;
     this.isCommentLoading = false;
@@ -294,30 +300,36 @@
   export default {
     data() {
       return {
-        post: {
+        categories: {
+          ALL: {},
+          list: []
+        },
+        article: {
           id: '',
-          category: {},
+          category: {
+            code: 'ALL'
+          },
           writer: {},
           numberOfLike: 0,
           numberOfDislike: 0
         },
-        latestPostsByWriter: [],
-        nextPost: {},
-        prevPost: {},
+        latestArticlesByWriter: [],
+        nextArticle: null,
+        prevArticle: null,
         comments: [],
         isCommentSubmitting: false,
         isCommentLoading: true
       };
     },
     beforeRouteEnter(to, from, next) {
-      fetch(to.params.seq).then(({post, comments}) => {
+      fetch(to.params).then(({categories, article, comments}) => {
         next(_this => {
           _this.setDocumentTitle(
-            (post.post.status && post.post.status.delete) ? _this.$t('board.msg.deleted') : post.post.subject,
+            (article.article.status && article.article.status.delete) ? _this.$t('board.msg.deleted') : article.article.subject,
             _this.$t('board.name.free'),
             _this.$t('common.jakduk')
           );
-          apply.call(_this, post, comments);
+          apply.call(_this, categories, article, comments);
         });
       }, response => {
         next(_this => {
@@ -326,8 +338,8 @@
       });
     },
     beforeRouteUpdate(to, from, next) {
-      fetch(to.params.seq).then(({post, comments}) => {
-        apply.call(this, post, comments);
+      fetch(to.params).then(({categories, article, comments}) => {
+        apply.call(this, categories, article, comments);
         next();
       }, response => {
         error.call(this, response);
@@ -348,17 +360,17 @@
     },
     computed: {
       isNotice() {
-        return this.post.status && this.post.status.notice;
+        return this.article.status && this.article.status.notice;
       },
       isEditable() {
-        return !!(this.post.writer && (this.myProfile.id === this.post.writer.userId));
+        return !!(this.article.writer && (this.myProfile.id === this.article.writer.userId));
       },
       kakaoShareOptions() {
         return {
           kakaoClientId: this.$store.state.kakaoClientID,
-          label: this.post.subject,
+          label: this.article.subject,
           url: `${window.location.origin}${this.$route.fullPath}`,
-          thumbnailUrl: (this.post.galleries && this.post.galleries[0] && this.post.galleries[0].imageUrl) || `${window.location.origin}/assets/jakduk/img/logo_256.png`
+          thumbnailUrl: (this.article.galleries && this.article.galleries[0] && this.article.galleries[0].imageUrl) || `${window.location.origin}/assets/jakduk/img/logo_256.png`
         }
       },
       ...mapState({
@@ -372,9 +384,6 @@
       IdToRegDate: IdToRegDate
     },
     methods: {
-      categoryColor: CategoryColor,
-      categoryLabel: CategoryLabel,
-      categoryIcon: CategoryIcon,
       onEditorCreated(editor) {
         this.commentEditor = editor;
         $('.ui.sticky').sticky('refresh', true);
@@ -384,7 +393,7 @@
           name: 'board.view',
           params: {
             name: this.$route.params.name,
-            seq: this.prevPost.seq
+            seq: this.prevArticle.seq
           },
           query: this.$route.query
         });
@@ -394,7 +403,7 @@
           name: 'board.view',
           params: {
             name: this.$route.params.name,
-            seq: this.nextPost.seq
+            seq: this.nextArticle.seq
           },
           query: this.$route.query
         });
@@ -404,13 +413,13 @@
 
         $.ajax({
           type: isNotice ? 'delete' : 'post',
-          url: `/api/board/free/${this.post.seq}/notice`
+          url: `/api/board/${this.$route.params.name}/${this.article.seq}/notice`
         }).then(() => {
-          if (!this.post.status) {
-            this.post.status = {};
+          if (!this.article.status) {
+            this.article.status = {};
           }
 
-          this.post.status.notice = !isNotice;
+          this.article.status.notice = !isNotice;
 
           this.$store.dispatch('globalMessage', {
             level: 'info',
@@ -420,15 +429,15 @@
       },
       copyLinkIntoClipboard() {
         window.prompt(
-          this.$t('common.url.of.name', {name: this.post.subject}),
+          this.$t('common.url.of.name', {name: this.article.subject}),
           `${window.location.origin}${window.location.pathname}`
         );
       },
       likeOrDislike(what) {
-        $.post(`/api/board/free/${this.post.seq}/${what}`).then(data => {
-          this.post.myFeeling = data.myFeeling;
-          this.post.numberOfLike = data.numberOfLike;
-          this.post.numberOfDislike = data.numberOfDislike;
+        $.post(`/api/board/${this.$route.params.name}/${this.article.seq}/${what}`).then(data => {
+          this.article.myFeeling = data.myFeeling;
+          this.article.numberOfLike = data.numberOfLike;
+          this.article.numberOfDislike = data.numberOfDislike;
         }, ErrorDialog(response => {
           if (response.status === 400) {
             this.$store.dispatch('globalMessage', {
@@ -443,7 +452,7 @@
         if (window.confirm(this.$t('board.msg.confirm.delete.post'))) {
           $.ajax({
             type: 'delete',
-            url: `/api/board/free/${this.post.seq}`
+            url: `/api/board/${this.$route.params.name}/${this.article.seq}`
           }).then(() => {
             this.$router.replace({
               name: 'board',
@@ -455,7 +464,7 @@
         }
       },
       likeOrDislikeComment(comment, what) {
-        $.post(`/api/board/free/comment/${comment.id}/${what}`).then(data => {
+        $.post(`/api/board/${this.$route.params.name}/comment/${comment.id}/${what}`).then(data => {
           comment.myFeeling = data.myFeeling;
           comment.numberOfLike = data.numberOfLike;
           comment.numberOfDislike = data.numberOfDislike;
@@ -473,7 +482,7 @@
         if (window.confirm(this.$t('common.do.you.want.to.delete.a.comment'))) {
           $.ajax({
             type: 'delete',
-            url: `/api/board/free/comment/${comment.id}`
+            url: `/api/board/${this.$route.params.name}/comment/${comment.id}`
           }).then(() => {
             const index = this.comments.findIndex(_comment => _comment.id === comment.id);
             this.comments.splice(index, 1);
@@ -489,7 +498,7 @@
 
         this.isCommentLoading = true;
 
-        $.getJSON(`/api/board/free/${this.post.seq}/comments${lastComment ? `?commentId=${lastComment.id}` : ''}`).then(data => {
+        $.getJSON(`/api/board/${this.$route.params.name}/${this.article.seq}/comments${lastComment ? `?commentId=${lastComment.id}` : ''}`).then(data => {
           if (data.comments.length) {
             this.comments.splice(this.comments.length, 0, ...data.comments);
           } else {
@@ -536,11 +545,10 @@
 
         $.ajax({
           type: 'post',
-          url: '/api/board/free/comment',
+          url: `/api/board/${this.$route.params.name}/${this.article.seq}/comment`,
           contentType: 'application/json',
           data: JSON.stringify({
             content: this.commentEditor.getContents(),
-            seq: this.post.seq,
             galleries: this.commentEditor.getEmbeds().reduce((list, embed) => {
               const image = commentEdiotImageList.find(image => image.imageUrl === embed.image);
 

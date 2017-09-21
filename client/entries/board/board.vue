@@ -11,8 +11,8 @@
         <!--분류-->
         <div class="ui segment">
           <select id="categories" class="ui dropdown">
-            <option v-for="id in categories" :value="id">
-              <i :class="[categoryColor(id), categoryIcon(id)]" class="icon"></i> {{$t(categoryLabel(id))}}
+            <option v-for="category in categories.list" :value="category.code" :key="category.code">
+              <i v-if="category.icon" :class="[category.icon, category.color]"></i> {{category.name}}
             </option>
           </select>
           <router-link :to="{name: 'board.write', params: {name: $route.params.name}}" class="ui right floated icon button"><i class="write icon"></i></router-link>
@@ -22,11 +22,11 @@
         <div class="ui blue segment">
           <div class="ui divided items board">
             <board-list-item :is-notice="true" :item="notice" v-for="notice in board.notices" :key="notice.seq"></board-list-item>
-            <board-list-item :is-notice="false" :item="post" v-for="post in board.posts" :key="post.seq"></board-list-item>
+            <board-list-item :is-notice="false" :item="post" :category="categories[post.category]" v-for="post in board.articles" :key="post.seq"></board-list-item>
           </div>
         </div>
       </div>
-      <div v-else class="ui segment">{{$t('failed.loading')}}</div>
+      <div v-else="" class="ui segment">{{$t('failed.loading')}}</div>
 
       <!--bottom네비게이션-->
       <div class="ui grid">
@@ -82,34 +82,33 @@
   import BoardListItem from '../../components/board_list_item/board_list_item.vue';
   import Pagination from '../../components/pagination/pagination.vue';
   import Pager from '../../components/pager/pager.vue';
-  import CategoryColor from '../../filters/category_color';
-  import CategoryIcon from '../../filters/category_icon';
-  import CategoryLabel from '../../filters/category_label';
+  import createCategoriesVM from '../../filters/categories_view_model';
 
   const PAGE_SIZE = 10;
   const PAGINATION_SHIFT_SIZE = 5;
 
   function fetch(options) {
     return $.when(
-      $.getJSON('/api/board/free/posts', {
+      $.getJSON(`/api/board/${options.boardName}/articles`, {
         page: options.page,
         size: options.size,
-        category: options.category
+        categoryCode: options.category
       }).then(data => data, (response, result) => result),
-      $.getJSON('/api/board/free/tops').then(data => data, (response, result) => result)
-    ).always((posts, tops) => {
+      $.getJSON(`/api/board/${options.boardName}/tops`).then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/${options.boardName}/categories`).then(data => data, (response, result) => result)
+    ).always((board, tops, boardCategories) => {
       this.top = (tops === 'error' || !tops) ? undefined : tops;
-      this.board = (posts === 'error' || !posts) ? undefined : posts;
+      this.board = (board === 'error' || !board) ? undefined : board;
 
       if (this.board) {
-        const start = Math.floor(posts.number / PAGINATION_SHIFT_SIZE) * PAGINATION_SHIFT_SIZE + 1;
-        const end = Math.min(posts.totalPages + 1, start + PAGINATION_SHIFT_SIZE);
+        const start = Math.floor(board.number / PAGINATION_SHIFT_SIZE) * PAGINATION_SHIFT_SIZE + 1;
+        const end = Math.min(board.totalPages + 1, start + PAGINATION_SHIFT_SIZE);
 
         this.pagination.start = start;
         this.pagination.end = end;
-        this.pagination.first = posts.first;
-        this.pagination.last = posts.last;
-        this.pagination.current = posts.number + 1;
+        this.pagination.first = board.first;
+        this.pagination.last = board.last;
+        this.pagination.current = board.number + 1;
         this.pagination.items = [];
 
         for (let i = start; i < end; i++) {
@@ -119,12 +118,7 @@
           });
         }
 
-        this.categories = ['ALL'];
-        Object.keys(this.board.categories).forEach(key => {
-          if (key !== 'ALL') {
-            this.categories.push(key);
-          }
-        });
+        this.categories = createCategoriesVM.call(this, boardCategories.categories, true);
       }
 
       this.$store.commit('load', false);
@@ -134,7 +128,9 @@
   export default {
     data() {
       return {
-        categories: [],
+        categories: {
+          list: []
+        },
         board: {
           categories: {},
           first: undefined,
@@ -142,7 +138,7 @@
           notices: [],
           number: 0,
           numberOfElements: 0,
-          posts: [],
+          articles: [],
           size: 0,
           totalElements: 0,
           totalPages: 0
@@ -161,6 +157,7 @@
     beforeRouteEnter(to, from, next) {
       next(_this => {
         const category = (to.query.category || 'ALL').toUpperCase();
+        const boardName = to.params.name;
 
         _this.category = category;
 
@@ -169,7 +166,8 @@
         fetch.call(_this, {
           page: Math.max(1, parseInt(to.query.page) || 1),
           size: PAGE_SIZE,
-          category: category
+          category: category,
+          boardName: boardName
         }).then(() => {
           $(_this.$el).find('#categories').dropdown({
             onChange(category) {
@@ -187,24 +185,27 @@
     },
     beforeRouteUpdate(to, from, next) {
       const category = (to.query.category || 'ALL').toUpperCase();
+      const boardName = to.params.name;
 
       this.category = category;
 
       fetch.call(this, {
         page: Math.max(1, parseInt(to.query.page) || 1),
         size: PAGE_SIZE,
-        category: category
+        category: category,
+        boardName: boardName
       }).then(() => {
         next();
+        $(this.$el).find('#categories').dropdown('set selected', category);
       });
     },
     updated() {
       $('.ui.sticky').sticky('refresh', true);
     },
     methods: {
-      categoryColor: CategoryColor,
-      categoryLabel: CategoryLabel,
-      categoryIcon: CategoryIcon,
+      decorateCategory() {
+
+      },
       onPageChange(what) {
         let pageNumber = Math.max(1, parseInt(this.$route.query.page) || 1);
 

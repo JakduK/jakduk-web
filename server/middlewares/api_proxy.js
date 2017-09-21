@@ -6,42 +6,61 @@ const config = require('../config/environment');
 const Util = require('../helpers/jakduk_util');
 const slack = require('../helpers/slack_notifier')(config.slack);
 
-const apiHooks = {
-  '/board/free'(resData, req) {
-    new ApiClient(
-      `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.seq})}`,
-      config.internalApiServerUrl
-    ).getPost(resData.seq).then(response => {
-      const og = Util.ogFromPost(response.data.post, 200);
-      slack({
-        author: og.author,
-        subject: og.title,
-        link: og.link,
-        text: og.description,
-        image: og.image,
-        video: og.video,
-        videoProvider: og.videoProvider,
-        isPost: true
-      });
+function boardHook(resData, req) {
+  new ApiClient(
+    `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.seq})}`,
+    config.internalApiServerUrl
+  ).getPost(resData.board, resData.seq).then(response => {
+    const og = Util.ogFromPost(response.data.article, 200);
+    slack({
+      author: og.author,
+      subject: og.title,
+      link: og.link,
+      text: og.description,
+      image: og.image,
+      video: og.video,
+      videoProvider: og.videoProvider,
+      isPost: true
     });
-  },
-  '/board/free/comment'(resData, req) {
-    new ApiClient(
-      `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.boardItem.seq})}`,
-      config.internalApiServerUrl
-    ).getPost(resData.boardItem.seq).then(response => {
-      const post = Util.ogFromPost(response.data.post, 200);
-      const comment = Util.ogFromPost(resData, 200);
-      slack({
-        author: comment.author,
-        subject: post.title,
-        link: post.link,
-        text: comment.description,
-        isPost: false
-      });
+  });
+}
+
+function boardCommentHook(resData, req) {
+  new ApiClient(
+    `${(req.headers.cookie || '')}; ${_.template(config.viewAbusePreventCookie)({seq: resData.article.seq})}`,
+    config.internalApiServerUrl
+  ).getPost(resData.article.board, resData.article.seq).then(response => {
+    const post = Util.ogFromPost(response.data.article, 200);
+    const comment = Util.ogFromPost({
+      seq: resData.article.seq,
+      subject: response.data.article.subject,
+      writer: resData.writer,
+      board: resData.article.board,
+      content: resData.content
+    }, 200);
+    slack({
+      author: comment.author,
+      subject: post.title,
+      link: post.link,
+      text: comment.description,
+      isPost: false
     });
-  }
-};
+  });
+}
+
+const ApiHooks = [
+  ApiHook(/^\/board\/(?:[a-z]+?)\/(?:\d+?)\/comment$/, boardCommentHook),
+  ApiHook(/^\/board\/(?:[a-z]+?)\/(?:\d+?)$/, boardHook)
+];
+
+function ApiHook(testRegexp, runFunc) {
+  return {
+    test(string) {
+      return testRegexp.test(string);
+    },
+    run: runFunc
+  };
+}
 
 module.exports = function (path, dest) {
   return hpm(path, {
@@ -51,16 +70,21 @@ module.exports = function (path, dest) {
       [`^${path}`]: ''
     },
     onProxyRes(proxyRes, req) {
-			const urlPath = /\/$/.test(req.path) ? req.path.replace(/\/$/, '') : req.path;
+      const urlPath = /\/$/.test(req.path) ? req.path.replace(/\/$/, '') : req.path;
 
-			if (apiHooks[urlPath] && proxyRes.statusCode === 200 && req.method === 'POST') {
-        const chunks = [];
-        proxyRes.on('data', chunk => {
-          chunks.push(chunk);
-        });
-        proxyRes.on('end', () => {
-          const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => len + chunk.length, 0));
-          apiHooks[urlPath](JSON.parse(payload.toString('utf8')), req);
+      if (proxyRes.statusCode === 200 && req.method === 'POST') {
+        _.each(ApiHooks, hook => {
+          if (hook.test(urlPath)) {
+            const chunks = [];
+            proxyRes.on('data', chunk => {
+              chunks.push(chunk);
+            });
+            proxyRes.on('end', () => {
+              const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => len + chunk.length, 0));
+              hook.run(JSON.parse(payload.toString('utf8')), req);
+            });
+            return false;
+          }
         });
       }
     }

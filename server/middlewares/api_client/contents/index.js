@@ -29,8 +29,8 @@ module.exports = function (ApiClient) {
     });
   };
 
-  ApiClient.prototype.getPost = function (seq) {
-    return this.requestGetJson(`${this.serverUrl}/board/free/${seq}`);
+  ApiClient.prototype.getPost = function (board, seq) {
+    return this.requestGetJson(`${this.serverUrl}/board/${board.toLowerCase()}/${seq}`);
   };
 
   ApiClient.prototype.getComments = function (query) {

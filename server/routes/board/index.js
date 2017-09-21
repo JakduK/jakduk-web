@@ -6,7 +6,7 @@ const Util = require('../../helpers/jakduk_util');
 module.exports.setup = function (app) {
   const router = express.Router();
 
-  router.get('/free', (req, res, next) => {
+  router.get('/:board', (req, res, next) => {
     res.locals.title = [
       i18n.__('board.free.breadcrumbs.posts'),
       i18n.__('board.name.free'),
@@ -18,7 +18,7 @@ module.exports.setup = function (app) {
     });
   });
 
-  router.get('/free/comments', (req, res, next) => {
+  router.get('/:board/comments', (req, res, next) => {
     res.locals.title = [
       i18n.__('board.free.breadcrumbs.comments'),
       i18n.__('board.name.free'),
@@ -30,7 +30,7 @@ module.exports.setup = function (app) {
     });
   });
 
-  router.get('/free/write', (req, res, next) => {
+  router.get('/:board/write', (req, res, next) => {
     res.locals.title = [
       i18n.__('board.write'),
       i18n.__('common.jakduk')
@@ -41,8 +41,8 @@ module.exports.setup = function (app) {
     });
   });
 
-  router.get('/free/edit/:id', (req, res, next) => {
-    req.api.getPost(req.params.id).then(response => {
+  router.get('/:board/edit/:id', (req, res, next) => {
+    req.api.getPost(req.params.board, req.params.id).then(response => {
       if (response.statusCode !== 200) {
         next(Util.makeError(response));
         return;
@@ -67,8 +67,8 @@ module.exports.setup = function (app) {
     }).catch(next);
   });
 
-  router.get('/free/:id', (req, res, next) => {
-    req.api.getPost(req.params.id).then(response => {
+  router.get('/:board/:id', (req, res, next) => {
+    req.api.getPost(req.params.board, req.params.id).then(response => {
       if (response.statusCode !== 200) {
         next(Util.makeError(response));
         return;

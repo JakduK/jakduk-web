@@ -2,9 +2,9 @@
   <div class="ui segments">
     <div class="ui segment">
       <div class="ui labeled fluid input">
-        <select id="categories" class="ui label compact selection dropdown">
-          <option v-for="category in categories" :value="category.code">
-            <i :class="[categoryColor(category.code), categoryIcon(category.code)]" class="icon"></i> {{$t(categoryLabel(category.code))}}
+        <select v-if="!isEmptyArray(categories.list)" id="categories" class="ui dropdown topic-write-category">
+          <option v-for="category in categories.list" :value="category.code">
+            <i v-if="category.icon" :class="[category.color, category.icon]" class="icon"></i> {{category.name}}
           </option>
         </select>
         <input v-model="subject" id="subject" type="text" autofocus>
@@ -47,7 +47,7 @@
       <div class="ui divider"></div>
 
       <div class="clearfix">
-        <button @click="checkForm(editor) && submitPost()" :class="{loading: isSubmitting}" class="ui right floated blue labeled icon button">
+        <button @click="checkForm(editor) && submitArticle()" :class="{loading: isSubmitting}" class="ui right floated blue labeled icon button">
           <i class="icon edit"></i> {{$t(editMode ? 'common.save' : 'common.post')}}
         </button>
         <button @click="$router.go(-1)" class="ui right floated blue labeled icon button">
@@ -62,21 +62,24 @@
   .editor-container {
     height: 640px;
   }
+  .topic-write-category {
+    min-width: 7em !important;
+  }
 </style>
 
 <script>
   import $ from 'jquery';
-  import CategoryColor from '../../filters/category_color';
-  import CategoryIcon from '../../filters/category_icon';
-  import CategoryLabel from '../../filters/category_label';
   import FileSize from 'filesize';
+  import createCategoriesVM from '../../filters/categories_view_model';
 
   export default {
     data() {
       return {
         editMode: false,
-        categories: [],
-        category: 'FREE',
+        categories: {
+          list: []
+        },
+        category: 'ALL',
         subject: '',
         imageList: [],
         deletedImageList: [],
@@ -91,14 +94,14 @@
 
       $.when(this.defers.editor, this.defers.data).then(() => {
         if (this.editMode) {
-          $(this.$el).find('#categories').dropdown('set selected', this.post.category.code);
-          this.subject = this.post.subject;
-          this.imageList = (this.post.galleries || []).map(image => {
+          $(this.$el).find('#categories').dropdown('set selected', this.article.category.code);
+          this.subject = this.article.subject;
+          this.imageList = (this.article.galleries || []).map(image => {
             image.name = image.name || image.fileName;
             image.isRenaming = false;
             return image;
           });
-          this.editor.setContents(this.post.content);
+          this.editor.setContents(this.article.content);
         }
 
         this.$store.commit('load', false);
@@ -110,18 +113,18 @@
     },
     beforeRouteEnter(to, from, next) {
       const editMode = to.meta.mode === 'edit';
-      let promises = [$.getJSON('/api/board/free/categories').then(data => data, (response, result) => result)];
+      let promises = [$.getJSON(`/api/board/${to.params.name}/categories`).then(data => data, (response, result) => result)];
 
       if (editMode) {
-        promises.push($.getJSON(`/api/board/free/${to.params.seq}`).then(data => data, (response, result) => result));
+        promises.push($.getJSON(`/api/board/${to.params.name}/${to.params.seq}`).then(data => data, (response, result) => result));
       }
 
-      $.when.apply(null, promises).then((categories, post) => {
+      $.when.apply(null, promises).then((categories, article) => {
         next(_this => {
           if (editMode) {
-            _this.setDocumentTitle(post.post.subject, _this.$t('board.edit'), _this.$t('common.jakduk'));
+            _this.setDocumentTitle(article.article.subject, _this.$t('board.edit'), _this.$t('common.jakduk'));
 
-            if (!_this.$store.state.myProfile || _this.$store.state.myProfile.id !== post.post.writer.userId) {
+            if (!_this.$store.state.myProfile || _this.$store.state.myProfile.id !== article.article.writer.userId) {
               window.alert(_this.$t('common.msg.error.401'));
               _this.$router.go(-1);
               return;
@@ -130,19 +133,22 @@
             _this.setDocumentTitle(_this.$t('board.write'), _this.$t('common.jakduk'));
           }
 
-          if (post) {
-            _this.post = post.post;
+          if (article) {
+            _this.article = article.article;
           }
 
           _this.editMode = editMode;
-          _this.categories = categories.categories;
+          _this.categories = createCategoriesVM.call(_this, categories.categories, false);
+          _this.category = _this.categories.list[0].code;
 
           _this.$nextTick(() => {
-            $(_this.$el).find('#categories').dropdown({
-              onChange(category) {
-                _this.category = category;
-              }
-            }).dropdown('set selected', 'FREE');
+            $(_this.$el).find('#categories')
+              .dropdown('set selected', _this.categories.list[0].code)
+              .dropdown({
+                onChange(category) {
+                  _this.category = category;
+                }
+              });
 
             _this.defers.data.resolve();
           });
@@ -150,9 +156,6 @@
       });
     },
     methods: {
-      categoryColor: CategoryColor,
-      categoryLabel: CategoryLabel,
-      categoryIcon: CategoryIcon,
       onEditorCreated(editor) {
         this.editor = editor;
         this.defers.editor.resolve();
@@ -195,15 +198,15 @@
 
         return true;
       },
-      submitPost() {
+      submitArticle() {
         this.isSubmitting = true;
 
         $.ajax({
           type: this.editMode ? 'put' : 'post',
-          url: `/api/board/free/${this.editMode ? this.post.seq : ''}`,
+          url: `/api/board/${this.$route.params.name}${this.editMode ? '/' + this.article.seq : ''}`,
           contentType: 'application/json',
           data: JSON.stringify({
-            categoryCode: this.category,
+            categoryCode: this.category === 'ALL' ? null : this.category,
             subject: this.subject,
             content: this.editor.getContents(),
             galleries: this.imageList.map(image => {
@@ -222,11 +225,12 @@
               seq: data.seq
             }
           });
-        }, ...response => {
+        }, response => {
           this.$store.dispatch('globalMessage', {
             level: 'error',
-            message: response[2]
+            message: JSON.stringify(response.responseJSON, null, 2)
           });
+          this.isSubmitting = false;
         }).then(() => {
           const promise = [];
           let reqData;
@@ -235,7 +239,7 @@
             reqData = JSON.stringify({
               form: {
                 from: 'BOARD_FREE',
-                itemId: this.post.id
+                itemId: this.article.id
               }
             });
           }

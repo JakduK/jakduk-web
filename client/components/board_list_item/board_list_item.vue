@@ -19,8 +19,8 @@
 
       <div class="extra">
         <div class="ui small labels nomargin">
-          <div v-if="!isNotice" :class="categoryColor(item.category)" class="ui label bottom">
-            {{$t(categoryLabel(item.category))}}<div class="detail">{{item.seq}}</div>
+          <div v-if="!isNotice && category" :class="category.color" class="ui label bottom">
+            {{category.name}}<div class="detail">{{item.seq}}</div>
           </div>
           <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui image basic label bottom">
             <img :src="avatarSrc(item.writer.picture)">
@@ -62,19 +62,11 @@
 
 <script>
   import IdToRegDate from '../../filters/id_to_regdate';
-  import CategoryColor from '../../filters/category_color';
-  import CategoryIcon from '../../filters/category_icon';
-  import CategoryLabel from '../../filters/category_label';
 
   export default {
-    props: ['item', 'isNotice'],
+    props: ['category', 'item', 'isNotice'],
     filters: {
       IdToRegDate: IdToRegDate
-    },
-    methods: {
-      categoryColor: CategoryColor,
-      categoryLabel: CategoryLabel,
-      categoryIcon: CategoryIcon,
     }
   }
 </script>

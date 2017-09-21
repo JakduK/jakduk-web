@@ -45,7 +45,7 @@ module.exports = {
     const og = {
       author: post.writer.username,
       title: post.subject,
-      link: config.origin + '/board/free/' + post.seq,
+      link: `${config.origin}/board/${post.board.toLowerCase()}/${post.seq}`,
       description: _s(post.content).unescapeHTML().stripTags().truncate(limit).value() || post.subject,
       type: 'article'
     };
