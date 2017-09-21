@@ -2,8 +2,8 @@ module.exports = {
   staging: {
     origin: process.env.ORIGIN || 'https://staging.jakduk.com',
     apiServerUrl: process.env.API_SERVER || '/api',
-    internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'https://staging.jakduk.com:8080/api',
-    thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'https://staging.jakduk.com:8080',
+    internalApiServerUrl: process.env.INTERNAL_API_SERVER || 'https://dev-web.jakduk.com/api',
+    thumbnailServerUrl: process.env.THUMBNAIL_SERVER || 'https://dev-image.jakduk.com',
     secureCookie: false,
     debug: true
   },
