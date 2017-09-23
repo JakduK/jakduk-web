@@ -33,8 +33,8 @@
               <div v-if="result.highlight.content" v-html="result.highlight.content[0]" class="description"></div>
               <div class="extra">
                 <div class="ui small labels">
-                  <div :class="categoryColor(result.category)" class="ui label nomargin">
-                    {{$t(categoryLabel(result.category))}}
+                  <div :class="result.category" class="ui label nomargin">
+                    {{result.category}}
                     <div class="detail">{{result.seq}}</div>
                   </div>
                   <div class="ui image basic label nomargin">
@@ -130,6 +130,7 @@
   import $ from 'jquery';
   import IdToRegDate from '../../filters/id_to_regdate';
   import IndexedColor from '../../filters/indexed_color';
+  import createCategoriesVM from '../../filters/categories_view_model';
 
   function fetch(query) {
     const promises = [$.getJSON('/api/search/popular/words?size=20').then(data => data, (response, result) => result)];

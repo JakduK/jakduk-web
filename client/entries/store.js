@@ -12,7 +12,6 @@ export default new Vuex.Store({
     err: window.ENV.err,
     isMobile: /iphone|ipad|android/i.test(window.navigator.userAgent),
     kakaoClientID: window.ENV.kakaoClientID,
-    locale: window.ENV.locale,
     isAuthenticated: !!window.ENV.myProfile,
     isAdmin: window.ENV.myProfile && window.ENV.myProfile.roles.some(role => role === 'ROLE_ROOT'),
     myProfile: window.ENV.myProfile,

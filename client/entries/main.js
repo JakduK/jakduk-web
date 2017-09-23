@@ -12,7 +12,6 @@ import Toast from '../components/toast/toast.vue';
 Vue.component('toast', Toast);
 Vue.directive('tooltip', Tooltip);
 Vue.filter('encode', Encode);
-
 Vue.mixin({
   methods: {
     setDocumentTitle(...titles) {

@@ -13,7 +13,7 @@
       <div class="ui divider"></div>
 
       <div class="editor-container">
-        <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'editor', language: $store.state.locale}"></editor>
+        <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'editor', language: $lang.split('-')[0]}"></editor>
       </div>
 
       <div v-if="imageList.length" class="ui divided items">
@@ -113,7 +113,7 @@
     },
     beforeRouteEnter(to, from, next) {
       const editMode = to.meta.mode === 'edit';
-      let promises = [$.getJSON(`/api/board/${to.params.name}/categories`).then(data => data, (response, result) => result)];
+      let promises = [$.getJSON(`/api/board/${to.params.name}/categories?lang=${window.ENV.locale.split('-')[0]}`).then(data => data, (response, result) => result)];
 
       if (editMode) {
         promises.push($.getJSON(`/api/board/${to.params.name}/${to.params.seq}`).then(data => data, (response, result) => result));
@@ -139,19 +139,20 @@
 
           _this.editMode = editMode;
           _this.categories = createCategoriesVM.call(_this, categories.categories, false);
-          _this.category = _this.categories.list[0].code;
+          if (_this.categories.list.length) {
+            _this.category = _this.categories.list[0].code;
+            _this.$nextTick(() => {
+              $(_this.$el).find('#categories')
+                .dropdown('set selected', _this.categories.list[0].code)
+                .dropdown({
+                  onChange(category) {
+                    _this.category = category;
+                  }
+                });
+            });
+          }
 
-          _this.$nextTick(() => {
-            $(_this.$el).find('#categories')
-              .dropdown('set selected', _this.categories.list[0].code)
-              .dropdown({
-                onChange(category) {
-                  _this.category = category;
-                }
-              });
-
-            _this.defers.data.resolve();
-          });
+          _this.$nextTick(() => _this.defers.data.resolve());
         });
       });
     },

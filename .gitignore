@@ -6,3 +6,4 @@ node_modules/
 bower_components/
 local.js
 robots.txt
+package-lock.json

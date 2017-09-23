@@ -95,7 +95,7 @@
         categoryCode: options.category
       }).then(data => data, (response, result) => result),
       $.getJSON(`/api/board/${options.boardName}/tops`).then(data => data, (response, result) => result),
-      $.getJSON(`/api/board/${options.boardName}/categories`).then(data => data, (response, result) => result)
+      $.getJSON(`/api/board/${options.boardName}/categories?lang=${this.$lang.split('-')[0]}`).then(data => data, (response, result) => result)
     ).always((board, tops, boardCategories) => {
       this.top = (tops === 'error' || !tops) ? undefined : tops;
       this.board = (board === 'error' || !board) ? undefined : board;

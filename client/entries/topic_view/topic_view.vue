@@ -162,7 +162,7 @@
         <div class="comment-form">
           <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
           <div class="comment-editor">
-            <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'comment', language: $store.state.locale}"></editor>
+            <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'comment', language: $lang.split('-')[0]}"></editor>
           </div>
           <div class="clearfix">
             <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
@@ -260,7 +260,7 @@
   let commentEdiotImageList = [];
 
   function fetch({name, seq}) {
-    return $.getJSON(`/api/board/${name}/categories`).then(data => {
+    return $.getJSON(`/api/board/${name}/categories?lang=${window.ENV.locale.split('-')[0]}`).then(data => {
       return data;
     }, response => response).then(categories => {
       return $.getJSON(`/api/board/${name}/${seq}`).then(data => {
