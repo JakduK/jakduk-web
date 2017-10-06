@@ -1,5 +1,6 @@
 export default {
   state: {
+    boardCategories: {},
     popularSearchWords: [],
     searchResult: {
       postResult: {
@@ -19,6 +20,9 @@ export default {
     },
     searchResult(state, searchResult) {
       state.searchResult = searchResult;
+    },
+    boardCategories(state, {id, categories}) {
+      state.boardCategories[id] = categories;
     }
   }
 };
