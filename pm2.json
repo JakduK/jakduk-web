@@ -9,7 +9,7 @@
     "out_file": ".logs/out.log",
     "env": {
       "NODE_ENV": "development",
-      "DEBUG": "jakduk,jakduk:*"
+      "DEBUG": "jakduk-web,jakduk-web:*"
     },
     "env_staging" : {
       "ENV": "staging",
