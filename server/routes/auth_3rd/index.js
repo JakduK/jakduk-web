@@ -3,6 +3,7 @@ const querystring = require('querystring');
 const _ = require('lodash');
 const oauthClient = require('../../helpers/oauth');
 const Util = require('../../helpers/jakduk_util');
+const debug = require('debug')('jakduk-web:auth_3rd');
 
 function oauth2(providers) {
   const router = express.Router();
@@ -22,6 +23,7 @@ function login(provider, req, res) {
 function callback(provider, req, res) {
   oauthClient[provider].authorize(req.query.code).then(response => {
     if (response.statusCode === 200) {
+      debug(`[Login with ${provider}] %o`, response.data);
       return Promise.all([
         response.data.access_token,
         req.api.loginWith(provider, response.data.access_token)
