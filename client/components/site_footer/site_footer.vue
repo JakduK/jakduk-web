@@ -14,9 +14,9 @@
           <div class="four wide column">
             <h4 class="ui header">{{$t('board')}}</h4>
             <div class="ui link list">
-              <router-link :to="{name: 'board', params: {name: 'free'}, query: {category: 'FREE'}}" class="item">{{$t('board.name.free')}}</router-link>
-              <router-link :to="{name: 'board', params: {name: 'free'}, query: {category: 'FOOTBALL'}}" class="item">{{$t('board.category.football')}}</router-link>
-              <a href="/rss.xml" class="item">RSS</a>
+              <router-link :to="{name: 'board', params: {name: 'free'}}" class="item">{{$t('board.name.free')}}</router-link>
+              <router-link :to="{name: 'board', params: {name: 'football'}}" class="item">{{$t('board.name.football')}}</router-link>
+              <router-link :to="{name: 'board', params: {name: 'developer'}}" class="item">{{$t('board.name.swdev')}}</router-link>
             </div>
           </div>
           <div class="four wide column">
@@ -29,6 +29,11 @@
           <div class="four wide column">
             <div class="ui center aligned container">
               <div class="ui link list">
+                <div class="item">
+                  <a href="/rss.xml">
+                    <i class="rss big icon"></i> RSS
+                  </a>
+                </div>
                 <div class="item">
                   <a href="https://github.com/JakduK" target="_blank">
                     <i class="github alternate big icon"></i> Github
