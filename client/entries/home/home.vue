@@ -159,7 +159,7 @@
   function fetch() {
     const promises = $.when(
       $.getJSON('/api/home/latest').then(data => data, (response, result) => result),
-      $.getJSON('/api/search/popular/words?size=10').then(data => data, (response, result) => result),
+      $.getJSON('/api/search/popular-words?size=10').then(data => data, (response, result) => result),
       $.getJSON('/api/home/encyclopedia').then(data => data, (response, result) => result)
     );
 

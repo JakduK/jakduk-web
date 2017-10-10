@@ -121,7 +121,7 @@
           name: 'search',
           query: {
             q: keyword,
-            w: 'PO;CO;GA',
+            w: 'ARTICLE;COMMENT;GALLERY',
             from: 0,
             size: 3
           }

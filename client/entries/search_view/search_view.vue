@@ -3,24 +3,24 @@
     <div class="ui segments">
       <h5 class="ui segment"><i class="blue trophy icon"></i> {{$t('popular.search.words')}}</h5>
       <div class="ui blue segment">
-        <router-link v-for="(word, index) in popularSearchWords" :key="word.key" :class="indexedColor(index, false)" :to="{name: 'search', query: {q: word.key, w: 'PO;CO;GA', from: 0, size: 3}}" class="ui label search-keyword">{{word.key}}</router-link>
+        <router-link v-for="(word, index) in popularSearchWords" :key="word.key" :class="indexedColor(index, false)" :to="{name: 'search', query: {q: word.key, w: 'ARTICLE;COMMENT;GALLERY', from: 0, size: 3}}" class="ui label search-keyword">{{word.key}}</router-link>
       </div>
     </div>
 
-    <div v-if="searchResult.postResult" class="ui segments">
+    <div v-if="searchResult.articleResult" class="ui segments">
       <h5 class="ui segment">
         <i class="blue search icon"></i>
-        {{$t('search.post.results', {n: searchResult.postResult.totalCount})}}
-        <router-link v-if="searchResult.postResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'PO'}}" class="pull-right">
+        {{$t('search.post.results', {n: searchResult.articleResult.totalCount})}}
+        <router-link v-if="searchResult.articleResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'ARTICLE'}}" class="pull-right">
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
       <div class="ui blue segment">
-        <div v-if="!searchResult.postResult.posts.length">
+        <div v-if="!searchResult.articleResult.articles.length">
           <i class="icon idea"></i> {{$t('search.no.result')}}
         </div>
         <div v-else class="ui divided link items">
-          <router-link :to="{name: 'board.view', params: {name: result.board.toLowerCase(), seq: result.seq}}" v-for="result in searchResult.postResult.posts" :key="result.id" class="item">
+          <router-link :to="{name: 'board.view', params: {name: result.board.toLowerCase(), seq: result.seq}}" v-for="result in searchResult.articleResult.articles" :key="result.id" class="item">
             <div class="content">
               <div v-if="result.highlight.subject" class="header">
                 <div v-if="!isEmptyArray(result.galleries)" class="pull-right">
@@ -33,8 +33,8 @@
               <div v-if="result.highlight.content" v-html="result.highlight.content[0]" class="description"></div>
               <div class="extra">
                 <div class="ui small labels">
-                  <div v-if="boardCategories[result.board] && boardCategories[result.board][result.category]" :class="[boardCategories[result.board][result.category].color]" class="ui label nomargin">
-                    {{convertBoardName(result.board)}} &middot; {{boardCategories[result.board][result.category].name}}
+                  <div v-if="boardCategories[result.board]" :class="[boardCategories[result.board][result.category] ? boardCategories[result.board][result.category].color : '']" class="ui label nomargin">
+                    {{convertBoardName(result.board)}} {{boardCategories[result.board][result.category] ? ' &middot; ' + boardCategories[result.board][result.category].name: ''}}
                     <div class="detail">{{result.seq}}</div>
                   </div>
                   <div class="ui image basic label nomargin">
@@ -54,7 +54,7 @@
       <h5 class="ui segment">
         <i class="blue search icon"></i>
         {{$t('search.comment.results', {n: searchResult.commentResult.totalCount})}}
-        <router-link v-if="searchResult.commentResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'CO'}}" class="pull-right">
+        <router-link v-if="searchResult.commentResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'COMMENT'}}" class="pull-right">
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
@@ -63,14 +63,14 @@
           <i class="icon idea"></i> {{$t('search.no.result')}}
         </div>
         <div v-else class="ui divided link items">
-          <router-link :to="{name: 'board.view', params: {name: result.parentBoard.board.toLowerCase(), seq: result.parentBoard.seq}}" v-for="result in searchResult.commentResult.comments" :key="result.id" class="item">
+          <router-link :to="{name: 'board.view', params: {name: result.article.board.toLowerCase(), seq: result.article.seq}}" v-for="result in searchResult.commentResult.comments" :key="result.id" class="item">
             <div class="content">
               <div v-html="result.highlight.content[0]" class="ui header tiny"></div>
-              <div v-html="result.parentBoard.subject" class="extra"></div>
+              <div v-html="result.article.subject" class="extra"></div>
               <div class="extra">
-                <div v-if="boardCategories[result.parentBoard.board] && boardCategories[result.parentBoard.board][result.parentBoard.category]" :class="[boardCategories[result.parentBoard.board][result.parentBoard.category].color]" class="ui label nomargin">
-                  {{convertBoardName(result.parentBoard.board)}} &middot; {{boardCategories[result.parentBoard.board][result.parentBoard.category].name}}
-                  <div class="detail">{{result.parentBoard.seq}}</div>
+                <div v-if="boardCategories[result.article.board] && boardCategories[result.article.board][result.article.category]" :class="[boardCategories[result.article.board][result.article.category].color]" class="ui label nomargin">
+                  {{convertBoardName(result.article.board)}} &middot; {{boardCategories[result.article.board][result.article.category].name}}
+                  <div class="detail">{{result.article.seq}}</div>
                 </div>
                 <div class="ui small image basic label">
                   <img :src="avatarSrc(result.writer.picture)">
@@ -88,7 +88,7 @@
       <h5 class="ui segment">
         <i class="blue search icon"></i>
         {{$t('search.gallery.results', {n: searchResult.galleryResult.totalCount})}}
-        <router-link v-if="searchResult.galleryResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'GA'}}" class="pull-right">
+        <router-link v-if="searchResult.galleryResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'GALLERY'}}" class="pull-right">
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
@@ -141,7 +141,7 @@
       $.getJSON('/api/board/free/categories').then(data => data, (response, result) => result),
       $.getJSON('/api/board/football/categories').then(data => data, (response, result) => result),
       $.getJSON('/api/board/developer/categories').then(data => data, (response, result) => result),
-      $.getJSON('/api/search/popular/words?size=20').then(data => data, (response, result) => result)
+      $.getJSON('/api/search/popular-words?size=20').then(data => data, (response, result) => result)
     ];
 
     if (query.q) {
@@ -220,6 +220,11 @@
         if (!id) {
           return '';
         }
+
+        if (id === 'DEVELOPER') {
+          id = 'swdev';
+        }
+
         return this.$t(`board.name.${id.toLowerCase()}`);
       }
     }

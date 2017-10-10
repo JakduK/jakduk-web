@@ -62,7 +62,7 @@ module.exports = function (ApiClient) {
   };
 
   ApiClient.prototype.getPopularSearchWords = function (query) {
-    return this.requestGetJson(`${this.serverUrl}/search/popular/words`, {
+    return this.requestGetJson(`${this.serverUrl}/search/popular-words`, {
       query: query
     });
   };

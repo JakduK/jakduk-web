@@ -3,8 +3,8 @@ export default {
     boardCategories: {},
     popularSearchWords: [],
     searchResult: {
-      postResult: {
-        posts: []
+      articleResult: {
+        articles: []
       },
       commentResult: {
         comments: []
