@@ -9,7 +9,7 @@
 
       <div v-if="board" class="ui segments">
         <!--분류-->
-        <div class="ui segment">
+        <div class="ui segment clearfix" :class="$route.params.name === 'free' ? 'no-categories' : ''">
           <select id="categories" class="ui dropdown">
             <option v-for="category in categories.list" :value="category.code" :key="category.code">
               <i v-if="category.icon" :class="[category.icon, category.color]"></i> {{category.name}}
@@ -76,6 +76,12 @@
     </div>
   </div>
 </template>
+
+<style>
+  .no-categories > .dropdown {
+    display: none !important;
+  }
+</style>
 
 <script>
   import $ from 'jquery';
