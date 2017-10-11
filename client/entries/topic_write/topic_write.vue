@@ -94,7 +94,9 @@
 
       $.when(this.defers.editor, this.defers.data).then(() => {
         if (this.editMode) {
-          $(this.$el).find('#categories').dropdown('set selected', this.article.category.code);
+          if (this.article.category) {
+            $(this.$el).find('#categories').dropdown('set selected', this.article.category.code);
+          }
           this.subject = this.article.subject;
           this.imageList = (this.article.galleries || []).map(image => {
             image.name = image.name || image.fileName;
