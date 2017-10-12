@@ -442,7 +442,7 @@
           if (response.status === 400) {
             this.$store.dispatch('globalMessage', {
               level: 'warn',
-              message: this.$t('board.msg.you.are.writer')
+              message: response.responseJSON.message
             });
             return true;
           }
@@ -472,7 +472,7 @@
           if (response.status === 400) {
             this.$store.dispatch('globalMessage', {
               level: 'warn',
-              message: this.$t('board.msg.you.are.writer')
+              message: response.responseJSON.message
             });
             return true;
           }
