@@ -150,7 +150,7 @@
           <p v-if="isEmptyArray(comments)">
             <i class="icon idea"></i>{{$t('board.msg.there.is.no.new.comment')}}
           </p>
-          <comment-list-item v-for="comment in comments" :item="comment" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'LIKE')" @on-dislike="likeOrDislikeComment(comment, 'DISLIKE')" @on-delete="deleteComment"></comment-list-item>
+          <comment-list-item v-for="comment in comments" :item="comment" :key="comment.id" @on-like="likeOrDislikeComment(comment, 'like')" @on-dislike="likeOrDislikeComment(comment, 'dislike')" @on-delete="deleteComment"></comment-list-item>
         </div>
 
         <button @click="moreComments" :class="{loading: isCommentLoading}" type="button" class="fluid ui button">
