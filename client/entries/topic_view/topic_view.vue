@@ -68,10 +68,10 @@
               <button class="ui basic label nomargin">
                 <i class="eye grey icon"></i>{{article.views}}
               </button>
-              <button @click="likeOrDislike('LIKE')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
+              <button @click="likeOrDislike('like')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
                 <i :style="{'font-weight': article.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: article.myFeeling !== 'LIKE'}" class="smile icon"></i>{{article.numberOfLike}}
               </button>
-              <button @click="likeOrDislike('DISLIKE')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
+              <button @click="likeOrDislike('dislike')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
                 <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{article.numberOfDislike}}
               </button>
             </div>
@@ -93,10 +93,10 @@
 
       <!--하단 좋아요-->
       <div class="ui center aligned segment">
-        <button @click="likeOrDislike('LIKE')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
+        <button @click="likeOrDislike('like')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
           <i :style="{'font-weight': article.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: article.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{article.numberOfLike}}</strong>
         </button>
-        <button @click="likeOrDislike('DISLIKE')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
+        <button @click="likeOrDislike('dislike')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
           <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{article.numberOfDislike}}</strong>
         </button>
       </div>
