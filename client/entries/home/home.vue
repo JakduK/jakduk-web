@@ -79,11 +79,12 @@
           <div v-if="latest" class="swiper-container text-overflow">
             <div class="swiper-wrapper">
               <div v-for="image in latest.galleries" :key="image.id" data-swiper-autoplay="3000" class="swiper-slide pull-left">
-                <router-link :to="{name: 'gallery.view', params: {id: image.id}}" class="ui fluid rounded bordered image">
+                <router-link :to="{name: 'gallery.view', params: {id: image.id}}" class="ui rounded bordered image">
                   <img :data-src="image.thumbnailUrl" class="swiper-lazy">
                   <div class="ui divider"></div>
-                  <div v-if="image.writer" class="">{{image.writer.username}}
-                    <span class="nowrap">&middot; <i class="eye icon"></i>{{image.views}}</span>
+                  <div v-if="image.writer">
+                    <img :src="avatarSrc(image.writer.picture)" class="ui image avatar nomargin">
+                    &nbsp;{{image.writer.username}}
                   </div>
                 </router-link>
               </div>
