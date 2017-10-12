@@ -31,33 +31,11 @@
               <div class="detail">{{image.id | IdToRegDate('LL')}}</div>
             </div>
           </div>
-          <div class="right aligned sixteen wide mobile five wide tablet five wide computer wide column">
-            <div class="ui labels">
-              <button class="ui basic label nomargin">
-                <i class="eye grey icon"></i>{{image.views}}
-              </button>
-              <button @click="likeOrDislike('LIKE')" :class="image.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
-                <i :style="{'font-weight': image.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: image.myFeeling !== 'LIKE'}" class="smile icon"></i>{{image.numberOfLike}}
-              </button>
-              <button @click="likeOrDislike('DISLIKE')" :class="image.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
-                <i :style="{'font-weight': image.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: image.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{image.numberOfDislike}}
-              </button>
-            </div>
-          </div>
         </div>
       </div>
       <!--본문 콘텐트-->
       <div class="ui blue segment text-center">
         <img :src="imageSrc(image.id)">
-      </div>
-      <!--하단 좋아요-->
-      <div class="ui center aligned segment">
-        <button @click="likeOrDislike('LIKE')" :class="image.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
-          <i :style="{'font-weight': image.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: image.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{image.numberOfLike}}</strong>
-        </button>
-        <button @click="likeOrDislike('DISLIKE')" :class="image.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
-          <i :style="{'font-weight': image.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: image.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{image.numberOfDislike}}</strong>
-        </button>
       </div>
     </div>
     
@@ -207,19 +185,6 @@
             id: this.nextImage.id
           }
         });
-      },
-      likeOrDislike(what) {
-        $.post(`/api/gallery/${this.image.id}/${what}`).then(data => {
-          this.$store.commit('feeling', data);
-        }, ErrorDialog(response => {
-          if (response.status === 400) {
-            this.$store.dispatch('globalMessage', {
-              level: 'warn',
-              message: this.$t('board.msg.you.are.writer')
-            });
-            return true;
-          }
-        }));
       },
       copyLinkIntoClipboard() {
         window.prompt(this.$t('common.url.of.name', {
