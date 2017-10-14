@@ -18,7 +18,7 @@
           <h5 class="ui segment"><i class="blue feed icon"></i> {{$t('home.posts.latest')}}</h5>
           <div class="ui blue segment">
             <div class="ui divided items">
-              <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in latest.articles" :key="post.seq" class="item">
+              <router-link :to="{name: 'board.view', params: {name: post.board.toLowerCase(), seq: post.seq}}" v-for="post in latest.articles" :key="post.seq" class="item">
                 <div class="content">
                   <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
                     <div v-if="!isEmptyArray(post.galleries)" class="right floated content">

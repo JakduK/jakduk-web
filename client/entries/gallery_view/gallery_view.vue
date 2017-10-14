@@ -57,7 +57,7 @@
       <h4 class="ui segment"><i class="blue linkify icon"></i> {{$t('gallery.linked.posts')}}</h4>
       <div class="ui blue segment">
         <div class="ui divided selection relaxed list">
-          <router-link :to="{name: 'board.view', params: {name: 'free', seq: post.seq}}" v-for="post in linkedPosts" :key="post.id" class="item">
+          <router-link :to="{name: 'board.view', params: {name: post.board.toLowerCase(), seq: post.seq}}" v-for="post in linkedPosts" :key="post.id" class="item">
             <div class="content">
               <div class="header">{{post.subject}}</div>
               <div class="extra">
