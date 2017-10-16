@@ -19,7 +19,7 @@
 
       <div class="extra">
         <div class="ui small labels nomargin">
-          <div v-if="!isNotice" :class="category ? category.color : ''" class="ui label bottom">
+          <div v-if="!isNotice" :class="category ? category.color : 'grey'" class="ui label bottom">
             {{category ? category.name : item.seq}}<div v-if="category" class="detail">{{item.seq}}</div>
           </div>
           <div v-if="item.writer" :class="{image: item.writer.picture}" class="ui image basic label bottom">

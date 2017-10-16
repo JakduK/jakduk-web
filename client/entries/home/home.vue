@@ -18,25 +18,28 @@
           <h5 class="ui segment"><i class="blue feed icon"></i> {{$t('home.posts.latest')}}</h5>
           <div class="ui blue segment">
             <div class="ui divided items">
-              <router-link :to="{name: 'board.view', params: {name: post.board.toLowerCase(), seq: post.seq}}" v-for="post in latest.articles" :key="post.seq" class="item">
+              <router-link :to="{name: 'board.view', params: {name: article.board.toLowerCase(), seq: article.seq}}" v-for="article in latest.articles" :key="article.seq" class="item">
                 <div class="content">
-                  <div :class="{'ui tiny disabled': post.status.delete}"  class="header">
-                    <div v-if="!isEmptyArray(post.galleries)" class="right floated content">
+                  <div :class="{'ui tiny disabled': article.status.delete}"  class="header">
+                    <div v-if="!isEmptyArray(article.galleries)" class="right floated content">
                       <div class="ui rounded bordered image thumbnail">
-                        <img :src="post.galleries[0].thumbnailUrl">
+                        <img :src="article.galleries[0].thumbnailUrl">
                       </div>
                     </div>
                     <div class="break-all">
-                      {{post.status.delete ? $t('board.msg.deleted') : post.subject}}
+                      <div :class="article.category ? categories[article.board][article.category].color : 'grey'" class="ui label bottom">
+                        {{convertBoardName(article.board)}}<div v-if="article.category" class="detail">{{categories[article.board][article.category].name}}</div>
+                      </div>
+                      <span class="vertical-align-middle">{{article.status.delete ? $t('board.msg.deleted') : article.subject}}</span>
                     </div>
                   </div>
-                  <div v-if="post.writer" class="extra">
-                    <p>{{post.shortContent}}...</p>
+                  <div v-if="article.writer" class="extra">
+                    <p>{{article.shortContent}}...</p>
                     <p>
                       <span class="ui avatar bordered image">
-                        <img :src="avatarSrc(post.writer.picture)">
+                        <img :src="avatarSrc(article.writer.picture)">
                       </span>
-                      <strong>{{post.writer.username}}</strong><span class="nowrap"> &middot; {{post.id | IdToRegDate('LL')}}</span>
+                      <strong>{{article.writer.username}}</strong><span class="nowrap"> &middot; {{article.id | IdToRegDate('LL')}}</span>
                     </p>
                   </div>
                 </div>
@@ -152,6 +155,8 @@
   import Truncate from 'lodash/fp/truncate';
   import IdToRegDate from '../../filters/id_to_regdate';
   import IndexedColor from '../../filters/indexed_color';
+  import BoardName from '../../filters/board_name';
+  import createCategoriesVM from '../../filters/categories_view_model';
 
   function reduce() {
     return Array.prototype.reduce.call(arguments[0], arguments[1], arguments[2]);
@@ -161,10 +166,13 @@
     const promises = $.when(
       $.getJSON('/api/home/latest').then(data => data, (response, result) => result),
       $.getJSON('/api/search/popular-words?size=10').then(data => data, (response, result) => result),
-      $.getJSON('/api/home/encyclopedia').then(data => data, (response, result) => result)
+      $.getJSON('/api/home/encyclopedia').then(data => data, (response, result) => result),
+      $.getJSON('/api/board/free/categories').then(data => data, (response, result) => result),
+      $.getJSON('/api/board/football/categories').then(data => data, (response, result) => result),
+      $.getJSON('/api/board/developer/categories').then(data => data, (response, result) => result)
     );
 
-    promises.always((latest, popularSearchWords, encyclopedia) => {
+    promises.always((latest, popularSearchWords, encyclopedia, freeCategories, footballCategories, developerCategories) => {
       if (latest !== 'error') {
         let $news = $(`<div>${latest.homeDescription.desc}</div>`).find('>ul').children();
         latest.homeDescription.desc = reduce($news, (list, elem) => {
@@ -176,6 +184,11 @@
       this.latest = latest === 'error' ? undefined : latest;
       this.popularSearchWords = popularSearchWords === 'error' ? undefined : popularSearchWords.popularSearchWords;
       this.encyclopedia = encyclopedia === 'error' ? undefined : encyclopedia;
+      this.categories = {
+        FREE: createCategoriesVM.call(this, freeCategories.categories, false),
+        FOOTBALL: createCategoriesVM.call(this, footballCategories.categories, false),
+        DEVELOPER: createCategoriesVM.call(this, developerCategories.categories, false)
+      };
       this.$store.commit('load', false);
 
       this.$nextTick(() => {
@@ -206,7 +219,8 @@
           homeDescription: {}
         },
         popularSearchWords: [],
-        encyclopedia: {}
+        encyclopedia: {},
+        categories: {}
       };
     },
     beforeRouteEnter(to, from, next) {
@@ -224,7 +238,10 @@
       }
     },
     methods: {
-      indexedColor: IndexedColor
+      indexedColor: IndexedColor,
+      convertBoardName(id) {
+        return this.$t(BoardName(id));
+      }
     },
     filters: {
       IdToRegDate: IdToRegDate

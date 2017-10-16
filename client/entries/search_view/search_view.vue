@@ -33,7 +33,7 @@
               <div v-if="result.highlight.content" v-html="result.highlight.content[0]" class="description"></div>
               <div class="extra">
                 <div class="ui small labels">
-                  <div v-if="boardCategories[result.board]" :class="[boardCategories[result.board][result.category] ? boardCategories[result.board][result.category].color : '']" class="ui label nomargin">
+                  <div :class="result.category ? boardCategories[result.board][result.category].color : 'grey'" class="ui label nomargin">
                     {{convertBoardName(result.board)}} {{boardCategories[result.board][result.category] ? ' &middot; ' + boardCategories[result.board][result.category].name: ''}}
                     <div class="detail">{{result.seq}}</div>
                   </div>
@@ -68,8 +68,9 @@
               <div v-html="result.highlight.content[0]" class="ui header tiny"></div>
               <div v-html="result.article.subject" class="extra"></div>
               <div class="extra">
-                <div v-if="boardCategories[result.article.board] && boardCategories[result.article.board][result.article.category]" :class="[boardCategories[result.article.board][result.article.category].color]" class="ui label nomargin">
-                  {{convertBoardName(result.article.board)}} &middot; {{boardCategories[result.article.board][result.article.category].name}}
+                <div :class="result.article.category ? boardCategories[result.article.board][result.article.category].color : 'grey'" class="ui label nomargin">
+                  {{convertBoardName(result.article.board)}}
+                  <template v-if="result.article.category">&middot; {{boardCategories[result.article.board][result.article.category].name}}</template>
                   <div class="detail">{{result.article.seq}}</div>
                 </div>
                 <div class="ui small image basic label">
@@ -134,6 +135,7 @@
   import $ from 'jquery';
   import IdToRegDate from '../../filters/id_to_regdate';
   import IndexedColor from '../../filters/indexed_color';
+  import BoardName from '../../filters/board_name';
   import createCategoriesVM from '../../filters/categories_view_model';
 
   function fetch(query) {
@@ -217,15 +219,7 @@
     methods: {
       indexedColor: IndexedColor,
       convertBoardName(id) {
-        if (!id) {
-          return '';
-        }
-
-        if (id === 'DEVELOPER') {
-          id = 'swdev';
-        }
-
-        return this.$t(`board.name.${id.toLowerCase()}`);
+        return this.$t(BoardName(id));
       }
     }
   };
