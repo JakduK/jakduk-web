@@ -50,7 +50,7 @@
           <h5 class="ui segment"><i class="blue talk icon"></i> {{$t('home.comments.latest')}}</h5>
           <div class="ui blue segment">
             <div class="ui divided items">
-              <router-link :to="{name: 'board.view', params: {name: 'free', seq: comment.article.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
+              <router-link :to="{name: 'board.view', params: {name: comment.article.board.toLowerCase(), seq: comment.article.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
                 <div class="content">
                   <div class="header break-all">{{comment.content}}</div>
                   <div v-if="comment.writer" class="extra">
