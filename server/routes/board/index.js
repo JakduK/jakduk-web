@@ -50,13 +50,13 @@ module.exports.setup = function (app) {
 
       const postData = response.data;
 
-      if (req.userInfo.id !== postData.post.writer.userId) {
+      if (req.userInfo.id !== postData.article.writer.userId) {
         next(Util.makeForbidden());
         return;
       }
 
       res.locals.title = [
-        i18n.__(postData.post.subject),
+        i18n.__(postData.article.subject),
         i18n.__('board.edit'),
         i18n.__('common.jakduk')
       ];
@@ -74,11 +74,12 @@ module.exports.setup = function (app) {
         return;
       }
 
-      const postData = response.data;
+      const articleData = response.data;
+      const article = articleData.article;
 
-      if (!postData.post.status || !postData.post.status.delete) {
+      if (!article.status || !article.status.delete) {
         _.merge(res.locals.meta, {
-          og: Util.ogFromPost(postData.post, 120)
+          og: Util.ogFromPost(article, 120)
         });
       }
 
@@ -87,7 +88,7 @@ module.exports.setup = function (app) {
       }
 
       res.locals.title = [
-        (postData.post.status && postData.post.status.delete) ? i18n.__('board.msg.deleted') : postData.post.subject,
+        (article.status && article.status.delete) ? i18n.__('board.msg.deleted') : article.subject,
         i18n.__('board.name.free'),
         i18n.__('common.jakduk')
       ];
