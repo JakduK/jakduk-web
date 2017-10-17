@@ -324,12 +324,22 @@
     beforeRouteEnter(to, from, next) {
       fetch(to.params).then(({categories, article, comments}) => {
         next(_this => {
-          _this.setDocumentTitle(
-            (article.article.status && article.article.status.delete) ? _this.$t('board.msg.deleted') : article.article.subject,
-            _this.$t('board.name.free'),
-            _this.$t('common.jakduk')
-          );
-          apply.call(_this, categories, article, comments);
+          if (article.article.board.toLowerCase() !== to.params.name) {
+            _this.$router.replace({
+              name: 'board.view',
+              params: {
+                name: article.article.board.toLowerCase(),
+                seq: article.article.seq
+              }
+            });
+          } else {
+            _this.setDocumentTitle(
+              (article.article.status && article.article.status.delete) ? _this.$t('board.msg.deleted') : article.article.subject,
+              _this.$t('board.name.free'),
+              _this.$t('common.jakduk')
+            );
+            apply.call(_this, categories, article, comments);
+          }
         });
       }, response => {
         next(_this => {

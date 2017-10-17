@@ -77,6 +77,11 @@ module.exports.setup = function (app) {
       const articleData = response.data;
       const article = articleData.article;
 
+      if (req.params.board !== article.board.toLowerCase()) {
+        res.redirect(`/board/${article.board.toLowerCase()}/${article.seq}`);
+        return;
+      }
+
       if (!article.status || !article.status.delete) {
         _.merge(res.locals.meta, {
           og: Util.ogFromPost(article, 120)
