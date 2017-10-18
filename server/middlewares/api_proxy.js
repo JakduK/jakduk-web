@@ -50,7 +50,7 @@ function boardCommentHook(resData, req) {
 
 const ApiHooks = [
   ApiHook(/^\/board\/(?:[a-z]+?)\/(?:\d+?)\/comment$/, boardCommentHook),
-  ApiHook(/^\/board\/(?:[a-z]+?)\/(?:\d+?)$/, boardHook)
+  ApiHook(/^\/board\/(?:[a-z]+?)$/, boardHook)
 ];
 
 function ApiHook(testRegexp, runFunc) {
