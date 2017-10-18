@@ -19,7 +19,7 @@
       <div v-if="imageList.length" class="ui divided items">
         <div v-for="image in imageList" :key="image.id" :data-image-id="image.id" class="item">
           <div class="ui small image">
-            <img :src="image.imageUrl">
+            <img :src="image.thumbnailUrl">
           </div>
           <div class="content">
             <div class="ui header tiny break-all">
