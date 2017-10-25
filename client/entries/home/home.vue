@@ -166,10 +166,10 @@
     const promises = $.when(
       $.getJSON('/api/home/latest').then(data => data, (response, result) => result),
       $.getJSON('/api/search/popular-words?size=10').then(data => data, (response, result) => result),
-      $.getJSON('/api/home/encyclopedia').then(data => data, (response, result) => result),
-      $.getJSON('/api/board/free/categories').then(data => data, (response, result) => result),
-      $.getJSON('/api/board/football/categories').then(data => data, (response, result) => result),
-      $.getJSON('/api/board/developer/categories').then(data => data, (response, result) => result)
+      $.getJSON(`/api/home/encyclopedia?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/free/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/football/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/developer/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result)
     );
 
     promises.always((latest, popularSearchWords, encyclopedia, freeCategories, footballCategories, developerCategories) => {

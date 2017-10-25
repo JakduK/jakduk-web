@@ -260,7 +260,7 @@
   let commentEdiotImageList = [];
 
   function fetch({name, seq}) {
-    return $.getJSON(`/api/board/${name}/categories?lang=${window.ENV.locale.split('-')[0]}`).then(data => {
+    return $.getJSON(`/api/board/${name}/categories?lang=${window.ENV.shortLocale}`).then(data => {
       return data;
     }, response => response).then(categories => {
       return $.getJSON(`/api/board/${name}/${seq}`).then(data => {

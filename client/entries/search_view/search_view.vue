@@ -140,9 +140,9 @@
 
   function fetch(query) {
     const promises = [
-      $.getJSON('/api/board/free/categories').then(data => data, (response, result) => result),
-      $.getJSON('/api/board/football/categories').then(data => data, (response, result) => result),
-      $.getJSON('/api/board/developer/categories').then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/free/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/football/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result),
+      $.getJSON(`/api/board/developer/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result),
       $.getJSON('/api/search/popular-words?size=20').then(data => data, (response, result) => result)
     ];
 

@@ -115,7 +115,7 @@
     },
     beforeRouteEnter(to, from, next) {
       const editMode = to.meta.mode === 'edit';
-      let promises = [$.getJSON(`/api/board/${to.params.name}/categories?lang=${window.ENV.locale.split('-')[0]}`).then(data => data, (response, result) => result)];
+      let promises = [$.getJSON(`/api/board/${to.params.name}/categories?lang=${window.ENV.shortLocale}`).then(data => data, (response, result) => result)];
 
       if (editMode) {
         promises.push($.getJSON(`/api/board/${to.params.name}/${to.params.seq}`).then(data => data, (response, result) => result));
