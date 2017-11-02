@@ -2,7 +2,9 @@ const querystring = require('querystring');
 
 module.exports = function (ApiClient) {
   ApiClient.prototype.join = function (data) {
-    return this.requestPostJson(`${this.serverUrl}/user`, data);
+    return this.requestPostJson(`${this.serverUrl}/user`, {
+      data
+    });
   };
 
   ApiClient.prototype.joinWith = function (data) {
