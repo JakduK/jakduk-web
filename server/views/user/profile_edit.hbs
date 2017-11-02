@@ -201,7 +201,7 @@
           if ($scope.userProfileForm.username.$valid) {
             if ($scope.usernameConn === "none") {
               $scope.usernameConn = "connecting";
-              $http.get('{{apiServerUrl}}/user/exist/username/edit?username=' + encodeURIComponent($scope.username)).then(function () {
+              $http.get('{{apiServerUrl}}/user/exist/username?username=' + encodeURIComponent($scope.username)).then(function () {
                 $scope.usernameStatus = 'OK';
                 $scope.usernameAlert = {
                   classType: "text-success",

@@ -40,8 +40,8 @@ module.exports = function (ApiClient) {
   };
 
   ApiClient.prototype.findPassword = function (email, callbackUrl) {
-    return this.requestPostJson(`${this.serverUrl}/password/find`, {
-      query: {
+    return this.requestPostJson(`${this.serverUrl}/user/password/find`, {
+      data: {
         email: email,
         callbackUrl: callbackUrl
       }
@@ -49,12 +49,12 @@ module.exports = function (ApiClient) {
   };
 
   ApiClient.prototype.checkResetPasswordCode = function (code) {
-    return this.requestGetJson(`${this.serverUrl}/password/reset/${querystring.escape(code)}`);
+    return this.requestGetJson(`${this.serverUrl}/user/password/reset/${querystring.escape(code)}`);
   };
 
   ApiClient.prototype.resetPassword = function (code, newPwd) {
-    return this.requestPostJson(`${this.serverUrl}/password/reset`, {
-      query: {
+    return this.requestPostJson(`${this.serverUrl}/user/password/reset`, {
+      data: {
         password: newPwd,
         code: code
       }
