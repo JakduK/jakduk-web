@@ -72,6 +72,13 @@ module.exports = function (path, dest) {
     onProxyRes(proxyRes, req) {
       const urlPath = /\/$/.test(req.path) ? req.path.replace(/\/$/, '') : req.path;
 
+      if (proxyRes.statusCode === 301) {
+        let orgLocation = proxyRes.headers['location'];
+        if (orgLocation && orgLocation.includes('/api/board')) {
+          proxyRes.headers['location'] = `${config.origin}${orgLocation.substring(orgLocation.indexOf('/board'))}`;
+        }
+      }
+
       if (proxyRes.statusCode === 200 && req.method === 'POST') {
         _.each(ApiHooks, hook => {
           if (hook.test(urlPath)) {
