@@ -55,7 +55,8 @@
             <div class="ui divided items">
               <router-link :to="{name: 'board.view', params: {name: comment.article.board.toLowerCase(), seq: comment.article.seq}}" v-for="comment in latest.comments" :key="comment.id" class="item">
                 <div class="content">
-                  <div class="header break-all">{{comment.content}}</div>
+                  <div class="ui header small break-all">{{comment.content}}</div>
+                  <div class="extra"><i class="caret right icon"></i>{{comment.article.subject}}</div>
                   <div v-if="comment.writer" class="extra">
                     <span class="ui avatar bordered image">
                       <img :src="avatarSrc(comment.writer.picture)">
