@@ -15,7 +15,7 @@
         </span>
       </div>
 
-      <div v-if="!isNotice" class="extra">{{item.shortContent}}...</div>
+      <div v-if="!isNotice" class="extra">{{truncate(item.shortContent)}}</div>
 
       <div class="extra">
         <div class="ui small labels nomargin">
@@ -62,11 +62,15 @@
 
 <script>
   import IdToRegDate from '../../filters/id_to_regdate';
+  import Truncate from 'lodash/fp/truncate';
 
   export default {
     props: ['category', 'item', 'isNotice'],
     filters: {
       IdToRegDate: IdToRegDate
+    },
+    methods: {
+      truncate: Truncate({length: 99})
     }
   }
 </script>
