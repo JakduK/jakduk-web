@@ -34,7 +34,7 @@
                     </div>
                   </div>
                   <div v-if="article.writer" class="extra">
-                    <p>{{article.shortContent}}...</p>
+                    <p>{{truncate(article.shortContent)}}</p>
                     <p>
                       <span class="ui avatar bordered image">
                         <img :src="avatarSrc(article.writer.picture)">
@@ -242,7 +242,8 @@
       indexedColor: IndexedColor,
       convertBoardName(id) {
         return this.$t(BoardName(id));
-      }
+      },
+      truncate: Truncate({length: 99})
     },
     filters: {
       IdToRegDate: IdToRegDate
