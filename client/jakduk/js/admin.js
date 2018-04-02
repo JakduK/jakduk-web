@@ -384,10 +384,10 @@ define([
 
       function getActiveLeage(id) {
         switch (id) {
-          case 'KLCL':
-            return 'K League Classic';
-          case 'KLCH':
-            return 'K League Challenge';
+          case 'KL1':
+            return 'K League 1';
+          case 'KL2':
+            return 'K League 2';
           case 'KL':
             return 'K League';
           default:
