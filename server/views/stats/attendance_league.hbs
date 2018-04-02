@@ -65,17 +65,17 @@
       angular.module("jakdukApp", [
         "highcharts-ng", "ui.bootstrap", 'jakdukCommon'
       ]).controller('statsCtrl', ['$scope', '$http', '$window', '$location', function ($scope, $http, $window, $location) {
-        var KLCLId = 'KLCL';
-        var KLCHId = 'KLCH';
-        var KLCLname = '{{TRANSLATION "stats.attendance.filter.league.classic"}}';
-        var KLCHname = '{{TRANSLATION "stats.attendance.filter.league.challenge"}}';
+        var KL1Id = 'KL1';
+        var KL2Id = 'KL2';
+        var KL1name = '{{TRANSLATION "stats.attendance.filter.league.1"}}';
+        var KL2name = '{{TRANSLATION "stats.attendance.filter.league.2"}}';
         var league = $location.search().league;
 
-        $scope.leagues = {'KLCL': {name: KLCLname}, 'KLCH': {name: KLCHname}};
+        $scope.leagues = {'KL1': {name: KL1name}, 'KL2': {name: KL2name}};
         if (Object.keys($scope.leagues).indexOf(league) >= 0) {
           $scope.leagueId = league;
         } else {
-          $scope.leagueId = KLCLId;
+          $scope.leagueId = KL1Id;
         }
 
         $scope.attendancesConn = "none";
@@ -265,10 +265,10 @@
           $scope.totalSum = totalSum;
           $scope.gamesSum = gamesSum;
 
-          if ($scope.leagueId == KLCLId) {
-            $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.classic.title"}}';
-          } else if ($scope.leagueId == KLCHId) {
-            $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.challenge.title"}}';
+          if ($scope.leagueId == KL1Id) {
+            $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.1.title"}}';
+          } else if ($scope.leagueId == KL2Id) {
+            $scope.chartConfig.title.text = '{{TRANSLATION "stats.attendance.league.2.title"}}';
           }
 
           $scope.chartConfig.options.chart.height = 300 + (attendances.length * 30);

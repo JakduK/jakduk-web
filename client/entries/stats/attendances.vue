@@ -96,8 +96,8 @@
   import {comma} from '../../filters/number_format';
 
   const KL_ID = 'KL';
-  const KLCL_ID = 'KLCL';
-  const KLCH_ID = 'KLCH';
+  const KL1_ID = 'KL1';
+  const KL2_ID = 'KL2';
 
   function getDefaultChartOptions(category = 'league', league = KL_ID) {
     if (category === 'club') {
@@ -130,12 +130,12 @@
           id: 'KL',
           name: this.$t('stats.attendance.filter.league')
         }, {
-          id: 'KLCL',
-          name: this.$t('stats.attendance.filter.league.classic'),
+          id: 'KL1',
+          name: this.$t('stats.attendance.filter.league.1'),
           disabled: true
         }, {
-          id: 'KLCH',
-          name: this.$t('stats.attendance.filter.league.challenge'),
+          id: 'KL2',
+          name: this.$t('stats.attendance.filter.league.2'),
           disabled: true
         }]
       }, {
@@ -145,11 +145,11 @@
           id: 'KL',
           name: this.$t('stats.attendance.filter.league')
         }, {
-          id: 'KLCL',
-          name: this.$t('stats.attendance.filter.league.classic')
+          id: 'KL1',
+          name: this.$t('stats.attendance.filter.league.1')
         }, {
-          id: 'KLCH',
-          name: this.$t('stats.attendance.filter.league.challenge')
+          id: 'KL2',
+          name: this.$t('stats.attendance.filter.league.2')
         }]
       }, {
         id: 2014,
@@ -158,11 +158,11 @@
           id: 'KL',
           name: this.$t('stats.attendance.filter.league')
         }, {
-          id: 'KLCL',
-          name: this.$t('stats.attendance.filter.league.classic')
+          id: 'KL1',
+          name: this.$t('stats.attendance.filter.league.1')
         }, {
-          id: 'KLCH',
-          name: this.$t('stats.attendance.filter.league.challenge')
+          id: 'KL2',
+          name: this.$t('stats.attendance.filter.league.2')
         }]
       }, {
         id: 2015,
@@ -171,11 +171,11 @@
           id: 'KL',
           name: this.$t('stats.attendance.filter.league')
         }, {
-          id: 'KLCL',
-          name: this.$t('stats.attendance.filter.league.classic')
+          id: 'KL1',
+          name: this.$t('stats.attendance.filter.league.1')
         }, {
-          id: 'KLCH',
-          name: this.$t('stats.attendance.filter.league.challenge')
+          id: 'KL2',
+          name: this.$t('stats.attendance.filter.league.2')
         }]
       }, {
         id: 2016,
@@ -184,20 +184,33 @@
           id: 'KL',
           name: this.$t('stats.attendance.filter.league')
         }, {
-          id: 'KLCL',
-          name: this.$t('stats.attendance.filter.league.classic')
+          id: 'KL1',
+          name: this.$t('stats.attendance.filter.league.1')
         }, {
-          id: 'KLCH',
-          name: this.$t('stats.attendance.filter.league.challenge')
+          id: 'KL2',
+          name: this.$t('stats.attendance.filter.league.2')
         }]
+      }, {
+          id: 2017,
+          name: 2017,
+          sub: [{
+              id: 'KL',
+              name: this.$t('stats.attendance.filter.league')
+          }, {
+              id: 'KL1',
+              name: this.$t('stats.attendance.filter.league.1')
+          }, {
+              id: 'KL2',
+              name: this.$t('stats.attendance.filter.league.2')
+          }]
       }];
     } else {
       return [{
-        id: 'KLCL',
-        name: this.$t('stats.attendance.filter.league.classic')
+        id: 'KL1',
+        name: this.$t('stats.attendance.filter.league.1')
       }, {
-        id: 'KLCH',
-        name: this.$t('stats.attendance.filter.league.challenge')
+        id: 'KL2',
+        name: this.$t('stats.attendance.filter.league.2')
       }];
     }
   }
@@ -205,10 +218,10 @@
   function getDefaultLeagueChartOptions(league) {
     let title;
 
-    if (league === KLCH_ID) {
-      title = this.$t('stats.attendance.league.challenge.title');
+    if (league === KL2_ID) {
+      title = this.$t('stats.attendance.league.2.title');
     } else {
-      title = this.$t('stats.attendance.league.classic.title');
+      title = this.$t('stats.attendance.league.1.title');
     }
 
     return {
@@ -420,7 +433,7 @@
     }, {
       name: `${this.$t('stats.attendance.average')}`,
       yAxis: 1,
-      type: 'column',
+      type: 'spline',
       animation: true,
       data: [],
       dataLabels: {
@@ -463,6 +476,7 @@
     }, {
       name: this.$t('stats.attendance.average'),
       yAxis: 1,
+      type: 'spline',
       animation: true,
       data: [],
       dataLabels: {
@@ -621,7 +635,7 @@
       });
     } else {
       promise = $.getJSON(`/api/stats/league/attendances`, {
-        competitionCode: league || KLCL_ID,
+        competitionCode: league || KL1_ID,
         lang: this.$lang.replace('-', '_')
       }).then(data => {
         let totalAttendees = 0;
