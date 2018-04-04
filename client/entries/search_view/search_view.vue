@@ -11,7 +11,7 @@
       <h5 class="ui segment">
         <i class="blue search icon"></i>
         {{$t('search.post.results', {n: searchResult.articleResult.totalCount})}}
-        <router-link v-if="searchResult.articleResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'ARTICLE'}}" class="pull-right">
+        <router-link v-if="searchResult.articleResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'ARTICLE', from: page, size: pageSize}}" class="pull-right">
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
@@ -54,7 +54,7 @@
       <h5 class="ui segment">
         <i class="blue search icon"></i>
         {{$t('search.comment.results', {n: searchResult.commentResult.totalCount})}}
-        <router-link v-if="searchResult.commentResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'COMMENT'}}" class="pull-right">
+        <router-link v-if="searchResult.commentResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'COMMENT', from: page, size: pageSize}}" class="pull-right">
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
@@ -89,7 +89,7 @@
       <h5 class="ui segment">
         <i class="blue search icon"></i>
         {{$t('search.gallery.results', {n: searchResult.galleryResult.totalCount})}}
-        <router-link v-if="searchResult.galleryResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'GALLERY'}}" class="pull-right">
+        <router-link v-if="searchResult.galleryResult.totalCount" :to="{name: 'search', query: {q: $route.query.q, w: 'GALLERY', from: page, size: pageSize}}" class="pull-right">
           {{$t('common.button.more')}} <i class="chevron right icon"></i>
         </router-link>
       </h5>
@@ -127,6 +127,14 @@
 
   .ui.items .item .header {
     display: block;
+  }
+</style>
+<style>
+  .ui.items .item .header em,
+  .ui.items .item .description em {
+    font-style: normal;
+    font-weight: bold;
+    background: yellow;
   }
 </style>
 
@@ -187,6 +195,12 @@
   }
 
   export default {
+    data() {
+      return {
+        page: 0,
+        pageSize: 10
+      };
+    },
     beforeRouteEnter(to, from, next) {
       fetch(to.query).then(function () {
         const _arguments = arguments;
@@ -202,6 +216,7 @@
         const _arguments = arguments;
         _this.setDocumentTitle(_this.$t('search'), _this.$t('common.jakduk'));
         apply.apply(_this, _arguments);
+        _this.page = to.query.w.split(';').length > 1 ? 0 : _this.page + _this.pageSize;
         next();
       });
     },
