@@ -74,6 +74,8 @@ const defaultConfig = {
 
   slack: {},
 
+  telegram: {},
+
   gaAccount: ''
 };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require('debug')('jakduk:slack');
+var debug = require('debug')('jakduk-web:slack');
 var restler = require('restler');
 var clor = require('clor');
 

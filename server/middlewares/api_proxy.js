@@ -4,7 +4,7 @@ const _ = require('lodash');
 const ApiClient = require('../middlewares/api_client').ApiClient;
 const config = require('../config/environment');
 const Util = require('../helpers/jakduk_util');
-const slack = require('../helpers/slack_notifier')(config.slack);
+const telegram = require('../helpers/telegram_notifier')(config.telegram);
 
 function boardHook(resData, req) {
   new ApiClient(
@@ -12,7 +12,7 @@ function boardHook(resData, req) {
     config.internalApiServerUrl
   ).getPost(resData.board, resData.seq).then(response => {
     const og = Util.ogFromPost(response.data.article, 200);
-    slack({
+    telegram({
       author: og.author,
       subject: og.title,
       link: og.link,
@@ -38,7 +38,7 @@ function boardCommentHook(resData, req) {
       board: resData.article.board,
       content: resData.content
     }, 200);
-    slack({
+    telegram({
       author: comment.author,
       subject: post.title,
       link: post.link,
