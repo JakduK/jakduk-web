@@ -43,6 +43,8 @@ function boardCommentHook(resData, req) {
       subject: post.title,
       link: post.link,
       text: comment.description,
+      video: comment.video,
+      videoProvider: comment.videoProvider,
       isPost: false
     });
   });

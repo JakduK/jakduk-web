@@ -7,10 +7,16 @@ module.exports = function (options) {
   return function (message) {
     const content = [
       `🔔 <strong>New ${message.isPost ? 'Post' : 'Comment'}!</strong> - by ${message.author}`,
-      `<a href="${message.link}">${message.link}</a>`,
-      '',
-      `${message.text}`
+      ''
     ];
+
+    content.push(message.text, '', `<strong>${message.subject}</strong>`);
+
+    if (message.video) {
+      content.push(`<a href="${message.video}">Watch on ${message.videoProvider}</a>`);
+    }
+
+    content.push(`<a href="${message.link}">${message.link}</a>`);
 
     restler.postJson(`${apiBase}/sendMessage`, {
       chat_id: options.chat_id,
