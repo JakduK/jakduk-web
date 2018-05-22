@@ -4,7 +4,8 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "gulp": "gulp"
   },
   "dependencies": {
     "body-parser": "^1.18.1",
@@ -60,6 +61,7 @@
     "file-loader": "^0.11.2",
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
     "highcharts": "^5.0.14",
     "highlight.js": "^9.12.0",
     "jquery": "^3.2.1",
