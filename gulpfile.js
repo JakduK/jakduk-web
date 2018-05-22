@@ -43,5 +43,5 @@ gulp.task('local', (callback) => {
 });
 
 gulp.task('build', (callback) => {
-  return runSequence('clean', 'semantic-ui', 'webpack', 'local', callback);
+  return runSequence('clean', 'webpack', 'local', callback);
 });
