@@ -1,3 +1,4 @@
+const Url = require('url');
 const hpm = require('http-proxy-middleware');
 const _ = require('lodash');
 
@@ -75,9 +76,9 @@ module.exports = function (path, dest) {
       const urlPath = /\/$/.test(req.path) ? req.path.replace(/\/$/, '') : req.path;
 
       if (proxyRes.statusCode === 301) {
-        let orgLocation = proxyRes.headers['location'];
-        if (orgLocation && orgLocation.includes('/api/board')) {
-          proxyRes.headers['location'] = `${config.origin}${orgLocation.substring(orgLocation.indexOf('/board'))}`;
+        const orgLocationUrl = Url.parse(proxyRes.headers['location']);
+        if (orgLocationUrl.pathname.includes('/api/board')) {
+          proxyRes.headers['location'] = `${config.origin}${orgLocationUrl.pathname}`;
         }
       }
 
