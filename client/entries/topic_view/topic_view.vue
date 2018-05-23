@@ -349,8 +349,13 @@
     },
     beforeRouteUpdate(to, from, next) {
       fetch(to.params).then(({categories, article, comments}) => {
-        apply.call(this, categories, article, comments);
-        next();
+        const targetBoard = article.article.board.toLowerCase();
+        if (to.params.name !== targetBoard) {
+          next({path: `${to.path.replace(`/${to.params.name}/`, `/${targetBoard}/`)}`, query: to.query});
+        } else {
+          apply.call(this, categories, article, comments);
+          next();
+        }
       }, response => {
         error.call(this, response);
       });
