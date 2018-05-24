@@ -58,7 +58,13 @@
         <div class="ui tiny header">{{$t('common.jakduk.description')}}</div>
         <div class="ui horizontal small divided link list">
           <div class="item">
-            <a href="https://icons8.com/web-app/for/all/ghost">Free icons by Icons8</a>
+            <a href="https://jetbrains.com" target="_blank">
+              <img src="/assets/images/jetbrains.png" class="ui image tiny right spaced">
+              <a href="https://jetbrains.com/products.html" target="_blank">Tools supported by JetBrains</a>
+            </a>
+          </div>
+          <div class="item">
+            <a href="https://icons8.com/web-app/for/all/ghost" target="_blank">Free icons by Icons8</a>
           </div>
         </div>
       </div>
