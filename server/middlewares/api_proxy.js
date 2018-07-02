@@ -91,7 +91,8 @@ module.exports = function (path, dest) {
             });
             proxyRes.on('end', () => {
               const payload = Buffer.concat(chunks, _(chunks).reduce((len, chunk) => len + chunk.length, 0));
-              hook.run(JSON.parse(payload.toString('utf8')), req);
+              const json = JSON.parse(payload.toString('utf8'));
+              hook.run(json, req);
             });
             return false;
           }

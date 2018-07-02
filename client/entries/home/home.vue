@@ -20,7 +20,7 @@
             <div class="ui divided items">
               <router-link :to="{name: 'board.view', params: {name: article.board.toLowerCase(), seq: article.seq}}" v-for="article in latest.articles" :key="article.seq" class="item">
                 <div class="content">
-                  <div :class="{'ui tiny disabled': article.status.delete}"  class="header">
+                  <div :class="{'ui tiny disabled': article.status && article.status.delete}"  class="header">
                     <div v-if="!isEmptyArray(article.galleries)" class="right floated content">
                       <div class="ui rounded bordered image thumbnail">
                         <img :src="article.galleries[0].thumbnailUrl">
@@ -30,7 +30,7 @@
                       <div :class="article.category ? categories[article.board][article.category].color : 'grey'" class="ui label bottom">
                         {{convertBoardName(article.board)}}<div v-if="article.category" class="detail">{{categories[article.board][article.category].name}}</div>
                       </div>
-                      <span class="vertical-align-middle">{{article.status.delete ? $t('board.msg.deleted') : article.subject}}</span>
+                      <span class="vertical-align-middle">{{article.status && article.status.delete ? $t('board.msg.deleted') : article.subject}}</span>
                     </div>
                   </div>
                   <div v-if="article.writer" class="extra">
