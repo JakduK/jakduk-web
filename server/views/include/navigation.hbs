@@ -1,0 +1,102 @@
+<div class="header" ng-controller="headerCtrl">
+  <div class="container">
+
+    <!-- Logo -->
+    <a class="logo" href="/">
+      {{#if (EQ locale 'ko')}}
+        <img src="/assets/jakduk/img/logo_type_A_kr.png" alt="Logo">
+      {{else}}
+        <img src="/assets/jakduk/img/logo_type_A_en.png" alt="Logo">
+      {{/if}}
+    </a>
+    <!-- End Logo -->
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <ul class="loginbar pull-right">
+        <li class="hoverSelector">
+          <i class="fa fa-globe"></i>
+          <a>{{TRANSLATION "common.language"}}</a>
+          <ul class="languages hoverSelectorBlock">
+            <li><a href="?lang=ko">{{TRANSLATION "common.language.korean"}}</a></li>
+            <li><a href="?lang=en">{{TRANSLATION "common.language.english"}}</a></li>
+          </ul>
+        </li>
+        <li class="topbar-devider"></li>
+        {{#unless isAuthenticated}}
+          <li><a href="/login{{{redir}}}">{{TRANSLATION "common.login"}}</a></li>
+        {{/unless}}
+
+        {{#if isAuthenticated}}
+          {{#if (EQ userInfo.providerId 'JAKDUK')}}
+            <li>
+              <i class="fa fa-user"></i>
+              <a href="/user/profile">{{userInfo.username}}</a>
+            </li>
+          {{else if (OR userInfo.providerId 'FACEBOOK' 'DAUM')}}
+            <li>
+              <i class="fa fa-user"></i>
+              <a href="/user/social/profile">{{userInfo.username}}</a>
+            </li>
+          {{/if}}
+          <li class="topbar-devider"></li>
+          <li><a href="/logout">{{TRANSLATION "common.logout"}}</a></li>
+        {{/if}}
+      </ul>
+    </div>
+    <!-- End Topbar -->
+
+    <!-- Toggle get grouped for better mobile display -->
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="fa fa-bars"></span>
+    </button>
+    <!-- End Toggle -->
+  </div><!--/end container-->
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div aria-expanded="false" class="navbar-collapse mega-menu navbar-responsive-collapse collapse">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <li ng-class="{active:isActive('/home')}">
+          <a href="/home">{{TRANSLATION "common.home"}}</a>
+        </li>
+        <li ng-class="{active:isActive('/board')}">
+          <a href="/board/free">{{TRANSLATION "board"}}</a>
+        </li>
+        <li ng-class="{active:isActive('/gallery')}">
+          <a href="/gallery">{{TRANSLATION "gallery"}}</a>
+        </li>
+        <li class="dropdown" ng-class="{active:isActive('/stats')}">
+          <a href="/stats" class="dropdown-toggle" data-toggle="dropdown">{{TRANSLATION "stats"}}</a>
+          <ul class="dropdown-menu">
+            <li ng-class="{active:isActive('/stats/supporters')}">
+              <a href="/stats/supporters">{{TRANSLATION "stats.supporters"}}</a></li>
+            <li ng-class="{active:isActive('/stats/attendance')}">
+              <a href="/stats/attendance/league">{{TRANSLATION "stats.attendance"}}</a></li>
+          </ul>
+        </li>
+        <li ng-class="{active:isActive('/jakdu')}">
+          <a href="/jakdu">{{TRANSLATION "jakdu"}}</a>
+        </li>
+
+        <!-- Search Block -->
+        <li>
+          <i class="search fa fa-search search-btn" ng-click="toggleSearchOnHeader()"></i>
+          <div class="search-open">
+            <div class="input-group animated fadeInDown">
+              <input class="form-control" type="text" ng-model="searchOnHeader" ng-init="searchOnHeader=''"
+                focusy="searchFocusOnHeader"
+                ng-keypress="($event.which === 13)?btnEnterOnHeaderSearch():return"
+                placeholder="{{TRANSLATION "search.placeholder.words"}}">
+              <span class="input-group-btn">
+                <button class="btn-u" type="button" ng-click="btnEnterOnHeaderSearch()">Go</button>
+              </span>
+            </div>
+          </div>
+        </li>
+        <!-- End Search Block -->
+      </ul>
+    </div><!--/end container-->
+  </div><!--/navbar-collapse-->
+</div>

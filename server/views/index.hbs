@@ -5,27 +5,7 @@
 {{/if}}
   <head>
     <title>{{{TITLE @root.title}}}</title>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="{{@root.meta.og.description}}" name="description">
-    <meta content="{{@root.meta.og.author}}" name="author">
-
-    <meta content="{{{TITLE @root.title}}}" property="og:title">
-    <meta content="{{@root.meta.og.image}}" property="og:image">
-    <meta content="{{@root.meta.og.url}}" property="og:url">
-    <meta content="{{@root.meta.og.description}}" property="og:description">
-    <meta content="{{@root.meta.og.type}}" property="og:type">
-
-    <meta content="{{@root.meta.twitter.card}}" name="twitter:card">
-    <meta content="{{{TITLE @root.title}}}" name="twitter:title">
-    <meta content="{{@root.meta.og.description}}" name="twitter:description">
-    <meta content="{{@root.meta.og.image}}" name="twitter:image">
-
-    <meta content="{{@root.meta.facebook.appId}}" property="fb:app_id">
-
+    {{> meta}}
     <link rel="shortcut icon" href="/assets/jakduk/img/logo_16.png?{{@root.revision}}" sizes="16x16">
     <link rel="shortcut icon" href="/assets/jakduk/img/logo_32.png?{{@root.revision}}" sizes="32x32">
     <link rel="shortcut icon" href="/assets/jakduk/img/logo_196.png?{{@root.revision}}" sizes="196x196">

@@ -1,0 +1,46 @@
+<div class="wrapper">
+  <div class="container content">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="clearfix">
+          <div class="dropdown pull-right">
+            <button type="button" id="menus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" class="btn btn-link dropdown-toggle">
+              <i class="fa fa-globe"></i> {{TRANSLATION "common.language"}}
+            </button>
+            <ul aria-labelledby="menus" class="dropdown-menu">
+              <li><a href="?lang=ko-KR">{{TRANSLATION "common.language.korean"}}</a></li>
+              <li><a href="?lang=en-US">{{TRANSLATION "common.language.english"}}</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="reg-page">
+          <div class="reg-header">
+            <p>
+              <a class="logo" href="/">
+                {{#if (EQ locale 'ko-KR')}}
+                  <img src="/assets/jakduk/img/logo_type_A_kr.png" alt="Logo" class="center-block">
+                {{else}}
+                  <img src="/assets/jakduk/img/logo_type_A_en.png" alt="Logo" class="center-block">
+                {{/if}}
+              </a>
+            </p>
+            <h2 id="banner">Unauthorized</h2>
+          </div>
+          <p class="text-center message">Access denied!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{#CHUNK 'css'}}
+  <link rel="stylesheet" href="/assets/unify/assets/css/pages/page_log_reg_v1.css"/>
+{{/CHUNK}}
+{{#CHUNK 'js'}}
+  <script>
+    require(['angular', 'jakduk'], function (angular) {
+      angular.module('jakdukApp', ['jakdukCommon']);
+      angular.bootstrap(document, ['jakdukApp']);
+    });
+  </script>
+{{/CHUNK}}
