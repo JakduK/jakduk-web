@@ -156,6 +156,7 @@
         return {
           kakaoClientId: this.$store.state.kakaoClientID,
           label: this.image.name,
+          description: this.image.writer && this.image.writer.username || this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,
           thumbnailUrl: this.imageSrc(this.image.id)
         }

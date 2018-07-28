@@ -102,6 +102,7 @@
         kakaoShareOptions: {
           kakaoClientId: this.$store.getters.kakaoClientID,
           label: this.$t('stats.supporters.title'),
+          description: this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,
           thumbnailUrl: `${window.location.origin}/assets/jakduk/img/logo_256.png`
         }
