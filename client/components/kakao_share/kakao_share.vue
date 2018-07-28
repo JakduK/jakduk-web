@@ -1,6 +1,4 @@
 <script>
-  import Kakao from './kakao.sdk';
-
   export default {
     props: {
       options: {
@@ -19,32 +17,27 @@
         this.$slots.default
       );
     },
-    mounted() {
+    created() {
       if (!Kakao.Link) {
         Kakao.init(this.options.kakaoClientId);
       }
     },
-    updated() {
-      const img = document.createElement('img');
-      const options = {
-        container: this.$el,
-        label: this.options.label,
-        webLink: {
-          text: this.options.url,
-          url: this.options.url
-        },
-        image: {
-          src: this.options.thumbnailUrl
-        }
-      };
-
-      img.src = this.options.thumbnailUrl;
-      img.onload = function () {
-        options.image.width = Math.max(80, this.naturalWidth);
-        options.image.height = Math.max(80, this.naturalHeight);
-
-        Kakao.Link.createTalkLinkButton(options);
-      };
+    mounted() {
+      this.$el.addEventListener('click', () => {
+        const options = {
+          objectType: 'feed',
+          content: {
+            title: this.options.label,
+            description: this.options.description.replace(/<\/?.+?>/g, ''),
+            imageUrl: this.options.thumbnailUrl,
+            link: {
+              webUrl: this.options.url,
+              mobileWebUrl: this.options.url
+            }
+          }
+        };
+        Kakao.Link.sendDefault(options);
+      });
     },
     watch: {
       $route() {

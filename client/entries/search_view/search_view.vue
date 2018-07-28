@@ -220,9 +220,6 @@
         next();
       });
     },
-    updated() {
-      $('.ui.sticky').sticky('refresh', true);
-    },
     computed: mapState({
       popularSearchWords: state => state.searchView.popularSearchWords,
       searchResult: state => state.searchView.searchResult,

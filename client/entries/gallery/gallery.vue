@@ -74,8 +74,6 @@
       }).one('error', function () {
         $(this).off('load');
       });
-
-      $('.ui.sticky').sticky('refresh', true);
     },
     mounted() {
       this.scene = new ScrollMagic.Scene({

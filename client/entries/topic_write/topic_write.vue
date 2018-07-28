@@ -107,10 +107,6 @@
         }
 
         this.$store.commit('load', false);
-
-        this.$nextTick(() => {
-          $('.ui.sticky').sticky('refresh', true);
-        });
       });
     },
     beforeRouteEnter(to, from, next) {

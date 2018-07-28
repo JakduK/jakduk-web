@@ -35,11 +35,26 @@
   import $ from 'jquery';
 
   export default {
-    mounted: () => {
-      $('.ui.sticky').sticky({
-        offset: 70
+    data() {
+      return {
+        inited: false
+      };
+    },
+    created() {
+      this.$store.watch(state => {
+        return state.loading;
+      }, () => {
+        if (!this.inited) {
+          this.inited = true;
+          $('.ui.sticky').sticky({
+            offset: 70
+          });
+        }
+        this.$nextTick(() => {
+          $('.ui.sticky').sticky('refresh', true);
+        });
       });
     },
-    computed: mapState(['sidenav'])
+    computed: mapState(['loading'])
   };
 </script>

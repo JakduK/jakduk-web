@@ -12,19 +12,11 @@
 </template>
 
 <script>
-  import $ from 'jquery';
-
   export default {
     beforeRouteEnter(to, from, next) {
       next(_this => {
         _this.setDocumentTitle(_this.$t('about.site'), _this.$t('common.jakduk'));
       });
-    },
-    created() {
-      this.$store.commit('load', false);
-    },
-    mounted() {
-      $('.ui.sticky').sticky('refresh', true);
     }
   }
 </script>

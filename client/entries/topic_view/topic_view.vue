@@ -361,7 +361,6 @@
       });
     },
     updated() {
-      $('.ui.sticky').sticky('refresh', true);
       $(this.$el).find('img').one('load', () => {
         $('.ui.sticky').sticky('refresh', true);
       });
@@ -384,6 +383,7 @@
         return {
           kakaoClientId: this.$store.state.kakaoClientID,
           label: this.article.subject,
+          description: this.article.writer && this.article.writer.username || this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,
           thumbnailUrl: (this.article.galleries && this.article.galleries[0] && this.article.galleries[0].imageUrl) || `${window.location.origin}/assets/jakduk/img/logo_256.png`
         }

@@ -205,13 +205,7 @@
         $(this.$el).find('#categories').dropdown('set selected', category);
       });
     },
-    updated() {
-      $('.ui.sticky').sticky('refresh', true);
-    },
     methods: {
-      decorateCategory() {
-
-      },
       onPageChange(what) {
         let pageNumber = Math.max(1, parseInt(this.$route.query.page) || 1);
 
