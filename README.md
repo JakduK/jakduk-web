@@ -2,7 +2,7 @@
 
 # jakduk-web
 * Single page application
-* Stage https://staging.jakduk.com
+* Stage https://web-dev.jakduk.com
 * Production https://jakduk.com
 
 ## Client
