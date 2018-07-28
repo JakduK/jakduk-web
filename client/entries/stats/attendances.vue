@@ -800,7 +800,6 @@
       onChartCreated(chart) {
         this.chart = chart;
         this.chart.showLoading(this.$t('common.loading'));
-        $('.ui.sticky').sticky('refresh', true);
       }
     },
     components: {

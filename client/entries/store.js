@@ -19,13 +19,19 @@ export default new Vuex.Store({
     notification: {
       list: []
     },
-    loading: true
+    loading: true,
+    appLoaded: false
   },
   getters: {
     isMobile: state => state.isMobile,
-    kakaoClientID: state => state.kakaoClientID
+    kakaoClientID: state => state.kakaoClientID,
+    loading: state => state.loading,
+    appLoaded: state => state.appLoaded
   },
   mutations: {
+    appLoaded(state) {
+      state.appLoaded = true;
+    },
     load(state, b) {
       state.loading = b;
     },

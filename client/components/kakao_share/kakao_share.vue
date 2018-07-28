@@ -1,6 +1,4 @@
 <script>
-  import Kakao from './kakao.sdk';
-
   export default {
     props: {
       options: {

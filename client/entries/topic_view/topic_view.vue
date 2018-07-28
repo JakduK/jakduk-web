@@ -361,7 +361,6 @@
       });
     },
     updated() {
-      $('.ui.sticky').sticky('refresh', true);
       $(this.$el).find('img').one('load', () => {
         $('.ui.sticky').sticky('refresh', true);
       });

@@ -230,9 +230,6 @@
         fetch.call(_this);
       });
     },
-    updated() {
-      $('.ui.sticky').sticky('refresh', true);
-    },
     computed: {
       encyclopediaSummary() {
         return `${Truncate({length: 100})(this.encyclopedia.content)}`;

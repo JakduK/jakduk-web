@@ -184,19 +184,14 @@
   import SiteFooter from '../site_footer/site_footer.vue';
 
   export default {
-    data() {
-      return {
-        appLoaded: false
-      };
-    },
     computed: {
       loading() {
-        if (!this.appLoaded && !this.$store.state.loading) {
-          this.appLoaded = true;
+        if (!this.$store.state.appLoaded && this.$store.state.loading) {
+          this.$store.commit('appLoaded');
         }
         return this.$store.state.loading;
       },
-      ...mapState({globalMessage: 'globalMessage'})
+      ...mapState(['appLoaded', 'globalMessage'])
     },
     methods: {
       toastClicked(message) {
