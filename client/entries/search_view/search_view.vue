@@ -17,7 +17,7 @@
       </h5>
       <div class="ui blue segment">
         <div v-if="!searchResult.articleResult.articles.length">
-          <i class="icon idea"></i> {{$t('search.no.result')}}
+          <i class="icon info circle red"></i> {{$t('search.no.result')}}
         </div>
         <div v-else class="ui divided link items">
           <router-link :to="{name: 'board.view', params: {name: result.board.toLowerCase(), seq: result.seq}}" v-for="result in searchResult.articleResult.articles" :key="result.id" class="item">
@@ -38,8 +38,8 @@
                     <div class="detail">{{result.seq}}</div>
                   </div>
                   <div class="ui image basic label nomargin">
-                    <img :src="avatarSrc(result.writer.picture)">
-                    {{result.writer.username}}
+                    <img :src="avatarSrc(result.writer && result.writer.picture)">
+                    {{result.writer ? result.writer.username : '?'}}
                     <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
                   </div>
                 </div>
@@ -60,7 +60,7 @@
       </h5>
       <div class="ui blue segment">
         <div v-if="!searchResult.commentResult.comments.length">
-          <i class="icon idea"></i> {{$t('search.no.result')}}
+          <i class="icon info circle red"></i> {{$t('search.no.result')}}
         </div>
         <div v-else class="ui divided link items">
           <router-link :to="{name: 'board.view', params: {name: result.article.board.toLowerCase(), seq: result.article.seq}}" v-for="result in searchResult.commentResult.comments" :key="result.id" class="item">
@@ -74,8 +74,8 @@
                   <div class="detail">{{result.article.seq}}</div>
                 </div>
                 <div class="ui small image basic label">
-                  <img :src="avatarSrc(result.writer.picture)">
-                  {{result.writer.username}}
+                  <img :src="avatarSrc(result.writer && result.writer.picture)">
+                  {{result.writer ? result.writer.username : '?'}}
                   <div class="detail">{{result.id | IdToRegDate('LL')}}</div>
                 </div>
               </div>
@@ -95,7 +95,7 @@
       </h5>
       <div class="ui blue segment">
         <div v-if="!searchResult.galleryResult.galleries.length">
-          <i class="icon idea"></i> {{$t('search.no.result')}}
+          <i class="icon info circle red"></i> {{$t('search.no.result')}}
         </div>
         <div v-else class="ui link five doubling cards">
           <router-link :to="{name: 'gallery.view', params: {id: result.id}}" v-for="result in searchResult.galleryResult.galleries" :key="result.id" class="card">
@@ -107,8 +107,8 @@
             </div>
             <div class="extra content">
               <div class="author text-overflow">
-                <img :src="avatarSrc(result.writer.picture)" class="ui avatar bordered image">
-                {{result.writer.username}}
+                <img :src="avatarSrc(result.writer && result.writer.picture)" class="ui avatar bordered image">
+                {{result.writer ? result.writer.username : '?'}}
               </div>
             </div>
           </router-link>
