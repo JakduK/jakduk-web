@@ -15,8 +15,8 @@
             <i :class="{blue: item.myFeeling !== 'LIKE'}" class="smile icon"></i>
             {{item.numberOfLike || 0}}
           </button>
-          <button @click="dislikeComment(item)" :class="item.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui label nomargin mini">
-            <i :class="{teal: item.myFeeling !== 'DISLIKE'}" class="meh icon"></i> {{item.numberOfDislike || 0}}
+          <button @click="dislikeComment(item)" :class="item.myFeeling === 'DISLIKE' ? 'red' : 'basic'" class="ui label nomargin mini">
+            <i :class="{red: item.myFeeling !== 'DISLIKE'}" class="meh icon"></i> {{item.numberOfDislike || 0}}
           </button>
         </div>
       </div>

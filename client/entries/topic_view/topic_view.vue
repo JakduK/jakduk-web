@@ -71,8 +71,8 @@
               <button @click="likeOrDislike('like')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" type="button" class="ui label nomargin">
                 <i :style="{'font-weight': article.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: article.myFeeling !== 'LIKE'}" class="smile icon"></i>{{article.numberOfLike}}
               </button>
-              <button @click="likeOrDislike('dislike')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" type="button" class="ui  label nomargin">
-                <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{article.numberOfDislike}}
+              <button @click="likeOrDislike('dislike')" :class="article.myFeeling === 'DISLIKE' ? 'red' : 'basic'" type="button" class="ui label nomargin">
+                <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{red: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i>{{article.numberOfDislike}}
               </button>
             </div>
           </div>
@@ -96,8 +96,8 @@
         <button @click="likeOrDislike('like')" :class="article.myFeeling === 'LIKE' ? 'blue' : 'basic'" class="ui compact button">
           <i :style="{'font-weight': article.myFeeling === 'LIKE' ? 'bold' : 'normal'}" :class="{blue: article.myFeeling !== 'LIKE'}" class="smile icon"></i><strong>{{article.numberOfLike}}</strong>
         </button>
-        <button @click="likeOrDislike('dislike')" :class="article.myFeeling === 'DISLIKE' ? 'teal' : 'basic'" class="ui compact button">
-          <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{teal: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{article.numberOfDislike}}</strong>
+        <button @click="likeOrDislike('dislike')" :class="article.myFeeling === 'DISLIKE' ? 'red' : 'basic'" class="ui compact button">
+          <i :style="{'font-weight': article.myFeeling === 'DISLIKE' ? 'bold' : 'normal'}" :class="{red: article.myFeeling !== 'DISLIKE'}" class="meh icon"></i><strong>{{article.numberOfDislike}}</strong>
         </button>
       </div>
     </div>

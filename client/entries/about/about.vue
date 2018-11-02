@@ -16,6 +16,7 @@
     beforeRouteEnter(to, from, next) {
       next(_this => {
         _this.setDocumentTitle(_this.$t('about.site'), _this.$t('common.jakduk'));
+        _this.$store.commit('load', false);
       });
     }
   }

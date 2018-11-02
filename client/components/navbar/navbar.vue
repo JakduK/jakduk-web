@@ -7,7 +7,7 @@
           <button id="btnSidebarToggle" class="ui icon blue item button">
             <i class="content icon"></i>
           </button>
-          <a href="/home" class="item">{{$t('common.jakduk')}}</a>
+          <a href="/home" class="item" @click.prevent="goHome">{{$t('common.jakduk')}}</a>
           <div class="right menu">
             <a v-if="isAuthenticated" class="icon item logon">
               <div class="ui rounded image avatar nomargin">
@@ -26,7 +26,7 @@
       <div class="computer only row">
         <div class="ui container">
           <div class="ui borderless inverted fluid blue menu">
-            <a href="/home" class="header item">{{$t('common.jakduk')}}</a>
+            <a href="/home" class="header item" @click.prevent="goHome">{{$t('common.jakduk')}}</a>
             <div class="right menu">
               <div class="ui simple dropdown item">
                 <i class="globe icon"></i> {{$t('common.language')}}
@@ -126,6 +126,15 @@
             size: 3
           }
         });
+      },
+      goHome() {
+        if (this.$route.name === 'home') {
+          location.href = '/home';
+        } else {
+          this.$router.push({
+            name: 'home'
+          });
+        }
       }
     },
     components: {

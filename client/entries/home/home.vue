@@ -115,13 +115,13 @@
         <div class="ui blue segment">
           <div v-if="latest" class="ui middle aligned relaxed list">
             <div v-for="(user, index) in latest.users" :key="user.id" class="item">
-              <div class="image" :style="{width: user.about ? '50px' : ''}">
-                <img :src="avatarSrc(user.picture)" class="ui image avatar nomargin">
-                <i v-if="user.about" class="talk small outline fitted icon vertical-align-top"></i>
-              </div>
+              <img :src="avatarSrc(user.picture)" class="ui image avatar nomargin">
               <div class="content">
                 <div class="header">{{user.username}}</div>
-                <div v-if="user.about" class="description extra">{{user.about}}</div>
+                <div v-if="user.about" class="description extra">
+                  <i class="talk small outline fitted icon vertical-align-top flipped horizontally"></i>
+                  {{user.about}}
+                </div>
               </div>
             </div>
           </div>
