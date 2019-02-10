@@ -7,8 +7,26 @@
           <div class="four wide column">
             <h4 class="ui header">{{$t('about')}}</h4>
             <div class="ui link list">
-              <router-link to="/about" class="item">{{$t('about.site')}}</router-link>
-              <router-link :to="{name: 'board.view', params: {name: 'free', seq: 98}}" class="item">{{$t('about.site.use.guide')}}</router-link>
+              <a
+                href="https://wiki.jakduk.com/jakdu-k/%EC%9E%91%EB%91%90k-%EC%82%AC%EC%9D%B4%ED%8A%B8-%EC%86%8C%EA%B0%9C"
+                target="_blank"
+                class="item">
+                {{$t('about.site')}}
+              </a>
+              <a
+                href="https://wiki.jakduk.com/jakdu-k/%EC%9E%91%EB%91%90k%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4"
+                target="_blank"
+                class="item"
+              >
+                {{$t('about.site.use.guide')}}
+              </a>
+              <a
+                href="https://wiki.jakduk.com/jakdu-k/%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8"
+                target="_blank"
+                class="item"
+              >
+                {{$t('privacy.policy')}}
+              </a>
             </div>
           </div>
           <div class="four wide column">
