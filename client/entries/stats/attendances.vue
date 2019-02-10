@@ -99,6 +99,8 @@
   const KL1_ID = 'KL1';
   const KL2_ID = 'KL2';
 
+  const thisYear = new Date().getFullYear() - 1;
+
   function getDefaultChartOptions(category = 'league', league = KL_ID) {
     if (category === 'club') {
       return getDefaultClubChartOptions.call(this);
@@ -123,87 +125,28 @@
     if (category === 'club') {
       return null;
     } else if (category === 'season') {
-      return [{
-        id: 2012,
-        name: 2012,
-        sub: [{
-          id: 'KL',
-          name: this.$t('stats.attendance.filter.league')
-        }, {
-          id: 'KL1',
-          name: this.$t('stats.attendance.filter.league.1'),
-          disabled: true
-        }, {
-          id: 'KL2',
-          name: this.$t('stats.attendance.filter.league.2'),
-          disabled: true
-        }]
-      }, {
-        id: 2013,
-        name: 2013,
-        sub: [{
-          id: 'KL',
-          name: this.$t('stats.attendance.filter.league')
-        }, {
-          id: 'KL1',
-          name: this.$t('stats.attendance.filter.league.1')
-        }, {
-          id: 'KL2',
-          name: this.$t('stats.attendance.filter.league.2')
-        }]
-      }, {
-        id: 2014,
-        name: 2014,
-        sub: [{
-          id: 'KL',
-          name: this.$t('stats.attendance.filter.league')
-        }, {
-          id: 'KL1',
-          name: this.$t('stats.attendance.filter.league.1')
-        }, {
-          id: 'KL2',
-          name: this.$t('stats.attendance.filter.league.2')
-        }]
-      }, {
-        id: 2015,
-        name: 2015,
-        sub: [{
-          id: 'KL',
-          name: this.$t('stats.attendance.filter.league')
-        }, {
-          id: 'KL1',
-          name: this.$t('stats.attendance.filter.league.1')
-        }, {
-          id: 'KL2',
-          name: this.$t('stats.attendance.filter.league.2')
-        }]
-      }, {
-        id: 2016,
-        name: 2016,
-        sub: [{
-          id: 'KL',
-          name: this.$t('stats.attendance.filter.league')
-        }, {
-          id: 'KL1',
-          name: this.$t('stats.attendance.filter.league.1')
-        }, {
-          id: 'KL2',
-          name: this.$t('stats.attendance.filter.league.2')
-        }]
-      }, {
-          id: 2017,
-          name: 2017,
+      const seasons = [];
+      for (let year = 2012; year <= thisYear; year += 1) {
+        seasons.push({
+          id: year,
+          name: year,
           sub: [{
-              id: 'KL',
-              name: this.$t('stats.attendance.filter.league')
+            id: 'KL',
+            name: this.$t('stats.attendance.filter.league')
           }, {
-              id: 'KL1',
-              name: this.$t('stats.attendance.filter.league.1')
+            id: 'KL1',
+            name: this.$t('stats.attendance.filter.league.1'),
+            disabled: true
           }, {
-              id: 'KL2',
-              name: this.$t('stats.attendance.filter.league.2')
+            id: 'KL2',
+            name: this.$t('stats.attendance.filter.league.2'),
+            disabled: true
           }]
-      }];
+        });
+      }
+      seasons[0].sub[1].disabled = true;
+      seasons[0].sub[2].disabled = true;
+      return seasons;
     } else {
       return [{
         id: 'KL1',
@@ -542,7 +485,7 @@
     }];
   }
 
-  function fetch({category, league, season, club}) {
+  function fetch({category, league, season = thisYear, club}) {
     let promise;
 
     this.chartOptions = getDefaultChartOptions.call(this, category, league);
@@ -592,12 +535,12 @@
         }
       });
     } else if (category === 'season') {
-      this.subFilter = this.filter.find(f => `${f.id}` === `${season || 2016}`).sub;
+      this.subFilter = this.filter.find(f => `${f.id}` === `${season}`).sub;
 
       promise = $.getJSON('/api/football/clubs', {
         lang: this.$lang.replace('-', '_')
       }).then(footballClubs => {
-        return $.getJSON(`/api/stats/attendance/season/${season || 2016}`, {
+        return $.getJSON(`/api/stats/attendance/season/${season}`, {
           league: league || KL_ID,
           lang: this.$lang.replace('-', '_')
         }).then(data => {
