@@ -62,10 +62,16 @@ const defaultConfig = {
     callbackURL: `${envConfig.origin}/auth/facebook/callback`
   },
 
-  daum: {
-    clientID: process.env.DAUM_ID || '',
-    clientSecret: process.env.DAUM_SECRET || '',
-    callbackURL: `${envConfig.origin}/auth/daum/callback`
+  google: {
+    clientID: process.env.GOOGLE_ID || '',
+    clientSecret: process.env.GOOGLE_SECRET || '',
+    callbackURL: `${envConfig.origin}/auth/google/callback`
+  },
+
+  naver: {
+    clientID: process.env.NAVER_ID || '',
+    clientSecret: process.env.NAVER_SECRET || '',
+    callbackURL: `${envConfig.origin}/auth/naver/callback`
   },
 
   kakao: {

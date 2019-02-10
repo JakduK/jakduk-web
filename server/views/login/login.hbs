@@ -67,7 +67,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-u rounded btn-block ladda-button" ladda="btnSubmit" data-style="expand-right">
+            <button type="submit" class="btn btn-u btn-u-blue rounded btn-block ladda-button" ladda="btnSubmit" data-style="expand-right">
               {{TRANSLATION "user.sign.in"}}
             </button>
 
@@ -90,19 +90,48 @@
 
           <hr class="padding-10"/>
 
-          <button class="btn btn-facebook btn-block" onclick="javascript:window.location = '/auth/facebook{{{redir}}}'">
-            <i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
+          <button
+            style="background-color: #00c73c; color: white;"
+            class="btn btn-block"
+            onclick="javascript:window.location = '/auth/naver{{{redir}}}'"
+          >
+            {{TRANSLATION "common.button.connect.with.naver"}} <i class="fa fa-angle-right"></i>
           </button>
 
-          <button class="btn btn-dropbox btn-block" onclick="javascript:window.location = '/auth/daum{{{redir}}}'">
-            {{TRANSLATION "common.button.connect.with.daum"}} <i class="fa fa-angle-right"></i>
+          <button
+            id="kakao"
+            class="btn btn-block"
+            onclick="javascript:window.location = '/auth/kakao{{{redir}}}'"
+          >
+            {{TRANSLATION "common.button.connect.with.kakao"}} <i class="fa fa-angle-right"></i>
+          </button>
+
+          <button
+            class="btn btn-google btn-block"
+            onclick="javascript:window.location = '/auth/google{{{redir}}}'"
+          >
+            <i class="fa fa-google"></i> {{TRANSLATION "common.button.connect.with.google"}} <i class="fa fa-angle-right"></i>
+          </button>
+
+          <button
+            class="btn btn-facebook btn-block"
+            onclick="javascript:window.location = '/auth/facebook{{{redir}}}'"
+          >
+            <i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
           </button>
 
         </div>
       </div>
     </div><!--/row-->
   </div>
-
+  <form
+    id="kakao-form"
+    action="/auth/kakao/callback"
+    method="post"
+    style="display: none;"
+  >
+    <input type="hidden" name="access_token">
+  </form>
 </div><!-- /.container -->
 {{#CHUNK 'css'}}
   <link rel="stylesheet" href="/assets/unify/assets/css/pages/page_log_reg_v1.css"/>
@@ -152,6 +181,15 @@
       }]);
 
       angular.bootstrap(document, ['jakdukApp']);
+
+      Kakao.Auth.createLoginButton({
+        container: '#kakao',
+        always: function (data) {
+          var form = $('#kakao-form');
+          form.find('input').val(data.access_token);
+          form.submit();
+        },
+      });
     });
   </script>
 {{/CHUNK}}

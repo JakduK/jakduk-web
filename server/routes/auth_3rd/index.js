@@ -11,6 +11,7 @@ function oauth2(providers) {
   _.forEach(providers, provider => {
     router.get(`/${provider}`, login.bind(null, provider));
     router.get(`/${provider}/callback`, callback.bind(null, provider));
+    router.post(`/${provider}/callback`, callback.bind(null, provider));
   });
 
   return router;
@@ -20,9 +21,9 @@ function login(provider, req, res) {
   res.redirect(`${oauthClient[provider].getLoginUrl()}&state=${querystring.escape(`redir=${(req.query.redir || '')}`)}`);
 }
 
-function callback(provider, req, res) {
-  oauthClient[provider].authorize(req.query.code).then(response => {
-    if (response.statusCode === 200) {
+function callback(provider, req, res, next) {
+  oauthClient[provider].authorize(req.query.code || req.body).then(response => {
+    if (response.statusCode === 200 || response.status === 200) {
       debug(`[Login with ${provider}] %o`, response.data);
       return Promise.all([
         response.data.access_token,
@@ -35,7 +36,7 @@ function callback(provider, req, res) {
     const accessToken = responses[0];
     const loginResponse = responses[1];
 
-    if (status === 200) {
+    if (status === 200 && accessToken) {
       Util.saveSession(res, loginResponse);
       res.redirect(extra.redir || '/');
     } else if (status === 404) {
@@ -51,14 +52,23 @@ function callback(provider, req, res) {
     } else {
       return Promise.reject(loginResponse);
     }
-  }).catch(() => {
-    res.redirect('/login');
+  }).catch((response) => {
+    if (response.statusCode === 500) {
+      next({
+        status: response.statusCode,
+        message: JSON.stringify(response.data, null, 2)
+      });
+    } else {
+      res.redirect('/login');
+    }
   });
 }
 
 module.exports.setup = function (app) {
   app.use('/auth', oauth2([
-    'daum',
-    'facebook'
+    'google',
+    'facebook',
+    'naver',
+    'kakao',
   ]));
 };
