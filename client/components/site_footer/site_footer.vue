@@ -77,8 +77,8 @@
         <div class="ui horizontal small divided link list">
           <div class="item">
             <a href="https://jetbrains.com" target="_blank">
-              <img src="/assets/images/jetbrains.png" class="ui image tiny right spaced">
-              <a href="https://jetbrains.com/products.html" target="_blank">Tools supported by JetBrains</a>
+              <img src="/assets/images/jetbrains.png" class="ui image mini right spaced">
+              <a href="https://jetbrains.com?from=JakduK" target="_blank">Tools supported by JetBrains</a>
             </a>
           </div>
           <div class="item">
