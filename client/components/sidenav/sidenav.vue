@@ -18,7 +18,7 @@
           <router-link active-class="active" to="/gallery" class="item computer only row">
             {{$t('gallery')}}
           </router-link>
-          <router-link :class="{active: $route.name && $route.name.startsWith('stats')}" to="/stats/supporters" class="item computer only row">
+          <router-link :class="{active: $route.name && $route.name.startsWith('stats')}" to="/stats/attendance" class="item computer only row">
             {{$t('stats')}}
           </router-link>
           <router-link active-class="active" to="/jakdu" class="item computer only row">
