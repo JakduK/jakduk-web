@@ -91,7 +91,7 @@
           <hr class="padding-10"/>
 
           <button
-            style="background-color: #00c73c; color: white;"
+            style="background-color: #00c73c; color: white; font-weight: bold;"
             class="btn btn-block"
             onclick="javascript:window.location = '/auth/naver{{{redir}}}'"
           >
@@ -99,9 +99,9 @@
           </button>
 
           <button
+            style="background-color: #ffec00; color: #411b1e; font-weight: bold;"
             id="kakao"
             class="btn btn-block"
-            onclick="javascript:window.location = '/auth/kakao{{{redir}}}'"
           >
             {{TRANSLATION "common.button.connect.with.kakao"}} <i class="fa fa-angle-right"></i>
           </button>
@@ -110,14 +110,14 @@
             class="btn btn-google btn-block"
             onclick="javascript:window.location = '/auth/google{{{redir}}}'"
           >
-            <i class="fa fa-google"></i> {{TRANSLATION "common.button.connect.with.google"}} <i class="fa fa-angle-right"></i>
+            {{TRANSLATION "common.button.connect.with.google"}} <i class="fa fa-angle-right"></i>
           </button>
 
           <button
             class="btn btn-facebook btn-block"
             onclick="javascript:window.location = '/auth/facebook{{{redir}}}'"
           >
-            <i class="fa fa-facebook"></i> {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
+            {{TRANSLATION "common.button.connect.with.facebook"}} <i class="fa fa-angle-right"></i>
           </button>
 
         </div>
@@ -182,13 +182,14 @@
 
       angular.bootstrap(document, ['jakdukApp']);
 
-      Kakao.Auth.createLoginButton({
-        container: '#kakao',
-        always: function (data) {
-          var form = $('#kakao-form');
-          form.find('input').val(data.access_token);
-          form.submit();
-        },
+      $(document).on('click', '#kakao', function () {
+        Kakao.Auth.login({
+          always: function (data) {
+            var form = $('#kakao-form');
+            form.find('input').val(data.access_token);
+            form.submit();
+          },
+        });
       });
     });
   </script>
