@@ -19,7 +19,7 @@
     },
     created() {
       if (!Kakao.Link) {
-        Kakao.init(this.options.kakaoClientId);
+        Kakao.init(this.options.kakaoSdkKey);
       }
     },
     mounted() {

@@ -15,7 +15,7 @@ module.exports = setup(express());
 function setup(app) {
   app.locals.revision = config.revision;
   app.locals.gaAccount = config.gaAccount;
-  app.locals.kakaoClientID = config.kakao.clientID;
+  app.locals.kakaoSdkKey = config.kakao.sdkKey;
   app.locals.apiServerUrl = config.apiServerUrl;
   app.locals.thumbnailServerUrl = config.thumbnailServerUrl;
   app.locals.noRedirectPaths = config.noRedirectPaths;

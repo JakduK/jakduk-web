@@ -18,7 +18,8 @@ function oauth2(providers) {
 }
 
 function login(provider, req, res) {
-  res.redirect(`${oauthClient[provider].getLoginUrl()}&state=${querystring.escape(`redir=${(req.query.redir || '')}`)}`);
+  const providerLoginUrl = oauthClient[provider].getLoginUrl();
+  res.redirect(`${providerLoginUrl}&state=${querystring.escape(`redir=${(req.query.redir || '')}`)}`);
 }
 
 function callback(provider, req, res, next) {

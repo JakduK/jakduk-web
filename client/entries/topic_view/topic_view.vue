@@ -381,7 +381,7 @@
       },
       kakaoShareOptions() {
         return {
-          kakaoClientId: this.$store.state.kakaoClientID,
+          kakaoSdkKey: this.$store.state.kakaoSdkKey,
           label: this.article.subject,
           description: this.article.writer && this.article.writer.username || this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,

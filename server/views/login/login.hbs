@@ -100,8 +100,8 @@
 
           <button
             style="background-color: #ffec00; color: #411b1e; font-weight: bold;"
-            id="kakao"
             class="btn btn-block"
+            onclick="javascript:window.location = '/auth/kakao{{{redir}}}'"
           >
             {{TRANSLATION "common.button.connect.with.kakao"}} <i class="fa fa-angle-right"></i>
           </button>
@@ -181,16 +181,6 @@
       }]);
 
       angular.bootstrap(document, ['jakdukApp']);
-
-      $(document).on('click', '#kakao', function () {
-        Kakao.Auth.login({
-          always: function (data) {
-            var form = $('#kakao-form');
-            form.find('input').val(data.access_token);
-            form.submit();
-          },
-        });
-      });
     });
   </script>
 {{/CHUNK}}

@@ -11,7 +11,7 @@ export default new Vuex.Store({
   state: {
     err: window.ENV.err,
     isMobile: /iphone|ipad|android/i.test(window.navigator.userAgent),
-    kakaoClientID: window.ENV.kakaoClientID,
+    kakaoSdkKey: window.ENV.kakaoSdkKey,
     isAuthenticated: !!window.ENV.myProfile,
     isAdmin: window.ENV.myProfile && window.ENV.myProfile.roles.some(role => role === 'ROLE_ROOT'),
     myProfile: window.ENV.myProfile,
@@ -24,7 +24,7 @@ export default new Vuex.Store({
   },
   getters: {
     isMobile: state => state.isMobile,
-    kakaoClientID: state => state.kakaoClientID,
+    kakaoSdkKey: state => state.kakaoSdkKey,
     loading: state => state.loading,
     appLoaded: state => state.appLoaded
   },

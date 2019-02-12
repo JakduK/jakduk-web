@@ -38,7 +38,7 @@
         <img :src="imageSrc(image.id)">
       </div>
     </div>
-    
+
     <!--하단 공유-->
     <div class="shares text-center">
       <router-link :to="{name: 'gallery', query: $route.query}" class="ui icon basic button">
@@ -154,7 +154,7 @@
     computed: {
       kakaoShareOptions() {
         return {
-          kakaoClientId: this.$store.state.kakaoClientID,
+          kakaoSdkKey: this.$store.state.kakaoSdkKey,
           label: this.image.name,
           description: this.image.writer && this.image.writer.username || this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,

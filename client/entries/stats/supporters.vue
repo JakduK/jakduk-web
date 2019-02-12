@@ -100,7 +100,7 @@
       return {
         chartOptions: getDefaultChartOptions.call(this),
         kakaoShareOptions: {
-          kakaoClientId: this.$store.getters.kakaoClientID,
+          kakaoSdkKey: this.$store.getters.kakaoSdkKey,
           label: this.$t('stats.supporters.title'),
           description: this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,

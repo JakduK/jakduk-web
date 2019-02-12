@@ -99,7 +99,7 @@
   const KL1_ID = 'KL1';
   const KL2_ID = 'KL2';
 
-  const thisYear = new Date().getFullYear() - 1;
+  const lastYear = new Date().getFullYear() - 1;
 
   function getDefaultChartOptions(category = 'league', league = KL_ID) {
     if (category === 'club') {
@@ -126,7 +126,7 @@
       return null;
     } else if (category === 'season') {
       const seasons = [];
-      for (let year = 2012; year <= thisYear; year += 1) {
+      for (let year = lastYear; year >= 2012; year -= 1) {
         seasons.push({
           id: year,
           name: year,
@@ -485,7 +485,7 @@
     }];
   }
 
-  function fetch({category, league, season = thisYear, club}) {
+  function fetch({category, league, season = lastYear, club}) {
     let promise;
 
     this.chartOptions = getDefaultChartOptions.call(this, category, league);
@@ -612,7 +612,7 @@
     if (category === 'club') {
       selected = club || this.filter[0].id;
     } else if (category === 'season') {
-      selected = season || this.lastElement(this.filter).id;
+      selected = season || this.filter[0].id;
     } else {
       selected = league || this.filter[0].id;
     }
@@ -685,7 +685,7 @@
         filter: null,
         subFilter: null,
         kakaoShareOptions: {
-          kakaoClientId: this.$store.getters.kakaoClientID,
+          kakaoSdkKey: this.$store.getters.kakaoSdkKey,
           label: this.$t('stats.supporters.title'),
           description: this.$t('common.jakduk'),
           url: `${window.location.origin}${this.$route.fullPath}`,
