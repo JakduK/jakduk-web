@@ -97,10 +97,12 @@
 
             <div class="btn-group-justified padding-top-5">
               <a class="btn btn-sm btn-default" href="/join{{{redir}}}">
-                <span aria-hidden="true" class="icon-user-follow"></span> {{TRANSLATION "user.register"}}
+                <span aria-hidden="true" class="icon-user-follow text-capitalize"></span>
+                <span class="text-capitalize">{{TRANSLATION "user.register"}}</span>
               </a>
               <a class="btn btn-sm btn-default" href="/password/find">
-                <span aria-hidden="true" class="icon-real-estate-056"></span> {{TRANSLATION "user.sign.forgot.password"}}
+                <span aria-hidden="true" class="icon-real-estate-056"></span>
+                <span class="text-capitalize">{{TRANSLATION "user.sign.forgot.password"}}</span>
               </a>
             </div>
           </form>
@@ -108,7 +110,7 @@
           <hr class="padding-10"/>
 
           <button
-            style="background-color: #00c73c; color: white; font-weight: bold;"
+            style="background-color: #00c73c; color: white;"
             class="btn btn-block"
             onclick="javascript:window.location = '/auth/naver{{{redir}}}'"
           >
@@ -116,7 +118,7 @@
           </button>
 
           <button
-            style="background-color: #ffec00; color: #411b1e; font-weight: bold;"
+            style="background-color: #ffec00; color: #411b1e;"
             class="btn btn-block"
             onclick="javascript:window.location = '/auth/kakao{{{redir}}}'"
           >
