@@ -41,7 +41,20 @@
               <div class="input-group has-feedback"
                  ng-class="{'has-success':loginForm.username.$valid, 'has-error':!loginForm.username.$pristine && loginForm.username.$invalid}">
                 <span class="input-group-addon"><i class="fa fa-at fa-fw"></i></span>
-                <input type="email" class="form-control" id="username" name="username" placeholder="{{TRANSLATION "user.placeholder.email"}}" ng-model="email" ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax" autofocus autofill-fixer>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  placeholder="{{TRANSLATION "user.placeholder.email"}}"
+                  ng-model="email"
+                  ng-required="true"
+                  ng-minlength="emailLengthMin"
+                  ng-maxlength="emailLengthMax"
+                  autofocus
+                  autofill-fixer
+                  autocomplete="on"
+                >
                 <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':loginForm.username.$valid, 'glyphicon-remove':!loginForm.username.$pristine &&  loginForm.username.$invalid}"></span>
               </div>
               <p class="text-danger" ng-model="errorEmail" ng-show="errorEmail" ng-bind="errorEmail"></p>
@@ -50,7 +63,19 @@
             <div class="form-group">
               <div class="input-group has-feedback" ng-class="{'has-success':loginForm.password.$valid, 'has-error':!loginForm.password.$pristine && loginForm.password.$invalid}">
                 <span class="input-group-addon"><i class="fa fa-lock fa-fw"></i></span>
-                <input type="password" class="form-control" id="password" name="password" placeholder="{{TRANSLATION "user.placeholder.password"}}" ng-model="password" ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax" autofill-fixer>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  placeholder="{{TRANSLATION "user.placeholder.password"}}"
+                  ng-model="password"
+                  ng-required="true"
+                  ng-minlength="passwordLengthMin"
+                  ng-maxlength="passwordLengthMax"
+                  autofill-fixer
+                  autocomplete="on"
+                >
               <span class="glyphicon form-control-feedback"
                   ng-class="{'glyphicon-ok':loginForm.password.$valid, 'glyphicon-remove':!loginForm.password.$pristine && loginForm.password.$invalid}"></span>
               </div>
@@ -58,7 +83,6 @@
             </div>
 
             <div class="form-group">
-
               <div class="checkbox">
                 <label>
                   <input id="remember" name="remember" type="checkbox">
@@ -67,24 +91,17 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-u btn-u-blue rounded btn-block ladda-button" ladda="btnSubmit" data-style="expand-right">
+            <button type="submit" class="btn btn-u btn-u-blue btn-block ladda-button" ladda="btnSubmit" data-style="expand-right">
               {{TRANSLATION "user.sign.in"}}
             </button>
 
-            <div class="checkbox">
-              <ul class="list-inline">
-                <li>
-                  <a href="/join{{{redir}}}">
-                    <span aria-hidden="true" class="icon-user-follow"></span> {{TRANSLATION "user.register"}}
-                  </a>
-                </li>
-                &mid;
-                <li>
-                  <a href="/password/find">
-                    <span aria-hidden="true" class="icon-real-estate-056"></span> {{TRANSLATION "user.sign.forgot.password"}}
-                  </a>
-                </li>
-              </ul>
+            <div class="btn-group-justified padding-top-5">
+              <a class="btn btn-sm btn-default" href="/join{{{redir}}}">
+                <span aria-hidden="true" class="icon-user-follow"></span> {{TRANSLATION "user.register"}}
+              </a>
+              <a class="btn btn-sm btn-default" href="/password/find">
+                <span aria-hidden="true" class="icon-real-estate-056"></span> {{TRANSLATION "user.sign.forgot.password"}}
+              </a>
             </div>
           </form>
 

@@ -29,11 +29,16 @@
             <h2>{{TRANSLATION "user.register.header"}}</h2>
           </div>
 
-          <!--<div class="form-group">-->
-            <!--<div ng-repeat="item in uploader.queue" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>-->
-            <!--<label class="control-label">{{TRANSLATION "common.avatar"}}</label>-->
-            <!--<input type="file" nv-file-select="" uploader="uploader" accept="image/*">-->
-          <!--</div>-->
+          <div class="form-group">
+            {{#if bySocialAccount}}
+            <div>
+              <img class="image-md" ng-src="{%externalLargePictureUrl%}" ng-if="externalLargePictureUrl">
+            </div>
+            {{/if}}
+            <div ng-repeat="item in uploader.queue" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+            <label class="control-label">{{TRANSLATION "common.avatar"}}</label>
+            <input type="file" nv-file-select="" uploader="uploader" accept="image/*">
+          </div>
 
           <div class="form-group has-feedback"
              ng-class="{'has-success':userWrite.email.$valid && emailStatus === 'OK', 'has-error':!userWrite.email.$pristine && (userWrite.email.$invalid || emailStatus !== 'OK')}">
@@ -114,12 +119,17 @@
           <hr>
 
           <div class="text-right">
-            <button type="submit" class="btn-u rounded ladda-button"
-              ladda="btnSubmit" data-style="expand-right">
-              <span class="glyphicon glyphicon-upload"></span> {{TRANSLATION "common.button.write"}}
+            <button
+              type="submit"
+              class="btn-u btn-u-blue rounded ladda-button"
+              ladda="btnSubmit"
+              data-style="expand-right"
+              ng-disabled="btnSubmitDisabled"
+            >
+              {{TRANSLATION "user.register"}}
             </button>
             <button type="button" class="btn-u btn-u-default rounded" onclick="window.location='/'">
-              <span class="glyphicon glyphicon-ban-circle"></span> {{TRANSLATION "common.button.cancel"}}
+              </span> {{TRANSLATION "common.button.cancel"}}
             </button>
             <div>
               <span ng-class="buttonAlert.classType" ng-show="buttonAlert.msg" ng-bind="buttonAlert.msg"></span>
@@ -128,6 +138,10 @@
 
           <input type="hidden" name="accessToken" value="{{{accessToken}}}">
           <input type="hidden" name="provider" value="{{{provider}}}">
+          <input type="hidden" name="userPictureId" ng-value="userPictureId">
+          {{#if bySocialAccount}}
+            <input type="hidden" name="externalLargePictureUrl" ng-value="externalLargePictureUrl">
+          {{/if}}
         </form>
 
       </div>
@@ -151,10 +165,23 @@
           url: '/api/user/picture'
         });
 
-        uploader.onAfterAddingFile = function(fileItem) {
+        uploader.onAfterAddingFile = function() {
           if (uploader.queue.length > 1) {
             uploader.queue.splice(0, 1);
           }
+          $scope.externalLargePictureUrl = null;
+          $scope.btnSubmitDisabled = true;
+          uploader.uploadAll();
+          uploader.onSuccessItem = function(fileItem, response) {
+            $scope.btnSubmitDisabled = false;
+            $scope.userPictureId = response.id;
+          };
+          uploader.onErrorItem = function(fileItem, response) {
+            window.alert([
+              '{{TRANSLATION "common.failed.upload.avatar"}}',
+              response.message + '(' + response.code + ')'
+            ].join('\n'));
+          };
         };
 
         $scope.uploader = uploader;
@@ -378,7 +405,7 @@
 
         {{#if bySocialAccount}}
           {{#if snsProfile.email}}
-            $scope.email = '{{snsProfile.email}}';
+            $scope.email = '{{{snsProfile.email}}}';
             (function () {
               var deregister = $scope.$watch('email', function () {
                 $scope.onEmail();
@@ -388,7 +415,7 @@
             })();
           {{/if}}
           {{#if snsProfile.username}}
-            $scope.username = '{{snsProfile.username}}';
+            $scope.username = '{{{snsProfile.username}}}';
             (function () {
               var deregister = $scope.$watch('email', function () {
                 $scope.onUsername();
@@ -396,6 +423,9 @@
                 deregister();
               });
             })();
+          {{/if}}
+          {{#if snsProfile.externalLargePictureUrl}}
+            $scope.externalLargePictureUrl = '{{{snsProfile.externalLargePictureUrl}}}';
           {{/if}}
         {{/if}}
       }]);

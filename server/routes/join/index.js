@@ -22,15 +22,20 @@ function index(req, res, next) {
 
 function submit(req, res, next) {
   const body = req.body;
-
-  req.api.join({
+  const data = {
     email: body.email,
     username: body.username,
     password: body.password,
     passwordConfirm: body.passwordConfirm,
     footballClub: body.footballClub,
-    about: body.about
-  }).then(response => {
+    about: body.about,
+  };
+
+  if (body.userPictureId) {
+    data.userPictureId = body.userPictureId;
+  }
+
+  req.api.join(data).then(response => {
     if (response.statusCode === 200) {
       Util.saveSession(res, response);
       res.redirect(req.query.redir || '/');
@@ -77,15 +82,26 @@ function indexOAuth(req, res, next) {
 
 function submitOAuth(req, res, next) {
   const body = req.body;
-
-  res.clearCookie(config.tempTokenCookieFlag);
-
-  req.api.joinWith({
+  const data = {
     email: body.email,
     username: body.username,
     footballClub: body.footballClub,
-    about: body.about
-  }).then(response => {
+    about: body.about,
+    externalLargePictureUrl: body.externalLargePictureUrl,
+    userPictureId: body.userPictureId,
+  };
+
+  if (data.userPictureId) {
+    delete data.externalLargePictureUrl;
+  }
+
+  if (data.externalLargePictureUrl) {
+    delete data.userPictureId;
+  }
+
+  res.clearCookie(config.tempTokenCookieFlag);
+
+  req.api.joinWith(data).then(response => {
     if (response.statusCode === 200) {
       req.api.loginWith(body.provider, body.accessToken).then(() => {
         res.redirect(req.query.redir || '/');

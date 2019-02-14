@@ -23,6 +23,19 @@
     <![endif]-->
 
     <script type="text/javascript">
+      window.ENV = {
+        {{#if @root.err}}
+          err: {{{JSON_STRINGIFY @root.err}}},
+        {{/if}}
+        {{#if @root.userInfo}}
+          myProfile: {{{JSON_STRINGIFY @root.userInfo}}},
+        {{/if}}
+        imageServerUrl: '{{thumbnailServerUrl}}',
+        revision: '{{@root.revision}}',
+        locale: '{{@root.locale}}',
+        shortLocale: '{{SHORT_LOCALE @root.locale}}',
+        kakaoSdkKey: '{{kakaoSdkKey}}'
+      };
       window.require = {
         paths: {
           'angular-locale': '/assets/angular-i18n/angular-locale_{{LOWERCASE locale}}'
@@ -33,7 +46,6 @@
           }
         }
       };
-      Kakao.init('{{kakaoSdkKey}}');
     </script>
     <script src="/assets/requirejs/require.js"></script>
     <script src="/assets/jakduk/js/config.js"></script>
