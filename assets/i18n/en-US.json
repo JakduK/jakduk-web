@@ -336,5 +336,6 @@
   "user.sign.in.header": "Login to your account",
   "user.sign.out": "Logout",
   "user.sign.reset.password": "Reset password",
+  "user.signup.daum.end":  "Connect with Daum is no longer supported. Read more details below link.",
   "user.support.football.club": "Support FC"
 }

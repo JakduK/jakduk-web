@@ -337,5 +337,6 @@
   "user.sign.in.header": "로그인 하기",
   "user.sign.out": "로그아웃",
   "user.sign.reset.password": "비밀번호 재설정",
+  "user.signup.daum.end":  "다음 계정 로그인은 더이상 지원하지 않습니다. 자세한 내용은 아래 링크에서 참고하세요.",
   "user.support.football.club": "지지 구단"
 }
