@@ -10,10 +10,10 @@
         <i class="icon wrench"></i>
         <div class="menu">
           <button v-if="isAdmin && isNotice" @click="toggleNotice" class="item">
-            <i class="arrow circle outline down icon"></i> {{$t('common.button.cancel.notice')}}
+            <i class="arrow alternate circle down outline icon"></i> {{$t('common.button.cancel.notice')}}
           </button>
           <button v-else-if="isAdmin && !isNotice" @click="toggleNotice" class="item">
-            <i class="arrow circle outline up icon"></i> {{$t('common.button.set.as.notice')}}
+            <i class="arrow alternate circle up outline icon"></i> {{$t('common.button.set.as.notice')}}
           </button>
           <router-link v-if="isEditable" :to="{name: 'board.edit', params: {name: $route.params.name, seq: article.seq}}" class="item">
             <i class="edit icon"></i> {{$t('common.button.edit')}}
