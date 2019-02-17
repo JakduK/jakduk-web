@@ -1,5 +1,3 @@
-[![Telegram](https://img.shields.io/badge/join-telegram-blue.svg)](https://t.me/joinchat/EEdSAQ6kK0zyY_N_6TdW_Q)
-
 # jakduk-web
 * Single page application
 * Stage https://web-dev.jakduk.com
