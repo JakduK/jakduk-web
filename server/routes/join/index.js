@@ -107,7 +107,10 @@ function submitOAuth(req, res, next) {
         res.redirect(req.query.redir || '/');
       });
     } else {
-      res.redirect('/login');
+      next({
+        status: response.statusCode,
+        message: response.data,
+      });
     }
   }).catch(next);
 }
