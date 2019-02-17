@@ -46,7 +46,19 @@
               <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
               {{TRANSLATION "user.email"}}
             </label>
-            <input type="email" name="email" class="form-control" placeholder='{{TRANSLATION "user.placeholder.email"}}' ng-model="email" ng-blur="onEmail()" ng-keyup="validationEmail()" ng-required="true" ng-minlength="emailLengthMin" ng-maxlength="emailLengthMax">
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              placeholder='{{TRANSLATION "user.placeholder.email"}}'
+              ng-model="email"
+              ng-blur="onEmail()"
+              ng-keyup="validationEmail()"
+              ng-required="true"
+              ng-minlength="emailLengthMin"
+              ng-maxlength="emailLengthMax"
+              autocomplete="off"
+            >
 
             <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userWrite.email.$valid && emailStatus === 'OK', 'glyphicon-remove':!userWrite.email.$pristine && (userWrite.email.$invalid || emailStatus !== 'OK')}"></span>
 
@@ -61,7 +73,19 @@
               <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
               {{TRANSLATION "user.nickname"}}
             </label>
-            <input type="text" name="username" class="form-control" placeholder='{{TRANSLATION "user.placeholder.username"}}' ng-model="username" ng-blur="onUsername()" ng-keyup="validationUsername()" ng-required="true" ng-minlength="usernameLengthMin" ng-maxlength="usernameLengthMax">
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              placeholder='{{TRANSLATION "user.placeholder.username"}}'
+              ng-model="username"
+              ng-blur="onUsername()"
+              ng-keyup="validationUsername()"
+              ng-required="true"
+              ng-minlength="usernameLengthMin"
+              ng-maxlength="usernameLengthMax"
+              autocomplete="off"
+            >
 
             <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userWrite.username.$valid && usernameStatus === 'OK', 'glyphicon-remove':!userWrite.username.$pristine && (userWrite.username.$invalid || usernameStatus !== 'OK')}"></span>
 
@@ -78,7 +102,19 @@
                   <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
                   {{TRANSLATION "user.password"}}
                 </label>
-                <input type="password" name="password" class="form-control" placeholder='{{TRANSLATION "user.placeholder.password"}}' ng-model="password" ng-keyup="validationPassword()" ng-blur="equalPasswordConfirm()" ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax">
+                <input
+                  type="password"
+                  name="password"
+                  class="form-control"
+                  placeholder='{{TRANSLATION "user.placeholder.password"}}'
+                  ng-model="password"
+                  ng-keyup="validationPassword()"
+                  ng-blur="equalPasswordConfirm()"
+                  ng-required="true"
+                  ng-minlength="passwordLengthMin"
+                  ng-maxlength="passwordLengthMax"
+                  autocomplete="off"
+                >
 
                 <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userWrite.password.$valid, 'glyphicon-remove':!userWrite.password.$pristine && userWrite.password.$invalid}"></span>
 
@@ -92,9 +128,21 @@
                   <abbr title='{{TRANSLATION "common.msg.required"}}'>*</abbr>
                   {{TRANSLATION "user.password.confirm"}}
                 </label>
-                <input type="password" name="passwordConfirm" class="form-control" placeholder='{{TRANSLATION "user.placeholder.password.confirm"}}' ng-model="passwordConfirm" ng-keyup="validationPasswordConfirm()" ng-blur="equalPasswordConfirm()" ng-required="true" ng-minlength="passwordLengthMin" ng-maxlength="passwordLengthMax"/>
+                <input
+                  type="password"
+                  name="passwordConfirm"
+                  class="form-control"
+                  placeholder='{{TRANSLATION "user.placeholder.password.confirm"}}'
+                  ng-model="passwordConfirm"
+                  ng-keyup="validationPasswordConfirm()"
+                  ng-blur="equalPasswordConfirm()"
+                  ng-required="true"
+                  ng-minlength="passwordLengthMin"
+                  ng-maxlength="passwordLengthMax"
+                  autocomplete="off"
+                >
                 <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-ok':userWrite.passwordConfirm.$valid, 'glyphicon-remove':!userWrite.passwordConfirm.$pristine && (userWrite.passwordConfirm.$invalid || equalPasswordStatus != 'true')}"></span>
-                <span class="passwordConfirmAlert.classType" ng-show="passwordConfirmAlert.msg" ng-bind=passwordConfirmAlert.msg></span>
+                <span ng-class="passwordConfirmAlert.classType" ng-show="passwordConfirmAlert.msg" ng-bind=passwordConfirmAlert.msg></span>
               </div>
             </div>
           </div>
@@ -247,7 +295,6 @@
                   msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
                 $scope.emailConn = "none";
-                $scope.validationEmail();
               }, function () {
                 $scope.emailStatus = 'INVALID';
                 $scope.emailAlert = {
@@ -274,7 +321,6 @@
                   msg: '{{TRANSLATION "user.msg.available.data"}}'
                 };
                 $scope.usernameConn = "none";
-                $scope.validationUsername();
               }, function () {
                 $scope.usernameStatus = 'INVALID';
                 $scope.usernameAlert = {
