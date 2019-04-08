@@ -80,7 +80,9 @@
       </div>
 
       <!--본문 콘텐트-->
-      <div class="ui blue segment ql-editor" v-html="article.content"></div>
+      <div class="ui blue segment ql-snow">
+        <div class="ql-editor" v-html="article.content"></div>
+      </div>
 
       <div v-if="!isEmptyArray(article.galleries)" class="ui segment">
         <h5>{{$t('board.gallery.list')}}</h5>
