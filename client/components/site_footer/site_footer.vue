@@ -58,11 +58,6 @@
                   </a>
                 </div>
                 <div class="item">
-                  <a href="https://t.me/joinchat/EEdSAQ6kK0zyY_N_6TdW_Q" target="_blank">
-                    <i class="comments outline big icon"></i> Telegram
-                  </a>
-                </div>
-                <div class="item">
                   <a href="mailto:phjang1983@daum.net">
                     <i class="mail big icon"></i> email
                   </a>
