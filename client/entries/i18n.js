@@ -1,25 +1,19 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import $ from 'jquery';
 
 Vue.use(VueI18n);
 
+const i18n = new VueI18n({
+  fallbackLang: 'en',
+});
+
 function loadI18nBundle(locale) {
-  const deferred = $.Deferred();
-  require(`bundle-loader!../../assets/i18n/${locale}.json`)(bundle => {
-    deferred.resolve(bundle);
-  });
-  return deferred;
+  return import(`../../assets/i18n/${locale}.json`).then(bundle => bundle.default);
 }
 
 function loadMomentLocale(locale) {
-  const deferred = $.Deferred();
-  if (locale === 'en' || locale === 'en-US') {
-    deferred.resolve();
-  } else {
-    require(`bundle-loader!../../node_modules/moment/locale/${aliasLocale(locale)}.js`)(() => {
-      deferred.resolve();
-    });
+  if (locale !== 'en' && locale !== 'en-US') {
+    return import(`../../node_modules/moment/locale/${aliasLocale(locale)}.js`)
   }
 
   function aliasLocale(locale) {
@@ -32,12 +26,12 @@ function loadMomentLocale(locale) {
 }
 
 export function load(locale) {
-  return $.when(
+  return Promise.all([
     loadI18nBundle(locale),
     loadMomentLocale(locale)
-  ).done(i18nBundle => {
-    Vue.config.lang = locale;
-    Vue.config.fallbackLang = 'en';
-    Vue.locale(locale, i18nBundle);
+  ]).then(([i18nBundle]) => {
+    i18n.locale = locale;
+    i18n.setLocaleMessage(locale, i18nBundle);
+    return i18n
   });
 }

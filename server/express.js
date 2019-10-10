@@ -40,6 +40,7 @@ function setup(app) {
     }));
 
     app.use(hotMiddleware(compiler, {
+      reload: true,
       log(output) {
         console.log(output);
       }

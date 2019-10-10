@@ -3,7 +3,7 @@
     <div class="ui segment">
       <div class="ui labeled fluid input">
         <select v-if="!isEmptyArray(categories.list)" id="categories" class="ui dropdown topic-write-category">
-          <option v-for="category in categories.list" :value="category.code">
+          <option v-for="category in categories.list" :key="category.code" :value="category.code">
             <i v-if="category.icon" :class="[category.color, category.icon]" class="icon"></i> {{category.name}}
           </option>
         </select>
@@ -13,7 +13,7 @@
       <div class="ui divider"></div>
 
       <div class="editor-container">
-        <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'editor', language: $lang.split('-')[0]}"></editor>
+        <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'editor', language: $i18n.locale.split('-')[0]}"></editor>
       </div>
 
       <div v-if="imageList.length" class="ui divided items">

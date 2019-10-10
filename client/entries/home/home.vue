@@ -201,7 +201,7 @@
             loop: true,
             setWrapperSize: true,
             preloadImages: false,
-            lazyLoading: true,
+            lazy: true,
             lazyLoadingInPrevNext: true
           });
         });

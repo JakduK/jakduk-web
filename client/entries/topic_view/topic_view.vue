@@ -164,7 +164,7 @@
         <div class="comment-form">
           <div v-if="!isAuthenticated" class="ui blue message">{{$t('board.msg.need.login.for.write')}}</div>
           <div class="comment-editor">
-            <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'comment', language: $lang.split('-')[0]}"></editor>
+            <editor @on-created="onEditorCreated" @on-image-uploaded="onImageUploaded" :options="{mode: 'comment', language: $i18n.locale.split('-')[0]}"></editor>
           </div>
           <div class="clearfix">
             <button @click="checkCommentForm() && submitComment()" :class="{loading: isCommentSubmitting}" class="ui right floated blue labeled icon button">
