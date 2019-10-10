@@ -20,6 +20,7 @@ function setup(app) {
   app.locals.thumbnailServerUrl = config.thumbnailServerUrl;
   app.locals.noRedirectPaths = config.noRedirectPaths;
 
+  app.disable('x-powered-by')
   app.set('env', config.env);
   app.set('port', config.port);
   app.set('trust proxy', true);
