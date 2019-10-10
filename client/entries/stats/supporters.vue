@@ -123,7 +123,7 @@
       this.$store.commit('load', false);
 
       $.getJSON('/api/stats/supporters', {
-        lang: this.$lang.replace('-', '_')
+        lang: this.$i18n.locale.replace('-', '_')
       }).then(data => {
         const chartData = [];
 

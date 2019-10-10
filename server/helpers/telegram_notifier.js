@@ -1,6 +1,6 @@
 const debug = require('debug')('jakduk-web:telegram');
 const restler = require('restler');
-const clor = require('clor');
+const clor = require('colorette');
 
 module.exports = function (options) {
   const apiBase = `https://api.telegram.org/bot${options.token}`;

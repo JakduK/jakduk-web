@@ -1,17 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const config = require('./server/config/environment');
 
 module.exports = {
+  mode: config.env,
   entry: {
-    vendor: [
-      'vue',
-      'vue-i18n',
-      'vue-router',
-      'vuex',
-      'moment',
-      'jquery',
-      'semantic'
-    ],
     app: (() => {
       const appEntry = [];
       if (process.env.NODE_ENV !== 'production') {
@@ -36,7 +30,7 @@ module.exports = {
       exclude: /(node_modules|bower_components)/
     }, {
       test: /\.css$/,
-      use: ['style-loader', 'css-loader']
+      use: ['vue-style-loader', 'css-loader']
     }, {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
       loader: 'url-loader',
@@ -65,12 +59,8 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor']
-    }),
-    new webpack.ProvidePlugin({
-      jQuery: 'jquery'
-    }),
+    new VueLoaderPlugin(),
+    new webpack.ProvidePlugin({ jQuery: 'jquery' }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
@@ -79,22 +69,15 @@ module.exports = {
 
 if (process.env.NODE_ENV === 'production') {
   // http://vue-loader.vuejs.org/en/workflow/production.html
+  module.exports.optimization = module.exports.optimization || {};
+  module.exports.optimization.minimize = true;
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
   ]);
 } else {
-  module.exports.devtool = '#source-map';
+  module.exports.devtool = 'cheap-module-eval-source-map';
 }

@@ -21,8 +21,8 @@
         <!--공지/게시글-->
         <div class="ui blue segment">
           <div class="ui divided items board">
-            <board-list-item :is-notice="true" :item="notice" v-for="notice in board.notices" :key="notice.seq"></board-list-item>
-            <board-list-item :is-notice="false" :item="post" :category="categories[post.category]" v-for="post in board.articles" :key="post.seq"></board-list-item>
+            <board-list-item :is-notice="true" :item="notice" v-for="notice in board.notices" :key="`notice-${notice.seq}`"></board-list-item>
+            <board-list-item :is-notice="false" :item="post" :category="categories[post.category]" v-for="post in board.articles" :key="`article-${post.seq}`"></board-list-item>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@
         <h5 class="ui segment"><i class="blue thumbs outline up icon"></i> {{$t('board.top.likes')}}</h5>
         <div class="ui blue segment">
           <div v-if="top" class="ui middle aligned selection relaxed small list">
-            <router-link :to="{name: 'board.view', params: {seq: post.seq}, query: $route.query}" v-for="(post, index) in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
+            <router-link :to="{name: 'board.view', params: {seq: post.seq}, query: $route.query}" v-for="post in top.topLikes" :key="post.seq" v-tooltip :data-content="post.subject" class="item">
               <div class="header text-overflow">{{post.subject}}</div>
               <div class="extra">
                 <i class="smile icon"></i>{{post.count}} &nbsp; <i class="eye icon"></i>{{post.views}}

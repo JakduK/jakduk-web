@@ -3,11 +3,12 @@ import Encode from '../filters/encode';
 import Tooltip from '../directives/tooltip';
 import router from './router';
 import store from './store';
-import {load as loadI18n} from './i18n';
+import { load as loadI18n } from './i18n';
 import App from '../components/app/app.vue';
 import Navbar from '../components/navbar/navbar.vue';
 import PhoneSidenav from '../components/phone_sidenav/phone_sidenav.vue';
 import Toast from '../components/toast/toast.vue';
+import '../semantic/dist/semantic'
 
 Vue.component('toast', Toast);
 Vue.directive('tooltip', Tooltip);
@@ -39,7 +40,7 @@ if (!window.location.origin) {
   window.location.origin = `${window.location.protocol}//${window.location.host}`;
 }
 
-loadI18n(window.ENV.locale).done(() => {
+loadI18n(window.ENV.locale).then((i18n) => {
   router.beforeEach((to, from, next) => {
     if (to.path !== from.path) {
       store.commit('load', true);
@@ -57,23 +58,26 @@ loadI18n(window.ENV.locale).done(() => {
     }
   });
 
-  startApp();
+  startApp(i18n);
 });
 
-function startApp() {
+function startApp(i18n) {
   const navbar = new Vue({
+    i18n,
     store,
     router,
     render: createElement => createElement(Navbar)
   });
 
   const main = new Vue({
+    i18n,
     store,
     router,
     render: createElement => createElement(App)
   });
 
   const phoneSidenav = new Vue({
+    i18n,
     store,
     router,
     render: createElement => createElement(PhoneSidenav)
