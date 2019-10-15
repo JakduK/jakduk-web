@@ -515,23 +515,26 @@
 
         this.isCommentLoading = true;
 
-        $.getJSON(`/api/board/${this.$route.params.name}/${this.article.seq}/comments${lastComment ? `?commentId=${lastComment.id}` : ''}`).then(data => {
-          if (data.comments.length) {
-            this.comments.splice(this.comments.length, 0, ...data.comments);
-          } else {
+        $.getJSON(`/api/board/${this.$route.params.name}/${this.article.seq}/comments${lastComment ? `?commentId=${lastComment.id}` : ''}`)
+          .done((data) => {
+            if (data.comments.length) {
+              this.comments.splice(this.comments.length, 0, ...data.comments);
+            } else {
+              this.$store.dispatch('globalMessage', {
+                level: 'info',
+                message: this.$t('board.msg.there.is.no.new.comment')
+              });
+            }
+          })
+          .fail((...response) => {
             this.$store.dispatch('globalMessage', {
-              level: 'info',
-              message: this.$t('board.msg.there.is.no.new.comment')
-            });
-          }
-        }, response => {
-          this.$store.dispatch('globalMessage', {
-            level: 'error',
-            message: response[2]
+              level: 'error',
+              message: response[2]
+            })
+          })
+          .always(() => {
+            this.isCommentLoading = false;
           });
-        }).always(() => {
-          this.isCommentLoading = false;
-        });
       },
       checkCommentForm() {
         if (!this.$store.state.isAuthenticated) {
@@ -579,16 +582,19 @@
               return list;
             }, [])
           })
-        }).then(data => {
+        })
+        .done((data) => {
           this.comments.push(data);
           this.commentEditor.clear();
           commentEdiotImageList = [];
-        }, ...response => {
+        })
+        .fail((...response) => {
           this.$store.dispatch('globalMessage', {
             level: 'error',
             message: response[2]
           });
-        }).always(() => {
+        })
+        .always(() => {
           this.isCommentSubmitting = false;
         });
       },

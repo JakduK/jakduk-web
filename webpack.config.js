@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const config = require('./server/config/environment');
 
 module.exports = {
@@ -68,9 +69,14 @@ module.exports = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.optimization = module.exports.optimization || {};
-  module.exports.optimization.minimize = true;
+  module.exports.optimization.minimizer= [
+    new TerserPlugin({
+      cache: true,
+      parallel: true,
+      sourceMap: true,
+    }),
+  ];
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
