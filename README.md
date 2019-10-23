@@ -1,28 +1,22 @@
 # jakduk-web
 * Single page application
-* Stage https://web-dev.jakduk.com
-* Production https://jakduk.com
+* Stage https://dev-web.jakduk.com
+* Production https://www.jakduk.com
 
 ## Client
 * Vue.js
 * semantic-ui
 
 ## Server
-* Node.js 6.10.0+
+* Node.js 10.17.0+
 * Express
 * Environment variables
   * PORT (Default: 3000)
   * NODE_ENV (Default : development)
 
-# Prerequisite
-```
-npm install -g gulp
-```
-
 # Install
 ```
 npm install
-gulp build
 ```
 
 # Run
