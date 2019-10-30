@@ -46,7 +46,7 @@
 </style>
 
 <script>
-  import {mapState, mapGetters} from 'vuex';
+  import { mapGetters, mapState } from 'vuex';
   import $ from 'jquery';
 
   function getDefaultChartOptions() {
@@ -98,6 +98,7 @@
   export default {
     data() {
       return {
+        chart: null,
         chartOptions: getDefaultChartOptions.call(this),
         kakaoShareOptions: {
           kakaoSdkKey: this.$store.getters.kakaoSdkKey,
@@ -117,11 +118,13 @@
       $route() {
         this.chartOptions.chart.type = this.$route.query.chartType;
         adjustChartHeight.call(this);
+      },
+      chart() {
+        this.$store.commit('load', false);
+        this.chart.hideLoading();
       }
     },
     mounted() {
-      this.$store.commit('load', false);
-
       $.getJSON('/api/stats/supporters', {
         lang: this.$i18n.locale.replace('-', '_')
       }).then(data => {
@@ -164,31 +167,21 @@
         'totalSupporters'
       ])
     },
-    updated() {
-      if (this.chart) {
-        this.chart.hideLoading();
-      }
-    },
     methods: {
       copyLinkIntoClipboard() {
-        window.prompt(this.$t('common.url.of.name', {name: this.$t('stats.supporters.title')}), `${window.location.origin}${this.$route.fullPath}`);
+        window.prompt(
+          this.$t('common.url.of.name', {name: this.$t('stats.supporters.title')}),
+          `${window.location.origin}${this.$route.fullPath}`,
+        );
       },
       onChartCreated(chart) {
+        chart.showLoading(this.$t('common.loading'));
         this.chart = chart;
-        this.chart.showLoading(this.$t('common.loading'));
       }
     },
     components: {
-      chart: resolve => {
-        require.ensure([], require => {
-          resolve(require('../../components/chart/chart.vue'));
-        }, 'chart');
-      },
-      'kakao-share': resolve => {
-        require.ensure([], require => {
-          resolve(require('../../components/kakao_share/kakao_share.vue'));
-        }, 'kakao_share');
-      }
+      chart: () => import('../../components/chart/chart.vue'),
+      'kakao-share': () => import('../../components/kakao_share/kakao_share.vue'),
     }
   }
 </script>

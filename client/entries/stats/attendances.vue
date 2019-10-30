@@ -91,9 +91,9 @@
 </style>
 
 <script>
-  import {mapState, mapGetters} from 'vuex';
+  import { mapGetters, mapState } from 'vuex';
   import $ from 'jquery';
-  import {comma} from '../../filters/number_format';
+  import { comma } from '../../filters/number_format';
 
   const KL_ID = 'KL';
   const KL1_ID = 'KL1';
@@ -680,6 +680,7 @@
   export default {
     data() {
       return {
+        chart: null,
         chartOptions: {},
         chartData: [],
         filter: null,
@@ -703,19 +704,21 @@
       next();
     },
     watch: {
-      $route() {
-        fetch.call(this, this.$route.query).then(() => {
-          updateFilter.call(this, this.$route.query);
+      $route: {
+        immediate: true,
+        handler() {
+          this.chart = null;
+          fetch.call(this, this.$route.query).then(() => {
+            updateFilter.call(this, this.$route.query);
+          });
+        }
+      },
+      chart() {
+        if (this.chart != null) {
+          this.$store.commit('load', false);
           this.chart.hideLoading();
-        });
+        }
       }
-    },
-    mounted() {
-      this.$store.commit('load', false);
-      fetch.call(this, this.$route.query).then(() => {
-        updateFilter.call(this, this.$route.query);
-        this.chart.hideLoading();
-      });
     },
     computed: {
       ...mapState({
@@ -734,29 +737,21 @@
       ])
     },
     methods: {
+      comma,
       copyLinkIntoClipboard() {
         window.prompt(
           this.$t('common.url.of.name', {name: this.$t(getTitle(this.$route.query))}),
           `${window.location.origin}${this.$route.fullPath}`
         );
       },
-      comma: comma,
       onChartCreated(chart) {
+        chart.showLoading(this.$t('common.loading'));
         this.chart = chart;
-        this.chart.showLoading(this.$t('common.loading'));
       }
     },
     components: {
-      chart: resolve => {
-        require.ensure([], require => {
-          resolve(require('../../components/chart/chart.vue'));
-        }, 'chart');
-      },
-      'kakao-share': resolve => {
-        require.ensure([], require => {
-          resolve(require('../../components/kakao_share/kakao_share.vue'));
-        }, 'kakao_share');
-      }
+      chart: () => import('../../components/chart/chart.vue'),
+      'kakao-share': () => import('../../components/kakao_share/kakao_share.vue'),
     }
   }
 </script>

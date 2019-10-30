@@ -3,9 +3,8 @@
 </template>
 
 <script>
-  import $ from 'jquery';
-  import Highcharts from 'highcharts/highcharts.src'
-  import HighchartsExporting from 'highcharts/modules/exporting.src'
+  import Highcharts from 'highcharts/highcharts.src';
+  import HighchartsExporting from 'highcharts/modules/exporting.src';
 
   HighchartsExporting(Highcharts);
 
