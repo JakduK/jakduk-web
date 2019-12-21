@@ -14,7 +14,7 @@
                 {{$t('about.site')}}
               </a>
               <a
-                href="https://https://github.com/JakduK/jakduk-wiki/blob/master/jakdu-k/%EC%9E%91%EB%91%90k%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4.md"
+                href="https://github.com/JakduK/jakduk-wiki/blob/master/jakdu-k/%EC%9E%91%EB%91%90k%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4.md"
                 target="_blank"
                 class="item"
               >
